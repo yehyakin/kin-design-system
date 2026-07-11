@@ -6,7 +6,13 @@ The project follows semantic versioning for normative design documentation.
 
 ## Unreleased
 
-No unreleased changes.
+### Changed
+
+- Reworked the README with direct project language, Quick Start, product scope, repository navigation, and contribution paths.
+
+### Added
+
+- Added a complete Simplified Chinese README and translation maintenance rules.
 
 ## 1.0.0 — 2026-07-12
 
