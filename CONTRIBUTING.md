@@ -42,6 +42,16 @@ A proposal should explain:
 
 Do not vendor external code or assets by default. Before adding an adapter, verify the official repository, current package name, maintenance status, license, accessibility and runtime constraints. Record adoption in the consuming product, not in KIN as a universal mandate.
 
+## Translations
+
+`README.md` is the source README. Translations live in `READMEs/` and must remain complete, readable documents.
+
+- Translate meaning rather than English sentence structure.
+- Keep commands, paths, package names and normative keywords unchanged.
+- Update navigation links in both the source and translated README.
+- When a source change cannot be translated in the same pull request, record the source commit covered by the translation.
+- Do not add an unreviewed machine translation only to increase the language count.
+
 ## Validation
 
 ```powershell
