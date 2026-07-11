@@ -6,11 +6,7 @@ The project follows semantic versioning for normative design documentation.
 
 ## Unreleased
 
-### Added
-
-- Repository governance, contribution guidance and Agent instructions.
-- Dependency-free documentation validation and GitHub workflow.
-- Issue and pull-request templates.
+No unreleased changes.
 
 ## 1.0.0 — 2026-07-12
 
@@ -23,3 +19,6 @@ The project follows semantic versioning for normative design documentation.
 - Reference governance for public design sources.
 - Adapters for cmdk, React Virtuoso, Sonner, NumberFlow, Liveline, dnd kit, input-otp and Leva.
 - Boundaries for brand motion and long-task loaders.
+- Repository governance, contribution guidance and Agent instructions.
+- Dependency-free documentation validation and GitHub workflow.
+- Issue and pull-request templates.

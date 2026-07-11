@@ -53,7 +53,7 @@ This repository does not install product dependencies. `cmdk`, React Virtuoso, S
 
 ## Status
 
-`v1.0.0` documentation foundation. Framework adapters, executable tokens, examples and automated audits are future layers.
+`v1.0.0` documentation foundation. Framework adapters, executable tokens, examples and automated design audits are future layers; mechanical documentation validation is already included.
 
 See [`ROADMAP.md`](./ROADMAP.md) for planned layers and [`CONTRIBUTING.md`](./CONTRIBUTING.md) before proposing changes.
 
