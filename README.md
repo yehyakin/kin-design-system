@@ -14,7 +14,7 @@
   <a href="./LICENSE"><img src="https://img.shields.io/badge/License-MIT-232326" alt="MIT License" /></a>
 </p>
 
-KIN is the design reference used across 52.mk, ecommerce operations tools, and other desktop-style web products. It records decisions about color, type, layout, interaction, accessibility, and third-party UI packages so each project does not have to make those decisions again.
+KIN is the design reference used across information websites, ecommerce operations tools, and other desktop-style web products. It records decisions about color, type, layout, interaction, accessibility, and third-party UI packages so each project does not have to make those decisions again.
 
 The repository is written for product designers, frontend engineers, and coding tools. [`DESIGN.md`](./DESIGN.md) is the main specification. The shorter files cover individual principles and library integrations.
 
