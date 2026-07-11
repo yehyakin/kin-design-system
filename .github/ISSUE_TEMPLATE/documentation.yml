@@ -1,0 +1,26 @@
+name: Documentation correction
+description: Report an unclear rule, broken link, inaccurate claim or missing example.
+title: "[Docs]: "
+labels:
+  - documentation
+body:
+  - type: input
+    id: location
+    attributes:
+      label: Document location
+      placeholder: DESIGN.md section 9.2
+    validations:
+      required: true
+  - type: textarea
+    id: issue
+    attributes:
+      label: What is wrong or unclear?
+    validations:
+      required: true
+  - type: textarea
+    id: correction
+    attributes:
+      label: Suggested correction
+      description: Include a primary source when correcting a factual claim.
+    validations:
+      required: true

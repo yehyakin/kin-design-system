@@ -1,0 +1,50 @@
+name: Design change proposal
+description: Propose a normative KIN rule, Token, component or pattern change.
+title: "[Design]: "
+labels:
+  - design
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Describe the product problem and evidence. Visual preference alone is not sufficient for a normative change.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Product problem
+      description: Who is affected, in which workflow, and what currently fails?
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence
+      description: Include product examples, research, accessibility results, performance data or primary sources.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed change
+      description: State the exact rule, Token, behavior or documentation change.
+    validations:
+      required: true
+  - type: checkboxes
+    id: impact
+    attributes:
+      label: Impact areas
+      options:
+        - label: Light and dark themes
+        - label: Keyboard and accessibility
+        - label: Mobile and touch
+        - label: Reduced motion or transparency
+        - label: Intelligence workspace
+        - label: Ecommerce workspace
+        - label: Engineering/CAD workspace
+  - type: textarea
+    id: migration
+    attributes:
+      label: Migration and rollback
+      description: Explain how consuming products adopt, defer or revert the change.
+    validations:
+      required: true

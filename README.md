@@ -19,6 +19,8 @@ REFERENCES.md              外部来源、采用层级与治理
 principles/                跨框架设计原则
 integrations/              第三方组件的 KIN 适配规则
 tools/                     品牌动效与特殊加载工具边界
+scripts/                   无依赖文档校验工具
+.github/                   CI、Issue 与 PR 模板
 ```
 
 ## Product families
@@ -52,6 +54,8 @@ This repository does not install product dependencies. `cmdk`, React Virtuoso, S
 ## Status
 
 `v1.0.0` documentation foundation. Framework adapters, executable tokens, examples and automated audits are future layers.
+
+See [`ROADMAP.md`](./ROADMAP.md) for planned layers and [`CONTRIBUTING.md`](./CONTRIBUTING.md) before proposing changes.
 
 ## License
 
