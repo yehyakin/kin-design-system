@@ -6,7 +6,9 @@ The project follows semantic versioning for normative design documentation.
 
 ## Unreleased
 
-No unreleased changes.
+### Changed
+
+- Reworked the README into a value-first, action-oriented guide with Quick Start, product scope, repository navigation and contribution paths.
 
 ## 1.0.0 — 2026-07-12
 
