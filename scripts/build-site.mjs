@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import process from "node:process";
+import { build } from "esbuild";
 
 const root = process.cwd();
 const output = path.join(root, ".site-dist");
@@ -19,5 +20,24 @@ for (const [source, destination] of sources) {
   if (!fs.existsSync(from)) throw new Error(`Site source is missing: ${source}`);
   fs.cpSync(from, to, { recursive: true, force: true });
 }
+
+fs.copyFileSync(
+  path.join(root, "node_modules", "sonner", "dist", "styles.css"),
+  path.join(output, "assets", "sonner.css"),
+);
+
+await build({
+  entryPoints: [path.join(root, "site", "assets", "site.js")],
+  outdir: path.join(output, "assets"),
+  bundle: true,
+  splitting: true,
+  format: "esm",
+  target: ["es2022"],
+  minify: true,
+  entryNames: "[name]",
+  chunkNames: "chunks/[name]-[hash]",
+});
+
+fs.rmSync(path.join(output, "assets", "sonner-island.js"), { force: true });
 
 console.log(`KIN showcase built: ${path.relative(root, output)}`);

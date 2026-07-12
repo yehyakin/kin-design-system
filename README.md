@@ -232,10 +232,11 @@ Starting with a gradient, card layout, animation, or component library reverses 
 
 ## Optional UI libraries
 
-The integration notes explain when a library may help and when it should be skipped. These packages are not dependencies of KIN.
+The integration notes explain when a library may help and when it should be skipped. They are not required by the design contract. The showcase build uses Lucide and a lazy Sonner island as tested reference implementations; adopting products choose dependencies according to their own stack and existing components.
 
 | Library | Intended use | Skip when |
 |---|---|---|
+| [Lucide](./integrations/lucide.md) | The reference monochrome UI icon library | The product already has one complete, consistent icon system |
 | [cmdk](./integrations/cmdk.md) | Command menu and global search | A normal search field is enough |
 | [React Virtuoso](./integrations/virtuoso.md) | Large lists and event streams | Native rendering performs well |
 | [Sonner](./integrations/sonner.md) | Save, copy, undo, retry, and request feedback | The message belongs beside the affected object |

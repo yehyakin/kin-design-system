@@ -49,6 +49,8 @@ const required = [
   "site/zh/index.html",
   "site/assets/site.css",
   "site/assets/site.js",
+  "site/assets/sonner-island.js",
+  "integrations/lucide.md",
   ".github/workflows/deploy-pages.yml",
 ];
 

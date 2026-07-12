@@ -1,19 +1,64 @@
+import {
+  Bell,
+  BookOpen,
+  Bot,
+  Boxes,
+  Check,
+  Code2,
+  Contrast,
+  Copy,
+  createIcons,
+  Database,
+  Download,
+  DraftingCompass,
+  ExternalLink,
+  FolderDown,
+  Languages,
+  LayoutDashboard,
+  ListChecks,
+  Menu,
+  MonitorCog,
+  Moon,
+  Palette,
+  PanelsTopLeft,
+  Search,
+  ShoppingBag,
+  Sun,
+  Terminal,
+} from "lucide";
+
 const root = document.documentElement;
+const locale = root.lang === "zh-CN" ? "zh" : "en";
 const colorScheme = matchMedia("(prefers-color-scheme: dark)");
 const compactLayout = matchMedia("(max-width: 780px)");
 const themeColor = document.querySelector('meta[name="theme-color"]');
-const themeButtons = [...document.querySelectorAll("[data-theme-value]")];
+const themeSwitch = document.querySelector("[data-theme-switch]");
+const systemThemeActions = [...document.querySelectorAll("[data-theme-system]")];
 const contrastToggle = document.querySelector("[data-contrast-toggle]");
 const navToggle = document.querySelector("[data-nav-toggle]");
 const docsNav = document.querySelector(".docs-nav");
+const languageControl = document.querySelector("[data-language-control]");
+const languageTrigger = document.querySelector("[data-language-trigger]");
+const languageMenu = document.querySelector("[data-language-menu]");
 const commandDialog = document.querySelector("[data-command-dialog]");
 const commandTrigger = document.querySelector("[data-command-trigger]");
 const commandSearch = document.querySelector("[data-command-search]");
 const commandItems = [...document.querySelectorAll("[data-command-item]")];
 const commandEmpty = document.querySelector("[data-command-empty]");
+let sonnerModulePromise;
 
 function resolveTheme(preference) {
   return preference === "system" ? (colorScheme.matches ? "dark" : "light") : preference;
+}
+
+function updateThemeSwitch(resolved, preference) {
+  if (!themeSwitch) return;
+  const dark = resolved === "dark";
+  themeSwitch.setAttribute("aria-checked", String(dark));
+  themeSwitch.dataset.preference = preference;
+  themeSwitch.setAttribute("aria-label", locale === "zh"
+    ? `${preference === "system" ? "当前跟随系统。" : ""}切换为${dark ? "日间" : "夜间"}模式`
+    : `${preference === "system" ? "Following system. " : ""}Switch to ${dark ? "light" : "dark"} mode`);
 }
 
 function applyTheme(preference, persist = true) {
@@ -21,10 +66,9 @@ function applyTheme(preference, persist = true) {
   root.dataset.themePreference = preference;
   root.dataset.theme = resolved;
   if (themeColor) themeColor.content = resolved === "dark" ? "#08090a" : "#f6f7f8";
-  for (const button of themeButtons) {
-    button.setAttribute("aria-pressed", String(button.dataset.themeValue === preference));
-  }
+  updateThemeSwitch(resolved, preference);
   if (persist) localStorage.setItem("kin-site-theme", preference);
+  if (sonnerModulePromise) sonnerModulePromise.then((module) => module.updateToasterTheme(resolved, locale));
 }
 
 function applyContrast(enabled, persist = true) {
@@ -33,10 +77,8 @@ function applyContrast(enabled, persist = true) {
   if (persist) localStorage.setItem("kin-site-contrast", enabled ? "more" : "normal");
 }
 
-for (const button of themeButtons) {
-  button.addEventListener("click", () => applyTheme(button.dataset.themeValue));
-}
-
+themeSwitch?.addEventListener("click", () => applyTheme(root.dataset.theme === "dark" ? "light" : "dark"));
+for (const action of systemThemeActions) action.addEventListener("click", () => applyTheme("system"));
 contrastToggle?.addEventListener("click", () => applyContrast(root.dataset.contrast !== "more"));
 colorScheme.addEventListener("change", () => {
   if (root.dataset.themePreference === "system") applyTheme("system", false);
@@ -47,22 +89,34 @@ addEventListener("storage", (event) => {
   if (event.key === "kin-site-contrast") applyContrast(event.newValue === "more", false);
 });
 
-function setNavigation(open) {
+function setNavigation(open, moveFocus = true) {
   document.body.classList.toggle("nav-open", open);
   navToggle?.setAttribute("aria-expanded", String(open));
+  if (!moveFocus) return;
   if (open) docsNav?.querySelector("a")?.focus();
   else navToggle?.focus();
 }
 
 navToggle?.addEventListener("click", () => setNavigation(!document.body.classList.contains("nav-open")));
 docsNav?.addEventListener("click", (event) => {
-  if (compactLayout.matches && event.target.closest("a")) setNavigation(false);
+  if (compactLayout.matches && event.target.closest("a")) setNavigation(false, false);
 });
 addEventListener("resize", () => {
-  if (!compactLayout.matches) {
-    document.body.classList.remove("nav-open");
-    navToggle?.setAttribute("aria-expanded", "false");
-  }
+  if (!compactLayout.matches) setNavigation(false, false);
+});
+
+function setLanguageMenu(open, moveFocus = true) {
+  if (!languageMenu || !languageTrigger) return;
+  languageMenu.hidden = !open;
+  languageTrigger.setAttribute("aria-expanded", String(open));
+  if (!moveFocus) return;
+  if (open) languageMenu.querySelector('[role="menuitem"]')?.focus();
+  else languageTrigger.focus();
+}
+
+languageTrigger?.addEventListener("click", () => setLanguageMenu(languageMenu.hidden));
+document.addEventListener("click", (event) => {
+  if (!languageMenu?.hidden && !languageControl?.contains(event.target)) setLanguageMenu(false, false);
 });
 
 for (const tablist of document.querySelectorAll("[data-pattern-tabs]")) {
@@ -81,7 +135,7 @@ for (const tablist of document.querySelectorAll("[data-pattern-tabs]")) {
   for (const [index, tab] of tabs.entries()) {
     tab.addEventListener("click", () => selectTab(tab, false));
     tab.addEventListener("keydown", (event) => {
-      if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
+      if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
       event.preventDefault();
       let targetIndex = index;
       if (event.key === "ArrowLeft") targetIndex = (index - 1 + tabs.length) % tabs.length;
@@ -123,9 +177,7 @@ commandDialog?.addEventListener("click", (event) => {
   if (event.target === commandDialog) closeCommand();
 });
 commandDialog?.addEventListener("close", () => commandTrigger?.focus());
-for (const item of commandItems) {
-  item.addEventListener("click", () => closeCommand());
-}
+for (const item of commandItems) item.addEventListener("click", closeCommand);
 
 addEventListener("keydown", (event) => {
   const editable = event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement || event.target.isContentEditable;
@@ -140,9 +192,30 @@ addEventListener("keydown", (event) => {
   if (event.key === "Escape" && commandDialog?.open) {
     event.preventDefault();
     closeCommand();
+  } else if (event.key === "Escape" && !languageMenu?.hidden) {
+    event.preventDefault();
+    setLanguageMenu(false);
+  } else if (event.key === "Escape" && document.body.classList.contains("nav-open")) {
+    setNavigation(false);
   }
-  if (event.key === "Escape" && document.body.classList.contains("nav-open")) setNavigation(false);
 });
+
+async function showToast(trigger, overrides = {}) {
+  sonnerModulePromise ??= import("./sonner-island.js");
+  const module = await sonnerModulePromise;
+  module.showKinToast({
+    title: overrides.title || trigger.dataset.toastTitle,
+    description: overrides.description || trigger.dataset.toastDescription,
+    actionLabel: trigger.dataset.toastAction,
+    undoTitle: trigger.dataset.toastUndo,
+    theme: root.dataset.theme,
+    locale,
+  });
+}
+
+for (const trigger of document.querySelectorAll("[data-toast-title]")) {
+  trigger.addEventListener("click", () => showToast(trigger));
+}
 
 for (const button of document.querySelectorAll("[data-copy]")) {
   button.addEventListener("click", async () => {
@@ -151,6 +224,7 @@ for (const button of document.querySelectorAll("[data-copy]")) {
     try {
       await navigator.clipboard.writeText(target.textContent.trim());
       if (status) status.textContent = button.dataset.success;
+      await showToast(button, { title: button.dataset.success, description: button.dataset.toastDescription });
     } catch {
       if (status) status.textContent = button.dataset.failure;
     }
@@ -171,3 +245,34 @@ if ("IntersectionObserver" in window) {
 
 applyTheme(root.dataset.themePreference || localStorage.getItem("kin-site-theme") || "system", false);
 applyContrast(root.dataset.contrast === "more" || localStorage.getItem("kin-site-contrast") === "more", false);
+
+createIcons({
+  icons: {
+    Bell,
+    BookOpen,
+    Bot,
+    Boxes,
+    Check,
+    Code2,
+    Contrast,
+    Copy,
+    Database,
+    Download,
+    DraftingCompass,
+    ExternalLink,
+    FolderDown,
+    Languages,
+    LayoutDashboard,
+    ListChecks,
+    Menu,
+    MonitorCog,
+    Moon,
+    Palette,
+    PanelsTopLeft,
+    Search,
+    ShoppingBag,
+    Sun,
+    Terminal,
+  },
+  attrs: { "aria-hidden": "true", "stroke-width": "1.5" },
+});

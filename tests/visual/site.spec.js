@@ -5,7 +5,8 @@ test("showcase exposes the English contract and live foundations", async ({ page
   await expect(page).toHaveTitle("KIN Design System");
   await expect(page.getByRole("heading", { level: 1 })).toContainText("Clear interfaces");
   await expect(page.getByRole("heading", { name: "Foundations" })).toBeVisible();
-  await expect(page.getByRole("link", { name: "中文" })).toHaveAttribute("hreflang", "zh-CN");
+  await expect(page.locator('.language-menu a[hreflang="zh-CN"]')).toHaveAttribute("lang", "zh-CN");
+  await expect(page.locator('svg.lucide')).not.toHaveCount(0);
   await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
   await expect(page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).resolves.toBe(true);
   await page.screenshot({ path: "test-results/playwright/site-dark-desktop.png", fullPage: true });
@@ -13,16 +14,28 @@ test("showcase exposes the English contract and live foundations", async ({ page
 
 test("showcase theme contrast and language preferences work", async ({ page }) => {
   await page.goto("/");
-  await page.getByRole("button", { name: "Light" }).click();
+  await page.getByRole("switch").click();
   await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
   await expect(page.evaluate(() => localStorage.getItem("kin-site-theme"))).resolves.toBe("light");
   await page.getByRole("button", { name: "Increase contrast" }).click();
   await expect(page.locator("html")).toHaveAttribute("data-contrast", "more");
-  await page.goto("/zh/");
+  await page.getByRole("button", { name: "Choose language" }).click();
+  await page.getByRole("menuitem", { name: "中文" }).click();
+  await page.waitForURL("**/zh/");
   await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
   await expect(page.locator("html")).toHaveAttribute("data-contrast", "more");
   await expect(page.getByRole("heading", { level: 1 })).toContainText("清楚的界面");
   await page.screenshot({ path: "test-results/playwright/site-light-zh.png", fullPage: true });
+});
+
+test("Sonner loads on demand for user-initiated feedback", async ({ page }) => {
+  await page.goto("/");
+  await expect(page.evaluate(() => performance.getEntriesByType("resource").some((entry) => entry.name.includes("sonner-island")))).resolves.toBe(false);
+  await page.getByRole("button", { name: "Show notification" }).click();
+  await expect(page.getByText("Reference exported", { exact: true })).toBeVisible();
+  await expect(page.evaluate(() => performance.getEntriesByType("resource").some((entry) => entry.name.includes("sonner-island")))).resolves.toBe(true);
+  await page.getByRole("button", { name: "View", exact: true }).click();
+  await expect(page.getByText("Export opened", { exact: true })).toBeVisible();
 });
 
 test("showcase command menu filters and restores focus", async ({ page }) => {
@@ -36,7 +49,9 @@ test("showcase command menu filters and restores focus", async ({ page }) => {
   const dialog = page.getByRole("dialog");
   await expect(dialog.getByRole("link", { name: /DTCG Tokens/ })).toBeVisible();
   await expect(dialog.getByRole("link", { name: /AI behavior/ })).toBeHidden();
-  await page.keyboard.press("Escape");
+  await search.fill("system theme");
+  await dialog.getByRole("button", { name: /Use system theme/ }).click();
+  await expect(page.evaluate(() => localStorage.getItem("kin-site-theme"))).resolves.toBe("system");
   await expect(page.getByRole("dialog")).toBeHidden();
   await expect(trigger).toBeFocused();
 });

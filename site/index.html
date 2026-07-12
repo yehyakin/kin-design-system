@@ -17,6 +17,7 @@
   <link rel="alternate" hreflang="x-default" href="https://yehyakin.github.io/kin-design-system/">
   <link rel="icon" href="assets/mark.svg" type="image/svg+xml">
   <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="assets/sonner.css">
   <link rel="stylesheet" href="assets/site.css">
   <script>
     (() => {
@@ -38,19 +39,21 @@
     </a>
     <div class="header-center">
       <button class="command-trigger" type="button" data-command-trigger aria-haspopup="dialog">
-        <span>Search sections and resources</span><kbd>Ctrl K</kbd>
+        <i data-lucide="search"></i><span>Search sections and resources</span><kbd>Ctrl K</kbd>
       </button>
     </div>
     <div class="header-actions">
-      <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="docs-nav" aria-label="Open navigation">Menu</button>
-      <a class="language-link" href="zh/" lang="zh-CN" hreflang="zh-CN" aria-label="阅读中文版">中文</a>
-      <div class="theme-control" aria-label="Appearance">
-        <button type="button" data-theme-value="light" aria-pressed="false">Light</button>
-        <button type="button" data-theme-value="dark" aria-pressed="false">Dark</button>
-        <button type="button" data-theme-value="system" aria-pressed="true">Auto</button>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="docs-nav" aria-label="Open navigation"><i data-lucide="menu"></i></button>
+      <div class="language-control" data-language-control>
+        <button class="language-trigger" type="button" data-language-trigger aria-haspopup="menu" aria-expanded="false" aria-label="Choose language"><i data-lucide="languages"></i></button>
+        <div class="language-menu" data-language-menu role="menu" hidden>
+          <a href="./" role="menuitem" lang="en" aria-current="page"><span>English</span><i data-lucide="check"></i></a>
+          <a href="zh/" role="menuitem" lang="zh-CN" hreflang="zh-CN"><span>中文</span></a>
+        </div>
       </div>
-      <button class="contrast-toggle" type="button" data-contrast-toggle aria-pressed="false" aria-label="Increase contrast">Contrast</button>
-      <a class="github-link" href="https://github.com/yehyakin/kin-design-system" aria-label="KIN on GitHub"><span>GitHub</span></a>
+      <button class="theme-switch" type="button" role="switch" data-theme-switch aria-checked="true" aria-label="Switch to light mode"><i class="theme-sun" data-lucide="sun"></i><i class="theme-moon" data-lucide="moon"></i></button>
+      <button class="contrast-toggle" type="button" data-contrast-toggle aria-pressed="false" aria-label="Increase contrast"><i data-lucide="contrast"></i></button>
+      <a class="github-link" href="https://github.com/yehyakin/kin-design-system" aria-label="KIN on GitHub"><i data-lucide="code-2"></i><span>GitHub</span></a>
     </div>
   </header>
 
@@ -58,20 +61,20 @@
     <nav class="docs-nav" id="docs-nav" aria-label="Documentation">
       <div class="nav-group">
         <h2>Start here</h2>
-        <a href="#overview" aria-current="location">Overview</a>
-        <a href="#principles">Principles</a>
+        <a href="#overview" aria-current="location"><i data-lucide="layout-dashboard"></i>Overview</a>
+        <a href="#principles"><i data-lucide="list-checks"></i>Principles</a>
       </div>
       <div class="nav-group">
         <h2>System</h2>
-        <a href="#foundations">Foundations</a>
-        <a href="#components">Components</a>
-        <a href="#patterns">Product patterns <span>4</span></a>
-        <a href="#ai-contract">AI behavior</a>
+        <a href="#foundations"><i data-lucide="palette"></i>Foundations</a>
+        <a href="#components"><i data-lucide="boxes"></i>Components</a>
+        <a href="#patterns"><i data-lucide="panels-top-left"></i>Product patterns <span class="nav-count">4</span></a>
+        <a href="#ai-contract"><i data-lucide="bot"></i>AI behavior</a>
       </div>
       <div class="nav-group">
         <h2>Use KIN</h2>
-        <a href="#agents">Coding tools</a>
-        <a href="#resources">Resources</a>
+        <a href="#agents"><i data-lucide="terminal"></i>Coding tools</a>
+        <a href="#resources"><i data-lucide="folder-down"></i>Resources</a>
       </div>
       <p class="nav-footer">Open source · MIT<br>Contract version 2.0.0</p>
     </nav>
@@ -147,6 +150,12 @@
               <span class="space-token"><i style="height:4px"></i>4</span><span class="space-token"><i style="height:8px"></i>8</span><span class="space-token"><i style="height:12px"></i>12</span><span class="space-token"><i style="height:16px"></i>16</span><span class="space-token"><i style="height:20px"></i>20</span><span class="space-token"><i style="height:24px"></i>24</span><span class="space-token"><i style="height:32px"></i>32</span><span class="space-token"><i style="height:48px"></i>48</span>
             </div>
           </div>
+          <div class="foundation-block">
+            <div class="subheading"><h3>Icon library</h3><p>Lucide · named imports · 1.5px stroke</p></div>
+            <div class="icon-sample-row" aria-label="Lucide icon examples">
+              <div class="icon-sample"><i data-lucide="search"></i><span>Search</span></div><div class="icon-sample"><i data-lucide="database"></i><span>Data</span></div><div class="icon-sample"><i data-lucide="book-open"></i><span>Reading</span></div><div class="icon-sample"><i data-lucide="shopping-bag"></i><span>Commerce</span></div><div class="icon-sample"><i data-lucide="drafting-compass"></i><span>Canvas</span></div><div class="icon-sample"><i data-lucide="bot"></i><span>AI</span></div><div class="icon-sample"><i data-lucide="monitor-cog"></i><span>Monitor</span></div><div class="icon-sample"><i data-lucide="download"></i><span>Export</span></div>
+            </div>
+          </div>
         </section>
 
         <hr class="section-rule">
@@ -157,7 +166,7 @@
           </div>
           <div class="component-demo">
             <div class="demo-toolbar" aria-label="Button examples">
-              <button class="primary-button" type="button">Save changes</button><button type="button">Preview</button><button class="ghost-button" type="button">More actions</button><button class="danger-button" type="button">Remove</button><button type="button" disabled>Unavailable</button>
+              <button class="primary-button" type="button" data-toast-title="Changes saved" data-toast-description="The reference settings are now current." data-toast-action="Undo" data-toast-undo="Save reverted"><i data-lucide="check"></i>Save changes</button><button type="button">Preview</button><button class="ghost-button" type="button">More actions</button><button class="danger-button" type="button">Remove</button><button type="button" disabled>Unavailable</button>
             </div>
             <div class="field-demo">
               <div class="field"><label for="project-name">Project name</label><input id="project-name" value="KIN reference"><small>Shown in the workspace header.</small></div>
@@ -172,6 +181,7 @@
             <div class="metric-demo">
               <div><span>Contract</span><strong>2.0.0</strong></div><div><span>Theme modes</span><strong>4</strong></div><div><span>Product patterns</span><strong>4</strong></div><div><span>Last reviewed</span><strong>12 Jul 2026</strong></div>
             </div>
+            <div class="notification-demo"><div><strong>Action feedback</strong><span>Sonner loads only when an action needs temporary feedback.</span></div><button type="button" data-toast-title="Reference exported" data-toast-description="The generated file is ready for review." data-toast-action="View" data-toast-undo="Export opened"><i data-lucide="bell"></i>Show notification</button></div>
           </div>
         </section>
 
@@ -219,7 +229,7 @@
         <hr class="section-rule">
         <section class="content-section" id="agents" aria-labelledby="agents-title">
           <div class="section-heading"><h2 id="agents-title">Give coding tools a design contract</h2><p>Pin an exact KIN version, keep a local contract copy, and record the project’s own decisions instead of relying on a vague style prompt.</p></div>
-          <div class="code-block"><button class="copy-button" type="button" data-copy="agent-prompt" data-success="Prompt copied." data-failure="Copy failed. Select the text manually." aria-describedby="copy-status">Copy</button><code id="agent-prompt">Read DESIGN.md completely before changing UI.
+          <div class="code-block"><button class="copy-button" type="button" data-copy="agent-prompt" data-success="Prompt copied." data-failure="Copy failed. Select the text manually." data-toast-description="The Agent prompt is available on your clipboard." aria-describedby="copy-status"><i data-lucide="copy"></i>Copy</button><code id="agent-prompt">Read DESIGN.md completely before changing UI.
 
 Treat it as a normative product design contract. Start from the real user task,
 entity model, data states, and existing components. Preserve themes, mobile,
@@ -265,9 +275,11 @@ keyboard, accessibility, real APIs, and human control.</code></div>
       <a class="command-item" data-command-item href="https://github.com/yehyakin/kin-design-system/blob/v2.0.0/DESIGN.md">Design contract <span>GitHub</span></a>
       <a class="command-item" data-command-item href="examples/workspace-reference/">Workspace reference <span>Demo</span></a>
       <a class="command-item" data-command-item href="tokens/kin.tokens.json">DTCG Tokens <span>JSON</span></a>
+      <button class="command-item" type="button" data-command-item data-theme-system>Use system theme <span>Appearance</span></button>
       <p class="command-empty" data-command-empty hidden>No matching section or resource.</p>
     </div>
   </dialog>
+  <div data-sonner-root></div>
   <script type="module" src="assets/site.js"></script>
 </body>
 </html>

@@ -10,6 +10,13 @@ The project follows semantic versioning for normative design documentation.
 
 - Added a bilingual, theme-aware KIN showcase site with live foundations, component states, product patterns, Agent guidance, and versioned resources.
 - Added a dependency-free static build, local server, link validation, Playwright coverage, and GitHub Pages deployment workflow.
+- Added Lucide as the reference monochrome icon adapter and applied it to the showcase navigation and controls.
+- Added a lazy-loaded Sonner interaction island for user-initiated save, copy, undo, and feedback demonstrations.
+
+### Changed
+
+- Replaced the segmented theme selector with an accessible light/dark switch while preserving system mode through the command menu.
+- Replaced text-only language links with an icon-triggered language menu.
 
 ## 2.0.0 — 2026-07-12
 

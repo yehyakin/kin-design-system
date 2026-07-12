@@ -47,6 +47,7 @@ Third-party component defaults always have the lowest visual priority.
 | [React Virtuoso](https://github.com/petyosi/react-virtuoso) | core candidate at scale | [`integrations/virtuoso.md`](./integrations/virtuoso.md) |
 | [dnd kit](https://github.com/clauderic/dnd-kit) | conditional | [`integrations/dnd-kit.md`](./integrations/dnd-kit.md) |
 | [Sonner](https://github.com/emilkowalski/sonner) | core candidate | [`integrations/sonner.md`](./integrations/sonner.md) |
+| [Lucide](https://lucide.dev/) | core visual adapter | [`integrations/lucide.md`](./integrations/lucide.md) |
 
 Package names, maintainers, APIs, licenses and support status can change. Every consuming project MUST verify current official documentation and license terms at adoption time.
 

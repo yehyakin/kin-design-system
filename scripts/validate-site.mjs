@@ -11,6 +11,7 @@ const required = [
   "404.html",
   "assets/site.css",
   "assets/site.js",
+  "assets/sonner.css",
   "assets/mark.svg",
   "assets/og-card.svg",
   "manifest.webmanifest",
@@ -66,6 +67,17 @@ if (fs.existsSync(output)) {
       }
     }
   }
+}
+
+const assetDirectory = path.join(output, "assets");
+if (fs.existsSync(path.join(assetDirectory, "sonner-island.js"))) failures.push("assets/sonner-island.js: unbundled source must not ship");
+if (fs.existsSync(assetDirectory)) {
+  const mainBundle = path.join(assetDirectory, "site.js");
+  const chunks = fs.existsSync(path.join(assetDirectory, "chunks"))
+    ? fs.readdirSync(path.join(assetDirectory, "chunks"))
+    : [];
+  if (!chunks.some((file) => file.startsWith("sonner-island-") && file.endsWith(".js"))) failures.push("assets/chunks: lazy Sonner bundle is missing");
+  if (fs.existsSync(mainBundle) && fs.statSync(mainBundle).size > 50_000) failures.push("assets/site.js: initial JavaScript bundle exceeds 50 KB");
 }
 
 const cssPath = path.join(output, "assets/site.css");
