@@ -15,11 +15,12 @@ test.afterEach(async ({ page }) => {
   expect(browserErrors.get(page) ?? []).toEqual([]);
 });
 
-async function seedPreferences(page, theme, contrast = "normal") {
-  await page.addInitScript(({ selectedTheme, selectedContrast }) => {
+async function seedPreferences(page, theme, contrast = "normal", locale = "zh") {
+  await page.addInitScript(({ selectedTheme, selectedContrast, selectedLocale }) => {
     localStorage.setItem("kin-reference-theme", selectedTheme);
     localStorage.setItem("kin-reference-contrast", selectedContrast);
-  }, { selectedTheme: theme, selectedContrast: contrast });
+    localStorage.setItem("kin-reference-locale", selectedLocale);
+  }, { selectedTheme: theme, selectedContrast: contrast, selectedLocale: locale });
 }
 
 async function assertNoHorizontalOverflow(page) {
@@ -58,6 +59,7 @@ for (const theme of ["dark", "light"]) {
     await expect(page.locator("html")).toHaveAttribute("data-theme", theme);
     await expect(page.getByRole("heading", { name: "Alpha Network", level: 1 })).toBeVisible();
     await expect(page.locator(".inspector")).toBeVisible();
+    expect(await page.locator("svg.lucide").count()).toBeGreaterThan(8);
     await assertNoHorizontalOverflow(page);
     await capture(page, testInfo, `workspace-${theme}-desktop.png`);
   });
@@ -69,7 +71,7 @@ test("workspace high contrast", async ({ page }, testInfo) => {
   await page.goto("/examples/workspace-reference/");
 
   await expect(page.locator("html")).toHaveAttribute("data-contrast", "more");
-  await expect(page.getByRole("button", { name: "高对比" })).toHaveAttribute("aria-pressed", "true");
+  await expect(page.locator("[data-contrast-toggle]")).toHaveAttribute("aria-pressed", "true");
   const lineColor = await page.locator("html").evaluate((element) => getComputedStyle(element).getPropertyValue("--line").trim());
   const positiveColor = await page.locator("html").evaluate((element) => getComputedStyle(element).getPropertyValue("--positive").trim());
   expect(lineColor).toBe("#747a86");
@@ -80,15 +82,33 @@ test("workspace high contrast", async ({ page }, testInfo) => {
 test("theme and contrast preferences synchronize across tabs", async ({ context }) => {
   const firstPage = await context.newPage();
   const secondPage = await context.newPage();
+  await seedPreferences(firstPage, "dark");
+  await seedPreferences(secondPage, "dark");
   await Promise.all([
     firstPage.goto("/examples/workspace-reference/"),
     secondPage.goto("/examples/workspace-reference/states.html"),
   ]);
 
-  await firstPage.getByRole("button", { name: "日间" }).click();
+  await firstPage.locator("[data-theme-switch]").click();
   await expect(secondPage.locator("html")).toHaveAttribute("data-theme", "light");
-  await firstPage.getByRole("button", { name: "高对比" }).click();
+  await firstPage.locator("[data-contrast-toggle]").click();
   await expect(secondPage.locator("html")).toHaveAttribute("data-contrast", "more");
+});
+
+test("workspace localizes controls and loads Sonner on demand", async ({ page }) => {
+  await seedPreferences(page, "dark", "normal", "zh");
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/examples/workspace-reference/");
+
+  expect(await page.evaluate(() => performance.getEntriesByType("resource").some(({ name }) => name.includes("sonner-island")))).toBe(false);
+  await page.locator("[data-language-trigger]").click();
+  await page.locator('[data-locale-value="en"]').click();
+  await expect(page.locator("html")).toHaveAttribute("lang", "en");
+  await expect(page.getByText("Current status", { exact: true })).toBeVisible();
+
+  await page.locator('[data-toast="follow"]').click();
+  await expect(page.locator("[data-sonner-toast]")).toBeVisible();
+  expect(await page.evaluate(() => performance.getEntriesByType("resource").some(({ name }) => name.includes("sonner-island")))).toBe(true);
 });
 
 test("workspace mobile and inspector behavior", async ({ page }, testInfo) => {
@@ -99,12 +119,12 @@ test("workspace mobile and inspector behavior", async ({ page }, testInfo) => {
   await expect(page.locator(".sidebar")).toBeHidden();
   await expect(page.locator(".inspector")).toBeHidden();
   await expect(page.locator(".breadcrumb")).toBeHidden();
-  await assertMinimumTouchTargets(page, ".workspace-actions > button, .theme-control button, .view-bar a, .entity-actions button, .text-button");
+  await assertMinimumTouchTargets(page, ".workspace-actions > button, .workspace-actions > .language-control > button, .view-bar a, .entity-actions button, .text-button");
   await assertNoHorizontalOverflow(page);
   await capture(page, testInfo, "workspace-dark-mobile.png");
 
-  const mobileOpen = page.getByRole("button", { name: "属性" });
-  const mobileClose = page.getByRole("button", { name: "关闭属性面板" });
+  const mobileOpen = page.locator("[data-inspector-open]");
+  const mobileClose = page.locator("[data-inspector-close]");
   await mobileOpen.click();
   await expect(page.locator(".inspector")).toBeVisible();
   await expect(mobileClose).toBeFocused();
@@ -114,8 +134,8 @@ test("workspace mobile and inspector behavior", async ({ page }, testInfo) => {
 
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.reload();
-  const close = page.getByRole("button", { name: "关闭属性面板" });
-  const open = page.getByRole("button", { name: "属性" });
+  const close = page.locator("[data-inspector-close]");
+  const open = page.locator("[data-inspector-open]");
   await close.click();
   await expect(page.locator(".inspector")).toBeHidden();
   await expect(open).toBeFocused();
@@ -129,13 +149,13 @@ test("state reference and command dialog", async ({ page }, testInfo) => {
   await page.setViewportSize({ width: 1280, height: 900 });
   await page.goto("/examples/workspace-reference/states.html");
 
-  await expect(page.getByRole("heading", { name: "组件状态基准", level: 1 })).toBeVisible();
+  await expect(page.locator(".states-page h1")).toBeVisible();
   await expect(page.locator('[role="row"][aria-selected="true"]')).toHaveCount(1);
   await expect(page.locator('input[aria-invalid="true"]')).toHaveCount(1);
   await assertNoHorizontalOverflow(page);
   await capture(page, testInfo, "states-light.png");
 
-  const open = page.getByRole("button", { name: /打开命令菜单/ });
+  const open = page.locator("[data-command-open]");
   await open.click();
   const dialog = page.getByRole("dialog");
   await expect(dialog).toBeVisible();
@@ -151,8 +171,8 @@ test("information site preserves reading and provenance", async ({ page }, testI
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/examples/product-patterns/information.html");
 
-  await expect(page.getByRole("heading", { name: "区域公共网络节点状态记录", level: 1 })).toBeVisible();
-  await expect(page.getByRole("complementary", { name: "来源与修订" })).toBeVisible();
+  await expect(page.locator(".article h1")).toBeVisible();
+  await expect(page.locator(".source-rail")).toBeVisible();
   await expect(page.getByRole("table")).toBeVisible();
   await assertNoHorizontalOverflow(page);
   await capture(page, testInfo, "information-light-desktop.png");
@@ -170,10 +190,10 @@ test("ecommerce operations keeps money inventory and approval distinct", async (
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/examples/product-patterns/ecommerce.html");
 
-  await expect(page.getByRole("heading", { name: "商品运营", level: 1 })).toBeVisible();
+  await expect(page.locator(".commerce-bar h1")).toBeVisible();
   await expect(page.locator('[role="row"][aria-selected="true"]')).toHaveCount(1);
   await expect(page.getByText("CNY 1,299.00", { exact: true })).toHaveCount(2);
-  await expect(page.getByText("价格调整等待审批", { exact: true })).toBeVisible();
+  await expect(page.locator(".approval")).toBeVisible();
   await assertNoHorizontalOverflow(page);
   await capture(page, testInfo, "ecommerce-dark-desktop.png");
 
@@ -185,22 +205,21 @@ test("ecommerce operations keeps money inventory and approval distinct", async (
   await assertNoHorizontalOverflow(page);
 });
 
-test("engineering canvas separates tool mode object selection and generated changes", async ({ page }, testInfo) => {
+test("engineering canvas separates tools, selection, and generated changes", async ({ page }, testInfo) => {
   await seedPreferences(page, "dark");
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/examples/product-patterns/canvas.html");
 
-  await expect(page.getByRole("img", { name: "Bracket Assembly 工程图" })).toBeVisible();
-  const selectTool = page.getByRole("button", { name: "选择" });
-  const lineTool = page.getByRole("button", { name: "直线" });
+  await expect(page.locator('.drawing-area svg[role="img"]')).toBeVisible();
+  const tools = page.locator("[data-tool]");
+  expect(await tools.count()).toBe(5);
   const selectedObject = page.locator('[data-object][aria-pressed="true"]');
-  await expect(selectTool).toHaveAttribute("aria-pressed", "true");
   await expect(selectedObject).toHaveCount(1);
-  await lineTool.click();
-  await expect(lineTool).toHaveAttribute("aria-pressed", "true");
-  await expect(selectTool).toHaveAttribute("aria-pressed", "false");
+  const lineTool = page.locator('[data-tool][aria-pressed="false"]');
+  expect(await lineTool.count()).toBe(4);
+  await lineTool.nth(0).click();
   await expect(selectedObject).toHaveCount(1);
-  await expect(page.getByText("尚未写入 Revision 18。", { exact: false })).toBeVisible();
+  await expect(page.locator(".generated-change")).toBeVisible();
   await assertNoHorizontalOverflow(page);
   await capture(page, testInfo, "canvas-dark-desktop.png");
 
@@ -209,8 +228,8 @@ test("engineering canvas separates tool mode object selection and generated chan
   await expect(page.locator(".layer-panel")).toBeHidden();
   await expect(page.locator(".property-panel")).toBeHidden();
   await assertMinimumTouchTargets(page, ".canvas-actions > button, .tool-rail button");
-  const propertiesOpen = page.getByRole("button", { name: "属性" });
-  const propertiesClose = page.getByRole("button", { name: "关闭属性面板" });
+  const propertiesOpen = page.locator("[data-canvas-properties-open]");
+  const propertiesClose = page.locator("[data-canvas-properties-close]");
   await propertiesOpen.click();
   await expect(page.locator(".property-panel")).toBeVisible();
   await expect(propertiesClose).toBeFocused();

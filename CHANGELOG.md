@@ -6,6 +6,8 @@ The project follows semantic versioning for normative design documentation.
 
 ## Unreleased
 
+- Updated the workspace reference with the Lucide icon adapter, lazy Sonner feedback, a light/dark switch, and an icon-based English/Chinese language menu.
+
 ### Added
 
 - Added a bilingual, theme-aware KIN showcase site with live foundations, component states, product patterns, Agent guidance, and versioned resources.

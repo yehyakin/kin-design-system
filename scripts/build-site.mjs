@@ -40,4 +40,16 @@ await build({
 
 fs.rmSync(path.join(output, "assets", "sonner-island.js"), { force: true });
 
+await build({
+  entryPoints: [path.join(root, "examples", "workspace-reference", "reference.js")],
+  outdir: path.join(output, "examples", "workspace-reference"),
+  bundle: true,
+  splitting: true,
+  format: "esm",
+  target: ["es2022"],
+  minify: true,
+  entryNames: "[name]",
+  chunkNames: "chunks/[name]-[hash]",
+});
+
 console.log(`KIN showcase built: ${path.relative(root, output)}`);

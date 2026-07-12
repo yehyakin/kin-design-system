@@ -1,50 +1,170 @@
+import {
+  Activity,
+  Check,
+  Contrast,
+  createIcons,
+  Database,
+  Languages,
+  LayoutDashboard,
+  Moon,
+  PanelRight,
+  ScanLine,
+  Search,
+  Star,
+  Sun,
+  TriangleAlert,
+  X,
+} from "lucide";
+
+const root = document.documentElement;
 const media = matchMedia("(prefers-color-scheme: dark)");
-const themeButtons = [...document.querySelectorAll("[data-theme-value]")];
 const themeColor = document.querySelector('meta[name="theme-color"]');
+const themeSwitch = document.querySelector("[data-theme-switch]");
 const appShell = document.querySelector(".app-shell");
 const inspector = document.querySelector(".inspector");
 const inspectorOpen = document.querySelector("[data-inspector-open]");
 const inspectorClose = document.querySelector("[data-inspector-close]");
 const contrastToggle = document.querySelector("[data-contrast-toggle]");
+const languageControl = document.querySelector("[data-language-control]");
+const languageTrigger = document.querySelector("[data-language-trigger]");
+const languageMenu = document.querySelector("[data-language-menu]");
+const localeButtons = [...document.querySelectorAll("[data-locale-value]")];
 const compactLayout = matchMedia("(max-width: 760px)");
+let sonnerModulePromise;
+
+const copy = {
+  zh: {
+    skip: "跳到主要内容", primaryNav: "主导航", workspaceNav: "工作区", overview: "情报概览",
+    database: "对象数据库", signals: "风险信号", monitoring: "监测任务", savedViews: "保存视图",
+    stable: "近期稳定", changed: "最近变化", review: "等待复核", workspaceSettings: "工作区设置",
+    admin: "管理员", breadcrumb: "面包屑", search: "搜索", properties: "属性", language: "切换语言",
+    contrast: "切换高对比度", entityViews: "对象视图", summaryTab: "概览", activityTab: "事件",
+    sourcesTab: "来源", relationsTab: "关联", description: "持续记录入口、公开频道、运行状态和可验证事件。",
+    follow: "加入关注", runScan: "运行检测", metrics: "关键指标", currentStatus: "当前状态",
+    healthy: "正常", operatingRecord: "运营记录", operatingValue: "6 年 3 个月", completeness: "数据完整度",
+    latestEvent: "最近事件", latestEventValue: "2 小时前", statusSummary: "状态摘要",
+    statusSummaryDescription: "基于最近一次公开数据和监测结果。", updatedAt: "更新于 14:32",
+    summaryText: "官网与公开频道当前可访问。过去 30 天记录到 2 次短时异常，均已恢复；现有证据不足以提高风险等级。",
+    recentEvents: "最近事件", eventsDescription: "变化按发生时间排列，结论与来源分开显示。", viewAll: "查看全部",
+    todayTime: "今天 09:42", eventOneTitle: "香港节点延迟恢复正常", eventOneBody: "HK-02 延迟从 328ms 降至 89ms。",
+    monitorSystem: "检测系统", yesterdayTime: "昨天 23:18", eventTwoTitle: "公开频道发布维护通知",
+    eventTwoBody: "计划维护窗口为 7 月 13 日 02:00–03:00。", publicChannel: "公开频道", dateTime: "7 月 9 日",
+    eventThreeTitle: "主域名证书完成续期", eventThreeBody: "证书签发机构未发生变化。", certificateMonitor: "证书监测",
+    currentObject: "当前对象", closeInspector: "关闭属性面板", status: "状态", operatingStatus: "运行状态",
+    riskLevel: "风险等级", watch: "观察", lastScan: "最后检测", lastScanValue: "3 分钟前", operations: "运营信息",
+    firstRecorded: "首次收录", primaryRegion: "主要地区", eastAsia: "东亚", relatedDomains: "关联域名",
+    fourItems: "4 个", evidence: "证据", evidenceCount: "证据数量", sourceCount: "来源数量",
+    confidence: "证据可信度", confidenceDefinition: "该分数表示当前证据来源的可信程度，不代表对象整体安全等级。",
+    switchToLight: "切换到日间模式", switchToDark: "切换到夜间模式",
+    followedTitle: "已加入关注", followedDescription: "Alpha Network 的变化会出现在关注视图中。", undo: "撤销", undone: "已撤销关注",
+    scanTitle: "检测任务已创建", scanDescription: "系统将检测公开入口和监测节点。", viewTask: "查看任务", taskOpened: "检测任务已打开",
+  },
+  en: {
+    skip: "Skip to main content", primaryNav: "Primary navigation", workspaceNav: "Workspace", overview: "Overview",
+    database: "Entity database", signals: "Risk signals", monitoring: "Monitoring", savedViews: "Saved views",
+    stable: "Recently stable", changed: "Recent changes", review: "Pending review", workspaceSettings: "Workspace settings",
+    admin: "Administrator", breadcrumb: "Breadcrumb", search: "Search", properties: "Properties", language: "Change language",
+    contrast: "Toggle high contrast", entityViews: "Entity views", summaryTab: "Summary", activityTab: "Activity",
+    sourcesTab: "Sources", relationsTab: "Relations", description: "Tracks public endpoints, channels, operating status, and verifiable events.",
+    follow: "Follow", runScan: "Run scan", metrics: "Key metrics", currentStatus: "Current status",
+    healthy: "Healthy", operatingRecord: "Operating record", operatingValue: "6 years 3 months", completeness: "Data completeness",
+    latestEvent: "Latest event", latestEventValue: "2 hours ago", statusSummary: "Status summary",
+    statusSummaryDescription: "Based on the latest public data and monitoring result.", updatedAt: "Updated at 14:32",
+    summaryText: "The website and public channel are currently reachable. Two brief incidents were recorded in the past 30 days and both recovered; current evidence does not justify raising the risk level.",
+    recentEvents: "Recent activity", eventsDescription: "Changes are ordered by time, with findings separated from sources.", viewAll: "View all",
+    todayTime: "Today 09:42", eventOneTitle: "Hong Kong node latency recovered", eventOneBody: "HK-02 latency fell from 328ms to 89ms.",
+    monitorSystem: "Monitoring system", yesterdayTime: "Yesterday 23:18", eventTwoTitle: "Maintenance notice published",
+    eventTwoBody: "The maintenance window is scheduled for July 13, 02:00–03:00.", publicChannel: "Public channel", dateTime: "July 9",
+    eventThreeTitle: "Primary domain certificate renewed", eventThreeBody: "The certificate authority did not change.", certificateMonitor: "Certificate monitor",
+    currentObject: "Current entity", closeInspector: "Close properties panel", status: "Status", operatingStatus: "Operating status",
+    riskLevel: "Risk level", watch: "Watch", lastScan: "Last scan", lastScanValue: "3 minutes ago", operations: "Operations",
+    firstRecorded: "First recorded", primaryRegion: "Primary region", eastAsia: "East Asia", relatedDomains: "Related domains",
+    fourItems: "4 items", evidence: "Evidence", evidenceCount: "Evidence count", sourceCount: "Source count",
+    confidence: "Evidence confidence", confidenceDefinition: "This score describes confidence in the current evidence sources, not the overall safety level of the entity.",
+    switchToLight: "Switch to light mode", switchToDark: "Switch to dark mode",
+    followedTitle: "Added to following", followedDescription: "Changes to Alpha Network will appear in your followed view.", undo: "Undo", undone: "Follow removed",
+    scanTitle: "Scan created", scanDescription: "Public endpoints and monitoring nodes will be checked.", viewTask: "View task", taskOpened: "Scan task opened",
+  },
+};
+
+function currentLocale() {
+  return root.dataset.locale === "en" ? "en" : "zh";
+}
+
+function translate(locale, persist = true) {
+  const messages = copy[locale];
+  root.dataset.locale = locale;
+  root.lang = locale === "zh" ? "zh-CN" : "en";
+  for (const element of document.querySelectorAll("[data-i18n]")) {
+    const value = messages[element.dataset.i18n];
+    if (value) element.textContent = value;
+  }
+  for (const element of document.querySelectorAll("[data-i18n-aria]")) {
+    const value = messages[element.dataset.i18nAria];
+    if (value) element.setAttribute("aria-label", value);
+  }
+  for (const button of localeButtons) {
+    const active = button.dataset.localeValue === locale;
+    button.setAttribute("aria-current", active ? "true" : "false");
+  }
+  updateThemeSwitch(root.dataset.theme);
+  if (persist) localStorage.setItem("kin-reference-locale", locale);
+  if (sonnerModulePromise) sonnerModulePromise.then((module) => module.updateToasterTheme(root.dataset.theme, locale));
+}
+
+function updateThemeSwitch(theme) {
+  const dark = theme === "dark";
+  themeSwitch.setAttribute("aria-checked", String(dark));
+  themeSwitch.setAttribute("aria-label", copy[currentLocale()][dark ? "switchToLight" : "switchToDark"]);
+}
 
 function applyTheme(preference, persist = true) {
   const theme = preference === "system" ? (media.matches ? "dark" : "light") : preference;
-  document.documentElement.dataset.theme = theme;
-  document.documentElement.dataset.themePreference = preference;
+  root.dataset.theme = theme;
+  root.dataset.themePreference = preference;
   themeColor.content = theme === "dark" ? "#08090a" : "#f6f7f8";
-  for (const button of themeButtons) {
-    button.setAttribute("aria-pressed", String(button.dataset.themeValue === preference));
-  }
+  updateThemeSwitch(theme);
   if (persist) localStorage.setItem("kin-reference-theme", preference);
+  if (sonnerModulePromise) sonnerModulePromise.then((module) => module.updateToasterTheme(theme, currentLocale()));
 }
 
-for (const button of themeButtons) {
-  button.addEventListener("click", () => applyTheme(button.dataset.themeValue));
-}
-
+themeSwitch.addEventListener("click", () => applyTheme(root.dataset.theme === "dark" ? "light" : "dark"));
 media.addEventListener("change", () => {
-  if (document.documentElement.dataset.themePreference === "system") applyTheme("system", false);
+  if (root.dataset.themePreference === "system") applyTheme("system", false);
+});
+
+function applyContrast(enabled, persist = true) {
+  root.dataset.contrast = enabled ? "more" : "normal";
+  contrastToggle.setAttribute("aria-pressed", String(enabled));
+  if (persist) localStorage.setItem("kin-reference-contrast", enabled ? "more" : "normal");
+}
+
+contrastToggle.addEventListener("click", () => applyContrast(root.dataset.contrast !== "more"));
+
+function setLanguageMenu(open, moveFocus = true) {
+  languageMenu.hidden = !open;
+  languageTrigger.setAttribute("aria-expanded", String(open));
+  if (!moveFocus) return;
+  if (open) languageMenu.querySelector('[role="menuitem"]').focus();
+  else languageTrigger.focus();
+}
+
+languageTrigger.addEventListener("click", () => setLanguageMenu(languageMenu.hidden));
+for (const button of localeButtons) {
+  button.addEventListener("click", () => {
+    translate(button.dataset.localeValue);
+    setLanguageMenu(false);
+  });
+}
+document.addEventListener("click", (event) => {
+  if (!languageMenu.hidden && !languageControl.contains(event.target)) setLanguageMenu(false, false);
 });
 
 addEventListener("storage", (event) => {
   if (event.key === "kin-reference-theme") applyTheme(event.newValue || "system", false);
   if (event.key === "kin-reference-contrast") applyContrast(event.newValue === "more", false);
+  if (event.key === "kin-reference-locale") translate(event.newValue === "en" ? "en" : "zh", false);
 });
-
-applyTheme(document.documentElement.dataset.themePreference || "system", false);
-
-function applyContrast(enabled, persist = true) {
-  document.documentElement.dataset.contrast = enabled ? "more" : "normal";
-  contrastToggle.setAttribute("aria-pressed", String(enabled));
-  if (persist) localStorage.setItem("kin-reference-contrast", enabled ? "more" : "normal");
-}
-
-contrastToggle.addEventListener("click", () => {
-  applyContrast(document.documentElement.dataset.contrast !== "more");
-});
-
-applyContrast(localStorage.getItem("kin-reference-contrast") === "more", false);
 
 function setInspector(open, moveFocus = true) {
   appShell.classList.toggle("inspector-closed", !open);
@@ -52,7 +172,7 @@ function setInspector(open, moveFocus = true) {
   inspector.hidden = !open;
   inspectorOpen.setAttribute("aria-expanded", String(open));
   if (moveFocus) {
-    if (open) inspector.querySelector("button").focus();
+    if (open) inspectorClose.focus();
     else inspectorOpen.focus();
   }
 }
@@ -61,8 +181,54 @@ inspectorOpen.addEventListener("click", () => setInspector(true));
 inspectorClose.addEventListener("click", () => setInspector(false));
 
 document.addEventListener("keydown", (event) => {
-  if (event.key === "Escape" && !inspector.hidden) setInspector(false);
+  if (event.key === "Escape" && !languageMenu.hidden) {
+    setLanguageMenu(false);
+  } else if (event.key === "Escape" && !inspector.hidden) {
+    setInspector(false);
+  }
 });
 
+async function showToast(kind) {
+  sonnerModulePromise ??= import("../../site/assets/sonner-island.js");
+  const module = await sonnerModulePromise;
+  const messages = copy[currentLocale()];
+  const isFollow = kind === "follow";
+  module.showKinToast({
+    title: messages[isFollow ? "followedTitle" : "scanTitle"],
+    description: messages[isFollow ? "followedDescription" : "scanDescription"],
+    actionLabel: messages[isFollow ? "undo" : "viewTask"],
+    undoTitle: messages[isFollow ? "undone" : "taskOpened"],
+    theme: root.dataset.theme,
+    locale: currentLocale(),
+  });
+}
+
+for (const trigger of document.querySelectorAll("[data-toast]")) {
+  trigger.addEventListener("click", () => showToast(trigger.dataset.toast));
+}
+
 compactLayout.addEventListener("change", (event) => setInspector(!event.matches, false));
+applyTheme(root.dataset.themePreference || "system", false);
+applyContrast(root.dataset.contrast === "more", false);
+translate(root.dataset.locale === "en" ? "en" : "zh", false);
 setInspector(!compactLayout.matches, false);
+
+createIcons({
+  icons: {
+    Activity,
+    Check,
+    Contrast,
+    Database,
+    Languages,
+    LayoutDashboard,
+    Moon,
+    PanelRight,
+    ScanLine,
+    Search,
+    Star,
+    Sun,
+    TriangleAlert,
+    X,
+  },
+  attrs: { "aria-hidden": "true", "stroke-width": "1.5" },
+});
