@@ -1,0 +1,23 @@
+import fs from "node:fs";
+import path from "node:path";
+import process from "node:process";
+
+const root = process.cwd();
+const output = path.join(root, ".site-dist");
+const sources = [
+  ["site", "."],
+  ["examples", "examples"],
+  ["tokens", "tokens"],
+];
+
+fs.rmSync(output, { recursive: true, force: true });
+fs.mkdirSync(output, { recursive: true });
+
+for (const [source, destination] of sources) {
+  const from = path.join(root, source);
+  const to = path.join(output, destination);
+  if (!fs.existsSync(from)) throw new Error(`Site source is missing: ${source}`);
+  fs.cpSync(from, to, { recursive: true, force: true });
+}
+
+console.log(`KIN showcase built: ${path.relative(root, output)}`);

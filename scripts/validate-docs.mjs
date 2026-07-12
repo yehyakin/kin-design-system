@@ -3,7 +3,7 @@ import path from "node:path";
 import process from "node:process";
 
 const root = process.cwd();
-const ignored = new Set([".git", "node_modules", "dist", "build", "coverage"]);
+const ignored = new Set([".git", ".site-dist", "node_modules", "dist", "build", "coverage"]);
 const required = [
   "DESIGN.md",
   "README.md",
@@ -29,7 +29,11 @@ const required = [
   "playwright.config.js",
   "tests/visual/workspace.spec.js",
   "tests/tooling.test.mjs",
+  "tests/visual/site.spec.js",
   "scripts/audit-project.mjs",
+  "scripts/build-site.mjs",
+  "scripts/serve-site.mjs",
+  "scripts/validate-site.mjs",
   "scripts/check-adoption.mjs",
   "scripts/export-figma-variables.mjs",
   "scripts/init-adoption.mjs",
@@ -41,6 +45,11 @@ const required = [
   "examples/product-patterns/information.html",
   "examples/product-patterns/ecommerce.html",
   "examples/product-patterns/canvas.html",
+  "site/index.html",
+  "site/zh/index.html",
+  "site/assets/site.css",
+  "site/assets/site.js",
+  ".github/workflows/deploy-pages.yml",
 ];
 
 function walk(directory) {

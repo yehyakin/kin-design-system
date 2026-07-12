@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="en" data-theme="dark" data-theme-preference="system" data-contrast="normal">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#08090a">
+  <meta name="description" content="KIN is an open interface design system for clear, focused websites, applications, and professional workspaces.">
+  <meta property="og:title" content="KIN Design System">
+  <meta property="og:description" content="A practical interface system for clear, focused websites and applications.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://yehyakin.github.io/kin-design-system/">
+  <meta property="og:image" content="https://yehyakin.github.io/kin-design-system/assets/og-card.svg">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://yehyakin.github.io/kin-design-system/">
+  <link rel="alternate" hreflang="en" href="https://yehyakin.github.io/kin-design-system/">
+  <link rel="alternate" hreflang="zh-CN" href="https://yehyakin.github.io/kin-design-system/zh/">
+  <link rel="alternate" hreflang="x-default" href="https://yehyakin.github.io/kin-design-system/">
+  <link rel="icon" href="assets/mark.svg" type="image/svg+xml">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="assets/site.css">
+  <script>
+    (() => {
+      const preference = localStorage.getItem("kin-site-theme") || "system";
+      const theme = preference === "system" ? (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light") : preference;
+      document.documentElement.dataset.themePreference = preference;
+      document.documentElement.dataset.theme = theme;
+      document.documentElement.dataset.contrast = localStorage.getItem("kin-site-contrast") === "more" ? "more" : "normal";
+    })();
+  </script>
+  <title>KIN Design System</title>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <a class="brand" href="#overview" aria-label="KIN Design System home">
+      <span class="brand-mark" aria-hidden="true">KIN</span>
+      <span class="brand-copy"><strong>KIN</strong><small>Design System 2.0</small></span>
+    </a>
+    <div class="header-center">
+      <button class="command-trigger" type="button" data-command-trigger aria-haspopup="dialog">
+        <span>Search sections and resources</span><kbd>Ctrl K</kbd>
+      </button>
+    </div>
+    <div class="header-actions">
+      <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="docs-nav" aria-label="Open navigation">Menu</button>
+      <a class="language-link" href="zh/" lang="zh-CN" hreflang="zh-CN" aria-label="阅读中文版">中文</a>
+      <div class="theme-control" aria-label="Appearance">
+        <button type="button" data-theme-value="light" aria-pressed="false">Light</button>
+        <button type="button" data-theme-value="dark" aria-pressed="false">Dark</button>
+        <button type="button" data-theme-value="system" aria-pressed="true">Auto</button>
+      </div>
+      <button class="contrast-toggle" type="button" data-contrast-toggle aria-pressed="false" aria-label="Increase contrast">Contrast</button>
+      <a class="github-link" href="https://github.com/yehyakin/kin-design-system" aria-label="KIN on GitHub"><span>GitHub</span></a>
+    </div>
+  </header>
+
+  <div class="docs-shell">
+    <nav class="docs-nav" id="docs-nav" aria-label="Documentation">
+      <div class="nav-group">
+        <h2>Start here</h2>
+        <a href="#overview" aria-current="location">Overview</a>
+        <a href="#principles">Principles</a>
+      </div>
+      <div class="nav-group">
+        <h2>System</h2>
+        <a href="#foundations">Foundations</a>
+        <a href="#components">Components</a>
+        <a href="#patterns">Product patterns <span>4</span></a>
+        <a href="#ai-contract">AI behavior</a>
+      </div>
+      <div class="nav-group">
+        <h2>Use KIN</h2>
+        <a href="#agents">Coding tools</a>
+        <a href="#resources">Resources</a>
+      </div>
+      <p class="nav-footer">Open source · MIT<br>Contract version 2.0.0</p>
+    </nav>
+
+    <main class="docs-main" id="main">
+      <div class="content">
+        <section id="overview" aria-labelledby="overview-title">
+          <p class="eyebrow">KIN DESIGN SYSTEM / 2.0.0</p>
+          <h1 id="overview-title">Clear interfaces for work that needs attention.</h1>
+          <p class="lead">KIN is an open design system for websites and applications where people read, compare, decide, or act. It provides shared rules for structure, themes, interaction, accessibility, data, and AI-assisted work.</p>
+          <div class="intro-actions">
+            <a class="button primary" href="https://github.com/yehyakin/kin-design-system/blob/v2.0.0/DESIGN.md">Read the design contract</a>
+            <a class="button" href="#patterns">Explore product patterns</a>
+            <a class="button" href="examples/workspace-reference/">Open reference interface</a>
+          </div>
+          <dl class="intro-meta">
+            <div><dt>License</dt><dd>MIT</dd></div>
+            <div><dt>Themes</dt><dd>Light · Dark · System</dd></div>
+            <div><dt>Accessibility</dt><dd>WCAG AA baseline</dd></div>
+            <div><dt>Outputs</dt><dd>DTCG · Tailwind · Figma</dd></div>
+          </dl>
+        </section>
+
+        <hr class="section-rule">
+        <section class="content-section" id="principles" aria-labelledby="principles-title">
+          <div class="section-heading">
+            <h2 id="principles-title">Principles before components</h2>
+            <p>KIN keeps decisions consistent without forcing every product into one layout or visual template.</p>
+          </div>
+          <div class="principle-list">
+            <article class="principle"><span>01</span><h3>Content earns attention</h3><p>Visual weight follows the user’s task. Navigation and decoration step back once orientation is complete.</p></article>
+            <article class="principle"><span>02</span><h3>Structure is felt</h3><p>Alignment, spacing, surface levels, and restrained hairlines explain relationships without building a card wall.</p></article>
+            <article class="principle"><span>03</span><h3>Data has context</h3><p>Important values carry a definition, unit, time range, source, and an honest unknown or stale state.</p></article>
+            <article class="principle"><span>04</span><h3>People stay in control</h3><p>High-impact actions show scope and consequence. Suggestions, rules, facts, and executed automation remain distinct.</p></article>
+            <article class="principle"><span>05</span><h3>Dense, not crowded</h3><p>Professional interfaces remove repeated explanation and ornament before reducing readability or touch targets.</p></article>
+          </div>
+        </section>
+
+        <hr class="section-rule">
+        <section class="content-section" id="foundations" aria-labelledby="foundations-title">
+          <div class="section-heading">
+            <h2 id="foundations-title">Foundations</h2>
+            <p>The live values below respond to this page’s theme and contrast controls.</p>
+          </div>
+          <div class="foundation-block">
+            <div class="subheading"><h3>Surface ladder</h3><p>Hierarchy without heavy shadow</p></div>
+            <div class="surface-row" aria-label="Surface color levels">
+              <div class="surface-sample canvas"><strong>Canvas</strong>Application base</div>
+              <div class="surface-sample one"><strong>Surface 1</strong>Primary content</div>
+              <div class="surface-sample two"><strong>Surface 2</strong>Inset region</div>
+              <div class="surface-sample three"><strong>Surface 3</strong>Menu and overlay</div>
+              <div class="surface-sample four"><strong>Surface 4</strong>Highest surface</div>
+            </div>
+          </div>
+          <div class="foundation-block">
+            <div class="subheading"><h3>Semantic color</h3><p>Color communicates meaning, not decoration</p></div>
+            <div class="semantic-row" aria-label="Semantic colors">
+              <div class="semantic-item accent"><i></i>Action</div><div class="semantic-item monitor"><i></i>Monitor</div><div class="semantic-item positive"><i></i>Positive</div><div class="semantic-item warning"><i></i>Warning</div><div class="semantic-item negative"><i></i>Negative</div><div class="semantic-item offline"><i></i>Offline</div>
+            </div>
+          </div>
+          <div class="foundation-block">
+            <div class="subheading"><h3>Typography</h3><p>Compact application scale with readable body text</p></div>
+            <div class="type-specimen">
+              <div class="type-line"><span>Display</span><strong class="display">Quiet intelligence</strong><span>32 / 38 · 600</span></div>
+              <div class="type-line"><span>Page title</span><strong class="title">Current work and context</strong><span>20 / 26 · 600</span></div>
+              <div class="type-line"><span>Body</span><strong class="body">Interfaces should be clear before they are decorated.</strong><span>14 / 22 · 400</span></div>
+              <div class="type-line"><span>Metadata</span><strong class="meta">Source checked 12 July 2026</strong><span>12 / 17 · 400</span></div>
+            </div>
+          </div>
+          <div class="foundation-block">
+            <div class="subheading"><h3>Spacing</h3><p>4px base grid</p></div>
+            <div class="spacing-scale" aria-label="Spacing scale">
+              <span class="space-token"><i style="height:4px"></i>4</span><span class="space-token"><i style="height:8px"></i>8</span><span class="space-token"><i style="height:12px"></i>12</span><span class="space-token"><i style="height:16px"></i>16</span><span class="space-token"><i style="height:20px"></i>20</span><span class="space-token"><i style="height:24px"></i>24</span><span class="space-token"><i style="height:32px"></i>32</span><span class="space-token"><i style="height:48px"></i>48</span>
+            </div>
+          </div>
+        </section>
+
+        <hr class="section-rule">
+        <section class="content-section" id="components" aria-labelledby="components-title">
+          <div class="section-heading">
+            <h2 id="components-title">Component behavior</h2>
+            <p>States are part of the contract. Focus, selection, status, stale data, and error must remain separate.</p>
+          </div>
+          <div class="component-demo">
+            <div class="demo-toolbar" aria-label="Button examples">
+              <button class="primary-button" type="button">Save changes</button><button type="button">Preview</button><button class="ghost-button" type="button">More actions</button><button class="danger-button" type="button">Remove</button><button type="button" disabled>Unavailable</button>
+            </div>
+            <div class="field-demo">
+              <div class="field"><label for="project-name">Project name</label><input id="project-name" value="KIN reference"><small>Shown in the workspace header.</small></div>
+              <div class="field invalid"><label for="source-url">Source URL</label><input id="source-url" value="example"><small>Enter a complete URL including https://</small></div>
+            </div>
+            <div class="data-demo" role="table" aria-label="Entity rows">
+              <div class="data-row header" role="row"><span>Object</span><span>Status</span><span>Source</span><span>Updated</span></div>
+              <div class="data-row selected" role="row" aria-selected="true"><strong>Reference contract</strong><span class="status healthy">Current</span><span>Repository</span><span>2 min ago</span></div>
+              <div class="data-row" role="row"><strong>External evidence</strong><span class="status watch">Review</span><span>3 sources</span><span>Yesterday</span></div>
+              <div class="data-row" role="row"><strong>Archived decision</strong><span class="status">Stale</span><span>Unavailable</span><span>12 Jun</span></div>
+            </div>
+            <div class="metric-demo">
+              <div><span>Contract</span><strong>2.0.0</strong></div><div><span>Theme modes</span><strong>4</strong></div><div><span>Product patterns</span><strong>4</strong></div><div><span>Last reviewed</span><strong>12 Jul 2026</strong></div>
+            </div>
+          </div>
+        </section>
+
+        <hr class="section-rule">
+        <section class="content-section" id="patterns" aria-labelledby="patterns-title">
+          <div class="section-heading">
+            <h2 id="patterns-title">Patterns follow the task</h2>
+            <p>KIN does not make every product a three-column dashboard. Each pattern preserves the information and controls its task requires.</p>
+          </div>
+          <div class="pattern-tabs" role="tablist" aria-label="Product patterns" data-pattern-tabs>
+            <button id="tab-intelligence" role="tab" aria-selected="true" aria-controls="panel-intelligence">Intelligence</button>
+            <button id="tab-information" role="tab" aria-selected="false" aria-controls="panel-information" tabindex="-1">Information</button>
+            <button id="tab-commerce" role="tab" aria-selected="false" aria-controls="panel-commerce" tabindex="-1">Ecommerce</button>
+            <button id="tab-engineering" role="tab" aria-selected="false" aria-controls="panel-engineering" tabindex="-1">Engineering</button>
+          </div>
+          <div class="pattern-panel" id="panel-intelligence" role="tabpanel" aria-labelledby="tab-intelligence">
+            <div class="pattern-summary"><div><h3>Intelligence workspace</h3><p>Saved views, entity identity, chronology, evidence, properties, and reversible review decisions.</p></div><a class="button" href="examples/workspace-reference/">Open full reference</a></div>
+            <div class="pattern-preview"><div class="mini-workspace"><div class="mini-sidebar"><div class="mini-brand">KIN / Review</div><div class="mini-nav-item active">Entity database</div><div class="mini-nav-item">Risk signals</div><div class="mini-nav-item">Evidence queue</div></div><div class="mini-main"><div class="mini-bar"><span>Entities / Atlas Record</span><span>Updated 2m</span></div><div class="mini-content"><h4 class="mini-title">Atlas Record</h4><p class="mini-copy">Current state, recent changes, and verified sources remain visible together.</p><div class="mini-metrics"><div><strong>Observed</strong><span>Status</span></div><div><strong>82 / 100</strong><span>Evidence</span></div><div><strong>3 sources</strong><span>Coverage</span></div></div><div class="mini-list"><div class="mini-row"><span>09:42</span><strong>Source restored</strong><span>Monitor</span></div><div class="mini-row"><span>Yesterday</span><strong>Record revised</strong><span>Reviewer</span></div></div></div></div><div class="mini-inspector"><h4>Properties</h4><div class="mini-property"><span>Risk</span><strong>Watch</strong></div><div class="mini-property"><span>Evidence</span><strong>82 / 100</strong></div><div class="mini-property"><span>Updated</span><strong>2 min ago</strong></div></div></div></div>
+          </div>
+          <div class="pattern-panel" id="panel-information" role="tabpanel" aria-labelledby="tab-information" hidden>
+            <div class="pattern-summary"><div><h3>Information site</h3><p>Reading order, provenance, search, stable URLs, correction history, and content that remains useful without decoration.</p></div><a class="button" href="examples/product-patterns/information.html">Open full reference</a></div>
+            <div class="pattern-preview"><div class="mini-article-layout"><div class="mini-topic">Topics<br><br>Current record<br>Related records<br>Archive</div><article class="mini-article"><h4>A record with visible sources</h4><p>Readers can identify the subject, currency, origin, and next navigation step before promotional content competes for attention.</p><p>The article remains readable when images, motion, or generated summaries are unavailable.</p></article><aside class="mini-source">Sources<br><br>[1] Primary record<br>[2] Revision log<br><br>Last checked<br>12 Jul 2026</aside></div></div>
+          </div>
+          <div class="pattern-panel" id="panel-commerce" role="tabpanel" aria-labelledby="tab-commerce" hidden>
+            <div class="pattern-summary"><div><h3>Ecommerce operations</h3><p>Products, money, inventory, channels, approvals, and automation stay distinct so operators can act safely.</p></div><a class="button" href="examples/product-patterns/ecommerce.html">Open full reference</a></div>
+            <div class="pattern-preview"><div class="mini-workspace mini-commerce"><div class="mini-sidebar"><div class="mini-brand">Store / Operations</div><div class="mini-nav-item active">Products</div><div class="mini-nav-item">Inventory</div><div class="mini-nav-item">Approvals</div></div><div class="mini-main"><div class="mini-bar"><span>Product operations</span><span>24 records</span></div><div class="mini-content"><div class="mini-metrics"><div><strong>18</strong><span>Active</span></div><div><strong>4</strong><span>Review</span></div><div><strong>2</strong><span>Blocked</span></div></div><div class="mini-commerce-table"><div class="mini-commerce-row"><strong>Studio lamp</strong><span>USD 84</span><span>12 available</span></div><div class="mini-commerce-row"><strong>Desk tray</strong><span>USD 32</span><span>Review</span></div><div class="mini-commerce-row"><strong>Wall shelf</strong><span>USD 120</span><span>Low stock</span></div></div></div></div><div class="mini-inspector"><h4>Selected product</h4><div class="mini-property"><span>Channel</span><strong>Web</strong></div><div class="mini-property"><span>Approval</span><strong>Pending</strong></div><div class="mini-property"><span>Inventory</span><strong>12</strong></div></div></div></div>
+          </div>
+          <div class="pattern-panel" id="panel-engineering" role="tabpanel" aria-labelledby="tab-engineering" hidden>
+            <div class="pattern-summary"><div><h3>Engineering canvas</h3><p>Tools, structure, geometry, units, constraints, revisions, and generated changes support precision without competing with the canvas.</p></div><a class="button" href="examples/product-patterns/canvas.html">Open full reference</a></div>
+            <div class="pattern-preview"><div class="mini-canvas"><div class="mini-tools"><div class="mini-tool active">S</div><div class="mini-tool">L</div><div class="mini-tool">M</div></div><div class="mini-layers"><strong>Layers</strong><div class="mini-layer">Frame</div><div class="mini-layer">Panel</div><div class="mini-layer">Fasteners</div></div><div class="mini-drawing"><div class="mini-geometry"></div></div><div class="mini-properties"><strong>Properties</strong><br><br>Width&nbsp;&nbsp; 640 mm<br>Height&nbsp; 420 mm<br>Unit&nbsp;&nbsp;&nbsp; mm<br><br>Generated change<br>Awaiting review</div></div></div>
+          </div>
+        </section>
+
+        <hr class="section-rule">
+        <section class="content-section" id="ai-contract" aria-labelledby="ai-title">
+          <div class="section-heading"><h2 id="ai-title">AI behavior is a product contract</h2><p>AI is useful when its source, uncertainty, scope, and effect stay visible. It is not a visual theme.</p></div>
+          <div class="ai-contract">
+            <div class="ai-row"><strong>Conclusion</strong><p>State the recommendation or result without presenting inference as confirmed fact.</p></div>
+            <div class="ai-row"><strong>Evidence</strong><p>Link the records, rules, inputs, and sources that support the result.</p></div>
+            <div class="ai-row"><strong>Uncertainty</strong><p>Expose missing, conflicting, stale, or model-estimated information.</p></div>
+            <div class="ai-row"><strong>Action</strong><p>Offer a previewable next step with scope, confirmation, audit history, and rollback where possible.</p></div>
+          </div>
+        </section>
+
+        <hr class="section-rule">
+        <section class="content-section" id="agents" aria-labelledby="agents-title">
+          <div class="section-heading"><h2 id="agents-title">Give coding tools a design contract</h2><p>Pin an exact KIN version, keep a local contract copy, and record the project’s own decisions instead of relying on a vague style prompt.</p></div>
+          <div class="code-block"><button class="copy-button" type="button" data-copy="agent-prompt" data-success="Prompt copied." data-failure="Copy failed. Select the text manually." aria-describedby="copy-status">Copy</button><code id="agent-prompt">Read DESIGN.md completely before changing UI.
+
+Treat it as a normative product design contract. Start from the real user task,
+entity model, data states, and existing components. Preserve themes, mobile,
+keyboard, accessibility, real APIs, and human control.</code></div>
+          <p class="inline-status" id="copy-status" role="status" aria-live="polite"></p>
+          <div class="intro-actions"><a class="button primary" href="https://github.com/yehyakin/kin-design-system/tree/v2.0.0/skills/kin-design">Open the Agent Skill</a><a class="button" href="https://github.com/yehyakin/kin-design-system/tree/v2.0.0/adoption">Read adoption guide</a></div>
+        </section>
+
+        <hr class="section-rule">
+        <section class="content-section" id="resources" aria-labelledby="resources-title">
+          <div class="section-heading"><h2 id="resources-title">Use the source of truth</h2><p>Normative documentation and generated files are versioned together and checked in CI.</p></div>
+          <div class="resource-list">
+            <a class="resource-link" href="https://github.com/yehyakin/kin-design-system/blob/v2.0.0/DESIGN.md"><strong>DESIGN.md</strong><span>Normative principles, Tokens, behavior, accessibility, and delivery contract.</span><b>Read</b></a>
+            <a class="resource-link" href="tokens/kin.tokens.json"><strong>DTCG Tokens</strong><span>Machine-readable theme, typography, spacing, radius, and component primitives.</span><b>Download</b></a>
+            <a class="resource-link" href="tokens/kin.tailwind.css"><strong>Tailwind Tokens</strong><span>Generated CSS variables and Tailwind-compatible theme values.</span><b>Download</b></a>
+            <a class="resource-link" href="tokens/kin.figma.variables.json"><strong>Figma Variables</strong><span>Create-only payload with light, dark, and high-contrast modes.</span><b>Download</b></a>
+            <a class="resource-link" href="examples/workspace-reference/states.html"><strong>State reference</strong><span>Inputs, data rows, feedback, dialog, focus, and Command Menu behavior.</span><b>Open</b></a>
+            <a class="resource-link" href="https://github.com/yehyakin/kin-design-system/releases/tag/v2.0.0"><strong>Release 2.0.0</strong><span>Versioned release notes and immutable source tag.</span><b>View</b></a>
+          </div>
+        </section>
+
+        <footer class="site-footer"><div><span>KIN Design System · MIT License</span><span>Designed for careful work, maintained in public.</span></div></footer>
+      </div>
+    </main>
+
+    <aside class="section-rail" aria-label="On this page">
+      <h2>On this page</h2>
+      <a href="#overview">Overview</a><a href="#principles">Principles</a><a href="#foundations">Foundations</a><a href="#components">Components</a><a href="#patterns">Patterns</a><a href="#ai-contract">AI behavior</a><a href="#agents">Coding tools</a><a href="#resources">Resources</a>
+      <p class="release-note">KIN 2.0.0<br>Released 12 July 2026<br><br>Reference values are live and theme-aware.</p>
+    </aside>
+  </div>
+
+  <dialog class="command-dialog" data-command-dialog aria-label="Search KIN">
+    <div class="command-search"><input type="search" data-command-search placeholder="Search sections and resources" aria-label="Search commands"></div>
+    <div class="command-list">
+      <div class="command-group-label">Sections</div>
+      <a class="command-item" data-command-item href="#principles">Principles <span>Section</span></a>
+      <a class="command-item" data-command-item href="#foundations">Foundations and Tokens <span>Section</span></a>
+      <a class="command-item" data-command-item href="#components">Component behavior <span>Section</span></a>
+      <a class="command-item" data-command-item href="#patterns">Product patterns <span>Section</span></a>
+      <a class="command-item" data-command-item href="#ai-contract">AI behavior <span>Section</span></a>
+      <div class="command-group-label">Resources</div>
+      <a class="command-item" data-command-item href="https://github.com/yehyakin/kin-design-system/blob/v2.0.0/DESIGN.md">Design contract <span>GitHub</span></a>
+      <a class="command-item" data-command-item href="examples/workspace-reference/">Workspace reference <span>Demo</span></a>
+      <a class="command-item" data-command-item href="tokens/kin.tokens.json">DTCG Tokens <span>JSON</span></a>
+      <p class="command-empty" data-command-empty hidden>No matching section or resource.</p>
+    </div>
+  </dialog>
+  <script type="module" src="assets/site.js"></script>
+</body>
+</html>

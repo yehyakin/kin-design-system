@@ -9,7 +9,7 @@ const targetArg = args.find((arg) => !arg.startsWith("--")) ?? ".";
 const target = path.resolve(targetArg);
 const configPath = path.join(target, "kin.config.json");
 const defaultExcluded = [
-  ".git", "node_modules", "dist", "build", "out", "coverage", "test-results", "playwright-report", ".next",
+  ".git", ".site-dist", "node_modules", "dist", "build", "out", "coverage", "test-results", "playwright-report", ".next",
   "tests", "__tests__", "fixtures",
 ];
 const extensions = new Set([".css", ".scss", ".sass", ".less", ".html", ".htm", ".js", ".jsx", ".ts", ".tsx", ".vue", ".svelte"]);

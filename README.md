@@ -9,6 +9,11 @@
 </p>
 
 <p align="center">
+  <a href="https://yehyakin.github.io/kin-design-system/">Website</a> &nbsp;·&nbsp;
+  <a href="https://yehyakin.github.io/kin-design-system/zh/">中文展示页</a>
+</p>
+
+<p align="center">
   <a href="./DESIGN.md"><img src="https://img.shields.io/badge/Design_Contract-v2.0.0-5E6AD2" alt="KIN Design Contract v2.0.0" /></a>
   <a href="https://github.com/yehyakin/kin-design-system/actions/workflows/validate-docs.yml"><img src="https://github.com/yehyakin/kin-design-system/actions/workflows/validate-docs.yml/badge.svg" alt="Documentation validation" /></a>
   <a href="./LICENSE"><img src="https://img.shields.io/badge/License-MIT-232326" alt="MIT License" /></a>

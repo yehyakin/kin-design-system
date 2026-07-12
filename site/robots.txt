@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://yehyakin.github.io/kin-design-system/sitemap.xml

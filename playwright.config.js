@@ -16,8 +16,8 @@ export default defineConfig({
     trace: "retain-on-failure",
   },
   webServer: {
-    command: "node scripts/serve-reference.mjs",
-    url: "http://127.0.0.1:4173/examples/workspace-reference/",
+    command: "node scripts/build-site.mjs && node scripts/serve-site.mjs",
+    url: "http://127.0.0.1:4173/",
     reuseExistingServer: !process.env.CI,
     timeout: 30_000,
   },

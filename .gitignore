@@ -41,6 +41,7 @@ build/Release
 node_modules/
 playwright-report/
 test-results/
+.site-dist/
 jspm_packages/
 
 # Snowpack dependency directory (https://snowpack.dev/)

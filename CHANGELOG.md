@@ -6,7 +6,10 @@ The project follows semantic versioning for normative design documentation.
 
 ## Unreleased
 
-No changes yet.
+### Added
+
+- Added a bilingual, theme-aware KIN showcase site with live foundations, component states, product patterns, Agent guidance, and versioned resources.
+- Added a dependency-free static build, local server, link validation, Playwright coverage, and GitHub Pages deployment workflow.
 
 ## 2.0.0 — 2026-07-12
 
