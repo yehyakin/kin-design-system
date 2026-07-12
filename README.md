@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  <a href="./DESIGN.md"><img src="https://img.shields.io/badge/Design_Contract-v1.0.0-5E6AD2" alt="KIN Design Contract v1.0.0" /></a>
+  <a href="./DESIGN.md"><img src="https://img.shields.io/badge/Design_Contract-v2.0.0-5E6AD2" alt="KIN Design Contract v2.0.0" /></a>
   <a href="https://github.com/yehyakin/kin-design-system/actions/workflows/validate-docs.yml"><img src="https://github.com/yehyakin/kin-design-system/actions/workflows/validate-docs.yml/badge.svg" alt="Documentation validation" /></a>
   <a href="./LICENSE"><img src="https://img.shields.io/badge/License-MIT-232326" alt="MIT License" /></a>
 </p>
@@ -114,9 +114,27 @@ Read [`DESIGN.md`](./DESIGN.md) when planning or reviewing an interface. You can
 
 Add the design contract and relevant supporting files to a project's documentation. Record project-specific exceptions next to the contract instead of silently changing the rules.
 
+KIN 2.0 includes a non-destructive adoption record and a candidate audit:
+
+```bash
+node scripts/init-adoption.mjs ../your-project
+node scripts/check-adoption.mjs ../your-project
+node scripts/audit-project.mjs ../your-project
+```
+
+The audit reports code patterns for review; it does not prove a visual defect or rewrite source. See [`adoption/README.md`](./adoption/README.md) for the contract, exception format, and product profiles.
+
 ### Use it with a coding tool
 
-Give the tool the main contract before it edits the interface:
+Use the repository Skill when the coding tool supports Agent Skills:
+
+```text
+skills/kin-design/SKILL.md
+```
+
+The Skill classifies build, redesign, audit, and review tasks; loads only the relevant workflow; and requires visual and engineering evidence before claiming compliance.
+
+For tools without Skill support, give the tool the main contract before it edits the interface:
 
 ```md
 Read DESIGN.md before changing the interface.
@@ -147,6 +165,11 @@ Live metrics
   DESIGN.md
   integrations/liveline.md
   integrations/number-flow.md
+
+Information, ecommerce, intelligence, or canvas product work
+  DESIGN.md
+  matching file in patterns/
+  components/core-states.md
 ```
 
 [`AGENTS.md`](./AGENTS.md) contains repository-wide instructions for tools that support project instruction files.
@@ -156,10 +179,13 @@ Live metrics
 ```bash
 git clone https://github.com/yehyakin/kin-design-system.git
 cd kin-design-system
-node scripts/validate-docs.mjs
+npm ci
+npx playwright install chromium
+npm run validate
+npm run test:reference
 ```
 
-The validator has no package dependencies. It checks required files, local Markdown links, code fences, placeholder comments, and unresolved merge markers.
+Node.js 20.11 or newer is required for the repository tooling. The contract and documentation validators remain dependency-free. Playwright is a development-only dependency used for the reference interfaces.
 
 ## A practical design sequence
 
@@ -221,13 +247,26 @@ Each adopting project is responsible for checking the current version, license, 
 | Path | Purpose |
 |---|---|
 | [`DESIGN.md`](./DESIGN.md) | Normative design contract |
+| [`skills/kin-design/`](./skills/kin-design/) | Agent workflow, task routing, and audit protocol |
+| [`tokens/`](./tokens/) | Generated Tailwind CSS, DTCG, and Figma Variables interoperability output |
+| [`adoption/`](./adoption/) | Consuming-project configuration schema, example, and adoption guide |
+| [`scripts/audit-project.mjs`](./scripts/audit-project.mjs) | Read-only static candidate audit with human-review boundaries |
+| [`scripts/export-figma-variables.mjs`](./scripts/export-figma-variables.mjs) | Create-only Figma Variables REST payload generator |
+| [`components/core-states.md`](./components/core-states.md) | Normative component state and acceptance matrices |
+| [`examples/workspace-reference/`](./examples/workspace-reference/) | Framework-free light/dark responsive visual fixture |
+| [`patterns/`](./patterns/) | Product contracts for information, intelligence, ecommerce, and engineering interfaces |
+| [`examples/product-patterns/`](./examples/product-patterns/) | Distinct reference pages for information, ecommerce, and engineering products |
 | [`AGENTS.md`](./AGENTS.md) | Instructions for coding tools working in this repository |
 | [`REFERENCES.md`](./REFERENCES.md) | Source hierarchy, attribution, and third-party adoption |
 | [`principles/`](./principles/) | Interaction, visual review, hierarchy, density, and composition |
 | [`integrations/`](./integrations/) | Rules for optional UI libraries |
 | [`tools/`](./tools/) | Boundaries for brand motion and long-task loaders |
 | [`CONTRIBUTING.md`](./CONTRIBUTING.md) | Contribution and versioning rules |
-| [`ROADMAP.md`](./ROADMAP.md) | Planned tokens, examples, patterns, and tooling |
+| [`scripts/validate-design.mjs`](./scripts/validate-design.mjs) | Token, reference, theme-parity, and contrast checks |
+| [`scripts/report-token-changes.mjs`](./scripts/report-token-changes.mjs) | Machine-readable Token changes against a Git reference |
+| [`tests/visual/`](./tests/visual/) | Automated responsive, theme, focus, and overlay checks |
+| [`ROADMAP.md`](./ROADMAP.md) | Planned examples, patterns, exports, and tooling |
+| [`RELEASING.md`](./RELEASING.md) | Release checks, tag order, repository settings, and rollback |
 | [`CHANGELOG.md`](./CHANGELOG.md) | User-visible changes |
 
 ## Languages
@@ -239,9 +278,9 @@ Translations are maintained as complete documents. A language should not be adde
 
 ## Status and roadmap
 
-Version 1.0 provides the design contract, reference governance, integration notes, repository guidance, and documentation validation.
+Version 2.0 adds design-tool interoperability, a review-first static audit, and a versioned adoption contract. It keeps the 1.4 product profiles and reference interfaces while making project integration more explicit and testable.
 
-Planned work includes framework-neutral design tokens, CSS output, reference component states, worked product examples, Figma token export, and Agent tooling. See [`ROADMAP.md`](./ROADMAP.md) for the current plan and non-goals.
+Planned work now depends on evidence from real adoptions rather than adding more universal rules. See [`ROADMAP.md`](./ROADMAP.md) for the current plan and non-goals.
 
 ## Contributing
 
@@ -251,6 +290,11 @@ Before opening a pull request:
 
 ```bash
 node scripts/validate-docs.mjs
+node scripts/validate-design.mjs
+node scripts/export-tokens.mjs --check
+node scripts/export-figma-variables.mjs --check
+npm run test:tooling
+npm run test:reference
 ```
 
 Update [`CHANGELOG.md`](./CHANGELOG.md) when a change affects readers or adopting products.

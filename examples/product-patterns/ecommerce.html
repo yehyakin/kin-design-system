@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="dark" data-contrast="normal">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#08090a" />
+    <title>KIN Ecommerce Operations Reference</title>
+    <script>
+      (()=>{const p=localStorage.getItem("kin-reference-theme")||"system";const t=p==="system"?(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light"):p;document.documentElement.dataset.theme=t;document.documentElement.dataset.themePreference=p;document.documentElement.dataset.contrast=localStorage.getItem("kin-reference-contrast")==="more"?"more":"normal"})();
+    </script>
+    <link rel="stylesheet" href="./patterns.css" />
+    <script src="./theme.js" defer></script>
+  </head>
+  <body>
+    <div class="commerce-shell">
+      <aside class="commerce-sidebar" aria-label="电商工作区导航">
+        <header class="commerce-brand"><strong>Merch Desk</strong><span>电商运营</span></header>
+        <nav class="commerce-nav"><a href="#overview">概览</a><a href="#catalog" aria-current="page">商品 <span>284</span></a><a href="#inventory">库存 <span>12</span></a><a href="#orders">订单 <span>36</span></a><a href="#campaigns">活动 <span>4</span></a><a href="#approvals">待审批 <span>7</span></a></nav>
+      </aside>
+
+      <main class="commerce-main">
+        <header class="commerce-bar">
+          <div><p class="location-path">商品目录 / 全部商品</p><h1>商品运营</h1></div>
+          <div class="commerce-tools"><button type="button">筛选</button><button type="button">导出</button><button type="button" class="primary-action">新建商品</button></div>
+        </header>
+        <section class="commerce-summary" aria-label="当前队列摘要"><div><span>当前视图</span><strong>284 个商品</strong></div><div><span>低库存</span><strong>12</strong></div><div><span>待审批</span><strong>7</strong></div><div><span>同步失败</span><strong>2</strong></div></section>
+
+        <div class="commerce-table" role="grid" aria-label="商品列表">
+          <div class="commerce-row header" role="row"><span role="columnheader"></span><span role="columnheader">商品</span><span role="columnheader">售价</span><span role="columnheader">可售</span><span role="columnheader">渠道状态</span><span role="columnheader">更新</span></div>
+          <div class="commerce-row" role="row" tabindex="0"><span role="gridcell"><label class="checkbox-target"><input type="checkbox" aria-label="选择 Linen Overshirt" /></label></span><strong role="gridcell">Linen Overshirt<br /><small>SKU OS-041</small></strong><span class="money" role="gridcell">CNY 699.00</span><span class="quantity" role="gridcell">84</span><span role="gridcell"><i class="status-dot positive"></i>3 个渠道</span><span role="gridcell">8 分钟前</span></div>
+          <div class="commerce-row selected" role="row" tabindex="0" aria-selected="true"><span role="gridcell"><label class="checkbox-target"><input type="checkbox" aria-label="选择 Field Jacket" /></label></span><strong role="gridcell">Field Jacket<br /><small>SKU FJ-018</small></strong><span class="money" role="gridcell">CNY 1,299.00</span><span class="quantity" role="gridcell">6</span><span role="gridcell"><i class="status-dot warning"></i>待补货</span><span role="gridcell">12 分钟前</span></div>
+          <div class="commerce-row" role="row" tabindex="0"><span role="gridcell"><label class="checkbox-target"><input type="checkbox" aria-label="选择 Canvas Tote" /></label></span><strong role="gridcell">Canvas Tote<br /><small>SKU CT-102</small></strong><span class="money" role="gridcell">CNY 329.00</span><span class="quantity" role="gridcell">128</span><span role="gridcell"><i class="status-dot positive"></i>3 个渠道</span><span role="gridcell">19 分钟前</span></div>
+          <div class="commerce-row" role="row" tabindex="0"><span role="gridcell"><label class="checkbox-target"><input type="checkbox" aria-label="选择 Wool Cap" /></label></span><strong role="gridcell">Wool Cap<br /><small>SKU WC-033</small></strong><span class="money" role="gridcell">CNY 269.00</span><span class="quantity" role="gridcell">0</span><span role="gridcell"><i class="status-dot negative"></i>已售罄</span><span role="gridcell">24 分钟前</span></div>
+        </div>
+      </main>
+
+      <aside class="commerce-inspector" aria-labelledby="product-title">
+        <header><p class="object-id">SKU FJ-018</p><h2 id="product-title">Field Jacket</h2></header>
+        <section><h3>销售状态</h3><dl><div><dt>内部状态</dt><dd>已启用</dd></div><div><dt>渠道发布</dt><dd>2 / 3</dd></div><div><dt>售价</dt><dd>CNY 1,299.00</dd></div><div><dt>可售库存</dt><dd>6</dd></div><div><dt>已预留</dt><dd>4</dd></div></dl></section>
+        <section><h3>库存位置</h3><dl><div><dt>上海</dt><dd>4 可售</dd></div><div><dt>深圳</dt><dd>2 可售</dd></div><div><dt>在途</dt><dd>24 · 7 月 15 日</dd></div></dl></section>
+        <section><h3>审批</h3><div class="approval"><strong>价格调整等待审批</strong><span>建议从 CNY 1,399.00 调整为 CNY 1,299.00；尚未发布到任何渠道。</span></div></section>
+        <section class="pattern-theme-actions"><div class="theme-control" role="group" aria-label="界面主题"><button type="button" data-theme-value="light">日间</button><button type="button" data-theme-value="dark">夜间</button><button type="button" data-theme-value="system">系统</button></div><button type="button" data-contrast-toggle aria-pressed="false">高对比</button></section>
+      </aside>
+    </div>
+  </body>
+</html>

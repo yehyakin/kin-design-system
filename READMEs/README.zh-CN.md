@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  <a href="../DESIGN.md"><img src="https://img.shields.io/badge/Design_Contract-v1.0.0-5E6AD2" alt="KIN Design Contract v1.0.0" /></a>
+  <a href="../DESIGN.md"><img src="https://img.shields.io/badge/Design_Contract-v2.0.0-5E6AD2" alt="KIN Design Contract v2.0.0" /></a>
   <a href="https://github.com/yehyakin/kin-design-system/actions/workflows/validate-docs.yml"><img src="https://github.com/yehyakin/kin-design-system/actions/workflows/validate-docs.yml/badge.svg" alt="Documentation validation" /></a>
   <a href="../LICENSE"><img src="https://img.shields.io/badge/License-MIT-232326" alt="MIT License" /></a>
 </p>
@@ -114,9 +114,27 @@ KIN 为常见问题提供一套共用答案：
 
 把主规范和需要的支持文档加入项目文档。项目确实需要例外时，应记录例外和原因，而不是悄悄改变规则。
 
+KIN 2.0 提供不覆盖现有文件的接入记录和候选问题审计：
+
+```bash
+node scripts/init-adoption.mjs ../your-project
+node scripts/check-adoption.mjs ../your-project
+node scripts/audit-project.mjs ../your-project
+```
+
+审计器只把代码模式列为待复核项，不会把正则命中当成视觉结论，也不会自动改写源码。接入合同、例外格式和产品类型见 [`adoption/README.md`](../adoption/README.md)。
+
 ### 交给编码工具使用
 
-让工具在修改界面前先读取主规范：
+编码工具支持 Agent Skill 时，使用仓库中的：
+
+```text
+skills/kin-design/SKILL.md
+```
+
+Skill 会区分新建、保留式改造、整体改造、审计和设计评审，只加载当前任务需要的流程，并要求提供视觉与工程证据后才能声称符合 KIN。
+
+不支持 Skill 的工具，仍应在修改界面前先读取主规范：
 
 ```md
 修改界面前先阅读 DESIGN.md。
@@ -147,6 +165,11 @@ KIN 为常见问题提供一套共用答案：
   DESIGN.md
   integrations/liveline.md
   integrations/number-flow.md
+
+信息网站、电商、情报或工程画布产品
+  DESIGN.md
+  patterns/ 中匹配的产品模式
+  components/core-states.md
 ```
 
 支持项目指令文件的工具可以直接读取 [`AGENTS.md`](../AGENTS.md)。
@@ -156,10 +179,13 @@ KIN 为常见问题提供一套共用答案：
 ```bash
 git clone https://github.com/yehyakin/kin-design-system.git
 cd kin-design-system
-node scripts/validate-docs.mjs
+npm ci
+npx playwright install chromium
+npm run validate
+npm run test:reference
 ```
 
-校验脚本没有包依赖。它会检查必要文件、本地 Markdown 链接、代码块、占位注释和未解决的合并标记。
+仓库工具需要 Node.js 20.11 或更高版本。设计合同和文档校验器仍然没有包依赖。Playwright 只作为参考界面的开发测试依赖。
 
 ## 一套实际的设计顺序
 
@@ -221,13 +247,26 @@ KIN 建议按照下面的顺序解决界面问题：
 | 路径 | 用途 |
 |---|---|
 | [`DESIGN.md`](../DESIGN.md) | 规范性设计合同 |
+| [`skills/kin-design/`](../skills/kin-design/) | Agent 工作流、任务路由和审计协议 |
+| [`tokens/`](../tokens/) | 生成的 Tailwind CSS、DTCG 与 Figma Variables 互操作文件 |
+| [`adoption/`](../adoption/) | 接入项目的配置 Schema、示例和使用说明 |
+| [`scripts/audit-project.mjs`](../scripts/audit-project.mjs) | 带人工复核边界的只读静态候选审计 |
+| [`scripts/export-figma-variables.mjs`](../scripts/export-figma-variables.mjs) | 生成 create-only Figma Variables REST 请求体 |
+| [`components/core-states.md`](../components/core-states.md) | 规范性组件状态与验收矩阵 |
+| [`examples/workspace-reference/`](../examples/workspace-reference/) | 无框架、支持明暗主题和响应式的视觉基准页 |
+| [`patterns/`](../patterns/) | 信息、情报、电商和工程界面的产品合同 |
+| [`examples/product-patterns/`](../examples/product-patterns/) | 信息、电商和工程产品的差异化参考页 |
 | [`AGENTS.md`](../AGENTS.md) | 编码工具在本仓库内使用的指令 |
 | [`REFERENCES.md`](../REFERENCES.md) | 来源优先级、引用和第三方采用规则 |
 | [`principles/`](../principles/) | 交互、视觉检查、层级、密度和构图 |
 | [`integrations/`](../integrations/) | 可选 UI 库的使用规则 |
 | [`tools/`](../tools/) | 品牌动效和长任务加载器的边界 |
 | [`CONTRIBUTING.md`](../CONTRIBUTING.md) | 贡献和版本规则 |
-| [`ROADMAP.md`](../ROADMAP.md) | 计划中的 Token、示例、产品模式和工具 |
+| [`scripts/validate-design.mjs`](../scripts/validate-design.mjs) | Token、引用、主题一致性和对比度检查 |
+| [`scripts/report-token-changes.mjs`](../scripts/report-token-changes.mjs) | 对比 Git 基准的机器可读 Token 变更报告 |
+| [`tests/visual/`](../tests/visual/) | 响应式、主题、焦点和浮层自动检查 |
+| [`ROADMAP.md`](../ROADMAP.md) | 计划中的示例、产品模式、导出和工具 |
+| [`RELEASING.md`](../RELEASING.md) | 发布检查、Tag 顺序、仓库设置和回滚流程 |
 | [`CHANGELOG.md`](../CHANGELOG.md) | 面向使用者的变更记录 |
 
 ## 语言
@@ -239,9 +278,9 @@ KIN 建议按照下面的顺序解决界面问题：
 
 ## 当前状态与路线图
 
-1.0 版本包含设计合同、来源治理、组件接入说明、仓库使用文档和文档校验。
+2.0 版本加入设计工具互操作、以人工复核为前提的静态审计，以及可固定版本的项目接入合同。它继续保留 1.4 的产品类型和参考界面，并让项目接入方式更加明确、可检查。
 
-后续计划包括框架无关的设计 Token、CSS 输出、参考组件状态、完整产品示例、Figma Token 导出和 Agent 工具。当前计划与非目标见 [`ROADMAP.md`](../ROADMAP.md)。
+后续工作将优先依据真实项目的接入结果，而不是继续增加通用规则。当前计划与非目标见 [`ROADMAP.md`](../ROADMAP.md)。
 
 ## 参与贡献
 
@@ -251,6 +290,11 @@ KIN 建议按照下面的顺序解决界面问题：
 
 ```bash
 node scripts/validate-docs.mjs
+node scripts/validate-design.mjs
+node scripts/export-tokens.mjs --check
+node scripts/export-figma-variables.mjs --check
+npm run test:tooling
+npm run test:reference
 ```
 
 如果改动会影响读者或接入项目，请同步更新 [`CHANGELOG.md`](../CHANGELOG.md)。

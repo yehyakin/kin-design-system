@@ -23,5 +23,56 @@ jobs:
           node-version: 24
           package-manager-cache: false
 
+      - name: Install validation dependencies
+        run: npm ci
+
       - name: Validate documentation
         run: node scripts/validate-docs.mjs
+
+      - name: Validate design contract
+        run: node scripts/validate-design.mjs
+
+      - name: Validate release consistency
+        run: node scripts/validate-release.mjs
+
+      - name: Check generated tokens
+        run: node scripts/export-tokens.mjs --check
+
+      - name: Check Figma Variables payload
+        run: node scripts/export-figma-variables.mjs --check
+
+      - name: Test design tooling
+        run: node --test tests/tooling.test.mjs
+
+  reference:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install test dependencies
+        run: npm ci
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Test reference interfaces
+        run: npm run test:reference
+
+      - name: Upload reference screenshots
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: kin-reference-screenshots
+          path: |
+            test-results/**/*.png
+            playwright-report/
+          if-no-files-found: ignore
+          retention-days: 14

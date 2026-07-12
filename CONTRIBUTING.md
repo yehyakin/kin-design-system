@@ -56,9 +56,16 @@ Do not vendor external code or assets by default. Before adding an adapter, veri
 
 ```powershell
 node scripts/validate-docs.mjs
+node scripts/validate-design.mjs
+node scripts/validate-release.mjs
+node scripts/export-tokens.mjs --check
+node scripts/export-figma-variables.mjs --check
+npm run test:tooling
 ```
 
-The validator checks local Markdown links, paired fences, unresolved merge markers, placeholders and required repository files. Visual and product judgment still require human review.
+The validators check document structure, local links, required machine-readable Token groups, Token references, theme parity and baseline text contrast. Visual and product judgment still require human review.
+
+For Token changes, include the output of `node scripts/report-token-changes.mjs <base-ref>`. For component-state or reference-interface changes, run `npm run test:reference` and review the generated screenshots before opening the pull request.
 
 ## Versioning
 

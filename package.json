@@ -1,0 +1,31 @@
+{
+  "name": "kin-design-system",
+  "version": "2.0.0",
+  "description": "Design contracts, tokens, reference interfaces, and review tooling for information-rich products.",
+  "private": true,
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yehyakin/kin-design-system.git"
+  },
+  "engines": {
+    "node": ">=20.11"
+  },
+  "type": "module",
+  "scripts": {
+    "validate": "node scripts/validate-docs.mjs && node scripts/validate-design.mjs && node scripts/validate-release.mjs && node scripts/export-tokens.mjs --check && node scripts/export-figma-variables.mjs --check",
+    "tokens:export": "node scripts/export-tokens.mjs",
+    "tokens:check": "node scripts/export-tokens.mjs --check && node scripts/export-figma-variables.mjs --check",
+    "tokens:figma": "node scripts/export-figma-variables.mjs",
+    "adoption:init": "node scripts/init-adoption.mjs",
+    "adoption:check": "node scripts/check-adoption.mjs",
+    "test:reference": "playwright test",
+    "test:reference:update": "playwright test --update-snapshots",
+    "test:tooling": "node --test tests/tooling.test.mjs",
+    "audit": "node scripts/audit-project.mjs"
+  },
+  "devDependencies": {
+    "@google/design.md": "0.3.0",
+    "@playwright/test": "1.61.1"
+  }
+}

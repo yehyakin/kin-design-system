@@ -8,33 +8,52 @@ The roadmap is directional. Items enter a release only after evidence, design re
 - Source governance and component adapters.
 - Contribution workflow and automated document validation.
 
-## 1.1 — Executable tokens
+## 1.1 — Executable contract
 
-- Framework-neutral JSON design tokens.
-- Generated CSS custom properties.
-- Light, dark and high-contrast reference themes.
-- Token validation and change reports.
+- Machine-readable tokens in `DESIGN.md` frontmatter.
+- KIN Agent Skill with build, redesign, audit, and review routing.
+- Theme-parity, reference, contrast, and contract validation.
+- Evidence-based audit scoring and severity.
 
-## 1.2 — Reference components
+## 1.2 — Token exports and reference states
 
-- Accessible HTML/CSS reference states.
-- App Shell, Sidebar, View Bar, Inspector and Data Row examples.
-- Command menu, Activity Feed and Metric Strip examples.
-- Visual regression fixtures across themes and viewport sizes.
+- Generated CSS custom properties and DTCG output.
+- Normative state and acceptance matrices for core components.
+- Accessible HTML/CSS App Shell, Sidebar, View Bar, Inspector, Activity and Metric reference.
+- Manual visual fixture across light/dark themes and desktop/mobile viewports.
 
-## 1.3 — Product patterns
+## 1.3 — Automated reference coverage
 
-- Proxy intelligence workspace.
+- High-contrast reference theme and parity validation.
+- Token change reports against Git references.
+- Command menu, data list, form, empty/error/stale and overlay fixture.
+- Automated responsive, theme, focus and overlay checks.
+- CI screenshot artifacts for human visual review.
+
+Pixel-difference gating remains deferred until cross-platform font and rendering baselines are stable enough to avoid false failures.
+
+## 1.4 — Product patterns
+
+- Information site with search, provenance, revision, and reading structure.
+- Intelligence workspace for evidence, monitoring, risk, and investigation.
 - Ecommerce operations workspace.
-- AI-assisted review and approval flow.
 - Engineering/CAD canvas shell.
+- AI-assisted review and approval embedded in the relevant product model.
+- Distinct framework-free reference pages and automated checks.
 
-## 2.0 — Agent and design tooling
+## 2.0 — Design tooling
 
-- KIN Agent skill with progressive reference loading.
-- Figma-compatible token export.
-- Design audit CLI with human-review output.
-- Migration helpers for consuming products.
+- Figma Variables create payload and DTCG/Tokens Studio interoperability guidance.
+- Design audit CLI with source locations, severity, exceptions, and human-review output.
+- Versioned adoption configuration, initialization, structural checks, and migration records for consuming products.
+
+The Figma exporter deliberately does not manage credentials or update existing library IDs. The audit deliberately does not auto-fix heuristic findings. These boundaries prevent tooling convenience from becoming destructive product behavior.
+
+## Next
+
+- Gather adoption evidence from real consuming projects before expanding scanner rules.
+- Add ID-aware Figma library synchronization only if an eligible team can test update and rollback behavior.
+- Evaluate cross-platform screenshot baselines after font and renderer variance is measured.
 
 ## Non-goals
 

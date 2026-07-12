@@ -1,0 +1,4 @@
+interface:
+  display_name: "KIN Design"
+  short_description: "Build and review interfaces with the KIN contract"
+  default_prompt: "Use $kin-design to design or review this interface with KIN rules."

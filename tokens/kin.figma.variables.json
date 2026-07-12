@@ -1,0 +1,2737 @@
+{
+  "variableCollections": [
+    {
+      "action": "CREATE",
+      "id": "kin_color_collection",
+      "name": "KIN Color",
+      "initialModeId": "kin_kin_color_collection_mode_light",
+      "hiddenFromPublishing": false
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_scale_collection",
+      "name": "KIN Scale",
+      "initialModeId": "kin_kin_scale_collection_mode_default",
+      "hiddenFromPublishing": false
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_typography_collection",
+      "name": "KIN Typography",
+      "initialModeId": "kin_kin_typography_collection_mode_default",
+      "hiddenFromPublishing": false
+    }
+  ],
+  "variableModes": [
+    {
+      "action": "UPDATE",
+      "id": "kin_kin_color_collection_mode_light",
+      "name": "Light",
+      "variableCollectionId": "kin_color_collection"
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_color_collection_mode_dark",
+      "name": "Dark",
+      "variableCollectionId": "kin_color_collection"
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_color_collection_mode_light_high_contrast",
+      "name": "Light High Contrast",
+      "variableCollectionId": "kin_color_collection"
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_color_collection_mode_dark_high_contrast",
+      "name": "Dark High Contrast",
+      "variableCollectionId": "kin_color_collection"
+    },
+    {
+      "action": "UPDATE",
+      "id": "kin_kin_scale_collection_mode_default",
+      "name": "Default",
+      "variableCollectionId": "kin_scale_collection"
+    },
+    {
+      "action": "UPDATE",
+      "id": "kin_kin_typography_collection_mode_default",
+      "name": "Default",
+      "variableCollectionId": "kin_typography_collection"
+    }
+  ],
+  "variables": [
+    {
+      "action": "CREATE",
+      "id": "kin_kin_color_collection_variable_color_accent",
+      "name": "Color/accent",
+      "resolvedType": "COLOR",
+      "variableCollectionId": "kin_color_collection",
+      "description": "Semantic KIN color. Values change by theme and contrast mode.",
+      "hiddenFromPublishing": false,
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "--accent"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_color_collection_variable_color_accent_active",
+      "name": "Color/accent active",
+      "resolvedType": "COLOR",
+      "variableCollectionId": "kin_color_collection",
+      "description": "Semantic KIN color. Values change by theme and contrast mode.",
+      "hiddenFromPublishing": false,
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "--accent-active"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_color_collection_variable_color_accent_hover",
+      "name": "Color/accent hover",
+      "resolvedType": "COLOR",
+      "variableCollectionId": "kin_color_collection",
+      "description": "Semantic KIN color. Values change by theme and contrast mode.",
+      "hiddenFromPublishing": false,
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "--accent-hover"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_color_collection_variable_color_accent_soft",
+      "name": "Color/accent soft",
+      "resolvedType": "COLOR",
+      "variableCollectionId": "kin_color_collection",
+      "description": "Semantic KIN color. Values change by theme and contrast mode.",
+      "hiddenFromPublishing": false,
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "--accent-soft"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_color_collection_variable_color_canvas",
+      "name": "Color/canvas",
+      "resolvedType": "COLOR",
+      "variableCollectionId": "kin_color_collection",
+      "description": "Semantic KIN color. Values change by theme and contrast mode.",
+      "hiddenFromPublishing": false,
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "--canvas"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_color_collection_variable_color_critical",
+      "name": "Color/critical",
+      "resolvedType": "COLOR",
+      "variableCollectionId": "kin_color_collection",
+      "description": "Semantic KIN color. Values change by theme and contrast mode.",
+      "hiddenFromPublishing": false,
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "--critical"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_color_collection_variable_color_focus_ring",
+      "name": "Color/focus ring",
+      "resolvedType": "COLOR",
+      "variableCollectionId": "kin_color_collection",
+      "description": "Semantic KIN color. Values change by theme and contrast mode.",
+      "hiddenFromPublishing": false,
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "--focus-ring"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_color_collection_variable_color_icon_muted",
+      "name": "Color/icon muted",
+      "resolvedType": "COLOR",
+      "variableCollectionId": "kin_color_collection",
+      "description": "Semantic KIN color. Values change by theme and contrast mode.",
+      "hiddenFromPublishing": false,
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "--icon-muted"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_color_collection_variable_color_icon_primary",
+      "name": "Color/icon primary",
+      "resolvedType": "COLOR",
+      "variableCollectionId": "kin_color_collection",
+      "description": "Semantic KIN color. Values change by theme and contrast mode.",
+      "hiddenFromPublishing": false,
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "--icon-primary"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_color_collection_variable_color_line_default",
+      "name": "Color/line default",
+      "resolvedType": "COLOR",
+      "variableCollectionId": "kin_color_collection",
+      "description": "Semantic KIN color. Values change by theme and contrast mode.",
+      "hiddenFromPublishing": false,
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "--line-default"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_color_collection_variable_color_line_strong",
+      "name": "Color/line strong",
+      "resolvedType": "COLOR",
+      "variableCollectionId": "kin_color_collection",
+      "description": "Semantic KIN color. Values change by theme and contrast mode.",
+      "hiddenFromPublishing": false,
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "--line-strong"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_color_collection_variable_color_line_subtle",
+      "name": "Color/line subtle",
+      "resolvedType": "COLOR",
+      "variableCollectionId": "kin_color_collection",
+      "description": "Semantic KIN color. Values change by theme and contrast mode.",
+      "hiddenFromPublishing": false,
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "--line-subtle"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_color_collection_variable_color_monitor",
+      "name": "Color/monitor",
+      "resolvedType": "COLOR",
+      "variableCollectionId": "kin_color_collection",
+      "description": "Semantic KIN color. Values change by theme and contrast mode.",
+      "hiddenFromPublishing": false,
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "--monitor"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_color_collection_variable_color_monitor_soft",
+      "name": "Color/monitor soft",
+      "resolvedType": "COLOR",
+      "variableCollectionId": "kin_color_collection",
+      "description": "Semantic KIN color. Values change by theme and contrast mode.",
+      "hiddenFromPublishing": false,
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "--monitor-soft"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_color_collection_variable_color_negative",
+      "name": "Color/negative",
+      "resolvedType": "COLOR",
+      "variableCollectionId": "kin_color_collection",
+      "description": "Semantic KIN color. Values change by theme and contrast mode.",
+      "hiddenFromPublishing": false,
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "--negative"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_color_collection_variable_color_offline",
+      "name": "Color/offline",
+      "resolvedType": "COLOR",
+      "variableCollectionId": "kin_color_collection",
+      "description": "Semantic KIN color. Values change by theme and contrast mode.",
+      "hiddenFromPublishing": false,
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "--offline"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_color_collection_variable_color_positive",
+      "name": "Color/positive",
+      "resolvedType": "COLOR",
+      "variableCollectionId": "kin_color_collection",
+      "description": "Semantic KIN color. Values change by theme and contrast mode.",
+      "hiddenFromPublishing": false,
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "--positive"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_color_collection_variable_color_sidebar",
+      "name": "Color/sidebar",
+      "resolvedType": "COLOR",
+      "variableCollectionId": "kin_color_collection",
+      "description": "Semantic KIN color. Values change by theme and contrast mode.",
+      "hiddenFromPublishing": false,
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "--sidebar"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_color_collection_variable_color_surface_1",
+      "name": "Color/surface 1",
+      "resolvedType": "COLOR",
+      "variableCollectionId": "kin_color_collection",
+      "description": "Semantic KIN color. Values change by theme and contrast mode.",
+      "hiddenFromPublishing": false,
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "--surface-1"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_color_collection_variable_color_surface_2",
+      "name": "Color/surface 2",
+      "resolvedType": "COLOR",
+      "variableCollectionId": "kin_color_collection",
+      "description": "Semantic KIN color. Values change by theme and contrast mode.",
+      "hiddenFromPublishing": false,
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "--surface-2"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_color_collection_variable_color_surface_3",
+      "name": "Color/surface 3",
+      "resolvedType": "COLOR",
+      "variableCollectionId": "kin_color_collection",
+      "description": "Semantic KIN color. Values change by theme and contrast mode.",
+      "hiddenFromPublishing": false,
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "--surface-3"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_color_collection_variable_color_surface_4",
+      "name": "Color/surface 4",
+      "resolvedType": "COLOR",
+      "variableCollectionId": "kin_color_collection",
+      "description": "Semantic KIN color. Values change by theme and contrast mode.",
+      "hiddenFromPublishing": false,
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "--surface-4"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_color_collection_variable_color_surface_hover",
+      "name": "Color/surface hover",
+      "resolvedType": "COLOR",
+      "variableCollectionId": "kin_color_collection",
+      "description": "Semantic KIN color. Values change by theme and contrast mode.",
+      "hiddenFromPublishing": false,
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "--surface-hover"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_color_collection_variable_color_surface_overlay",
+      "name": "Color/surface overlay",
+      "resolvedType": "COLOR",
+      "variableCollectionId": "kin_color_collection",
+      "description": "Semantic KIN color. Values change by theme and contrast mode.",
+      "hiddenFromPublishing": false,
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "--surface-overlay"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_color_collection_variable_color_surface_selected",
+      "name": "Color/surface selected",
+      "resolvedType": "COLOR",
+      "variableCollectionId": "kin_color_collection",
+      "description": "Semantic KIN color. Values change by theme and contrast mode.",
+      "hiddenFromPublishing": false,
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "--surface-selected"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_color_collection_variable_color_text_disabled",
+      "name": "Color/text disabled",
+      "resolvedType": "COLOR",
+      "variableCollectionId": "kin_color_collection",
+      "description": "Semantic KIN color. Values change by theme and contrast mode.",
+      "hiddenFromPublishing": false,
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "--text-disabled"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_color_collection_variable_color_text_inverse",
+      "name": "Color/text inverse",
+      "resolvedType": "COLOR",
+      "variableCollectionId": "kin_color_collection",
+      "description": "Semantic KIN color. Values change by theme and contrast mode.",
+      "hiddenFromPublishing": false,
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "--text-inverse"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_color_collection_variable_color_text_muted",
+      "name": "Color/text muted",
+      "resolvedType": "COLOR",
+      "variableCollectionId": "kin_color_collection",
+      "description": "Semantic KIN color. Values change by theme and contrast mode.",
+      "hiddenFromPublishing": false,
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "--text-muted"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_color_collection_variable_color_text_primary",
+      "name": "Color/text primary",
+      "resolvedType": "COLOR",
+      "variableCollectionId": "kin_color_collection",
+      "description": "Semantic KIN color. Values change by theme and contrast mode.",
+      "hiddenFromPublishing": false,
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "--text-primary"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_color_collection_variable_color_text_secondary",
+      "name": "Color/text secondary",
+      "resolvedType": "COLOR",
+      "variableCollectionId": "kin_color_collection",
+      "description": "Semantic KIN color. Values change by theme and contrast mode.",
+      "hiddenFromPublishing": false,
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "--text-secondary"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_color_collection_variable_color_warning",
+      "name": "Color/warning",
+      "resolvedType": "COLOR",
+      "variableCollectionId": "kin_color_collection",
+      "description": "Semantic KIN color. Values change by theme and contrast mode.",
+      "hiddenFromPublishing": false,
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "--warning"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_scale_collection_variable_spacing_1",
+      "name": "Spacing/1",
+      "resolvedType": "FLOAT",
+      "variableCollectionId": "kin_scale_collection",
+      "description": "",
+      "hiddenFromPublishing": false,
+      "scopes": [
+        "GAP",
+        "WIDTH_HEIGHT"
+      ],
+      "codeSyntax": {
+        "WEB": "--space-1"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_scale_collection_variable_spacing_2",
+      "name": "Spacing/2",
+      "resolvedType": "FLOAT",
+      "variableCollectionId": "kin_scale_collection",
+      "description": "",
+      "hiddenFromPublishing": false,
+      "scopes": [
+        "GAP",
+        "WIDTH_HEIGHT"
+      ],
+      "codeSyntax": {
+        "WEB": "--space-2"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_scale_collection_variable_spacing_3",
+      "name": "Spacing/3",
+      "resolvedType": "FLOAT",
+      "variableCollectionId": "kin_scale_collection",
+      "description": "",
+      "hiddenFromPublishing": false,
+      "scopes": [
+        "GAP",
+        "WIDTH_HEIGHT"
+      ],
+      "codeSyntax": {
+        "WEB": "--space-3"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_scale_collection_variable_spacing_4",
+      "name": "Spacing/4",
+      "resolvedType": "FLOAT",
+      "variableCollectionId": "kin_scale_collection",
+      "description": "",
+      "hiddenFromPublishing": false,
+      "scopes": [
+        "GAP",
+        "WIDTH_HEIGHT"
+      ],
+      "codeSyntax": {
+        "WEB": "--space-4"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_scale_collection_variable_spacing_5",
+      "name": "Spacing/5",
+      "resolvedType": "FLOAT",
+      "variableCollectionId": "kin_scale_collection",
+      "description": "",
+      "hiddenFromPublishing": false,
+      "scopes": [
+        "GAP",
+        "WIDTH_HEIGHT"
+      ],
+      "codeSyntax": {
+        "WEB": "--space-5"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_scale_collection_variable_spacing_6",
+      "name": "Spacing/6",
+      "resolvedType": "FLOAT",
+      "variableCollectionId": "kin_scale_collection",
+      "description": "",
+      "hiddenFromPublishing": false,
+      "scopes": [
+        "GAP",
+        "WIDTH_HEIGHT"
+      ],
+      "codeSyntax": {
+        "WEB": "--space-6"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_scale_collection_variable_spacing_8",
+      "name": "Spacing/8",
+      "resolvedType": "FLOAT",
+      "variableCollectionId": "kin_scale_collection",
+      "description": "",
+      "hiddenFromPublishing": false,
+      "scopes": [
+        "GAP",
+        "WIDTH_HEIGHT"
+      ],
+      "codeSyntax": {
+        "WEB": "--space-8"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_scale_collection_variable_spacing_10",
+      "name": "Spacing/10",
+      "resolvedType": "FLOAT",
+      "variableCollectionId": "kin_scale_collection",
+      "description": "",
+      "hiddenFromPublishing": false,
+      "scopes": [
+        "GAP",
+        "WIDTH_HEIGHT"
+      ],
+      "codeSyntax": {
+        "WEB": "--space-10"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_scale_collection_variable_spacing_12",
+      "name": "Spacing/12",
+      "resolvedType": "FLOAT",
+      "variableCollectionId": "kin_scale_collection",
+      "description": "",
+      "hiddenFromPublishing": false,
+      "scopes": [
+        "GAP",
+        "WIDTH_HEIGHT"
+      ],
+      "codeSyntax": {
+        "WEB": "--space-12"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_scale_collection_variable_radius_xs",
+      "name": "Radius/xs",
+      "resolvedType": "FLOAT",
+      "variableCollectionId": "kin_scale_collection",
+      "description": "",
+      "hiddenFromPublishing": false,
+      "scopes": [
+        "CORNER_RADIUS"
+      ],
+      "codeSyntax": {
+        "WEB": "--radius-xs"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_scale_collection_variable_radius_sm",
+      "name": "Radius/sm",
+      "resolvedType": "FLOAT",
+      "variableCollectionId": "kin_scale_collection",
+      "description": "",
+      "hiddenFromPublishing": false,
+      "scopes": [
+        "CORNER_RADIUS"
+      ],
+      "codeSyntax": {
+        "WEB": "--radius-sm"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_scale_collection_variable_radius_md",
+      "name": "Radius/md",
+      "resolvedType": "FLOAT",
+      "variableCollectionId": "kin_scale_collection",
+      "description": "",
+      "hiddenFromPublishing": false,
+      "scopes": [
+        "CORNER_RADIUS"
+      ],
+      "codeSyntax": {
+        "WEB": "--radius-md"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_scale_collection_variable_radius_lg",
+      "name": "Radius/lg",
+      "resolvedType": "FLOAT",
+      "variableCollectionId": "kin_scale_collection",
+      "description": "",
+      "hiddenFromPublishing": false,
+      "scopes": [
+        "CORNER_RADIUS"
+      ],
+      "codeSyntax": {
+        "WEB": "--radius-lg"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_scale_collection_variable_radius_xl",
+      "name": "Radius/xl",
+      "resolvedType": "FLOAT",
+      "variableCollectionId": "kin_scale_collection",
+      "description": "",
+      "hiddenFromPublishing": false,
+      "scopes": [
+        "CORNER_RADIUS"
+      ],
+      "codeSyntax": {
+        "WEB": "--radius-xl"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_scale_collection_variable_radius_round",
+      "name": "Radius/round",
+      "resolvedType": "FLOAT",
+      "variableCollectionId": "kin_scale_collection",
+      "description": "",
+      "hiddenFromPublishing": false,
+      "scopes": [
+        "CORNER_RADIUS"
+      ],
+      "codeSyntax": {
+        "WEB": "--radius-round"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_typography_collection_variable_typography_display_font_family",
+      "name": "Typography/display/font family",
+      "resolvedType": "STRING",
+      "variableCollectionId": "kin_typography_collection",
+      "description": "",
+      "hiddenFromPublishing": false
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_typography_collection_variable_typography_display_font_size",
+      "name": "Typography/display/font size",
+      "resolvedType": "FLOAT",
+      "variableCollectionId": "kin_typography_collection",
+      "description": "",
+      "hiddenFromPublishing": false,
+      "scopes": [
+        "FONT_SIZE"
+      ]
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_typography_collection_variable_typography_display_font_weight",
+      "name": "Typography/display/font weight",
+      "resolvedType": "FLOAT",
+      "variableCollectionId": "kin_typography_collection",
+      "description": "",
+      "hiddenFromPublishing": false,
+      "scopes": [
+        "FONT_WEIGHT"
+      ]
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_typography_collection_variable_typography_display_line_height",
+      "name": "Typography/display/line height",
+      "resolvedType": "FLOAT",
+      "variableCollectionId": "kin_typography_collection",
+      "description": "",
+      "hiddenFromPublishing": false,
+      "scopes": [
+        "LINE_HEIGHT"
+      ]
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_typography_collection_variable_typography_display_letter_spacing",
+      "name": "Typography/display/letter spacing",
+      "resolvedType": "FLOAT",
+      "variableCollectionId": "kin_typography_collection",
+      "description": "",
+      "hiddenFromPublishing": false,
+      "scopes": [
+        "LETTER_SPACING"
+      ]
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_typography_collection_variable_typography_page_title_font_family",
+      "name": "Typography/page title/font family",
+      "resolvedType": "STRING",
+      "variableCollectionId": "kin_typography_collection",
+      "description": "",
+      "hiddenFromPublishing": false
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_typography_collection_variable_typography_page_title_font_size",
+      "name": "Typography/page title/font size",
+      "resolvedType": "FLOAT",
+      "variableCollectionId": "kin_typography_collection",
+      "description": "",
+      "hiddenFromPublishing": false,
+      "scopes": [
+        "FONT_SIZE"
+      ]
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_typography_collection_variable_typography_page_title_font_weight",
+      "name": "Typography/page title/font weight",
+      "resolvedType": "FLOAT",
+      "variableCollectionId": "kin_typography_collection",
+      "description": "",
+      "hiddenFromPublishing": false,
+      "scopes": [
+        "FONT_WEIGHT"
+      ]
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_typography_collection_variable_typography_page_title_line_height",
+      "name": "Typography/page title/line height",
+      "resolvedType": "FLOAT",
+      "variableCollectionId": "kin_typography_collection",
+      "description": "",
+      "hiddenFromPublishing": false,
+      "scopes": [
+        "LINE_HEIGHT"
+      ]
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_typography_collection_variable_typography_page_title_letter_spacing",
+      "name": "Typography/page title/letter spacing",
+      "resolvedType": "FLOAT",
+      "variableCollectionId": "kin_typography_collection",
+      "description": "",
+      "hiddenFromPublishing": false,
+      "scopes": [
+        "LETTER_SPACING"
+      ]
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_typography_collection_variable_typography_entity_title_font_family",
+      "name": "Typography/entity title/font family",
+      "resolvedType": "STRING",
+      "variableCollectionId": "kin_typography_collection",
+      "description": "",
+      "hiddenFromPublishing": false
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_typography_collection_variable_typography_entity_title_font_size",
+      "name": "Typography/entity title/font size",
+      "resolvedType": "FLOAT",
+      "variableCollectionId": "kin_typography_collection",
+      "description": "",
+      "hiddenFromPublishing": false,
+      "scopes": [
+        "FONT_SIZE"
+      ]
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_typography_collection_variable_typography_entity_title_font_weight",
+      "name": "Typography/entity title/font weight",
+      "resolvedType": "FLOAT",
+      "variableCollectionId": "kin_typography_collection",
+      "description": "",
+      "hiddenFromPublishing": false,
+      "scopes": [
+        "FONT_WEIGHT"
+      ]
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_typography_collection_variable_typography_entity_title_line_height",
+      "name": "Typography/entity title/line height",
+      "resolvedType": "FLOAT",
+      "variableCollectionId": "kin_typography_collection",
+      "description": "",
+      "hiddenFromPublishing": false,
+      "scopes": [
+        "LINE_HEIGHT"
+      ]
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_typography_collection_variable_typography_entity_title_letter_spacing",
+      "name": "Typography/entity title/letter spacing",
+      "resolvedType": "FLOAT",
+      "variableCollectionId": "kin_typography_collection",
+      "description": "",
+      "hiddenFromPublishing": false,
+      "scopes": [
+        "LETTER_SPACING"
+      ]
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_typography_collection_variable_typography_section_title_font_family",
+      "name": "Typography/section title/font family",
+      "resolvedType": "STRING",
+      "variableCollectionId": "kin_typography_collection",
+      "description": "",
+      "hiddenFromPublishing": false
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_typography_collection_variable_typography_section_title_font_size",
+      "name": "Typography/section title/font size",
+      "resolvedType": "FLOAT",
+      "variableCollectionId": "kin_typography_collection",
+      "description": "",
+      "hiddenFromPublishing": false,
+      "scopes": [
+        "FONT_SIZE"
+      ]
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_typography_collection_variable_typography_section_title_font_weight",
+      "name": "Typography/section title/font weight",
+      "resolvedType": "FLOAT",
+      "variableCollectionId": "kin_typography_collection",
+      "description": "",
+      "hiddenFromPublishing": false,
+      "scopes": [
+        "FONT_WEIGHT"
+      ]
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_typography_collection_variable_typography_section_title_line_height",
+      "name": "Typography/section title/line height",
+      "resolvedType": "FLOAT",
+      "variableCollectionId": "kin_typography_collection",
+      "description": "",
+      "hiddenFromPublishing": false,
+      "scopes": [
+        "LINE_HEIGHT"
+      ]
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_typography_collection_variable_typography_section_title_letter_spacing",
+      "name": "Typography/section title/letter spacing",
+      "resolvedType": "FLOAT",
+      "variableCollectionId": "kin_typography_collection",
+      "description": "",
+      "hiddenFromPublishing": false,
+      "scopes": [
+        "LETTER_SPACING"
+      ]
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_typography_collection_variable_typography_body_font_family",
+      "name": "Typography/body/font family",
+      "resolvedType": "STRING",
+      "variableCollectionId": "kin_typography_collection",
+      "description": "",
+      "hiddenFromPublishing": false
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_typography_collection_variable_typography_body_font_size",
+      "name": "Typography/body/font size",
+      "resolvedType": "FLOAT",
+      "variableCollectionId": "kin_typography_collection",
+      "description": "",
+      "hiddenFromPublishing": false,
+      "scopes": [
+        "FONT_SIZE"
+      ]
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_typography_collection_variable_typography_body_font_weight",
+      "name": "Typography/body/font weight",
+      "resolvedType": "FLOAT",
+      "variableCollectionId": "kin_typography_collection",
+      "description": "",
+      "hiddenFromPublishing": false,
+      "scopes": [
+        "FONT_WEIGHT"
+      ]
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_typography_collection_variable_typography_body_line_height",
+      "name": "Typography/body/line height",
+      "resolvedType": "FLOAT",
+      "variableCollectionId": "kin_typography_collection",
+      "description": "",
+      "hiddenFromPublishing": false,
+      "scopes": [
+        "LINE_HEIGHT"
+      ]
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_typography_collection_variable_typography_body_letter_spacing",
+      "name": "Typography/body/letter spacing",
+      "resolvedType": "FLOAT",
+      "variableCollectionId": "kin_typography_collection",
+      "description": "",
+      "hiddenFromPublishing": false,
+      "scopes": [
+        "LETTER_SPACING"
+      ]
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_typography_collection_variable_typography_ui_font_family",
+      "name": "Typography/ui/font family",
+      "resolvedType": "STRING",
+      "variableCollectionId": "kin_typography_collection",
+      "description": "",
+      "hiddenFromPublishing": false
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_typography_collection_variable_typography_ui_font_size",
+      "name": "Typography/ui/font size",
+      "resolvedType": "FLOAT",
+      "variableCollectionId": "kin_typography_collection",
+      "description": "",
+      "hiddenFromPublishing": false,
+      "scopes": [
+        "FONT_SIZE"
+      ]
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_typography_collection_variable_typography_ui_font_weight",
+      "name": "Typography/ui/font weight",
+      "resolvedType": "FLOAT",
+      "variableCollectionId": "kin_typography_collection",
+      "description": "",
+      "hiddenFromPublishing": false,
+      "scopes": [
+        "FONT_WEIGHT"
+      ]
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_typography_collection_variable_typography_ui_line_height",
+      "name": "Typography/ui/line height",
+      "resolvedType": "FLOAT",
+      "variableCollectionId": "kin_typography_collection",
+      "description": "",
+      "hiddenFromPublishing": false,
+      "scopes": [
+        "LINE_HEIGHT"
+      ]
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_typography_collection_variable_typography_ui_letter_spacing",
+      "name": "Typography/ui/letter spacing",
+      "resolvedType": "FLOAT",
+      "variableCollectionId": "kin_typography_collection",
+      "description": "",
+      "hiddenFromPublishing": false,
+      "scopes": [
+        "LETTER_SPACING"
+      ]
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_typography_collection_variable_typography_metadata_font_family",
+      "name": "Typography/metadata/font family",
+      "resolvedType": "STRING",
+      "variableCollectionId": "kin_typography_collection",
+      "description": "",
+      "hiddenFromPublishing": false
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_typography_collection_variable_typography_metadata_font_size",
+      "name": "Typography/metadata/font size",
+      "resolvedType": "FLOAT",
+      "variableCollectionId": "kin_typography_collection",
+      "description": "",
+      "hiddenFromPublishing": false,
+      "scopes": [
+        "FONT_SIZE"
+      ]
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_typography_collection_variable_typography_metadata_font_weight",
+      "name": "Typography/metadata/font weight",
+      "resolvedType": "FLOAT",
+      "variableCollectionId": "kin_typography_collection",
+      "description": "",
+      "hiddenFromPublishing": false,
+      "scopes": [
+        "FONT_WEIGHT"
+      ]
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_typography_collection_variable_typography_metadata_line_height",
+      "name": "Typography/metadata/line height",
+      "resolvedType": "FLOAT",
+      "variableCollectionId": "kin_typography_collection",
+      "description": "",
+      "hiddenFromPublishing": false,
+      "scopes": [
+        "LINE_HEIGHT"
+      ]
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_typography_collection_variable_typography_metadata_letter_spacing",
+      "name": "Typography/metadata/letter spacing",
+      "resolvedType": "FLOAT",
+      "variableCollectionId": "kin_typography_collection",
+      "description": "",
+      "hiddenFromPublishing": false,
+      "scopes": [
+        "LETTER_SPACING"
+      ]
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_typography_collection_variable_typography_mono_font_family",
+      "name": "Typography/mono/font family",
+      "resolvedType": "STRING",
+      "variableCollectionId": "kin_typography_collection",
+      "description": "",
+      "hiddenFromPublishing": false
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_typography_collection_variable_typography_mono_font_size",
+      "name": "Typography/mono/font size",
+      "resolvedType": "FLOAT",
+      "variableCollectionId": "kin_typography_collection",
+      "description": "",
+      "hiddenFromPublishing": false,
+      "scopes": [
+        "FONT_SIZE"
+      ]
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_typography_collection_variable_typography_mono_font_weight",
+      "name": "Typography/mono/font weight",
+      "resolvedType": "FLOAT",
+      "variableCollectionId": "kin_typography_collection",
+      "description": "",
+      "hiddenFromPublishing": false,
+      "scopes": [
+        "FONT_WEIGHT"
+      ]
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_typography_collection_variable_typography_mono_line_height",
+      "name": "Typography/mono/line height",
+      "resolvedType": "FLOAT",
+      "variableCollectionId": "kin_typography_collection",
+      "description": "",
+      "hiddenFromPublishing": false,
+      "scopes": [
+        "LINE_HEIGHT"
+      ]
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_typography_collection_variable_typography_mono_letter_spacing",
+      "name": "Typography/mono/letter spacing",
+      "resolvedType": "FLOAT",
+      "variableCollectionId": "kin_typography_collection",
+      "description": "",
+      "hiddenFromPublishing": false,
+      "scopes": [
+        "LETTER_SPACING"
+      ]
+    }
+  ],
+  "variableModeValues": [
+    {
+      "variableId": "kin_kin_color_collection_variable_color_accent",
+      "modeId": "kin_kin_color_collection_mode_light",
+      "value": {
+        "r": 0.3254901960784314,
+        "g": 0.3764705882352941,
+        "b": 0.7725490196078432,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_accent",
+      "modeId": "kin_kin_color_collection_mode_dark",
+      "value": {
+        "r": 0.3686274509803922,
+        "g": 0.41568627450980394,
+        "b": 0.8235294117647058,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_accent",
+      "modeId": "kin_kin_color_collection_mode_light_high_contrast",
+      "value": {
+        "r": 0.3254901960784314,
+        "g": 0.3764705882352941,
+        "b": 0.7725490196078432,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_accent",
+      "modeId": "kin_kin_color_collection_mode_dark_high_contrast",
+      "value": {
+        "r": 0.3686274509803922,
+        "g": 0.41568627450980394,
+        "b": 0.8235294117647058,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_accent_active",
+      "modeId": "kin_kin_color_collection_mode_light",
+      "value": {
+        "r": 0.24313725490196078,
+        "g": 0.2901960784313726,
+        "b": 0.6509803921568628,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_accent_active",
+      "modeId": "kin_kin_color_collection_mode_dark",
+      "value": {
+        "r": 0.3176470588235294,
+        "g": 0.36470588235294116,
+        "b": 0.7490196078431373,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_accent_active",
+      "modeId": "kin_kin_color_collection_mode_light_high_contrast",
+      "value": {
+        "r": 0.24313725490196078,
+        "g": 0.2901960784313726,
+        "b": 0.6509803921568628,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_accent_active",
+      "modeId": "kin_kin_color_collection_mode_dark_high_contrast",
+      "value": {
+        "r": 0.3176470588235294,
+        "g": 0.36470588235294116,
+        "b": 0.7490196078431373,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_accent_hover",
+      "modeId": "kin_kin_color_collection_mode_light",
+      "value": {
+        "r": 0.27450980392156865,
+        "g": 0.3254901960784314,
+        "b": 0.7176470588235294,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_accent_hover",
+      "modeId": "kin_kin_color_collection_mode_dark",
+      "value": {
+        "r": 0.3843137254901961,
+        "g": 0.42745098039215684,
+        "b": 0.8,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_accent_hover",
+      "modeId": "kin_kin_color_collection_mode_light_high_contrast",
+      "value": {
+        "r": 0.27450980392156865,
+        "g": 0.3254901960784314,
+        "b": 0.7176470588235294,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_accent_hover",
+      "modeId": "kin_kin_color_collection_mode_dark_high_contrast",
+      "value": {
+        "r": 0.3843137254901961,
+        "g": 0.42745098039215684,
+        "b": 0.8,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_accent_soft",
+      "modeId": "kin_kin_color_collection_mode_light",
+      "value": {
+        "r": 0.3254901960784314,
+        "g": 0.3764705882352941,
+        "b": 0.7725490196078432,
+        "a": 0.10196078431372549
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_accent_soft",
+      "modeId": "kin_kin_color_collection_mode_dark",
+      "value": {
+        "r": 0.3686274509803922,
+        "g": 0.41568627450980394,
+        "b": 0.8235294117647058,
+        "a": 0.1411764705882353
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_accent_soft",
+      "modeId": "kin_kin_color_collection_mode_light_high_contrast",
+      "value": {
+        "r": 0.3254901960784314,
+        "g": 0.3764705882352941,
+        "b": 0.7725490196078432,
+        "a": 0.10196078431372549
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_accent_soft",
+      "modeId": "kin_kin_color_collection_mode_dark_high_contrast",
+      "value": {
+        "r": 0.3686274509803922,
+        "g": 0.41568627450980394,
+        "b": 0.8235294117647058,
+        "a": 0.1411764705882353
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_canvas",
+      "modeId": "kin_kin_color_collection_mode_light",
+      "value": {
+        "r": 0.9647058823529412,
+        "g": 0.9686274509803922,
+        "b": 0.9725490196078431,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_canvas",
+      "modeId": "kin_kin_color_collection_mode_dark",
+      "value": {
+        "r": 0.03137254901960784,
+        "g": 0.03529411764705882,
+        "b": 0.0392156862745098,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_canvas",
+      "modeId": "kin_kin_color_collection_mode_light_high_contrast",
+      "value": {
+        "r": 1,
+        "g": 1,
+        "b": 1,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_canvas",
+      "modeId": "kin_kin_color_collection_mode_dark_high_contrast",
+      "value": {
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_critical",
+      "modeId": "kin_kin_color_collection_mode_light",
+      "value": {
+        "r": 0.6980392156862745,
+        "g": 0.21568627450980393,
+        "b": 0.28627450980392155,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_critical",
+      "modeId": "kin_kin_color_collection_mode_dark",
+      "value": {
+        "r": 0.8470588235294118,
+        "g": 0.34509803921568627,
+        "b": 0.4,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_critical",
+      "modeId": "kin_kin_color_collection_mode_light_high_contrast",
+      "value": {
+        "r": 0.6980392156862745,
+        "g": 0.21568627450980393,
+        "b": 0.28627450980392155,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_critical",
+      "modeId": "kin_kin_color_collection_mode_dark_high_contrast",
+      "value": {
+        "r": 0.8470588235294118,
+        "g": 0.34509803921568627,
+        "b": 0.4,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_focus_ring",
+      "modeId": "kin_kin_color_collection_mode_light",
+      "value": {
+        "r": 0.28627450980392155,
+        "g": 0.34509803921568627,
+        "b": 0.7686274509803922,
+        "a": 0.6196078431372549
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_focus_ring",
+      "modeId": "kin_kin_color_collection_mode_dark",
+      "value": {
+        "r": 0.5098039215686274,
+        "g": 0.5607843137254902,
+        "b": 1,
+        "a": 0.7215686274509804
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_focus_ring",
+      "modeId": "kin_kin_color_collection_mode_light_high_contrast",
+      "value": {
+        "r": 0.2235294117647059,
+        "g": 0.27450980392156865,
+        "b": 0.7215686274509804,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_focus_ring",
+      "modeId": "kin_kin_color_collection_mode_dark_high_contrast",
+      "value": {
+        "r": 0.6588235294117647,
+        "g": 0.6941176470588235,
+        "b": 1,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_icon_muted",
+      "modeId": "kin_kin_color_collection_mode_light",
+      "value": {
+        "r": 0.49019607843137253,
+        "g": 0.5098039215686274,
+        "b": 0.5450980392156862,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_icon_muted",
+      "modeId": "kin_kin_color_collection_mode_dark",
+      "value": {
+        "r": 0.4980392156862745,
+        "g": 0.5137254901960784,
+        "b": 0.5450980392156862,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_icon_muted",
+      "modeId": "kin_kin_color_collection_mode_light_high_contrast",
+      "value": {
+        "r": 0.49019607843137253,
+        "g": 0.5098039215686274,
+        "b": 0.5450980392156862,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_icon_muted",
+      "modeId": "kin_kin_color_collection_mode_dark_high_contrast",
+      "value": {
+        "r": 0.4980392156862745,
+        "g": 0.5137254901960784,
+        "b": 0.5450980392156862,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_icon_primary",
+      "modeId": "kin_kin_color_collection_mode_light",
+      "value": {
+        "r": 0.24705882352941178,
+        "g": 0.25882352941176473,
+        "b": 0.2823529411764706,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_icon_primary",
+      "modeId": "kin_kin_color_collection_mode_dark",
+      "value": {
+        "r": 0.8431372549019608,
+        "g": 0.8509803921568627,
+        "b": 0.8705882352941177,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_icon_primary",
+      "modeId": "kin_kin_color_collection_mode_light_high_contrast",
+      "value": {
+        "r": 0.24705882352941178,
+        "g": 0.25882352941176473,
+        "b": 0.2823529411764706,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_icon_primary",
+      "modeId": "kin_kin_color_collection_mode_dark_high_contrast",
+      "value": {
+        "r": 0.8431372549019608,
+        "g": 0.8509803921568627,
+        "b": 0.8705882352941177,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_line_default",
+      "modeId": "kin_kin_color_collection_mode_light",
+      "value": {
+        "r": 0.0784313725490196,
+        "g": 0.08627450980392157,
+        "b": 0.10196078431372549,
+        "a": 0.10196078431372549
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_line_default",
+      "modeId": "kin_kin_color_collection_mode_dark",
+      "value": {
+        "r": 1,
+        "g": 1,
+        "b": 1,
+        "a": 0.09019607843137255
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_line_default",
+      "modeId": "kin_kin_color_collection_mode_light_high_contrast",
+      "value": {
+        "r": 0.41568627450980394,
+        "g": 0.4392156862745098,
+        "b": 0.47843137254901963,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_line_default",
+      "modeId": "kin_kin_color_collection_mode_dark_high_contrast",
+      "value": {
+        "r": 0.4549019607843137,
+        "g": 0.47843137254901963,
+        "b": 0.5254901960784314,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_line_strong",
+      "modeId": "kin_kin_color_collection_mode_light",
+      "value": {
+        "r": 0.0784313725490196,
+        "g": 0.08627450980392157,
+        "b": 0.10196078431372549,
+        "a": 0.16862745098039217
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_line_strong",
+      "modeId": "kin_kin_color_collection_mode_dark",
+      "value": {
+        "r": 1,
+        "g": 1,
+        "b": 1,
+        "a": 0.14901960784313725
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_line_strong",
+      "modeId": "kin_kin_color_collection_mode_light_high_contrast",
+      "value": {
+        "r": 0.0784313725490196,
+        "g": 0.08627450980392157,
+        "b": 0.10196078431372549,
+        "a": 0.16862745098039217
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_line_strong",
+      "modeId": "kin_kin_color_collection_mode_dark_high_contrast",
+      "value": {
+        "r": 1,
+        "g": 1,
+        "b": 1,
+        "a": 0.14901960784313725
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_line_subtle",
+      "modeId": "kin_kin_color_collection_mode_light",
+      "value": {
+        "r": 0.0784313725490196,
+        "g": 0.08627450980392157,
+        "b": 0.10196078431372549,
+        "a": 0.058823529411764705
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_line_subtle",
+      "modeId": "kin_kin_color_collection_mode_dark",
+      "value": {
+        "r": 1,
+        "g": 1,
+        "b": 1,
+        "a": 0.054901960784313725
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_line_subtle",
+      "modeId": "kin_kin_color_collection_mode_light_high_contrast",
+      "value": {
+        "r": 0.0784313725490196,
+        "g": 0.08627450980392157,
+        "b": 0.10196078431372549,
+        "a": 0.058823529411764705
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_line_subtle",
+      "modeId": "kin_kin_color_collection_mode_dark_high_contrast",
+      "value": {
+        "r": 1,
+        "g": 1,
+        "b": 1,
+        "a": 0.054901960784313725
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_monitor",
+      "modeId": "kin_kin_color_collection_mode_light",
+      "value": {
+        "r": 0.08627450980392157,
+        "g": 0.4980392156862745,
+        "b": 0.5529411764705883,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_monitor",
+      "modeId": "kin_kin_color_collection_mode_dark",
+      "value": {
+        "r": 0.30980392156862746,
+        "g": 0.8156862745098039,
+        "b": 0.8705882352941177,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_monitor",
+      "modeId": "kin_kin_color_collection_mode_light_high_contrast",
+      "value": {
+        "r": 0.08627450980392157,
+        "g": 0.4980392156862745,
+        "b": 0.5529411764705883,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_monitor",
+      "modeId": "kin_kin_color_collection_mode_dark_high_contrast",
+      "value": {
+        "r": 0.30980392156862746,
+        "g": 0.8156862745098039,
+        "b": 0.8705882352941177,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_monitor_soft",
+      "modeId": "kin_kin_color_collection_mode_light",
+      "value": {
+        "r": 0.08627450980392157,
+        "g": 0.4980392156862745,
+        "b": 0.5529411764705883,
+        "a": 0.09019607843137255
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_monitor_soft",
+      "modeId": "kin_kin_color_collection_mode_dark",
+      "value": {
+        "r": 0.30980392156862746,
+        "g": 0.8156862745098039,
+        "b": 0.8705882352941177,
+        "a": 0.10196078431372549
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_monitor_soft",
+      "modeId": "kin_kin_color_collection_mode_light_high_contrast",
+      "value": {
+        "r": 0.08627450980392157,
+        "g": 0.4980392156862745,
+        "b": 0.5529411764705883,
+        "a": 0.09019607843137255
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_monitor_soft",
+      "modeId": "kin_kin_color_collection_mode_dark_high_contrast",
+      "value": {
+        "r": 0.30980392156862746,
+        "g": 0.8156862745098039,
+        "b": 0.8705882352941177,
+        "a": 0.10196078431372549
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_negative",
+      "modeId": "kin_kin_color_collection_mode_light",
+      "value": {
+        "r": 0.6627450980392157,
+        "g": 0.2823529411764706,
+        "b": 0.2196078431372549,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_negative",
+      "modeId": "kin_kin_color_collection_mode_dark",
+      "value": {
+        "r": 0.8235294117647058,
+        "g": 0.41568627450980394,
+        "b": 0.3607843137254902,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_negative",
+      "modeId": "kin_kin_color_collection_mode_light_high_contrast",
+      "value": {
+        "r": 0.6627450980392157,
+        "g": 0.2823529411764706,
+        "b": 0.2196078431372549,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_negative",
+      "modeId": "kin_kin_color_collection_mode_dark_high_contrast",
+      "value": {
+        "r": 0.8235294117647058,
+        "g": 0.41568627450980394,
+        "b": 0.3607843137254902,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_offline",
+      "modeId": "kin_kin_color_collection_mode_light",
+      "value": {
+        "r": 0.43529411764705883,
+        "g": 0.4549019607843137,
+        "b": 0.49019607843137253,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_offline",
+      "modeId": "kin_kin_color_collection_mode_dark",
+      "value": {
+        "r": 0.4666666666666667,
+        "g": 0.48627450980392156,
+        "b": 0.5215686274509804,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_offline",
+      "modeId": "kin_kin_color_collection_mode_light_high_contrast",
+      "value": {
+        "r": 0.43529411764705883,
+        "g": 0.4549019607843137,
+        "b": 0.49019607843137253,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_offline",
+      "modeId": "kin_kin_color_collection_mode_dark_high_contrast",
+      "value": {
+        "r": 0.4666666666666667,
+        "g": 0.48627450980392156,
+        "b": 0.5215686274509804,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_positive",
+      "modeId": "kin_kin_color_collection_mode_light",
+      "value": {
+        "r": 0.1411764705882353,
+        "g": 0.4823529411764706,
+        "b": 0.33725490196078434,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_positive",
+      "modeId": "kin_kin_color_collection_mode_dark",
+      "value": {
+        "r": 0.3137254901960784,
+        "g": 0.6784313725490196,
+        "b": 0.49019607843137253,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_positive",
+      "modeId": "kin_kin_color_collection_mode_light_high_contrast",
+      "value": {
+        "r": 0.1411764705882353,
+        "g": 0.4823529411764706,
+        "b": 0.33725490196078434,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_positive",
+      "modeId": "kin_kin_color_collection_mode_dark_high_contrast",
+      "value": {
+        "r": 0.3137254901960784,
+        "g": 0.6784313725490196,
+        "b": 0.49019607843137253,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_sidebar",
+      "modeId": "kin_kin_color_collection_mode_light",
+      "value": {
+        "r": 0.9411764705882353,
+        "g": 0.9450980392156862,
+        "b": 0.9529411764705882,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_sidebar",
+      "modeId": "kin_kin_color_collection_mode_dark",
+      "value": {
+        "r": 0.043137254901960784,
+        "g": 0.047058823529411764,
+        "b": 0.050980392156862744,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_sidebar",
+      "modeId": "kin_kin_color_collection_mode_light_high_contrast",
+      "value": {
+        "r": 0.9411764705882353,
+        "g": 0.9450980392156862,
+        "b": 0.9529411764705882,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_sidebar",
+      "modeId": "kin_kin_color_collection_mode_dark_high_contrast",
+      "value": {
+        "r": 0.043137254901960784,
+        "g": 0.047058823529411764,
+        "b": 0.050980392156862744,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_surface_1",
+      "modeId": "kin_kin_color_collection_mode_light",
+      "value": {
+        "r": 1,
+        "g": 1,
+        "b": 1,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_surface_1",
+      "modeId": "kin_kin_color_collection_mode_dark",
+      "value": {
+        "r": 0.058823529411764705,
+        "g": 0.06274509803921569,
+        "b": 0.06666666666666667,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_surface_1",
+      "modeId": "kin_kin_color_collection_mode_light_high_contrast",
+      "value": {
+        "r": 1,
+        "g": 1,
+        "b": 1,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_surface_1",
+      "modeId": "kin_kin_color_collection_mode_dark_high_contrast",
+      "value": {
+        "r": 0.03137254901960784,
+        "g": 0.03529411764705882,
+        "b": 0.0392156862745098,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_surface_2",
+      "modeId": "kin_kin_color_collection_mode_light",
+      "value": {
+        "r": 0.9568627450980393,
+        "g": 0.9607843137254902,
+        "b": 0.9647058823529412,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_surface_2",
+      "modeId": "kin_kin_color_collection_mode_dark",
+      "value": {
+        "r": 0.0784313725490196,
+        "g": 0.08235294117647059,
+        "b": 0.08627450980392157,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_surface_2",
+      "modeId": "kin_kin_color_collection_mode_light_high_contrast",
+      "value": {
+        "r": 0.9568627450980393,
+        "g": 0.9607843137254902,
+        "b": 0.9647058823529412,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_surface_2",
+      "modeId": "kin_kin_color_collection_mode_dark_high_contrast",
+      "value": {
+        "r": 0.0784313725490196,
+        "g": 0.08235294117647059,
+        "b": 0.08627450980392157,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_surface_3",
+      "modeId": "kin_kin_color_collection_mode_light",
+      "value": {
+        "r": 0.9254901960784314,
+        "g": 0.9333333333333333,
+        "b": 0.9411764705882353,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_surface_3",
+      "modeId": "kin_kin_color_collection_mode_dark",
+      "value": {
+        "r": 0.09803921568627451,
+        "g": 0.10196078431372549,
+        "b": 0.10980392156862745,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_surface_3",
+      "modeId": "kin_kin_color_collection_mode_light_high_contrast",
+      "value": {
+        "r": 0.9254901960784314,
+        "g": 0.9333333333333333,
+        "b": 0.9411764705882353,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_surface_3",
+      "modeId": "kin_kin_color_collection_mode_dark_high_contrast",
+      "value": {
+        "r": 0.09803921568627451,
+        "g": 0.10196078431372549,
+        "b": 0.10980392156862745,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_surface_4",
+      "modeId": "kin_kin_color_collection_mode_light",
+      "value": {
+        "r": 0.8941176470588236,
+        "g": 0.9019607843137255,
+        "b": 0.9137254901960784,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_surface_4",
+      "modeId": "kin_kin_color_collection_mode_dark",
+      "value": {
+        "r": 0.12549019607843137,
+        "g": 0.12941176470588237,
+        "b": 0.1411764705882353,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_surface_4",
+      "modeId": "kin_kin_color_collection_mode_light_high_contrast",
+      "value": {
+        "r": 0.8941176470588236,
+        "g": 0.9019607843137255,
+        "b": 0.9137254901960784,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_surface_4",
+      "modeId": "kin_kin_color_collection_mode_dark_high_contrast",
+      "value": {
+        "r": 0.12549019607843137,
+        "g": 0.12941176470588237,
+        "b": 0.1411764705882353,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_surface_hover",
+      "modeId": "kin_kin_color_collection_mode_light",
+      "value": {
+        "r": 0.0784313725490196,
+        "g": 0.08627450980392157,
+        "b": 0.10196078431372549,
+        "a": 0.043137254901960784
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_surface_hover",
+      "modeId": "kin_kin_color_collection_mode_dark",
+      "value": {
+        "r": 1,
+        "g": 1,
+        "b": 1,
+        "a": 0.043137254901960784
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_surface_hover",
+      "modeId": "kin_kin_color_collection_mode_light_high_contrast",
+      "value": {
+        "r": 0.0784313725490196,
+        "g": 0.08627450980392157,
+        "b": 0.10196078431372549,
+        "a": 0.043137254901960784
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_surface_hover",
+      "modeId": "kin_kin_color_collection_mode_dark_high_contrast",
+      "value": {
+        "r": 1,
+        "g": 1,
+        "b": 1,
+        "a": 0.043137254901960784
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_surface_overlay",
+      "modeId": "kin_kin_color_collection_mode_light",
+      "value": {
+        "r": 0.9647058823529412,
+        "g": 0.9686274509803922,
+        "b": 0.9725490196078431,
+        "a": 0.7607843137254902
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_surface_overlay",
+      "modeId": "kin_kin_color_collection_mode_dark",
+      "value": {
+        "r": 0.03137254901960784,
+        "g": 0.03529411764705882,
+        "b": 0.0392156862745098,
+        "a": 0.7215686274509804
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_surface_overlay",
+      "modeId": "kin_kin_color_collection_mode_light_high_contrast",
+      "value": {
+        "r": 0.9647058823529412,
+        "g": 0.9686274509803922,
+        "b": 0.9725490196078431,
+        "a": 0.7607843137254902
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_surface_overlay",
+      "modeId": "kin_kin_color_collection_mode_dark_high_contrast",
+      "value": {
+        "r": 0.03137254901960784,
+        "g": 0.03529411764705882,
+        "b": 0.0392156862745098,
+        "a": 0.7215686274509804
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_surface_selected",
+      "modeId": "kin_kin_color_collection_mode_light",
+      "value": {
+        "r": 0.3215686274509804,
+        "g": 0.3686274509803922,
+        "b": 0.7686274509803922,
+        "a": 0.10196078431372549
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_surface_selected",
+      "modeId": "kin_kin_color_collection_mode_dark",
+      "value": {
+        "r": 0.3686274509803922,
+        "g": 0.41568627450980394,
+        "b": 0.8235294117647058,
+        "a": 0.12156862745098039
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_surface_selected",
+      "modeId": "kin_kin_color_collection_mode_light_high_contrast",
+      "value": {
+        "r": 0.3215686274509804,
+        "g": 0.3686274509803922,
+        "b": 0.7686274509803922,
+        "a": 0.10196078431372549
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_surface_selected",
+      "modeId": "kin_kin_color_collection_mode_dark_high_contrast",
+      "value": {
+        "r": 0.3686274509803922,
+        "g": 0.41568627450980394,
+        "b": 0.8235294117647058,
+        "a": 0.12156862745098039
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_text_disabled",
+      "modeId": "kin_kin_color_collection_mode_light",
+      "value": {
+        "r": 0.6313725490196078,
+        "g": 0.6470588235294118,
+        "b": 0.6784313725490196,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_text_disabled",
+      "modeId": "kin_kin_color_collection_mode_dark",
+      "value": {
+        "r": 0.3843137254901961,
+        "g": 0.4,
+        "b": 0.42745098039215684,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_text_disabled",
+      "modeId": "kin_kin_color_collection_mode_light_high_contrast",
+      "value": {
+        "r": 0.6313725490196078,
+        "g": 0.6470588235294118,
+        "b": 0.6784313725490196,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_text_disabled",
+      "modeId": "kin_kin_color_collection_mode_dark_high_contrast",
+      "value": {
+        "r": 0.3843137254901961,
+        "g": 0.4,
+        "b": 0.42745098039215684,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_text_inverse",
+      "modeId": "kin_kin_color_collection_mode_light",
+      "value": {
+        "r": 0.9686274509803922,
+        "g": 0.9725490196078431,
+        "b": 0.9803921568627451,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_text_inverse",
+      "modeId": "kin_kin_color_collection_mode_dark",
+      "value": {
+        "r": 0.08235294117647059,
+        "g": 0.08627450980392157,
+        "b": 0.09803921568627451,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_text_inverse",
+      "modeId": "kin_kin_color_collection_mode_light_high_contrast",
+      "value": {
+        "r": 0.9686274509803922,
+        "g": 0.9725490196078431,
+        "b": 0.9803921568627451,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_text_inverse",
+      "modeId": "kin_kin_color_collection_mode_dark_high_contrast",
+      "value": {
+        "r": 0.08235294117647059,
+        "g": 0.08627450980392157,
+        "b": 0.09803921568627451,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_text_muted",
+      "modeId": "kin_kin_color_collection_mode_light",
+      "value": {
+        "r": 0.4196078431372549,
+        "g": 0.4392156862745098,
+        "b": 0.4745098039215686,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_text_muted",
+      "modeId": "kin_kin_color_collection_mode_dark",
+      "value": {
+        "r": 0.5450980392156862,
+        "g": 0.5607843137254902,
+        "b": 0.596078431372549,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_text_muted",
+      "modeId": "kin_kin_color_collection_mode_light_high_contrast",
+      "value": {
+        "r": 0.4196078431372549,
+        "g": 0.4392156862745098,
+        "b": 0.4745098039215686,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_text_muted",
+      "modeId": "kin_kin_color_collection_mode_dark_high_contrast",
+      "value": {
+        "r": 0.5450980392156862,
+        "g": 0.5607843137254902,
+        "b": 0.596078431372549,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_text_primary",
+      "modeId": "kin_kin_color_collection_mode_light",
+      "value": {
+        "r": 0.09411764705882353,
+        "g": 0.09803921568627451,
+        "b": 0.10980392156862745,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_text_primary",
+      "modeId": "kin_kin_color_collection_mode_dark",
+      "value": {
+        "r": 0.9568627450980393,
+        "g": 0.9607843137254902,
+        "b": 0.9686274509803922,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_text_primary",
+      "modeId": "kin_kin_color_collection_mode_light_high_contrast",
+      "value": {
+        "r": 0.03137254901960784,
+        "g": 0.03529411764705882,
+        "b": 0.0392156862745098,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_text_primary",
+      "modeId": "kin_kin_color_collection_mode_dark_high_contrast",
+      "value": {
+        "r": 1,
+        "g": 1,
+        "b": 1,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_text_secondary",
+      "modeId": "kin_kin_color_collection_mode_light",
+      "value": {
+        "r": 0.28627450980392155,
+        "g": 0.2980392156862745,
+        "b": 0.3254901960784314,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_text_secondary",
+      "modeId": "kin_kin_color_collection_mode_dark",
+      "value": {
+        "r": 0.788235294117647,
+        "g": 0.796078431372549,
+        "b": 0.8196078431372549,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_text_secondary",
+      "modeId": "kin_kin_color_collection_mode_light_high_contrast",
+      "value": {
+        "r": 0.20392156862745098,
+        "g": 0.2196078431372549,
+        "b": 0.25098039215686274,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_text_secondary",
+      "modeId": "kin_kin_color_collection_mode_dark_high_contrast",
+      "value": {
+        "r": 0.8823529411764706,
+        "g": 0.8941176470588236,
+        "b": 0.9098039215686274,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_warning",
+      "modeId": "kin_kin_color_collection_mode_light",
+      "value": {
+        "r": 0.5568627450980392,
+        "g": 0.396078431372549,
+        "b": 0.058823529411764705,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_warning",
+      "modeId": "kin_kin_color_collection_mode_dark",
+      "value": {
+        "r": 0.7764705882352941,
+        "g": 0.6039215686274509,
+        "b": 0.27058823529411763,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_warning",
+      "modeId": "kin_kin_color_collection_mode_light_high_contrast",
+      "value": {
+        "r": 0.5568627450980392,
+        "g": 0.396078431372549,
+        "b": 0.058823529411764705,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_warning",
+      "modeId": "kin_kin_color_collection_mode_dark_high_contrast",
+      "value": {
+        "r": 0.7764705882352941,
+        "g": 0.6039215686274509,
+        "b": 0.27058823529411763,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "kin_kin_scale_collection_variable_spacing_1",
+      "modeId": "kin_kin_scale_collection_mode_default",
+      "value": 4
+    },
+    {
+      "variableId": "kin_kin_scale_collection_variable_spacing_2",
+      "modeId": "kin_kin_scale_collection_mode_default",
+      "value": 8
+    },
+    {
+      "variableId": "kin_kin_scale_collection_variable_spacing_3",
+      "modeId": "kin_kin_scale_collection_mode_default",
+      "value": 12
+    },
+    {
+      "variableId": "kin_kin_scale_collection_variable_spacing_4",
+      "modeId": "kin_kin_scale_collection_mode_default",
+      "value": 16
+    },
+    {
+      "variableId": "kin_kin_scale_collection_variable_spacing_5",
+      "modeId": "kin_kin_scale_collection_mode_default",
+      "value": 20
+    },
+    {
+      "variableId": "kin_kin_scale_collection_variable_spacing_6",
+      "modeId": "kin_kin_scale_collection_mode_default",
+      "value": 24
+    },
+    {
+      "variableId": "kin_kin_scale_collection_variable_spacing_8",
+      "modeId": "kin_kin_scale_collection_mode_default",
+      "value": 32
+    },
+    {
+      "variableId": "kin_kin_scale_collection_variable_spacing_10",
+      "modeId": "kin_kin_scale_collection_mode_default",
+      "value": 40
+    },
+    {
+      "variableId": "kin_kin_scale_collection_variable_spacing_12",
+      "modeId": "kin_kin_scale_collection_mode_default",
+      "value": 48
+    },
+    {
+      "variableId": "kin_kin_scale_collection_variable_radius_xs",
+      "modeId": "kin_kin_scale_collection_mode_default",
+      "value": 3
+    },
+    {
+      "variableId": "kin_kin_scale_collection_variable_radius_sm",
+      "modeId": "kin_kin_scale_collection_mode_default",
+      "value": 5
+    },
+    {
+      "variableId": "kin_kin_scale_collection_variable_radius_md",
+      "modeId": "kin_kin_scale_collection_mode_default",
+      "value": 7
+    },
+    {
+      "variableId": "kin_kin_scale_collection_variable_radius_lg",
+      "modeId": "kin_kin_scale_collection_mode_default",
+      "value": 10
+    },
+    {
+      "variableId": "kin_kin_scale_collection_variable_radius_xl",
+      "modeId": "kin_kin_scale_collection_mode_default",
+      "value": 14
+    },
+    {
+      "variableId": "kin_kin_scale_collection_variable_radius_round",
+      "modeId": "kin_kin_scale_collection_mode_default",
+      "value": 999
+    },
+    {
+      "variableId": "kin_kin_typography_collection_variable_typography_display_font_family",
+      "modeId": "kin_kin_typography_collection_mode_default",
+      "value": "Inter, Geist, system-ui, sans-serif"
+    },
+    {
+      "variableId": "kin_kin_typography_collection_variable_typography_display_font_size",
+      "modeId": "kin_kin_typography_collection_mode_default",
+      "value": 32
+    },
+    {
+      "variableId": "kin_kin_typography_collection_variable_typography_display_font_weight",
+      "modeId": "kin_kin_typography_collection_mode_default",
+      "value": 600
+    },
+    {
+      "variableId": "kin_kin_typography_collection_variable_typography_display_line_height",
+      "modeId": "kin_kin_typography_collection_mode_default",
+      "value": 38
+    },
+    {
+      "variableId": "kin_kin_typography_collection_variable_typography_display_letter_spacing",
+      "modeId": "kin_kin_typography_collection_mode_default",
+      "value": -0.02
+    },
+    {
+      "variableId": "kin_kin_typography_collection_variable_typography_page_title_font_family",
+      "modeId": "kin_kin_typography_collection_mode_default",
+      "value": "Inter, Geist, system-ui, sans-serif"
+    },
+    {
+      "variableId": "kin_kin_typography_collection_variable_typography_page_title_font_size",
+      "modeId": "kin_kin_typography_collection_mode_default",
+      "value": 20
+    },
+    {
+      "variableId": "kin_kin_typography_collection_variable_typography_page_title_font_weight",
+      "modeId": "kin_kin_typography_collection_mode_default",
+      "value": 600
+    },
+    {
+      "variableId": "kin_kin_typography_collection_variable_typography_page_title_line_height",
+      "modeId": "kin_kin_typography_collection_mode_default",
+      "value": 26
+    },
+    {
+      "variableId": "kin_kin_typography_collection_variable_typography_page_title_letter_spacing",
+      "modeId": "kin_kin_typography_collection_mode_default",
+      "value": -0.01
+    },
+    {
+      "variableId": "kin_kin_typography_collection_variable_typography_entity_title_font_family",
+      "modeId": "kin_kin_typography_collection_mode_default",
+      "value": "Inter, Geist, system-ui, sans-serif"
+    },
+    {
+      "variableId": "kin_kin_typography_collection_variable_typography_entity_title_font_size",
+      "modeId": "kin_kin_typography_collection_mode_default",
+      "value": 18
+    },
+    {
+      "variableId": "kin_kin_typography_collection_variable_typography_entity_title_font_weight",
+      "modeId": "kin_kin_typography_collection_mode_default",
+      "value": 600
+    },
+    {
+      "variableId": "kin_kin_typography_collection_variable_typography_entity_title_line_height",
+      "modeId": "kin_kin_typography_collection_mode_default",
+      "value": 24
+    },
+    {
+      "variableId": "kin_kin_typography_collection_variable_typography_entity_title_letter_spacing",
+      "modeId": "kin_kin_typography_collection_mode_default",
+      "value": -0.01
+    },
+    {
+      "variableId": "kin_kin_typography_collection_variable_typography_section_title_font_family",
+      "modeId": "kin_kin_typography_collection_mode_default",
+      "value": "Inter, Geist, system-ui, sans-serif"
+    },
+    {
+      "variableId": "kin_kin_typography_collection_variable_typography_section_title_font_size",
+      "modeId": "kin_kin_typography_collection_mode_default",
+      "value": 14
+    },
+    {
+      "variableId": "kin_kin_typography_collection_variable_typography_section_title_font_weight",
+      "modeId": "kin_kin_typography_collection_mode_default",
+      "value": 600
+    },
+    {
+      "variableId": "kin_kin_typography_collection_variable_typography_section_title_line_height",
+      "modeId": "kin_kin_typography_collection_mode_default",
+      "value": 20
+    },
+    {
+      "variableId": "kin_kin_typography_collection_variable_typography_section_title_letter_spacing",
+      "modeId": "kin_kin_typography_collection_mode_default",
+      "value": 0
+    },
+    {
+      "variableId": "kin_kin_typography_collection_variable_typography_body_font_family",
+      "modeId": "kin_kin_typography_collection_mode_default",
+      "value": "Inter, Geist, system-ui, sans-serif"
+    },
+    {
+      "variableId": "kin_kin_typography_collection_variable_typography_body_font_size",
+      "modeId": "kin_kin_typography_collection_mode_default",
+      "value": 14
+    },
+    {
+      "variableId": "kin_kin_typography_collection_variable_typography_body_font_weight",
+      "modeId": "kin_kin_typography_collection_mode_default",
+      "value": 400
+    },
+    {
+      "variableId": "kin_kin_typography_collection_variable_typography_body_line_height",
+      "modeId": "kin_kin_typography_collection_mode_default",
+      "value": 22
+    },
+    {
+      "variableId": "kin_kin_typography_collection_variable_typography_body_letter_spacing",
+      "modeId": "kin_kin_typography_collection_mode_default",
+      "value": 0
+    },
+    {
+      "variableId": "kin_kin_typography_collection_variable_typography_ui_font_family",
+      "modeId": "kin_kin_typography_collection_mode_default",
+      "value": "Inter, Geist, system-ui, sans-serif"
+    },
+    {
+      "variableId": "kin_kin_typography_collection_variable_typography_ui_font_size",
+      "modeId": "kin_kin_typography_collection_mode_default",
+      "value": 13
+    },
+    {
+      "variableId": "kin_kin_typography_collection_variable_typography_ui_font_weight",
+      "modeId": "kin_kin_typography_collection_mode_default",
+      "value": 500
+    },
+    {
+      "variableId": "kin_kin_typography_collection_variable_typography_ui_line_height",
+      "modeId": "kin_kin_typography_collection_mode_default",
+      "value": 18
+    },
+    {
+      "variableId": "kin_kin_typography_collection_variable_typography_ui_letter_spacing",
+      "modeId": "kin_kin_typography_collection_mode_default",
+      "value": 0
+    },
+    {
+      "variableId": "kin_kin_typography_collection_variable_typography_metadata_font_family",
+      "modeId": "kin_kin_typography_collection_mode_default",
+      "value": "Inter, Geist, system-ui, sans-serif"
+    },
+    {
+      "variableId": "kin_kin_typography_collection_variable_typography_metadata_font_size",
+      "modeId": "kin_kin_typography_collection_mode_default",
+      "value": 12
+    },
+    {
+      "variableId": "kin_kin_typography_collection_variable_typography_metadata_font_weight",
+      "modeId": "kin_kin_typography_collection_mode_default",
+      "value": 400
+    },
+    {
+      "variableId": "kin_kin_typography_collection_variable_typography_metadata_line_height",
+      "modeId": "kin_kin_typography_collection_mode_default",
+      "value": 17
+    },
+    {
+      "variableId": "kin_kin_typography_collection_variable_typography_metadata_letter_spacing",
+      "modeId": "kin_kin_typography_collection_mode_default",
+      "value": 0
+    },
+    {
+      "variableId": "kin_kin_typography_collection_variable_typography_mono_font_family",
+      "modeId": "kin_kin_typography_collection_mode_default",
+      "value": "Geist Mono, JetBrains Mono, monospace"
+    },
+    {
+      "variableId": "kin_kin_typography_collection_variable_typography_mono_font_size",
+      "modeId": "kin_kin_typography_collection_mode_default",
+      "value": 12
+    },
+    {
+      "variableId": "kin_kin_typography_collection_variable_typography_mono_font_weight",
+      "modeId": "kin_kin_typography_collection_mode_default",
+      "value": 450
+    },
+    {
+      "variableId": "kin_kin_typography_collection_variable_typography_mono_line_height",
+      "modeId": "kin_kin_typography_collection_mode_default",
+      "value": 18
+    },
+    {
+      "variableId": "kin_kin_typography_collection_variable_typography_mono_letter_spacing",
+      "modeId": "kin_kin_typography_collection_mode_default",
+      "value": 0
+    }
+  ]
+}

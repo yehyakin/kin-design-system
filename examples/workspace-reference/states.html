@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="dark" data-contrast="normal">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#08090a" />
+    <title>KIN State Reference</title>
+    <script>
+      (() => {
+        const preference = localStorage.getItem("kin-reference-theme") || "system";
+        const resolved = preference === "system"
+          ? (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")
+          : preference;
+        document.documentElement.dataset.theme = resolved;
+        document.documentElement.dataset.themePreference = preference;
+        document.documentElement.dataset.contrast = localStorage.getItem("kin-reference-contrast") === "more" ? "more" : "normal";
+      })();
+    </script>
+    <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="./states.css" />
+    <script src="./states.js" defer></script>
+  </head>
+  <body class="states-page">
+    <a class="skip-link" href="#state-reference">跳到状态基准</a>
+
+    <header class="reference-header">
+      <div>
+        <p>KIN reference</p>
+        <h1>组件状态基准</h1>
+      </div>
+      <div class="reference-actions">
+        <button type="button" data-command-open>打开命令菜单 <kbd>⌘ K</kbd></button>
+        <div class="theme-control" role="group" aria-label="界面主题">
+          <button type="button" data-theme-value="light">日间</button>
+          <button type="button" data-theme-value="dark">夜间</button>
+          <button type="button" data-theme-value="system">系统</button>
+        </div>
+        <button type="button" data-contrast-toggle aria-pressed="false">高对比</button>
+      </div>
+    </header>
+
+    <main id="state-reference" class="reference-main" tabindex="-1">
+      <section aria-labelledby="rows-title">
+        <header class="reference-section-heading">
+          <div><h2 id="rows-title">数据行</h2><p>焦点、选择、业务状态和数据新鲜度分别表达。</p></div>
+          <span>4 种状态</span>
+        </header>
+
+        <div class="reference-table" role="grid" aria-label="对象状态示例">
+          <div class="reference-row reference-row-header" role="row">
+            <span role="columnheader">状态</span><span role="columnheader">对象</span><span role="columnheader">来源</span><span role="columnheader">更新时间</span>
+          </div>
+          <div class="reference-row" role="row" tabindex="0">
+            <span role="gridcell"><i class="status-dot positive"></i>正常</span><strong role="gridcell">North Relay</strong><span role="gridcell">7 个来源</span><time role="gridcell" datetime="2026-07-12T14:40:00+08:00">3 分钟前</time>
+          </div>
+          <div class="reference-row is-selected" role="row" tabindex="0" aria-selected="true">
+            <span role="gridcell"><i class="status-dot warning"></i>观察</span><strong role="gridcell">Harbor Link</strong><span role="gridcell">5 个来源</span><time role="gridcell" datetime="2026-07-12T14:28:00+08:00">15 分钟前</time>
+          </div>
+          <div class="reference-row is-stale" role="row" tabindex="0">
+            <span role="gridcell"><i class="status-dot neutral"></i>数据陈旧</span><strong role="gridcell">Delta Route</strong><span role="gridcell">上游无响应</span><time role="gridcell" datetime="2026-07-10T09:15:00+08:00">2 天前</time>
+          </div>
+          <div class="reference-row is-error" role="row" tabindex="0">
+            <span role="gridcell"><i class="status-dot negative"></i>检测失败</span><strong role="gridcell">East Gate</strong><span role="gridcell">保留上次结果</span><span role="gridcell">重试</span>
+          </div>
+        </div>
+      </section>
+
+      <section aria-labelledby="forms-title">
+        <header class="reference-section-heading">
+          <div><h2 id="forms-title">表单状态</h2><p>标签、输入、错误和帮助信息保持稳定关系。</p></div>
+          <span>完整状态</span>
+        </header>
+
+        <form class="reference-form" novalidate>
+          <label>
+            <span>视图名称</span>
+            <input name="view-name" autocomplete="off" value="近期风险变化" />
+            <small>保存后会出现在侧栏的“保存视图”。</small>
+          </label>
+          <label class="field-invalid">
+            <span>通知地址</span>
+            <input type="email" name="notification-email" autocomplete="email" value="alerts@" aria-invalid="true" aria-describedby="email-error" />
+            <small id="email-error" role="alert">请输入完整的邮箱地址，例如 alerts@example.com。</small>
+          </label>
+          <label>
+            <span>公开对象 ID</span>
+            <input name="public-id" value="PRX-1027" readonly />
+            <small>只读值可以选择和复制。</small>
+          </label>
+          <label>
+            <span>归档时间</span>
+            <input name="archive-time" value="未启用" disabled />
+            <small>启用归档策略后可设置。</small>
+          </label>
+          <div class="form-actions">
+            <button type="button">取消</button>
+            <button type="submit" class="primary-action">保存视图</button>
+          </div>
+        </form>
+      </section>
+
+      <section aria-labelledby="system-title">
+        <header class="reference-section-heading">
+          <div><h2 id="system-title">系统状态</h2><p>空、错和陈旧状态提供下一步，不填充装饰。</p></div>
+          <span>上下文反馈</span>
+        </header>
+
+        <div class="system-states">
+          <article>
+            <div><strong>暂无关联域名</strong><p>当前对象还没有经过验证的关联域名。</p></div>
+            <button type="button">提交线索</button>
+          </article>
+          <article class="state-error">
+            <div><strong>最近一次同步失败</strong><p>公开频道返回限流响应，已有数据仍可查看。</p></div>
+            <button type="button">重新同步</button>
+          </article>
+          <article class="state-stale">
+            <div><strong>价格数据可能已过期</strong><p>最后成功采集于 2 天前，当前数值不会显示为实时价格。</p></div>
+            <button type="button">查看来源</button>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <dialog class="command-dialog" aria-labelledby="command-title">
+      <header>
+        <label for="command-search" id="command-title">搜索对象或执行命令</label>
+        <button type="button" data-command-close aria-label="关闭命令菜单">Esc</button>
+      </header>
+      <input id="command-search" type="search" name="command" autocomplete="off" placeholder="输入对象、视图或操作…" />
+      <div class="command-results" role="listbox" aria-label="命令结果">
+        <p>最近使用</p>
+        <button type="button" role="option" aria-selected="true"><span><strong>Harbor Link</strong><small>打开对象详情</small></span><kbd>↵</kbd></button>
+        <button type="button" role="option"><span><strong>风险情报</strong><small>前往工作区</small></span><kbd>G R</kbd></button>
+        <p>操作</p>
+        <button type="button" role="option"><span><strong>切换到日间模式</strong><small>外观</small></span></button>
+      </div>
+    </dialog>
+  </body>
+</html>

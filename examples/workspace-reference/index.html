@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#08090a" />
+    <title>KIN Workspace Reference</title>
+    <script>
+      (() => {
+        const saved = localStorage.getItem("kin-reference-theme") || "system";
+        const resolved = saved === "system"
+          ? (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")
+          : saved;
+        document.documentElement.dataset.theme = resolved;
+        document.documentElement.dataset.themePreference = saved;
+        document.documentElement.dataset.contrast = localStorage.getItem("kin-reference-contrast") === "more" ? "more" : "normal";
+      })();
+    </script>
+    <link rel="stylesheet" href="./styles.css" />
+    <script src="./reference.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#workspace">跳到主要内容</a>
+
+    <div class="app-shell">
+      <aside class="sidebar" aria-label="主导航">
+        <header class="brand">
+          <span class="brand-mark" aria-hidden="true">K</span>
+          <span>
+            <strong>KIN</strong>
+            <small>Information Workspace</small>
+          </span>
+        </header>
+
+        <nav class="primary-nav" aria-label="工作区">
+          <a href="#overview">情报概览</a>
+          <a href="#database" aria-current="page">对象数据库</a>
+          <a href="#signals">风险信号</a>
+          <a href="#monitoring">监测任务</a>
+        </nav>
+
+        <section class="saved-views" aria-labelledby="saved-title">
+          <h2 id="saved-title">保存视图</h2>
+          <a href="#stable">近期稳定 <span>128</span></a>
+          <a href="#changed">最近变化 <span>16</span></a>
+          <a href="#review">等待复核 <span>7</span></a>
+        </section>
+
+        <div class="sidebar-footer">
+          <button type="button" class="account-button">
+            <span class="avatar" aria-hidden="true">YK</span>
+            <span>工作区设置<small>管理员</small></span>
+          </button>
+        </div>
+      </aside>
+
+      <main id="workspace" class="workspace" tabindex="-1">
+        <header class="workspace-bar">
+          <div class="breadcrumb" aria-label="面包屑">
+            <span>对象数据库</span><span aria-hidden="true">/</span><strong>Alpha Network</strong>
+          </div>
+          <div class="workspace-actions">
+            <span class="search-hint">搜索 <kbd>⌘ K</kbd></span>
+            <button type="button" data-inspector-open aria-controls="inspector" aria-expanded="true">属性</button>
+            <div class="theme-control" role="group" aria-label="界面主题">
+              <button type="button" data-theme-value="light">日间</button>
+              <button type="button" data-theme-value="dark">夜间</button>
+              <button type="button" data-theme-value="system">系统</button>
+            </div>
+            <button type="button" data-contrast-toggle aria-pressed="false">高对比</button>
+          </div>
+        </header>
+
+        <nav class="view-bar" aria-label="对象视图">
+          <a href="#summary" aria-current="page">概览</a>
+          <a href="#activity">事件</a>
+          <a href="#sources">来源</a>
+          <a href="#relations">关联</a>
+        </nav>
+
+        <article class="entity-content">
+          <header class="entity-header">
+            <div>
+              <p class="object-id">PRX-1027</p>
+              <h1>Alpha Network</h1>
+              <p>持续记录入口、公开频道、运行状态和可验证事件。</p>
+            </div>
+            <div class="entity-actions">
+              <button type="button">加入关注</button>
+              <button type="button" class="primary-action">运行检测</button>
+            </div>
+          </header>
+
+          <section class="metric-strip" aria-label="关键指标">
+            <div><span>当前状态</span><strong><i class="status-dot positive"></i>正常</strong></div>
+            <div><span>运营记录</span><strong>6 年 3 个月</strong></div>
+            <div><span>数据完整度</span><strong>86%</strong></div>
+            <div><span>最近事件</span><strong>2 小时前</strong></div>
+          </section>
+
+          <section class="summary" aria-labelledby="summary-title">
+            <div class="section-heading">
+              <div>
+                <h2 id="summary-title">状态摘要</h2>
+                <p>基于最近一次公开数据和监测结果。</p>
+              </div>
+              <time datetime="2026-07-12T14:32:00+08:00">更新于 14:32</time>
+            </div>
+            <p class="summary-text">官网与公开频道当前可访问。过去 30 天记录到 2 次短时异常，均已恢复；现有证据不足以提高风险等级。</p>
+          </section>
+
+          <section id="activity" class="activity" aria-labelledby="activity-title">
+            <div class="section-heading">
+              <div>
+                <h2 id="activity-title">最近事件</h2>
+                <p>变化按发生时间排列，结论与来源分开显示。</p>
+              </div>
+              <button type="button" class="text-button">查看全部</button>
+            </div>
+
+            <ol class="activity-list">
+              <li>
+                <time datetime="2026-07-12T09:42:00+08:00">今天 09:42</time>
+                <div><strong>香港节点延迟恢复正常</strong><p>HK-02 延迟从 328ms 降至 89ms。</p></div>
+                <span>检测系统</span>
+              </li>
+              <li>
+                <time datetime="2026-07-11T23:18:00+08:00">昨天 23:18</time>
+                <div><strong>公开频道发布维护通知</strong><p>计划维护窗口为 7 月 13 日 02:00–03:00。</p></div>
+                <span>公开频道</span>
+              </li>
+              <li>
+                <time datetime="2026-07-09T16:05:00+08:00">7 月 9 日</time>
+                <div><strong>主域名证书完成续期</strong><p>证书签发机构未发生变化。</p></div>
+                <span>证书监测</span>
+              </li>
+            </ol>
+          </section>
+        </article>
+      </main>
+
+      <aside id="inspector" class="inspector" aria-labelledby="inspector-title">
+        <header>
+          <div><span>当前对象</span><h2 id="inspector-title">Alpha Network</h2></div>
+          <button type="button" class="icon-button" data-inspector-close aria-label="关闭属性面板">×</button>
+        </header>
+
+        <section>
+          <h3>状态</h3>
+          <dl>
+            <div><dt>运行状态</dt><dd><i class="status-dot positive"></i>正常</dd></div>
+            <div><dt>风险等级</dt><dd><i class="status-dot warning"></i>观察</dd></div>
+            <div><dt>最后检测</dt><dd>3 分钟前</dd></div>
+          </dl>
+        </section>
+
+        <section>
+          <h3>运营信息</h3>
+          <dl>
+            <div><dt>首次收录</dt><dd>2020-04-18</dd></div>
+            <div><dt>主要地区</dt><dd>东亚</dd></div>
+            <div><dt>关联域名</dt><dd><a href="#domains">4 个</a></dd></div>
+          </dl>
+        </section>
+
+        <section>
+          <h3>证据</h3>
+          <dl>
+            <div><dt>证据数量</dt><dd>18</dd></div>
+            <div><dt>来源数量</dt><dd>7</dd></div>
+            <div><dt>证据可信度</dt><dd>90 / 100</dd></div>
+          </dl>
+          <p class="definition">该分数表示当前证据来源的可信程度，不代表对象整体安全等级。</p>
+        </section>
+      </aside>
+    </div>
+  </body>
+</html>

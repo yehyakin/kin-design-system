@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="dark" data-contrast="normal">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#08090a" />
+    <title>KIN Engineering Canvas Reference</title>
+    <script>
+      (()=>{const p=localStorage.getItem("kin-reference-theme")||"system";const t=p==="system"?(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light"):p;document.documentElement.dataset.theme=t;document.documentElement.dataset.themePreference=p;document.documentElement.dataset.contrast=localStorage.getItem("kin-reference-contrast")==="more"?"more":"normal"})();
+    </script>
+    <link rel="stylesheet" href="./patterns.css" />
+    <script src="./theme.js" defer></script>
+  </head>
+  <body>
+    <main class="canvas-shell">
+      <header class="canvas-topbar">
+        <div class="canvas-title"><strong>Bracket Assembly</strong><span>Revision 18 · 已保存</span></div>
+        <div class="canvas-actions"><button type="button">撤销</button><button type="button">重做</button><button type="button">导出</button><button type="button" class="mobile-only" data-canvas-properties-open aria-controls="canvas-properties" aria-expanded="false">属性</button><div class="pattern-theme-actions"><div class="theme-control" role="group" aria-label="界面主题"><button type="button" data-theme-value="light">日间</button><button type="button" data-theme-value="dark">夜间</button><button type="button" data-theme-value="system">系统</button></div><button type="button" data-contrast-toggle aria-pressed="false">高对比</button></div></div>
+      </header>
+
+      <nav class="tool-rail" aria-label="绘图工具">
+        <button type="button" data-tool aria-label="选择" aria-pressed="true">S</button><button type="button" data-tool aria-label="直线" aria-pressed="false">L</button><button type="button" data-tool aria-label="矩形" aria-pressed="false">R</button><button type="button" data-tool aria-label="尺寸" aria-pressed="false">D</button><button type="button" data-tool aria-label="约束" aria-pressed="false">C</button>
+      </nav>
+
+      <aside class="layer-panel" aria-label="图层和对象">
+        <header class="panel-heading"><strong>对象</strong><span>6</span></header>
+        <div class="layer-tree"><button type="button" data-object aria-pressed="false">Assembly <small>可见</small></button><div class="nested"><button type="button" data-object aria-pressed="true">Bracket-01 <small>已选</small></button><button type="button" data-object aria-pressed="false">Plate-02 <small>可见</small></button><button type="button" data-object aria-pressed="false">Bolt × 4 <small>锁定</small></button></div><button type="button" data-object aria-pressed="false">Construction <small>隐藏</small></button></div>
+      </aside>
+
+      <section class="drawing-area" aria-label="工程图画布">
+        <span class="canvas-mode">选择 · 正交视图</span>
+        <svg viewBox="0 0 760 500" role="img" aria-labelledby="drawing-title drawing-desc">
+          <title id="drawing-title">Bracket Assembly 工程图</title><desc id="drawing-desc">被选中的 L 形支架、安装板、孔位和 120 毫米尺寸标注。</desc>
+          <path class="geometry" d="M160 350 L160 150 L330 150 L330 220 L245 220 L245 350 Z" />
+          <rect class="geometry" x="245" y="300" width="300" height="50" />
+          <circle class="geometry" cx="205" cy="200" r="24" /><circle class="geometry" cx="295" cy="185" r="14" /><circle class="geometry" cx="310" cy="325" r="12" /><circle class="geometry" cx="480" cy="325" r="12" />
+          <path class="secondary" d="M120 350 H590 M160 110 V390 M545 270 V390" />
+          <path class="selected-geometry" d="M160 350 L160 150 L330 150 L330 220 L245 220 L245 350 Z" />
+          <rect class="handle" x="155" y="145" width="10" height="10" /><rect class="handle" x="325" y="145" width="10" height="10" /><rect class="handle" x="240" y="345" width="10" height="10" />
+          <path class="geometry" d="M160 405 H545 M160 395 V415 M545 395 V415" /><path class="geometry" d="M160 405 l12 -5 v10 Z M545 405 l-12 -5 v10 Z" />
+          <text class="dimension" x="330" y="397">120.00 mm</text>
+        </svg>
+      </section>
+
+      <aside id="canvas-properties" class="property-panel" aria-label="属性">
+        <div class="mobile-property-heading"><strong>属性</strong><button type="button" data-canvas-properties-close aria-label="关闭属性面板">关闭</button></div>
+        <section><h2>Bracket-01</h2><div class="property-grid"><label for="x">X</label><input id="x" value="160.00 mm" /><label for="y">Y</label><input id="y" value="150.00 mm" /><label for="width">宽度</label><input id="width" value="170.00 mm" /><label for="height">高度</label><input id="height" value="200.00 mm" /></div></section>
+        <section><h3>约束</h3><div class="property-grid"><label for="horizontal">水平</label><input id="horizontal" value="已约束" readonly /><label for="vertical">垂直</label><input id="vertical" value="已约束" readonly /><label for="radius">孔半径</label><input id="radius" value="24.00 mm" /></div></section>
+        <section><h3>生成的修改</h3><div class="generated-change"><strong>调整安装孔间距</strong><p>建议将中心距从 165.00 mm 改为 170.00 mm。尚未写入 Revision 18。</p><div><button type="button">查看差异</button><button type="button" class="primary-action">接受</button></div></div></section>
+      </aside>
+
+      <footer class="canvas-status"><div><span>X 312.40</span><span>Y 188.20</span><span>mm</span><span>Snap 1.00</span></div><div><span>1 个对象</span><span>100%</span><span>Revision 18</span></div></footer>
+    </main>
+  </body>
+</html>

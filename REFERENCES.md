@@ -29,6 +29,11 @@ Third-party component defaults always have the lowest visual priority.
 | [Kill AI Slop website](https://killaislop.com/) | human-readable companion reference | duplicate normative rules |
 | [Taste Skill](https://github.com/Leonxlnx/taste-skill) | density, hierarchy and visual-review prompts | arbitrary style parameters overriding KIN |
 | [Soul Design Linear DESIGN.md](https://github.com/soulcore-dev/soul-design-md/blob/main/designs/linear/DESIGN.md) | agent-readable documentation structure and implementation detail | unverified claims framed as official Linear tokens |
+| [Google DESIGN.md](https://github.com/google-labs-code/design.md) | machine-readable frontmatter, token references, linting and interoperable export | treating an alpha format as KIN's complete product contract |
+| [Anthropic frontend-design Skill](https://github.com/anthropics/skills/tree/main/skills/frontend-design) | subject-grounded direction, two-pass planning and screenshot critique | marketing-page assumptions applied to dense workspaces |
+| [Impeccable](https://github.com/pbakaus/impeccable) | context routing, progressive disclosure, scored audits and evidence formats | command structure or visual rules copied without KIN adaptation |
+| [Vercel Web Interface Guidelines](https://github.com/vercel-labs/web-interface-guidelines) | concise code-level accessibility and interface audit checks | scanner output treated as product judgment |
+| [Google Stitch Skills](https://github.com/google-labs-code/stitch-skills) | framework discovery and extraction of design intent from existing code | generated prose accepted without checking the source implementation |
 
 ## Runtime-component references
 
@@ -54,6 +59,19 @@ Package names, maintainers, APIs, licenses and support status can change. Every 
 | [Math Curve Loaders](https://github.com/Paidax01/math-curve-loaders) | exceptional long-running tasks with real progress | page loads, search, buttons, decoration |
 
 See [`tools/brand-motion.md`](./tools/brand-motion.md) and [`tools/long-task-loaders.md`](./tools/long-task-loaders.md).
+
+## Development validation
+
+| Tool | Scope | Boundary |
+|---|---|---|
+| [Playwright](https://github.com/microsoft/playwright) | development-only responsive, theme, focus, dialog and screenshot checks | screenshots support human review; platform-sensitive pixel differences are not yet a normative merge gate |
+| [Google DESIGN.md CLI](https://github.com/google-labs-code/design.md) | lint, interoperability export and Token diff | pinned alpha tooling does not replace KIN's prose, theme behavior or human product judgment |
+| [Tokens Studio documentation](https://github.com/tokens-studio/tokens-studio-for-figma-plugin-docs) | DTCG JSON exchange, Token Sets, Themes, and reviewed export to Figma | plugin configuration is not a substitute for KIN theme semantics |
+| [Figma Variables REST API](https://developers.figma.com/docs/rest-api/variables-endpoints/) | create-only Variables payload structure and platform limits | no credentials, automatic upload, or untested update synchronization in KIN |
+
+The reviewed Playwright dependency is recorded in `package-lock.json` and does not ship to consuming products. CI installs Chromium only in the reference-interface job.
+
+KIN 2.0 locks `@google/design.md` 0.3.0 and `@playwright/test` 1.61.1 as development-only dependencies. Both are published under Apache-2.0; their transitive dependency integrity is recorded in `package-lock.json` and reviewed with `npm audit` before release.
 
 ## Adoption record
 

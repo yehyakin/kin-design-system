@@ -23,6 +23,10 @@ Link primary sources, product evidence, screenshots or measurements. Label third
 ## Validation
 
 - [ ] `node scripts/validate-docs.mjs`
+- [ ] `node scripts/validate-design.mjs`
+- [ ] `node scripts/export-tokens.mjs --check`
+- [ ] `node scripts/report-token-changes.mjs <base-ref>` reviewed when Tokens changed
+- [ ] `npm run test:reference` and screenshots reviewed when reference UI changed
 - [ ] Light and dark implications reviewed
 - [ ] Keyboard and screen-reader implications reviewed
 - [ ] Mobile and touch implications reviewed
