@@ -8,7 +8,7 @@ The project follows semantic versioning for normative design documentation.
 
 ### Changed
 
-- Reworked the README with direct project language, Quick Start, product scope, repository navigation, and contribution paths.
+- Reframed the README for a general audience, expanded the supported interface scenarios, and added separate paths for designers, engineers, teams, independent makers, and coding tools.
 
 ### Added
 
