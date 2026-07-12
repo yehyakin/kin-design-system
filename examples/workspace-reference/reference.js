@@ -1,13 +1,18 @@
 import {
   Activity,
   Check,
+  CirclePlay,
   Contrast,
   createIcons,
   Database,
+  ExternalLink,
   Languages,
   LayoutDashboard,
+  LoaderCircle,
   Moon,
   PanelRight,
+  RefreshCw,
+  Save,
   ScanLine,
   Search,
   Star,
@@ -55,9 +60,17 @@ const copy = {
     firstRecorded: "首次收录", primaryRegion: "主要地区", eastAsia: "东亚", relatedDomains: "关联域名",
     fourItems: "4 个", evidence: "证据", evidenceCount: "证据数量", sourceCount: "来源数量",
     confidence: "证据可信度", confidenceDefinition: "该分数表示当前证据来源的可信程度，不代表对象整体安全等级。",
+    feedbackTitle: "交互反馈", feedbackDescription: "按钮状态说明操作进度，Sonner 只反馈用户主动触发的结果。",
+    toggleLabel: "切换状态", watchButton: "关注对象", watchingButton: "正在关注", toggleDescription: "选中状态由颜色、图标和 aria-pressed 共同表达。",
+    asyncLabel: "异步完成", saveButton: "保存视图", savingButton: "正在保存", savedButton: "已保存", asyncDescription: "同一按钮连续呈现等待、完成和恢复状态。",
+    taskButton: "启动导出任务", taskDescription: "同一条通知从处理中更新为完成，不重复堆叠。",
+    errorLabel: "失败与重试", retryButton: "模拟请求失败", errorDescription: "失败通知保留上下文，并提供明确的重试动作。",
     switchToLight: "切换到日间模式", switchToDark: "切换到夜间模式",
     followedTitle: "已加入关注", followedDescription: "Alpha Network 的变化会出现在关注视图中。", undo: "撤销", undone: "已撤销关注",
     scanTitle: "检测任务已创建", scanDescription: "系统将检测公开入口和监测节点。", viewTask: "查看任务", taskOpened: "检测任务已打开",
+    savedTitle: "视图已保存", savedDescription: "筛选条件和列顺序已保存。",
+    exportLoading: "正在创建导出任务", exportSuccess: "导出任务已创建", exportDescription: "任务完成后可在下载中心查看。",
+    errorTitle: "请求失败", errorToastDescription: "监测服务暂时没有响应。", retry: "重试", retryQueued: "已重新提交请求",
   },
   en: {
     skip: "Skip to main content", primaryNav: "Primary navigation", workspaceNav: "Workspace", overview: "Overview",
@@ -81,9 +94,17 @@ const copy = {
     firstRecorded: "First recorded", primaryRegion: "Primary region", eastAsia: "East Asia", relatedDomains: "Related domains",
     fourItems: "4 items", evidence: "Evidence", evidenceCount: "Evidence count", sourceCount: "Source count",
     confidence: "Evidence confidence", confidenceDefinition: "This score describes confidence in the current evidence sources, not the overall safety level of the entity.",
+    feedbackTitle: "Interaction feedback", feedbackDescription: "Button states communicate progress; Sonner reports results initiated by the user.",
+    toggleLabel: "Toggle state", watchButton: "Watch entity", watchingButton: "Watching", toggleDescription: "Color, icon treatment, and aria-pressed communicate the selected state together.",
+    asyncLabel: "Async completion", saveButton: "Save view", savingButton: "Saving", savedButton: "Saved", asyncDescription: "One button moves through pending, complete, and restored states without shifting layout.",
+    taskButton: "Start export task", taskDescription: "One notification updates from processing to complete instead of stacking duplicates.",
+    errorLabel: "Failure and retry", retryButton: "Simulate request failure", errorDescription: "The error keeps its context and offers a clear retry action.",
     switchToLight: "Switch to light mode", switchToDark: "Switch to dark mode",
     followedTitle: "Added to following", followedDescription: "Changes to Alpha Network will appear in your followed view.", undo: "Undo", undone: "Follow removed",
     scanTitle: "Scan created", scanDescription: "Public endpoints and monitoring nodes will be checked.", viewTask: "View task", taskOpened: "Scan task opened",
+    savedTitle: "View saved", savedDescription: "Filters and column order have been saved.",
+    exportLoading: "Creating export task", exportSuccess: "Export task created", exportDescription: "The result will appear in Downloads when ready.",
+    errorTitle: "Request failed", errorToastDescription: "The monitoring service did not respond.", retry: "Retry", retryQueued: "Request submitted again",
   },
 };
 
@@ -110,6 +131,11 @@ function translate(locale, persist = true) {
   updateThemeSwitch(root.dataset.theme);
   if (persist) localStorage.setItem("kin-reference-locale", locale);
   if (sonnerModulePromise) sonnerModulePromise.then((module) => module.updateToasterTheme(root.dataset.theme, locale));
+  const toggle = document.querySelector("[data-motion-toggle]");
+  if (toggle) {
+    const label = toggle.querySelector("span");
+    label.textContent = messages[toggle.getAttribute("aria-pressed") === "true" ? "watchingButton" : "watchButton"];
+  }
 }
 
 function updateThemeSwitch(theme) {
@@ -193,19 +219,71 @@ async function showToast(kind) {
   const module = await sonnerModulePromise;
   const messages = copy[currentLocale()];
   const isFollow = kind === "follow";
+  const isError = kind === "error";
   module.showKinToast({
-    title: messages[isFollow ? "followedTitle" : "scanTitle"],
-    description: messages[isFollow ? "followedDescription" : "scanDescription"],
-    actionLabel: messages[isFollow ? "undo" : "viewTask"],
-    undoTitle: messages[isFollow ? "undone" : "taskOpened"],
+    title: messages[isError ? "errorTitle" : isFollow ? "followedTitle" : "scanTitle"],
+    description: messages[isError ? "errorToastDescription" : isFollow ? "followedDescription" : "scanDescription"],
+    actionLabel: messages[isError ? "retry" : isFollow ? "undo" : "viewTask"],
+    undoTitle: messages[isError ? "retryQueued" : isFollow ? "undone" : "taskOpened"],
     theme: root.dataset.theme,
     locale: currentLocale(),
+    tone: isError ? "error" : "default",
   });
 }
 
 for (const trigger of document.querySelectorAll("[data-toast]")) {
   trigger.addEventListener("click", () => showToast(trigger.dataset.toast));
 }
+
+const motionToggle = document.querySelector("[data-motion-toggle]");
+motionToggle.addEventListener("click", () => {
+  const active = motionToggle.getAttribute("aria-pressed") !== "true";
+  motionToggle.setAttribute("aria-pressed", String(active));
+  motionToggle.querySelector("span").textContent = copy[currentLocale()][active ? "watchingButton" : "watchButton"];
+});
+
+const asyncButton = document.querySelector("[data-motion-async]");
+asyncButton.addEventListener("click", () => {
+  if (asyncButton.disabled) return;
+  const messages = copy[currentLocale()];
+  const label = asyncButton.querySelector("[data-motion-label]");
+  asyncButton.disabled = true;
+  asyncButton.classList.add("is-loading");
+  label.textContent = messages.savingButton;
+  window.setTimeout(async () => {
+    asyncButton.classList.remove("is-loading");
+    asyncButton.classList.add("is-success");
+    label.textContent = copy[currentLocale()].savedButton;
+    sonnerModulePromise ??= import("../../site/assets/sonner-island.js");
+    const module = await sonnerModulePromise;
+    const currentMessages = copy[currentLocale()];
+    module.showKinToast({
+      title: currentMessages.savedTitle,
+      description: currentMessages.savedDescription,
+      theme: root.dataset.theme,
+      locale: currentLocale(),
+      tone: "success",
+    });
+    window.setTimeout(() => {
+      asyncButton.classList.remove("is-success");
+      asyncButton.disabled = false;
+      label.textContent = copy[currentLocale()].saveButton;
+    }, 1100);
+  }, 700);
+});
+
+document.querySelector("[data-motion-task]").addEventListener("click", async () => {
+  sonnerModulePromise ??= import("../../site/assets/sonner-island.js");
+  const module = await sonnerModulePromise;
+  const messages = copy[currentLocale()];
+  module.showKinTaskToast({
+    loadingTitle: messages.exportLoading,
+    successTitle: messages.exportSuccess,
+    description: messages.exportDescription,
+    theme: root.dataset.theme,
+    locale: currentLocale(),
+  });
+});
 
 compactLayout.addEventListener("change", (event) => setInspector(!event.matches, false));
 applyTheme(root.dataset.themePreference || "system", false);
@@ -217,12 +295,17 @@ createIcons({
   icons: {
     Activity,
     Check,
+    CirclePlay,
     Contrast,
     Database,
+    ExternalLink,
     Languages,
     LayoutDashboard,
+    LoaderCircle,
     Moon,
     PanelRight,
+    RefreshCw,
+    Save,
     ScanLine,
     Search,
     Star,

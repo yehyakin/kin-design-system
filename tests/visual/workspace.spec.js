@@ -111,6 +111,31 @@ test("workspace localizes controls and loads Sonner on demand", async ({ page })
   expect(await page.evaluate(() => performance.getEntriesByType("resource").some(({ name }) => name.includes("sonner-island")))).toBe(true);
 });
 
+test("workspace demonstrates button motion and Sonner result patterns", async ({ page }) => {
+  await seedPreferences(page, "dark", "normal", "en");
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/examples/workspace-reference/");
+
+  const toggle = page.locator("[data-motion-toggle]");
+  await toggle.click();
+  await expect(toggle).toHaveAttribute("aria-pressed", "true");
+  await expect(toggle).toContainText("Watching");
+
+  const asyncButton = page.locator("[data-motion-async]");
+  await asyncButton.click();
+  await expect(asyncButton).toHaveClass(/is-loading/);
+  await expect(asyncButton).toHaveClass(/is-success/, { timeout: 2_000 });
+  await expect(page.getByText("View saved", { exact: true })).toBeVisible();
+
+  await page.locator("[data-motion-task]").click();
+  await expect(page.getByText("Creating export task", { exact: true })).toBeVisible();
+  await expect(page.getByText("Export task created", { exact: true })).toBeVisible({ timeout: 2_000 });
+
+  await page.locator('[data-toast="error"]').click();
+  await expect(page.getByText("Request failed", { exact: true })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Retry" })).toBeVisible();
+});
+
 test("workspace mobile and inspector behavior", async ({ page }, testInfo) => {
   await seedPreferences(page, "dark");
   await page.setViewportSize({ width: 390, height: 844 });

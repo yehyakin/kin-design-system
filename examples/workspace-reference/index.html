@@ -155,6 +155,55 @@
               </li>
             </ol>
           </section>
+
+          <section id="feedback" class="feedback-section" aria-labelledby="feedback-title">
+            <div class="section-heading">
+              <div>
+                <h2 id="feedback-title" data-i18n="feedbackTitle">交互反馈</h2>
+                <p data-i18n="feedbackDescription">按钮状态说明操作进度，Sonner 只反馈用户主动触发的结果。</p>
+              </div>
+              <a class="library-link" href="https://github.com/emilkowalski/sonner" target="_blank" rel="noopener noreferrer">
+                <span>emilkowalski/sonner</span><i data-lucide="external-link"></i>
+              </a>
+            </div>
+
+            <div class="feedback-grid">
+              <article class="feedback-example">
+                <span class="example-label" data-i18n="toggleLabel">切换状态</span>
+                <button type="button" class="motion-button" data-motion-toggle aria-pressed="false">
+                  <i data-lucide="star"></i><span data-i18n="watchButton">关注对象</span>
+                </button>
+                <p data-i18n="toggleDescription">选中状态由颜色、图标和 aria-pressed 共同表达。</p>
+              </article>
+
+              <article class="feedback-example">
+                <span class="example-label" data-i18n="asyncLabel">异步完成</span>
+                <button type="button" class="motion-button" data-motion-async>
+                  <i class="button-icon button-icon-default" data-lucide="save"></i>
+                  <i class="button-icon button-icon-loading" data-lucide="loader-circle"></i>
+                  <i class="button-icon button-icon-success" data-lucide="check"></i>
+                  <span data-motion-label data-i18n="saveButton">保存视图</span>
+                </button>
+                <p data-i18n="asyncDescription">同一按钮连续呈现等待、完成和恢复状态。</p>
+              </article>
+
+              <article class="feedback-example">
+                <span class="example-label">Sonner</span>
+                <button type="button" class="motion-button" data-motion-task>
+                  <i data-lucide="circle-play"></i><span data-i18n="taskButton">启动导出任务</span>
+                </button>
+                <p data-i18n="taskDescription">同一条通知从处理中更新为完成，不重复堆叠。</p>
+              </article>
+
+              <article class="feedback-example">
+                <span class="example-label" data-i18n="errorLabel">失败与重试</span>
+                <button type="button" class="motion-button danger-button" data-toast="error">
+                  <i data-lucide="refresh-cw"></i><span data-i18n="retryButton">模拟请求失败</span>
+                </button>
+                <p data-i18n="errorDescription">失败通知保留上下文，并提供明确的重试动作。</p>
+              </article>
+            </div>
+          </section>
         </article>
       </main>
 

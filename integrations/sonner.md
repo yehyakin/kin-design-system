@@ -30,6 +30,8 @@ Core candidate for compact feedback from user-initiated actions.
 
 The KIN showcase uses the official React Sonner package in an isolated, lazy-loaded island. React and Sonner are not part of the initial JavaScript bundle; they load after the first user action that requires temporary feedback. Theme changes update an already-mounted Toaster without producing a toast.
 
+The [workspace reference](../examples/workspace-reference/) demonstrates four approved patterns: reversible feedback, success, recoverable error, and a single loading toast updated in place when a task completes. These examples also verify bilingual labels, light and dark surfaces, mobile placement, and reduced motion.
+
 Consuming React products SHOULD mount one Toaster near the application root and call `toast()` from user-initiated operations. Non-React products SHOULD not add React only to copy this adapter; use a native-stack notification component that satisfies the same behavior contract instead.
 
 ## Source

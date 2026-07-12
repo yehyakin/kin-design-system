@@ -45,13 +45,22 @@ export function updateToasterTheme(theme, locale = currentLocale) {
   if (reactRoot) renderToaster(theme, locale);
 }
 
-export function showKinToast({ title, description, actionLabel, undoTitle, theme, locale }) {
+export function showKinToast({ title, description, actionLabel, undoTitle, theme, locale, tone = "default" }) {
   if (!renderToaster(theme ?? currentTheme, locale ?? currentLocale)) return;
-  toast(title, {
+  const notify = tone === "success" ? toast.success : tone === "error" ? toast.error : toast;
+  notify(title, {
     description,
     action: actionLabel ? {
       label: actionLabel,
       onClick: () => toast(undoTitle || (locale === "zh" ? "操作已撤销" : "Action undone")),
     } : undefined,
   });
+}
+
+export function showKinTaskToast({ loadingTitle, successTitle, description, theme, locale, duration = 900 }) {
+  if (!renderToaster(theme ?? currentTheme, locale ?? currentLocale)) return;
+  const id = toast.loading(loadingTitle);
+  window.setTimeout(() => {
+    toast.success(successTitle, { id, description });
+  }, duration);
 }
