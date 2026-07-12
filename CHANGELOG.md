@@ -6,6 +6,7 @@ The project follows semantic versioning for normative design documentation.
 
 ## Unreleased
 
+- Added a normative preference-control contract for Lucide-compatible icons, light/dark switches, retained system preference, and icon-triggered language menus.
 - Updated the workspace reference with the Lucide icon adapter, lazy Sonner feedback, a light/dark switch, and an icon-based English/Chinese language menu.
 - Expanded the workspace reference with Sonner success, error, undo, and loading-to-complete patterns plus press, toggle, pending, and completion button motion.
 

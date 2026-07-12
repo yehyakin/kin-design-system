@@ -175,6 +175,11 @@ Information, ecommerce, intelligence, or canvas product work
   DESIGN.md
   matching file in patterns/
   components/core-states.md
+
+Theme switch, system preference, or language menu
+  DESIGN.md
+  components/preference-controls.md
+  integrations/lucide.md
 ```
 
 [`AGENTS.md`](./AGENTS.md) contains repository-wide instructions for tools that support project instruction files.
@@ -259,6 +264,7 @@ Each adopting project is responsible for checking the current version, license, 
 | [`scripts/audit-project.mjs`](./scripts/audit-project.mjs) | Read-only static candidate audit with human-review boundaries |
 | [`scripts/export-figma-variables.mjs`](./scripts/export-figma-variables.mjs) | Create-only Figma Variables REST payload generator |
 | [`components/core-states.md`](./components/core-states.md) | Normative component state and acceptance matrices |
+| [`components/preference-controls.md`](./components/preference-controls.md) | Normative theme-switch, system-preference, and language-menu contract |
 | [`examples/workspace-reference/`](./examples/workspace-reference/) | Framework-free light/dark responsive visual fixture |
 | [`patterns/`](./patterns/) | Product contracts for information, intelligence, ecommerce, and engineering interfaces |
 | [`examples/product-patterns/`](./examples/product-patterns/) | Distinct reference pages for information, ecommerce, and engineering products |
