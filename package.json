@@ -1,6 +1,6 @@
 {
   "name": "kin-design-system",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Design contracts, tokens, reference interfaces, and review tooling for information-rich products.",
   "private": true,
   "license": "MIT",
@@ -13,16 +13,19 @@
   },
   "type": "module",
   "scripts": {
-    "validate": "node scripts/validate-docs.mjs && node scripts/validate-design.mjs && node scripts/validate-release.mjs && node scripts/export-tokens.mjs --check && node scripts/export-figma-variables.mjs --check",
+    "validate": "node scripts/validate-docs.mjs && node scripts/validate-design.mjs && node scripts/validate-components.mjs && node scripts/validate-release.mjs && node scripts/export-tokens.mjs --check && node scripts/export-figma-variables.mjs --check",
     "tokens:export": "node scripts/export-tokens.mjs",
     "tokens:check": "node scripts/export-tokens.mjs --check && node scripts/export-figma-variables.mjs --check",
     "tokens:figma": "node scripts/export-figma-variables.mjs",
+    "components:check": "node scripts/validate-components.mjs",
     "site:build": "node scripts/build-site.mjs",
     "site:check": "node scripts/build-site.mjs && node scripts/validate-site.mjs",
     "site:serve": "node scripts/build-site.mjs && node scripts/serve-site.mjs",
     "adoption:init": "node scripts/init-adoption.mjs",
     "adoption:check": "node scripts/check-adoption.mjs",
     "test:reference": "playwright test",
+    "test:reference:chromium": "playwright test --project=chromium-reduced --project=chromium-normal-motion",
+    "test:reference:smoke": "playwright test --project=firefox-smoke --project=webkit-smoke",
     "test:reference:update": "playwright test --update-snapshots",
     "test:tooling": "node --test tests/tooling.test.mjs",
     "audit": "node scripts/audit-project.mjs"

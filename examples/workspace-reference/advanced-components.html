@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="dark" data-contrast="normal">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#08090a" />
+    <title>KIN Advanced Component Reference</title>
+    <script>
+      (() => {
+        const preference = localStorage.getItem("kin-reference-theme") || "system";
+        const resolved = preference === "system" ? (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light") : preference;
+        document.documentElement.dataset.theme = resolved;
+        document.documentElement.dataset.themePreference = preference;
+        document.documentElement.dataset.contrast = localStorage.getItem("kin-reference-contrast") === "more" ? "more" : "normal";
+      })();
+    </script>
+    <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="./states.css" />
+    <link rel="stylesheet" href="./core-components.css" />
+    <link rel="stylesheet" href="./advanced-components.css" />
+    <script src="./advanced-components.js" defer></script>
+  </head>
+  <body class="states-page core-reference-page advanced-reference-page">
+    <a class="skip-link" href="#advanced-reference">跳到高级组件</a>
+    <header class="reference-header">
+      <div><p>KIN reference</p><h1>AI 与专业工作流组件</h1></div>
+      <div class="reference-actions"><a class="reference-back" href="./core-components.html">核心组件</a><div class="theme-control" role="group" aria-label="界面主题"><button type="button" data-theme-value="light">日间</button><button type="button" data-theme-value="dark">夜间</button><button type="button" data-theme-value="system">系统</button></div><button type="button" data-contrast-toggle aria-pressed="false">高对比</button></div>
+    </header>
+
+    <main id="advanced-reference" class="reference-main" tabindex="-1">
+      <div class="fixture-notice" role="note"><strong>本地交互基准</strong><span>本页使用确定性本地状态演示组件行为，不会联系模型、外部来源或后台任务服务。</span></div>
+
+      <section id="ai-assistance" aria-labelledby="ai-assistance-title">
+        <header class="reference-section-heading"><div><h2 id="ai-assistance-title">AI Composer、输出与证据</h2><p>输入、来源、生成内容、未确定信息和人工操作保持可追踪。</p></div><span>AI assistance</span></header>
+        <div class="ai-layout">
+          <form class="composer-sample" data-composer>
+            <header><div><strong>分析商品价格变化</strong><span>对象：Field Jacket · SKU FJ-018</span></div><span class="fixture-label">Fixture</span></header>
+            <label for="composer-instruction">说明</label>
+            <textarea id="composer-instruction" rows="4">根据已验证来源，总结价格变化并指出仍需人工确认的信息。</textarea>
+            <div class="attachment-row"><span><strong>price-history.csv</strong><small>12 KB · 当前工作区</small></span><button type="button" aria-label="移除 price-history.csv">移除</button></div>
+            <p class="privacy-note">内容只在本地基准中展示；没有数据离开浏览器。</p>
+            <div class="composer-actions"><span class="composer-status" role="status" aria-live="polite" data-composer-status>等待提交</span><button type="submit" class="primary-action" data-composer-submit>生成参考结果</button><button type="button" data-composer-stop hidden>停止</button><button type="button" data-composer-retry hidden>重试</button></div>
+          </form>
+
+          <article class="generated-result" aria-labelledby="generated-title" data-generated-result data-state="idle">
+            <header><div><span class="source-kind">本地生成示例</span><h3 id="generated-title">价格变化摘要</h3></div><span data-result-state>尚未生成</span></header>
+            <div class="result-body" data-result-body><p>提交后会在这里演示部分输出、停止、重试和完成状态。</p></div>
+            <div class="uncertainty-row" hidden data-uncertainty><strong>仍需确认</strong><span>渠道折扣是否属于计划内活动。</span></div>
+          </article>
+        </div>
+
+        <div class="evidence-list" aria-labelledby="evidence-title">
+          <header><div><h3 id="evidence-title">证据与引用</h3><p>引用编号与支持的结论保持稳定映射。</p></div><span>3 个来源</span></header>
+          <ol>
+            <li id="evidence-1"><a href="#evidence-1"><span>[1]</span><strong>商品价格记录</strong></a><p>支持“当前价格为 CNY 1,299.00”。</p><small>内部记录 · 今天 09:40 · 已验证</small></li>
+            <li id="evidence-2"><a href="#evidence-2"><span>[2]</span><strong>渠道活动日历</strong></a><p>活动状态仍待运营人员确认。</p><small>运营记录 · 昨天 17:20 · 部分验证</small></li>
+            <li id="evidence-3" class="evidence-conflict"><a href="#evidence-3"><span>[3]</span><strong>外部渠道快照</strong></a><p>显示 CNY 1,399.00，与内部记录存在冲突。</p><small>外部来源 · 今天 09:31 · 存在冲突</small></li>
+          </ol>
+        </div>
+      </section>
+
+      <section id="review" aria-labelledby="review-title">
+        <header class="reference-section-heading"><div><h2 id="review-title">建议变更与执行审批</h2><p>提案、批准、执行和完成是不同状态。</p></div><span>Review + approval</span></header>
+        <div class="review-layout">
+          <article class="change-review" data-change-review>
+            <header><div><strong>建议调整商品售价</strong><span>由本地参考工作流生成 · 尚未批准</span></div><span class="review-state" data-review-state>待审核</span></header>
+            <div class="diff-grid"><div><span>当前值</span><strong>CNY 1,399.00</strong></div><div class="proposed-value"><span>建议值</span><strong>CNY 1,299.00</strong></div></div>
+            <dl class="change-context"><div><dt>原因</dt><dd>内部价格记录与已批准定价表一致。</dd></div><div><dt>影响</dt><dd>官网与 2 个销售渠道；库存不变。</dd></div><div><dt>依据</dt><dd><a href="#evidence-1">[1]</a> <a href="#evidence-2">[2]</a></dd></div></dl>
+            <div class="review-actions"><button type="button" data-review-reject>拒绝</button><button type="button" data-review-edit>编辑建议</button><button type="button" class="primary-action" data-review-accept>接受建议</button></div>
+            <p class="review-message" role="status" data-review-message></p>
+          </article>
+
+          <article class="execution-preview" aria-labelledby="execution-title">
+            <header><div><span>执行范围预览</span><h3 id="execution-title">发布已批准价格</h3></div><span>需要确认</span></header>
+            <dl><div><dt>目标</dt><dd>Field Jacket · 3 个渠道</dd></div><div><dt>写入</dt><dd>销售价格与发布时间</dd></div><div><dt>外部影响</dt><dd>更新官网、渠道 A、渠道 B</dd></div><div><dt>通知</dt><dd>不发送客户消息</dd></div><div><dt>回滚</dt><dd>保留旧值，可人工恢复</dd></div></dl>
+            <label class="check-row"><input type="checkbox" data-scope-confirm /> <span>我已核对目标、价格和回滚范围</span></label>
+            <button type="button" class="primary-action" data-create-task disabled>确认并创建发布任务</button>
+            <p role="status" data-execution-status></p>
+          </article>
+        </div>
+      </section>
+
+      <section id="media-review" aria-labelledby="media-title">
+        <header class="reference-section-heading"><div><h2 id="media-title">媒体与生成资产审核</h2><p>选择、来源、权利、替代文本和发布批准分别处理。</p></div><span>Media review</span></header>
+        <div class="media-review-layout">
+          <div class="media-stage" role="img" aria-label="Field Jacket 商品主图本地占位预览"><div class="media-object"><span>Field Jacket</span><small>本地占位预览 · 1600 × 2000</small></div></div>
+          <aside class="media-inspector">
+            <header><div><strong>field-jacket-main-v3.png</strong><span>PNG · 2.4 MB · 2026-07-13 10:22</span></div><span class="status-text warning"><i></i>待审核</span></header>
+            <dl><div><dt>来源</dt><dd>生成任务 RUN-208</dd></div><div><dt>权利状态</dt><dd>品牌素材已授权</dd></div><div><dt>人物授权</dt><dd>不适用</dd></div><div><dt>替代文本</dt><dd>深蓝色 Field Jacket 正面商品图</dd></div><div><dt>渠道适配</dt><dd>官网通过；渠道 B 需 1:1 裁切</dd></div></dl>
+            <div class="media-actions"><button type="button" aria-pressed="true" data-media-select>已选择</button><button type="button" data-media-reject>要求修改</button><button type="button" class="primary-action" data-media-approve>批准发布</button></div>
+            <p role="status" data-media-status>选择不代表批准。</p>
+          </aside>
+        </div>
+      </section>
+
+      <section id="background-work" aria-labelledby="tasks-title">
+        <header class="reference-section-heading"><div><h2 id="tasks-title">后台任务</h2><p>任务状态是持久记录，不依赖 Toast 或持续动画。</p></div><span>Background work</span></header>
+        <div class="task-summary" role="status" data-task-summary>3 个任务：1 个运行中，1 个失败，1 个已完成。</div>
+        <div class="task-table" role="table" aria-label="后台任务队列">
+          <div class="task-row task-head" role="row"><span role="columnheader">任务</span><span role="columnheader">状态</span><span role="columnheader">进度</span><span role="columnheader">更新</span><span role="columnheader">操作</span></div>
+          <div class="task-row" role="row" data-created-task hidden><strong role="cell">发布已批准价格<small>Field Jacket · TASK-NEW</small></strong><span role="cell" data-created-state>排队中</span><span role="cell">等待执行</span><time role="cell">刚刚</time><button type="button" data-created-cancel>取消</button></div>
+          <div class="task-row" role="row"><strong role="cell">同步渠道价格<small>3 个渠道 · TASK-184</small></strong><span role="cell" class="status-text monitor"><i></i>运行中</span><span role="cell"><progress max="3" value="2">2 / 3</progress> 2 / 3</span><time role="cell">1 分钟前</time><button type="button" data-task-cancel>取消</button></div>
+          <div class="task-row failed-task" role="row"><strong role="cell">导出审核报告<small>PDF · TASK-183</small></strong><span role="cell" class="status-text negative"><i></i>失败</span><span role="cell">保留原始筛选</span><time role="cell">12 分钟前</time><button type="button" data-task-retry>重试失败任务</button></div>
+          <div class="task-row" role="row"><strong role="cell">验证商品来源<small>48 条记录 · TASK-179</small></strong><span role="cell" class="status-text positive"><i></i>已完成</span><span role="cell">48 / 48</span><time role="cell">今天 09:42</time><a role="cell" href="#background-work">查看结果</a></div>
+        </div>
+      </section>
+
+      <section id="chart" aria-labelledby="chart-title">
+        <header class="reference-section-heading"><div><h2 id="chart-title">图表与数据表</h2><p>趋势图和语义数据表使用同一数据、单位、范围与来源。</p></div><span>Chart + table</span></header>
+        <div class="chart-toolbar"><div><strong>近 7 日商品价格</strong><span>CNY · 来源：已验证价格记录 · 更新于 10:20</span></div><div role="group" aria-label="图表显示"><button type="button" aria-pressed="true" data-chart-view="chart">图表</button><button type="button" aria-pressed="false" data-chart-view="table">数据表</button></div></div>
+        <div class="chart-layout">
+          <div class="chart-visual" data-chart-visual>
+            <svg viewBox="0 0 720 240" role="img" aria-labelledby="price-chart-title price-chart-desc">
+              <title id="price-chart-title">近 7 日 Field Jacket 商品价格</title><desc id="price-chart-desc">价格从 7 月 7 日的 1399 元降至 7 月 13 日的 1299 元。7 月 11 日缺少外部渠道数据。</desc>
+              <g class="chart-grid" aria-hidden="true"><line x1="60" y1="30" x2="690" y2="30"/><line x1="60" y1="100" x2="690" y2="100"/><line x1="60" y1="170" x2="690" y2="170"/><line x1="60" y1="210" x2="690" y2="210"/></g>
+              <g class="chart-axis" aria-hidden="true"><text x="8" y="34">1,400</text><text x="8" y="104">1,350</text><text x="8" y="174">1,300</text><text x="60" y="232">7 Jul</text><text x="360" y="232">10 Jul</text><text x="650" y="232">13 Jul</text></g>
+              <polyline class="chart-line" points="60,31 165,31 270,72 375,72 480,128 585,170 690,170" aria-hidden="true"/>
+              <g class="chart-points"><circle cx="60" cy="31" r="5" tabindex="0" aria-label="7 月 7 日，CNY 1,399"/><circle cx="165" cy="31" r="5" tabindex="0" aria-label="7 月 8 日，CNY 1,399"/><circle cx="270" cy="72" r="5" tabindex="0" aria-label="7 月 9 日，CNY 1,369"/><circle cx="375" cy="72" r="5" tabindex="0" aria-label="7 月 10 日，CNY 1,369"/><circle cx="480" cy="128" r="5" tabindex="0" aria-label="7 月 11 日，CNY 1,329，外部来源缺失"/><circle cx="585" cy="170" r="5" tabindex="0" aria-label="7 月 12 日，CNY 1,299"/><circle cx="690" cy="170" r="5" tabindex="0" aria-label="7 月 13 日，CNY 1,299"/></g>
+            </svg>
+            <p class="chart-summary">价格在 7 天内下降 CNY 100。7 月 11 日外部渠道来源缺失，内部价格记录仍可用。</p>
+          </div>
+          <div class="chart-table" data-chart-table><table><caption>近 7 日 Field Jacket 商品价格数据</caption><thead><tr><th scope="col">日期</th><th scope="col">价格</th><th scope="col">来源状态</th></tr></thead><tbody><tr><th scope="row">7 月 7 日</th><td>CNY 1,399</td><td>已验证</td></tr><tr><th scope="row">7 月 9 日</th><td>CNY 1,369</td><td>已验证</td></tr><tr><th scope="row">7 月 11 日</th><td>CNY 1,329</td><td>外部来源缺失</td></tr><tr><th scope="row">7 月 13 日</th><td>CNY 1,299</td><td>已验证</td></tr></tbody></table></div>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

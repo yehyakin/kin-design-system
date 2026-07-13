@@ -1,0 +1,304 @@
+{
+  "schema_version": "1.0.0",
+  "terminology_version": "1.0.0",
+  "reviewed_on": "2026-07-13",
+  "entries": [
+    {
+      "canonical_name": "Tooltip",
+      "catalog_id": "tooltip",
+      "aliases": ["hint", "label tooltip"],
+      "not_synonyms": ["Popover", "Hover Card", "Dropdown Menu"],
+      "plain_definition": "A short non-interactive label or explanation shown from hover or focus.",
+      "use_when": "A control or value needs a concise explanation without additional actions.",
+      "do_not_use_when": "The content is interactive, required to complete the task, or unavailable on touch."
+    },
+    {
+      "canonical_name": "Popover",
+      "catalog_id": "popover",
+      "aliases": ["anchored panel"],
+      "not_synonyms": ["Tooltip", "Dialog", "Dropdown Menu"],
+      "plain_definition": "An anchored temporary surface containing contextual information or controls.",
+      "use_when": "The user needs a small contextual view or action set without leaving the current task.",
+      "do_not_use_when": "The task requires modal focus, deep navigation, or only a list of menu actions."
+    },
+    {
+      "canonical_name": "Dropdown Menu",
+      "catalog_id": "menu",
+      "aliases": ["action menu", "menu button"],
+      "not_synonyms": ["Select", "Combobox", "Popover"],
+      "plain_definition": "An anchored list of actions or choices opened from a trigger.",
+      "use_when": "Several related actions or menu choices belong to one trigger.",
+      "do_not_use_when": "The user is choosing a form value or typing to filter suggestions."
+    },
+    {
+      "canonical_name": "Context Menu",
+      "catalog_id": "context-menu",
+      "aliases": ["right-click menu", "secondary-action menu"],
+      "not_synonyms": ["Overflow Menu", "Dropdown Menu"],
+      "plain_definition": "A menu of actions for a specific object, opened from secondary click or an explicit equivalent.",
+      "use_when": "Object-specific actions benefit from pointer context and also have keyboard and touch access.",
+      "do_not_use_when": "The actions are primary, global, or unavailable without right click."
+    },
+    {
+      "canonical_name": "Hover Card",
+      "catalog_id": "hover-card",
+      "aliases": ["preview card", "rich hover preview"],
+      "not_synonyms": ["Tooltip", "Popover"],
+      "plain_definition": "A rich non-modal preview of a referenced object available from hover and keyboard focus.",
+      "use_when": "A user can benefit from previewing an entity without navigating away.",
+      "do_not_use_when": "The content must be edited, is essential, or has no touch alternative."
+    },
+    {
+      "canonical_name": "Dialog",
+      "catalog_id": "dialog",
+      "aliases": ["modal dialog", "modal"],
+      "not_synonyms": ["Popover", "Drawer", "Sheet"],
+      "plain_definition": "A modal task or decision that blocks interaction outside its scope.",
+      "use_when": "The user must complete, confirm, or cancel a bounded task before returning.",
+      "do_not_use_when": "The content can remain inline or does not require modal focus."
+    },
+    {
+      "canonical_name": "Drawer",
+      "catalog_id": "drawer",
+      "aliases": ["side panel", "edge panel"],
+      "not_synonyms": ["Dialog", "Sheet", "Sidebar"],
+      "plain_definition": "A panel entering from an edge for secondary navigation, properties, or a task.",
+      "use_when": "Spatial continuity with an edge or selected object helps preserve context.",
+      "do_not_use_when": "The region is permanent navigation or the task needs a compact modal decision."
+    },
+    {
+      "canonical_name": "Sheet",
+      "catalog_id": "drawer",
+      "aliases": ["bottom sheet", "attached sheet"],
+      "not_synonyms": ["Dialog", "Drawer"],
+      "plain_definition": "A modal surface attached to an owner or rising from a compact-screen edge.",
+      "use_when": "The platform and viewport provide a clear spatial owner for a modal task.",
+      "do_not_use_when": "A non-modal drawer or ordinary dialog better matches scope and focus."
+    },
+    {
+      "canonical_name": "Switch",
+      "catalog_id": "switch",
+      "aliases": ["toggle switch"],
+      "not_synonyms": ["Checkbox", "Toggle Button"],
+      "plain_definition": "A control that changes one setting immediately between on and off.",
+      "use_when": "The change takes effect immediately and represents a persistent setting.",
+      "do_not_use_when": "Selections are submitted later or more than one independent value is chosen."
+    },
+    {
+      "canonical_name": "Checkbox",
+      "catalog_id": "checkbox",
+      "aliases": ["check box"],
+      "not_synonyms": ["Switch", "Radio Group"],
+      "plain_definition": "A control selecting zero or more independent values.",
+      "use_when": "Several options may be selected independently or included in a batch action.",
+      "do_not_use_when": "Exactly one visible option is required or the setting changes immediately."
+    },
+    {
+      "canonical_name": "Radio Group",
+      "catalog_id": "radio-group",
+      "aliases": ["radio buttons", "option group"],
+      "not_synonyms": ["Checkbox", "Select"],
+      "plain_definition": "A visible group that selects exactly one value.",
+      "use_when": "The option set is small and comparison between all choices matters.",
+      "do_not_use_when": "Multiple values are allowed or the options should remain collapsed."
+    },
+    {
+      "canonical_name": "Segmented Control",
+      "catalog_id": "segmented-control",
+      "aliases": ["toggle group", "segment group"],
+      "not_synonyms": ["Tabs", "Radio Group"],
+      "plain_definition": "A compact connected set with one persistent selection.",
+      "use_when": "A small set changes a view, mode, or compact preference.",
+      "do_not_use_when": "Each label owns a document region or long form choices need explanation."
+    },
+    {
+      "canonical_name": "Select",
+      "catalog_id": "select",
+      "aliases": ["select field", "select menu"],
+      "not_synonyms": ["Dropdown Menu", "Combobox"],
+      "plain_definition": "A form control choosing one or more values from a predefined list.",
+      "use_when": "The values are known and free text is not accepted.",
+      "do_not_use_when": "The trigger opens actions or typing filters suggestions."
+    },
+    {
+      "canonical_name": "Combobox",
+      "catalog_id": "combobox",
+      "aliases": ["autocomplete", "typeahead"],
+      "not_synonyms": ["Select", "Search Field", "Command Menu"],
+      "plain_definition": "Text entry paired with a filtered list of selectable suggestions.",
+      "use_when": "Users need to type to find or optionally create a value.",
+      "do_not_use_when": "A simple select, site search, or global command launcher is intended."
+    },
+    {
+      "canonical_name": "Search Field",
+      "catalog_id": "search-field",
+      "aliases": ["search box", "query field"],
+      "not_synonyms": ["Text Input", "Combobox", "Command Menu"],
+      "plain_definition": "A text field with search-specific query, clear, result, and history behavior.",
+      "use_when": "The user is finding content rather than selecting a form value.",
+      "do_not_use_when": "The field stores a value or launches global commands."
+    },
+    {
+      "canonical_name": "Command Menu",
+      "catalog_id": "command-menu",
+      "aliases": ["command palette", "command center"],
+      "not_synonyms": ["Search Field", "Combobox"],
+      "plain_definition": "A keyboard-first searchable launcher for navigation and actions.",
+      "use_when": "A product has enough destinations and commands to reward keyboard access.",
+      "do_not_use_when": "A small ordinary search field or menu is sufficient."
+    },
+    {
+      "canonical_name": "Tabs",
+      "catalog_id": "tabs",
+      "aliases": ["tab list", "tabbed view"],
+      "not_synonyms": ["Segmented Control", "Sidebar"],
+      "plain_definition": "A row of labels controlling one associated content region.",
+      "use_when": "Sibling content views share one page context and one view is visible at a time.",
+      "do_not_use_when": "The choice is a compact setting or changes the application destination."
+    },
+    {
+      "canonical_name": "Accordion",
+      "catalog_id": "accordion",
+      "aliases": ["disclosure group", "expandable sections"],
+      "not_synonyms": ["Tabs", "Tree View"],
+      "plain_definition": "Stacked headings that expand or collapse associated content.",
+      "use_when": "Several sections can be understood independently and space is constrained.",
+      "do_not_use_when": "The content forms a hierarchy of selectable nodes or one shared tab region."
+    },
+    {
+      "canonical_name": "Breadcrumbs",
+      "catalog_id": "breadcrumbs",
+      "aliases": ["breadcrumb trail", "hierarchy trail"],
+      "not_synonyms": ["Back Button", "Stepper"],
+      "plain_definition": "A hierarchy trail from the current location to its ancestors.",
+      "use_when": "Users need orientation and direct access to ancestor levels.",
+      "do_not_use_when": "The flow is chronological, linear, or has no stable hierarchy."
+    },
+    {
+      "canonical_name": "Toast",
+      "catalog_id": "toast",
+      "aliases": ["snackbar", "temporary notification"],
+      "not_synonyms": ["Inline Alert", "Dialog", "Progress Region"],
+      "plain_definition": "A brief non-blocking result message after a user action.",
+      "use_when": "The result is not already visible or includes undo or recovery.",
+      "do_not_use_when": "The message is durable, blocks progress, or repeats an inline state."
+    },
+    {
+      "canonical_name": "Skeleton",
+      "catalog_id": "skeleton",
+      "aliases": ["content skeleton", "loading placeholder"],
+      "not_synonyms": ["Spinner", "Empty State"],
+      "plain_definition": "A temporary placeholder preserving predictable content geometry.",
+      "use_when": "The final layout is known and reserving space prevents layout shift.",
+      "do_not_use_when": "Only one action is busy or no content is expected."
+    },
+    {
+      "canonical_name": "Progress Indicator",
+      "catalog_id": "progress-indicator",
+      "aliases": ["progress bar", "progress ring"],
+      "not_synonyms": ["Skeleton", "Static Level Indicator"],
+      "plain_definition": "A visual and programmatic representation of ongoing work.",
+      "use_when": "An accepted action requires perceptible waiting or measurable completion.",
+      "do_not_use_when": "No real task is running or a stable empty state is intended."
+    },
+    {
+      "canonical_name": "Overflow Menu",
+      "catalog_id": "overflow-menu",
+      "aliases": ["more menu", "ellipsis menu"],
+      "not_synonyms": ["Context Menu", "Primary Actions"],
+      "plain_definition": "A menu holding secondary actions that do not fit or deserve permanent display.",
+      "use_when": "Secondary actions need a stable compact trigger without hiding the primary action.",
+      "do_not_use_when": "The hidden actions are essential or specific to pointer context."
+    },
+    {
+      "canonical_name": "Status Indicator",
+      "catalog_id": "status-indicator",
+      "aliases": ["status", "state indicator"],
+      "not_synonyms": ["Tag", "Badge", "decorative dot"],
+      "plain_definition": "A text-and-or-icon representation of an object's current semantic state.",
+      "use_when": "Users need to understand current health, availability, risk, or workflow state.",
+      "do_not_use_when": "The label classifies content rather than reporting current state."
+    },
+    {
+      "canonical_name": "Truncation",
+      "catalog_id": "truncation",
+      "aliases": ["ellipsis", "line clamp", "middle truncation"],
+      "not_synonyms": ["Content Removal", "Clipping"],
+      "plain_definition": "A deliberate shortened rendering that preserves access to the complete value when needed.",
+      "use_when": "Constrained geometry cannot accommodate a value without harming comparison or layout.",
+      "do_not_use_when": "The complete content is required and no accessible full-value path exists."
+    },
+    {
+      "canonical_name": "AI Composer",
+      "catalog_id": "ai-composer",
+      "aliases": ["prompt composer", "AI instruction field"],
+      "not_synonyms": ["Chat Window", "Search Field", "Textarea"],
+      "plain_definition": "A task-scoped input surface for instructions, attachments, context, submission, stop, and recovery.",
+      "use_when": "A real AI-backed product task accepts user instructions or selected context.",
+      "do_not_use_when": "A normal form field, search field, or decorative chat surface is sufficient."
+    },
+    {
+      "canonical_name": "Evidence List",
+      "catalog_id": "evidence-list",
+      "aliases": ["citation list", "source list"],
+      "not_synonyms": ["Confidence Score", "Activity Feed", "Reference Links"],
+      "plain_definition": "A structured list connecting claims or decisions to identifiable supporting and conflicting sources.",
+      "use_when": "Users need to verify how a conclusion, recommendation, or change is supported.",
+      "do_not_use_when": "A generic list of related links does not support a specific result."
+    },
+    {
+      "canonical_name": "Streaming Response",
+      "catalog_id": "streaming-response",
+      "aliases": ["partial response", "streamed output"],
+      "not_synonyms": ["Typing Animation", "Progress Indicator", "Completed Result"],
+      "plain_definition": "A real incomplete result that grows as backend output arrives and supports stop, failure, and retry.",
+      "use_when": "The backend exposes meaningful partial output before completion.",
+      "do_not_use_when": "Text is merely revealed gradually for visual effect or the result is already complete."
+    },
+    {
+      "canonical_name": "Suggested Change Review",
+      "catalog_id": "suggested-change-review",
+      "aliases": ["diff review", "proposal review"],
+      "not_synonyms": ["Activity Feed", "Execution Preview", "Audit Log"],
+      "plain_definition": "A review surface comparing current and proposed values before source data changes.",
+      "use_when": "A person must accept, reject, or edit a generated or automated proposal.",
+      "do_not_use_when": "The change has already executed or only historical activity is being shown."
+    },
+    {
+      "canonical_name": "Execution Preview",
+      "catalog_id": "execution-preview",
+      "aliases": ["scope preview", "action preview"],
+      "not_synonyms": ["Confirmation Dialog", "Suggested Change Review", "Task Queue"],
+      "plain_definition": "A pre-execution summary of targets, writes, external effects, permissions, irreversibility, and rollback.",
+      "use_when": "An AI, automation, or batch command can produce meaningful side effects.",
+      "do_not_use_when": "A low-impact local action has an obvious and immediately reversible result."
+    },
+    {
+      "canonical_name": "Media Review",
+      "catalog_id": "media-review",
+      "aliases": ["asset review", "generated asset review"],
+      "not_synonyms": ["Gallery", "File Upload", "Media Viewer"],
+      "plain_definition": "A decision surface for selecting and approving media with provenance, rights, metadata, accessibility, and channel constraints.",
+      "use_when": "Media must be inspected or approved before publication or downstream use.",
+      "do_not_use_when": "Users only browse or upload files without a review decision."
+    },
+    {
+      "canonical_name": "Background Task Queue",
+      "catalog_id": "background-task-queue",
+      "aliases": ["job queue", "task center"],
+      "not_synonyms": ["Toast", "Spinner", "Activity Feed"],
+      "plain_definition": "A durable list of accepted work with identity, state, progress, result, cancellation, and recovery.",
+      "use_when": "Work survives navigation, affects multiple targets, or needs durable status and history.",
+      "do_not_use_when": "A brief foreground action completes within the current context."
+    },
+    {
+      "canonical_name": "Chart",
+      "catalog_id": "chart",
+      "aliases": ["data chart", "analytical chart"],
+      "not_synonyms": ["Live Chart", "Sparkline", "Metric"],
+      "plain_definition": "A visual representation of trend, comparison, distribution, relationship, or composition with an accessible data path.",
+      "use_when": "A visual relationship is materially easier to understand than the same values in prose or a small table.",
+      "do_not_use_when": "The chart is decorative, exact values are the only need, or data quality cannot support the visual claim."
+    }
+  ]
+}

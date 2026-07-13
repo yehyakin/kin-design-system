@@ -1,0 +1,130 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/yehyakin/kin-design-system/main/adoption/kin.evidence.schema.json",
+  "title": "KIN adoption evidence",
+  "type": "object",
+  "required": ["kinVersion", "profile", "productRevision", "status", "reviewedOn", "mappings", "verification", "production", "ownership", "exceptions"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string" },
+    "kinVersion": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+    "profile": { "enum": ["information-site", "intelligence-workspace", "ecommerce-operations", "engineering-canvas"] },
+    "productRevision": { "type": "string", "minLength": 1 },
+    "status": { "enum": ["initialized", "mapped", "verified", "production-observed"] },
+    "reviewedOn": { "type": ["string", "null"], "format": "date" },
+    "mappings": {
+      "type": "object",
+      "required": ["tokens", "components", "routes"],
+      "additionalProperties": false,
+      "properties": {
+        "tokens": { "$ref": "#/$defs/mappingGroup" },
+        "components": { "$ref": "#/$defs/mappingGroup" },
+        "routes": { "$ref": "#/$defs/mappingGroup" }
+      }
+    },
+    "verification": {
+      "type": "object",
+      "required": ["automated", "manual"],
+      "additionalProperties": false,
+      "properties": {
+        "automated": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/automatedCheck" }
+        },
+        "manual": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/manualCheck" }
+        }
+      }
+    },
+    "production": {
+      "type": "object",
+      "required": ["status", "observedOn", "evidence", "owner", "rollback"],
+      "additionalProperties": false,
+      "properties": {
+        "status": { "enum": ["not-observed", "observed"] },
+        "observedOn": { "type": ["string", "null"], "format": "date" },
+        "evidence": { "type": "string" },
+        "owner": { "type": "string" },
+        "rollback": { "type": "string" }
+      }
+    },
+    "ownership": {
+      "type": "object",
+      "required": ["product", "design", "engineering", "accessibility"],
+      "additionalProperties": false,
+      "properties": {
+        "product": { "type": "string" },
+        "design": { "type": "string" },
+        "engineering": { "type": "string" },
+        "accessibility": { "type": "string" }
+      }
+    },
+    "exceptions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["scope", "reason", "owner", "status", "issue"],
+        "additionalProperties": false,
+        "properties": {
+          "scope": { "type": "string", "minLength": 1 },
+          "reason": { "type": "string", "minLength": 12 },
+          "owner": { "type": "string", "minLength": 1 },
+          "status": { "enum": ["active", "resolved"] },
+          "issue": { "type": "string" }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "mappingGroup": {
+      "type": "object",
+      "required": ["status", "items", "notes"],
+      "additionalProperties": false,
+      "properties": {
+        "status": { "enum": ["pending", "mapped", "verified", "not-applicable"] },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["kin", "local", "notes"],
+            "additionalProperties": false,
+            "properties": {
+              "kin": { "type": "string", "minLength": 1 },
+              "local": { "type": "string", "minLength": 1 },
+              "notes": { "type": "string" }
+            }
+          }
+        },
+        "notes": { "type": "string" }
+      }
+    },
+    "automatedCheck": {
+      "type": "object",
+      "required": ["name", "command", "status", "runAt", "artifact", "notes"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "command": { "type": "string", "minLength": 1 },
+        "status": { "enum": ["not-run", "passed", "failed", "blocked"] },
+        "runAt": { "type": ["string", "null"], "format": "date-time" },
+        "artifact": { "type": "string" },
+        "notes": { "type": "string" }
+      }
+    },
+    "manualCheck": {
+      "type": "object",
+      "required": ["id", "status", "environment", "reviewedOn", "reviewer", "findings", "notes"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "status": { "enum": ["not-run", "passed", "failed", "blocked", "not-applicable"] },
+        "environment": { "type": "string" },
+        "reviewedOn": { "type": ["string", "null"], "format": "date" },
+        "reviewer": { "type": "string" },
+        "findings": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+        "notes": { "type": "string" }
+      }
+    }
+  }
+}

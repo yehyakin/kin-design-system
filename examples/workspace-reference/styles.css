@@ -89,6 +89,7 @@
 }
 
 * { box-sizing: border-box; }
+[hidden] { display: none !important; }
 
 html, body { height: 100%; }
 
@@ -339,7 +340,9 @@ h1 { margin: 0; font-size: 22px; line-height: 1.25; letter-spacing: -0.015em; }
 .motion-button:active:not(:disabled) { transform: translateY(0.5px) scale(0.99); }
 .motion-button[aria-pressed="true"] { border-color: color-mix(in srgb, var(--accent) 56%, var(--line)); background: var(--selected); color: var(--text); }
 .motion-button[aria-pressed="true"] svg { color: var(--accent); fill: color-mix(in srgb, var(--accent) 26%, transparent); }
-.button-icon-loading, .button-icon-success { display: none; }
+.button-icon-loading, .button-icon-success, .paired-icon-active { display: none; }
+.motion-button[aria-pressed="true"] .paired-icon-default { display: none; }
+.motion-button[aria-pressed="true"] .paired-icon-active { display: block; }
 .motion-button.is-loading::after { opacity: 1; transform: scaleX(0.78); transition-duration: 650ms; }
 .motion-button.is-loading .button-icon-default { display: none; }
 .motion-button.is-loading .button-icon-loading { display: block; animation: button-spin 720ms linear infinite; }
@@ -442,6 +445,15 @@ h1 { margin: 0; font-size: 22px; line-height: 1.25; letter-spacing: -0.015em; }
   [data-sonner-toast] { transition: none !important; }
   .motion-button, .motion-button::after { transition: none !important; }
   .motion-button.is-loading .button-icon-loading, .motion-button.is-success .button-icon-success { animation: none; }
+}
+
+@media (forced-colors: active) {
+  :focus-visible { outline: 2px solid Highlight !important; outline-offset: 2px; }
+  .primary-action { border: 1px solid ButtonText; }
+  [aria-current="page"], [aria-selected="true"], [aria-pressed="true"] { outline: 1px solid Highlight; outline-offset: -1px; }
+  .status-dot, .status-text i { border: 1px solid CanvasText; background: CanvasText; }
+  .chart-line, .chart-points circle { stroke: CanvasText; }
+  .chart-points circle { fill: Canvas; }
 }
 
 @media (prefers-contrast: more) {

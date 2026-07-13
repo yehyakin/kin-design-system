@@ -13,6 +13,7 @@ What product or documentation problem does this change solve?
 - [ ] New component or integration
 - [ ] Accessibility or interaction change
 - [ ] Product-extension change
+- [ ] Figma, runtime-package, delivery-model or adoption-evidence change
 
 Describe affected product families, themes, viewports and migration requirements.
 
@@ -24,9 +25,13 @@ Link primary sources, product evidence, screenshots or measurements. Label third
 
 - [ ] `node scripts/validate-docs.mjs`
 - [ ] `node scripts/validate-design.mjs`
+- [ ] `node scripts/validate-components.mjs`
 - [ ] `node scripts/export-tokens.mjs --check`
 - [ ] `node scripts/report-token-changes.mjs <base-ref>` reviewed when Tokens changed
 - [ ] `npm run test:reference` and screenshots reviewed when reference UI changed
+- [ ] Automated and manual accessibility evidence are identified separately
+- [ ] Cross-browser smoke, real browser zoom and screen-reader limits are reported accurately
+- [ ] `DELIVERY.md` boundaries remain intact or the proposal includes separate ownership, versioning, migration and rollback
 - [ ] Light and dark implications reviewed
 - [ ] Keyboard and screen-reader implications reviewed
 - [ ] Mobile and touch implications reviewed

@@ -9,12 +9,44 @@ export default defineConfig({
   workers: process.env.CI ? 2 : undefined,
   reporter: process.env.CI ? [["line"], ["html", { outputFolder: "playwright-report", open: "never" }]] : "line",
   use: {
-    ...devices["Desktop Chrome"],
     baseURL: "http://127.0.0.1:4173",
     colorScheme: "dark",
-    reducedMotion: "reduce",
     trace: "retain-on-failure",
   },
+  projects: [
+    {
+      name: "chromium-reduced",
+      testIgnore: [/normal-motion\.spec\.js/, /browser-smoke\.spec\.js/],
+      use: {
+        ...devices["Desktop Chrome"],
+        reducedMotion: "reduce",
+      },
+    },
+    {
+      name: "chromium-normal-motion",
+      testMatch: /normal-motion\.spec\.js/,
+      use: {
+        ...devices["Desktop Chrome"],
+        reducedMotion: "no-preference",
+      },
+    },
+    {
+      name: "firefox-smoke",
+      testMatch: /browser-smoke\.spec\.js/,
+      use: {
+        ...devices["Desktop Firefox"],
+        reducedMotion: "reduce",
+      },
+    },
+    {
+      name: "webkit-smoke",
+      testMatch: /browser-smoke\.spec\.js/,
+      use: {
+        ...devices["Desktop Safari"],
+        reducedMotion: "reduce",
+      },
+    },
+  ],
   webServer: {
     command: "node scripts/build-site.mjs && node scripts/serve-site.mjs",
     url: "http://127.0.0.1:4173/",

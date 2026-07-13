@@ -1,4 +1,5 @@
 import fs from "node:fs";
+import { createHash } from "node:crypto";
 import path from "node:path";
 import process from "node:process";
 
@@ -16,6 +17,7 @@ function fail(message) {
 const packageJson = JSON.parse(read("package.json"));
 const packageLock = JSON.parse(read("package-lock.json"));
 const design = read("DESIGN.md");
+const delivery = read("DELIVERY.md");
 const designVersion = design.match(/^kin_version:\s*([0-9]+\.[0-9]+\.[0-9]+)\s*$/m)?.[1];
 const version = packageJson.version;
 
@@ -23,6 +25,9 @@ if (!designVersion) fail("DESIGN.md does not expose kin_version in frontmatter")
 if (designVersion !== version) fail(`DESIGN.md kin_version ${designVersion ?? "missing"} differs from package version ${version}`);
 if (packageLock.version !== version) fail(`package-lock.json version ${packageLock.version} differs from package version ${version}`);
 if (packageLock.packages?.[""]?.version !== version) fail("package-lock.json root package version is out of date");
+for (const term of ["contract-first", "variables-only", "project-owned"]) {
+  if (!delivery.includes(term)) fail(`DELIVERY.md does not define the ${term} boundary`);
+}
 
 for (const file of ["README.md", "READMEs/README.zh-CN.md"]) {
   const source = read(file);
@@ -32,8 +37,18 @@ for (const file of ["README.md", "READMEs/README.zh-CN.md"]) {
 
 const adoption = JSON.parse(read("adoption/kin.config.example.json"));
 JSON.parse(read("adoption/kin.config.schema.json"));
+const adoptionEvidence = JSON.parse(read("adoption/kin.evidence.example.json"));
+JSON.parse(read("adoption/kin.evidence.schema.json"));
 if (adoption.kinVersion !== version) fail("adoption/kin.config.example.json has a different kinVersion");
 if (!adoption.contract?.source?.includes(`/v${version}`)) fail("adoption example contract source is not pinned to the matching release URL");
+if (adoption.contract?.revision !== `v${version}`) fail("adoption example contract revision does not match the release version");
+if (adoption.contract?.checksum !== createHash("sha256").update(design).digest("hex")) fail("adoption example contract checksum does not match DESIGN.md");
+if (adoption.delivery?.mode !== "contract-first" || adoption.delivery?.figma !== "variables-only" || adoption.delivery?.runtime !== "project-owned") {
+  fail("adoption example does not preserve the KIN core delivery boundary");
+}
+if (adoptionEvidence.kinVersion !== version) fail("adoption/kin.evidence.example.json has a different kinVersion");
+if (adoptionEvidence.profile !== adoption.profile) fail("adoption evidence example profile differs from the adoption configuration example");
+if (adoptionEvidence.status !== "initialized") fail("adoption evidence example must not claim unperformed verification");
 if (!read("CHANGELOG.md").includes(`## ${version} —`)) fail(`CHANGELOG.md does not contain a ${version} release section`);
 
 const staleReferencePattern = /\bKIN\s+(\d+\.\d+(?:\.\d+)?)\b/g;

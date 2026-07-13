@@ -32,6 +32,9 @@ jobs:
       - name: Validate design contract
         run: node scripts/validate-design.mjs
 
+      - name: Validate component catalog
+        run: node scripts/validate-components.mjs
+
       - name: Validate release consistency
         run: node scripts/validate-release.mjs
 
@@ -60,8 +63,8 @@ jobs:
       - name: Install test dependencies
         run: npm ci
 
-      - name: Install Chromium
-        run: npx playwright install --with-deps chromium
+      - name: Install reference browsers
+        run: npx playwright install --with-deps chromium firefox webkit
 
       - name: Test reference interfaces
         run: npm run test:reference

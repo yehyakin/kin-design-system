@@ -9,10 +9,13 @@ Use KIN as a product contract, not as a visual theme preset.
 
 ## Required context
 
-1. Locate the KIN repository root from this skill directory and read `DESIGN.md` completely.
-2. Read the consuming project's `AGENTS.md`, `DESIGN.md`, `PRODUCT.md`, package manifest, global styles, token source, component primitives, and relevant route files when present.
-3. Preserve the user's explicit request, real product behavior, data model, accessibility, routes, analytics, and established brand assets.
-4. Read only the routed reference below. Do not load every reference.
+1. Locate the KIN repository root from this skill directory and read `DESIGN.md` and `DELIVERY.md` completely.
+2. Read `components/catalog.md` and `components/terminology.md` when the task adds, selects, renames, audits, or claims completion of a component.
+3. Read `components/ai-assistance.md`, `review-and-approval.md`, `background-work.md`, or `charts-and-analysis.md` when AI output, evidence, approval, side effects, durable jobs, media review, or analytical charts are in scope.
+4. Read `principles/verification.md` before claiming accessibility, browser, motion, zoom, RTL, or component-completion evidence.
+5. Read the consuming project's `AGENTS.md`, `DESIGN.md`, `PRODUCT.md`, package manifest, global styles, token source, component primitives, and relevant route files when present.
+6. Preserve the user's explicit request, real product behavior, data model, accessibility, routes, analytics, and established brand assets.
+7. Read only the routed reference below. Do not load every reference.
 
 If the KIN contract is unavailable, say so and do not claim KIN compliance.
 
@@ -34,6 +37,7 @@ Ask one focused question only when two plausible answers would materially change
 
 - New page, application, component, or feature: read `references/build.md`.
 - Existing interface redesign: read `references/redesign.md`.
+- KIN adoption, migration, or evidence recording: read `references/adoption.md` before the applicable build or redesign workflow.
 - Compliance, accessibility, performance, or anti-slop audit: read `references/audit.md`.
 - Design critique without implementation: read `references/review.md`.
 - Product-family and visual-register selection: also read `references/registers.md`.
@@ -59,7 +63,7 @@ Do not silently change routes, navigation labels, data meaning, form fields, ana
 3. Reuse existing tokens and primitives before creating new ones.
 4. Plan information hierarchy and states before styling.
 5. Implement the smallest coherent change.
-6. Verify realistic content, empty/error/loading/stale states, light/dark themes, target viewports, keyboard use, touch where relevant, and reduced motion.
+6. Verify realistic content, empty/error/loading/stale states, light/dark themes, target viewports, keyboard use, touch where relevant, and both normal and reduced motion. Label automated and manual evidence separately.
 7. Inspect rendered screenshots whenever a runnable UI exists.
 8. Report evidence, deviations, unresolved issues, and rollback.
 

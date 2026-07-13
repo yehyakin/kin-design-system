@@ -1,0 +1,64 @@
+{
+  "$schema": "https://raw.githubusercontent.com/yehyakin/kin-design-system/main/adoption/kin.evidence.schema.json",
+  "kinVersion": "2.1.0",
+  "profile": "information-site",
+  "productRevision": "unassigned",
+  "status": "initialized",
+  "reviewedOn": null,
+  "mappings": {
+    "tokens": {
+      "status": "pending",
+      "items": [
+        {
+          "kin": "semantic Tokens",
+          "local": "src/styles/tokens.css",
+          "notes": "Review local brand and semantic mappings before implementation."
+        }
+      ],
+      "notes": "No Token mapping has been verified."
+    },
+    "components": {
+      "status": "pending",
+      "items": [],
+      "notes": "Map existing primitives before creating replacements."
+    },
+    "routes": {
+      "status": "pending",
+      "items": [],
+      "notes": "Record only routes included in the adoption scope."
+    }
+  },
+  "verification": {
+    "automated": [
+      { "name": "Lint", "command": "npm run lint", "status": "not-run", "runAt": null, "artifact": "", "notes": "" },
+      { "name": "Type check", "command": "npm run typecheck", "status": "not-run", "runAt": null, "artifact": "", "notes": "" },
+      { "name": "Tests", "command": "npm test", "status": "not-run", "runAt": null, "artifact": "", "notes": "" },
+      { "name": "Build", "command": "npm run build", "status": "not-run", "runAt": null, "artifact": "", "notes": "" }
+    ],
+    "manual": [
+      { "id": "light-dark", "status": "not-run", "environment": "", "reviewedOn": null, "reviewer": "", "findings": [], "notes": "" },
+      { "id": "keyboard-focus", "status": "not-run", "environment": "", "reviewedOn": null, "reviewer": "", "findings": [], "notes": "" },
+      { "id": "touch-small-screen", "status": "not-run", "environment": "", "reviewedOn": null, "reviewer": "", "findings": [], "notes": "" },
+      { "id": "normal-reduced-motion", "status": "not-run", "environment": "", "reviewedOn": null, "reviewer": "", "findings": [], "notes": "" },
+      { "id": "browser-zoom-200", "status": "not-run", "environment": "", "reviewedOn": null, "reviewer": "", "findings": [], "notes": "" },
+      { "id": "long-content-localization", "status": "not-run", "environment": "", "reviewedOn": null, "reviewer": "", "findings": [], "notes": "" },
+      { "id": "rtl", "status": "not-run", "environment": "", "reviewedOn": null, "reviewer": "", "findings": [], "notes": "Record a supported locale or explain why RTL is not applicable." },
+      { "id": "forced-colors", "status": "not-run", "environment": "", "reviewedOn": null, "reviewer": "", "findings": [], "notes": "" },
+      { "id": "screen-reader", "status": "not-run", "environment": "", "reviewedOn": null, "reviewer": "", "findings": [], "notes": "" }
+    ]
+  },
+  "production": {
+    "status": "not-observed",
+    "observedOn": null,
+    "evidence": "",
+    "owner": "",
+    "rollback": ""
+  },
+  "ownership": {
+    "product": "",
+    "design": "",
+    "engineering": "",
+    "accessibility": ""
+  },
+  "exceptions": []
+}

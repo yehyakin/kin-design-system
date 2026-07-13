@@ -9,6 +9,9 @@ Use this protocol for code-backed KIN compliance reviews. Do not edit until the 
 - Confirm scanner or search hits in context; do not report raw regex hits as facts.
 - Cite every actionable finding with `file:line` or a screenshot and state.
 - Distinguish a systemic token/component problem from a one-off call-site issue.
+- Use canonical names from `components/terminology.md` and report the KIN maturity from `components/catalog.md` when relevant.
+- For AI or automation findings, verify evidence, uncertainty, execution scope, authorization, durable task state, and rollback against the matching advanced-component contract.
+- Follow `principles/verification.md` for accessibility and browser evidence. Do not infer screen-reader, real browser-zoom, RTL, WCAG, or full cross-browser support from screenshots or smoke tests.
 - Include positive findings so the report preserves what already works.
 
 ## Score
@@ -53,6 +56,7 @@ Systemic issues
 Verification
 - Screens inspected: ...
 - Commands run: ...
+- Manual environments: ...
 - Not verified: ...
 ```
 

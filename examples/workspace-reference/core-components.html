@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="dark" data-contrast="normal">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#08090a" />
+    <title>KIN Core Component Reference</title>
+    <script>
+      (() => {
+        const preference = localStorage.getItem("kin-reference-theme") || "system";
+        const resolved = preference === "system"
+          ? (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")
+          : preference;
+        document.documentElement.dataset.theme = resolved;
+        document.documentElement.dataset.themePreference = preference;
+        document.documentElement.dataset.contrast = localStorage.getItem("kin-reference-contrast") === "more" ? "more" : "normal";
+      })();
+    </script>
+    <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="./states.css" />
+    <link rel="stylesheet" href="./core-components.css" />
+    <script src="./core-components.js" defer></script>
+  </head>
+  <body class="states-page core-reference-page">
+    <a class="skip-link" href="#core-reference">跳到核心组件</a>
+
+    <header class="reference-header">
+      <div>
+        <p>KIN reference</p>
+        <h1>核心组件合同</h1>
+      </div>
+      <div class="reference-actions">
+        <a class="reference-back" href="./states.html">状态基准</a>
+        <div class="theme-control" role="group" aria-label="界面主题">
+          <button type="button" data-theme-value="light">日间</button>
+          <button type="button" data-theme-value="dark">夜间</button>
+          <button type="button" data-theme-value="system">系统</button>
+        </div>
+        <button type="button" data-contrast-toggle aria-pressed="false">高对比</button>
+      </div>
+    </header>
+
+    <main id="core-reference" class="reference-main" tabindex="-1">
+      <section id="actions" aria-labelledby="actions-title">
+        <header class="reference-section-heading">
+          <div><h2 id="actions-title">操作与选择</h2><p>执行、开关、单选和模式选择使用不同语义。</p></div>
+          <span>Actions + selection</span>
+        </header>
+        <div class="component-grid action-grid">
+          <article class="component-sample">
+            <h3>操作</h3>
+            <div class="sample-row">
+              <button type="button" class="primary-action">保存更改</button>
+              <button type="button">预览</button>
+              <button type="button" disabled aria-describedby="disabled-reason">发布</button>
+            </div>
+            <p id="disabled-reason" class="sample-note">完成审核后才能发布。</p>
+          </article>
+          <article class="component-sample">
+            <h3>布尔设置</h3>
+            <label class="check-row"><input type="checkbox" checked /> <span>在报告中包含来源</span></label>
+            <button class="switch-row" type="button" role="switch" aria-checked="true" data-core-switch><span>自动刷新</span><i aria-hidden="true"></i></button>
+          </article>
+          <article class="component-sample">
+            <h3 id="review-mode-label">审核模式</h3>
+            <div class="radio-stack" role="radiogroup" aria-labelledby="review-mode-label">
+              <label><input type="radio" name="review-mode" value="manual" checked /> 人工确认</label>
+              <label><input type="radio" name="review-mode" value="assisted" /> 辅助审核</label>
+            </div>
+          </article>
+          <article class="component-sample">
+            <h3>显示密度</h3>
+            <div class="segment-control" role="group" aria-label="显示密度" data-segment-group>
+              <button type="button" aria-pressed="true">紧凑</button>
+              <button type="button" aria-pressed="false">标准</button>
+              <button type="button" aria-pressed="false">舒适</button>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section id="forms" aria-labelledby="forms-core-title">
+        <header class="reference-section-heading">
+          <div><h2 id="forms-core-title">表单与输入</h2><p>标签、输入值、帮助、错误和提交结果由对应字段或表单拥有。</p></div>
+          <span>Forms + entry</span>
+        </header>
+        <form class="core-form" data-core-form novalidate>
+          <label class="core-field">
+            <span>规则名称</span>
+            <input name="rule-name" value="价格异常复核" autocomplete="off" />
+            <small>名称会显示在审核记录中。</small>
+          </label>
+          <label class="core-field">
+            <span>审核说明</span>
+            <textarea name="description" rows="3">价格变化超过阈值时请求人工确认。</textarea>
+            <small>说明为什么需要这条规则。</small>
+          </label>
+          <label class="core-field">
+            <span>通知频率</span>
+            <select name="frequency"><option>立即</option><option>每小时汇总</option><option>每日汇总</option></select>
+            <small>只影响通知，不改变规则执行。</small>
+          </label>
+          <label class="core-field search-field-sample">
+            <span>搜索商品</span>
+            <span class="search-input-wrap"><input type="search" name="product-search" placeholder="名称或 SKU" data-core-search /><button type="button" data-search-clear>清除</button></span>
+            <small data-search-status role="status">输入名称或 SKU 缩小结果范围。</small>
+          </label>
+          <label class="core-field combo-field">
+            <span>负责人</span>
+            <input name="owner" role="combobox" aria-expanded="false" aria-controls="owner-options" aria-autocomplete="list" autocomplete="off" placeholder="搜索人员" data-combobox />
+            <small>输入姓名并从结果中选择。</small>
+            <div id="owner-options" class="combo-options" role="listbox" hidden>
+              <button type="button" role="option" data-combo-option>林晨</button>
+              <button type="button" role="option" data-combo-option>周远</button>
+              <button type="button" role="option" data-combo-option>陈默</button>
+            </div>
+          </label>
+          <label class="core-field file-field">
+            <span>补充证据</span>
+            <input type="file" name="evidence" accept=".pdf,.png,.jpg" />
+            <small>PDF、PNG 或 JPG，单个文件不超过 10 MB。</small>
+          </label>
+          <div class="form-actions core-form-actions"><p class="form-result" role="status" data-form-result></p><button type="submit" class="primary-action">保存规则</button></div>
+        </form>
+      </section>
+
+      <section id="navigation" aria-labelledby="navigation-title">
+        <header class="reference-section-heading">
+          <div><h2 id="navigation-title">导航与 Disclosure</h2><p>位置、视图、命令和展开状态保持各自语义。</p></div>
+          <span>Navigation + disclosure</span>
+        </header>
+        <nav class="breadcrumb-sample" aria-label="面包屑"><a href="./">工作区</a><span aria-hidden="true">/</span><a href="#navigation">审核规则</a><span aria-hidden="true">/</span><span aria-current="page">价格异常</span></nav>
+        <div class="navigation-demo">
+          <div class="tab-list" role="tablist" aria-label="规则视图" data-core-tabs>
+            <button id="tab-summary" type="button" role="tab" aria-selected="true" aria-controls="panel-summary">摘要</button>
+            <button id="tab-history" type="button" role="tab" aria-selected="false" aria-controls="panel-history" tabindex="-1">历史</button>
+            <button id="tab-sources" type="button" role="tab" aria-selected="false" aria-controls="panel-sources" tabindex="-1">来源</button>
+          </div>
+          <div id="panel-summary" class="tab-panel" role="tabpanel" aria-labelledby="tab-summary">当前规则启用，最近一次执行没有发现需要人工复核的记录。</div>
+          <div id="panel-history" class="tab-panel" role="tabpanel" aria-labelledby="tab-history" hidden>最近 30 天执行 14 次，其中 2 次进入人工复核。</div>
+          <div id="panel-sources" class="tab-panel" role="tabpanel" aria-labelledby="tab-sources" hidden>规则使用商品价格、渠道状态和人工豁免记录。</div>
+        </div>
+        <div class="disclosure-row">
+          <details><summary>查看规则条件</summary><p>价格变化超过 12%，并且渠道状态不是维护中。</p></details>
+          <div class="menu-sample"><button type="button" aria-haspopup="menu" aria-expanded="false" data-menu-trigger>更多操作</button><div class="sample-menu" role="menu" hidden><button type="button" role="menuitem">复制规则</button><button type="button" role="menuitem">查看审计记录</button><button type="button" role="menuitem">停用规则</button></div></div>
+          <div class="menu-sample"><button type="button" aria-haspopup="menu" aria-expanded="false" data-context-target>当前对象操作</button><div class="sample-menu context-menu" role="menu" hidden><button type="button" role="menuitem">打开详情</button><button type="button" role="menuitem">复制对象链接</button></div></div>
+          <span class="tooltip-sample"><button type="button" aria-describedby="rule-help">?</button><span id="rule-help" role="tooltip">规则只处理新进入队列的记录。</span></span>
+        </div>
+        <nav class="pagination-sample" aria-label="审核记录分页"><button type="button" disabled>上一页</button><a href="#navigation" aria-current="page">1</a><a href="#navigation">2</a><a href="#navigation">3</a><button type="button">下一页</button></nav>
+      </section>
+
+      <section id="data-display" aria-labelledby="data-title">
+        <header class="reference-section-heading">
+          <div><h2 id="data-title">数据展示</h2><p>结构、来源、新鲜度和状态在扫描时保持可比较。</p></div>
+          <span>Data display</span>
+        </header>
+        <div class="data-display-grid">
+          <div class="table-wrap"><table class="core-table"><caption>等待审核的价格变化</caption><thead><tr><th scope="col">商品</th><th scope="col">变化</th><th scope="col">状态</th><th scope="col">更新</th></tr></thead><tbody><tr><th scope="row">Field Jacket</th><td>+12.4%</td><td><span class="status-text warning"><i></i>待复核</span></td><td>4 分钟前</td></tr><tr><th scope="row">Canvas Tote</th><td>−3.1%</td><td><span class="status-text positive"><i></i>已验证</span></td><td>18 分钟前</td></tr><tr class="stale-row"><th scope="row">Studio Lamp</th><td>未知</td><td><span class="status-text neutral"><i></i>来源不可用</span></td><td>2 天前</td></tr></tbody></table></div>
+          <div class="data-side-samples"><dl class="property-sample"><div><dt>规则 ID</dt><dd class="mono">RULE-024</dd></div><div><dt>负责人</dt><dd><span class="avatar-sample" aria-hidden="true">林</span> 林晨</dd></div><div><dt>标签</dt><dd><span class="tag-sample">价格</span><span class="tag-sample">人工复核</span></dd></div><div><dt>数据完整度</dt><dd>86 / 100</dd></div><div><dt>来源</dt><dd>3 个已验证来源</dd></div></dl><div class="tree-sample" role="tree" aria-label="规则分组"><div role="treeitem" aria-expanded="true" aria-selected="true" tabindex="0">价格规则<div role="group"><div role="treeitem" tabindex="-1">异常变化</div><div role="treeitem" tabindex="-1">渠道折扣</div></div></div><div role="treeitem" tabindex="-1">库存规则</div></div></div>
+        </div>
+        <div class="skeleton-sample" aria-label="正在载入下一批审核记录" aria-busy="true"><span></span><span></span><span></span></div>
+      </section>
+
+      <section id="feedback" aria-labelledby="feedback-core-title">
+        <header class="reference-section-heading">
+          <div><h2 id="feedback-core-title">反馈与进度</h2><p>反馈出现在能够解释结果的最小范围内。</p></div>
+          <span>Feedback + progress</span>
+        </header>
+        <div class="feedback-stack">
+          <div class="banner-sample" role="status"><span><strong>审核服务将在 18:00 维护</strong> 已打开的记录仍可查看，提交操作将在维护结束后恢复。</span><button type="button" aria-label="关闭维护通知">关闭</button></div>
+          <div class="inline-alert" role="status"><div><strong>2 条记录需要复核</strong><p>价格变化超过当前规则阈值，现有发布状态不受影响。</p></div><button type="button">打开队列</button></div>
+          <div class="inline-alert error-alert" role="alert"><div><strong>来源同步失败</strong><p>保留最近一次成功结果。重试不会重复创建审核任务。</p></div><button type="button">重试</button></div>
+          <div class="progress-sample"><div><span>正在验证来源</span><strong data-progress-label>3 / 5</strong></div><progress max="5" value="3">3 / 5</progress></div>
+          <div class="progress-sample"><div><span>本月自动化额度</span><strong>68%</strong></div><meter min="0" max="100" low="20" high="80" optimum="50" value="68">68%</meter></div>
+          <div class="loading-row" role="status"><span class="spinner-sample" aria-hidden="true"></span><span>正在读取审核历史</span></div>
+          <div class="empty-sample"><strong>没有更多待复核记录</strong><p>当前筛选条件下的记录已经处理完成。</p><button type="button">清除筛选</button></div>
+        </div>
+      </section>
+
+      <section id="overlays" aria-labelledby="overlays-title">
+        <header class="reference-section-heading">
+          <div><h2 id="overlays-title">浮层</h2><p>Dialog、Drawer 与 Popover 根据任务范围和空间关系选择。</p></div>
+          <span>Overlays</span>
+        </header>
+        <div class="sample-row overlay-triggers">
+          <button type="button" data-dialog-open>打开确认 Dialog</button>
+          <button type="button" data-drawer-open>打开属性 Drawer</button>
+          <span class="popover-anchor"><button type="button" aria-haspopup="dialog" aria-expanded="false" data-popover-trigger>筛选说明</button><div class="sample-popover" role="dialog" aria-label="筛选说明" hidden><strong>当前筛选</strong><p>只显示价格变化超过 12% 的在售商品。</p><button type="button" data-popover-close>关闭</button></div></span>
+        </div>
+      </section>
+    </main>
+
+    <dialog class="core-dialog" aria-labelledby="confirm-title">
+      <form method="dialog"><header><div><p>确认操作</p><h2 id="confirm-title">停用价格异常规则？</h2></div></header><p>新记录将不再进入人工复核。已有任务和审计记录会保留。</p><div class="dialog-actions"><button value="cancel">取消</button><button value="confirm" class="destructive-action">停用规则</button></div></form>
+    </dialog>
+
+    <div class="drawer-layer" hidden data-drawer-layer>
+      <button class="drawer-scrim" type="button" aria-label="关闭属性 Drawer" data-drawer-scrim></button>
+      <aside class="core-drawer" role="dialog" aria-modal="true" aria-labelledby="drawer-title">
+        <header><div><p>RULE-024</p><h2 id="drawer-title">规则属性</h2></div><button type="button" data-drawer-close>关闭</button></header>
+        <dl class="property-sample"><div><dt>状态</dt><dd>已启用</dd></div><div><dt>阈值</dt><dd>12%</dd></div><div><dt>负责人</dt><dd>林晨</dd></div><div><dt>最近修改</dt><dd>今天 09:42</dd></div></dl>
+      </aside>
+    </div>
+  </body>
+</html>

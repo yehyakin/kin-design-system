@@ -117,11 +117,17 @@ test("workspace demonstrates button motion and Sonner result patterns", async ({
   await page.goto("/examples/workspace-reference/");
 
   const toggle = page.locator("[data-motion-toggle]");
-  await toggle.click();
+  await expect(toggle).toContainText("Pause monitoring");
+  await expect(toggle.locator(".paired-icon-default")).toBeVisible();
+  await toggle.focus();
+  await page.keyboard.press("Space");
   await expect(toggle).toHaveAttribute("aria-pressed", "true");
-  await expect(toggle).toContainText("Watching");
+  await expect(toggle).toContainText("Resume monitoring");
+  await expect(toggle.locator(".paired-icon-active")).toBeVisible();
 
   const asyncButton = page.locator("[data-motion-async]");
+  await asyncButton.hover();
+  await expect(asyncButton).not.toHaveClass(/is-success/);
   await asyncButton.click();
   await expect(asyncButton).toHaveClass(/is-loading/);
   await expect(asyncButton).toHaveClass(/is-success/, { timeout: 2_000 });
@@ -189,6 +195,235 @@ test("state reference and command dialog", async ({ page }, testInfo) => {
   await page.keyboard.press("Escape");
   await expect(dialog).toBeHidden();
   await expect(open).toBeFocused();
+});
+
+test("core actions preserve distinct selection semantics", async ({ page }) => {
+  await seedPreferences(page, "dark");
+  await page.goto("/examples/workspace-reference/core-components.html#actions");
+
+  const switchControl = page.getByRole("switch", { name: "自动刷新" });
+  await expect(switchControl).toHaveAttribute("aria-checked", "true");
+  await switchControl.focus();
+  await page.keyboard.press("Space");
+  await expect(switchControl).toHaveAttribute("aria-checked", "false");
+
+  const density = page.getByRole("group", { name: "显示密度" });
+  await density.getByRole("button", { name: "标准" }).click();
+  await expect(density.getByRole("button", { name: "标准" })).toHaveAttribute("aria-pressed", "true");
+  await expect(density.getByRole("button", { name: "紧凑" })).toHaveAttribute("aria-pressed", "false");
+  await expect(page.getByRole("radio", { name: "人工确认" })).toBeChecked();
+});
+
+test("core form retains input and commits combobox value", async ({ page }) => {
+  await seedPreferences(page, "light");
+  await page.goto("/examples/workspace-reference/core-components.html#forms");
+
+  const combo = page.getByRole("combobox", { name: "负责人" });
+  await combo.fill("周");
+  await expect(combo).toHaveAttribute("aria-expanded", "true");
+  await page.keyboard.press("ArrowDown");
+  await page.keyboard.press("Enter");
+  await expect(combo).toHaveValue("周远");
+
+  await page.getByRole("button", { name: "保存规则" }).click();
+  await expect(page.getByText("规则已保存到当前工作区。", { exact: true })).toBeVisible();
+  await expect(page.getByLabel("规则名称")).toHaveValue("价格异常复核");
+  await page.getByLabel("通知频率").selectOption({ label: "每日汇总" });
+  await expect(page.getByLabel("通知频率")).toHaveValue("每日汇总");
+  await page.getByLabel("搜索商品").fill("SKU-024");
+  await expect(page.getByText("正在筛选“SKU-024”", { exact: true })).toBeVisible();
+  await page.getByRole("button", { name: "清除", exact: true }).click();
+  await expect(page.getByLabel("搜索商品")).toHaveValue("");
+  await expect(page.getByLabel("补充证据")).toHaveAttribute("accept", ".pdf,.png,.jpg");
+});
+
+test("core navigation separates tabs menus disclosures and pagination", async ({ page }) => {
+  await seedPreferences(page, "dark");
+  await page.goto("/examples/workspace-reference/core-components.html#navigation");
+
+  const summaryTab = page.getByRole("tab", { name: "摘要" });
+  await summaryTab.focus();
+  await page.keyboard.press("ArrowRight");
+  await expect(page.getByRole("tab", { name: "历史" })).toHaveAttribute("aria-selected", "true");
+  await expect(page.getByRole("tabpanel", { name: "历史" })).toBeVisible();
+
+  await page.getByRole("button", { name: "更多操作" }).click();
+  await expect(page.getByRole("menuitem", { name: "复制规则" })).toBeFocused();
+  await page.keyboard.press("ArrowDown");
+  await expect(page.getByRole("menuitem", { name: "查看审计记录" })).toBeFocused();
+  await page.keyboard.press("Escape");
+  await expect(page.getByRole("button", { name: "更多操作" })).toBeFocused();
+  const contextTarget = page.getByRole("button", { name: "当前对象操作" });
+  await contextTarget.focus();
+  await page.keyboard.press("Shift+F10");
+  await expect(page.getByRole("menuitem", { name: "打开详情" })).toBeFocused();
+  await page.keyboard.press("Escape");
+  await expect(contextTarget).toBeFocused();
+  await expect(page.getByRole("navigation", { name: "面包屑" })).toContainText("价格异常");
+  const tooltipTrigger = page.getByRole("button", { name: "?" });
+  await tooltipTrigger.focus();
+  await expect(page.getByRole("tooltip")).toHaveCSS("opacity", "1");
+  await page.keyboard.press("Escape");
+  await expect(page.getByRole("tooltip")).toHaveCSS("opacity", "0");
+  const disclosure = page.locator("details");
+  await expect(disclosure).not.toHaveAttribute("open", "");
+  await disclosure.locator("summary").click();
+  await expect(disclosure).toHaveAttribute("open", "");
+  await expect(page.getByRole("link", { name: "1" })).toHaveAttribute("aria-current", "page");
+});
+
+test("core data display preserves labels status and loading meaning", async ({ page }, testInfo) => {
+  await seedPreferences(page, "light");
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.goto("/examples/workspace-reference/core-components.html#data-display");
+
+  await expect(page.getByRole("table", { name: "等待审核的价格变化" })).toBeVisible();
+  await expect(page.getByText("来源不可用", { exact: true })).toBeVisible();
+  await expect(page.locator("#data-display").getByText("RULE-024", { exact: true })).toBeVisible();
+  await expect(page.getByRole("tree", { name: "规则分组" })).toBeVisible();
+  await expect(page.getByText("人工复核", { exact: true })).toBeVisible();
+  const treeRoot = page.getByRole("treeitem", { name: /价格规则/ });
+  await treeRoot.focus();
+  await page.keyboard.press("ArrowRight");
+  await expect(page.getByRole("treeitem", { name: "异常变化" })).toBeFocused();
+  await expect(page.getByLabel("正在载入下一批审核记录")).toHaveAttribute("aria-busy", "true");
+  await assertNoHorizontalOverflow(page);
+  await page.evaluate(() => { document.activeElement?.blur(); scrollTo(0, 0); });
+  await capture(page, testInfo, "core-components-light-desktop.png");
+});
+
+test("core feedback keeps progress and recovery in context", async ({ page }) => {
+  await seedPreferences(page, "dark");
+  await page.goto("/examples/workspace-reference/core-components.html#feedback");
+
+  await expect(page.getByRole("alert")).toContainText("来源同步失败");
+  await expect(page.getByRole("status").filter({ hasText: "审核服务将在 18:00 维护" })).toBeVisible();
+  const progress = page.getByRole("progressbar");
+  await expect(progress).toHaveAttribute("max", "5");
+  await expect(progress).toHaveAttribute("value", "3");
+  await expect(page.getByRole("meter")).toHaveAttribute("value", "68");
+  await expect(page.getByRole("status").filter({ hasText: "正在读取审核历史" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "清除筛选" })).toBeVisible();
+});
+
+test("core overlays restore focus and contain modal tasks", async ({ page }, testInfo) => {
+  await seedPreferences(page, "dark");
+  await page.goto("/examples/workspace-reference/core-components.html#overlays");
+
+  const dialogOpen = page.getByRole("button", { name: "打开确认 Dialog" });
+  await dialogOpen.click();
+  await expect(page.getByRole("dialog", { name: "停用价格异常规则？" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "取消" })).toBeFocused();
+  await page.keyboard.press("Escape");
+  await expect(dialogOpen).toBeFocused();
+
+  const drawerOpen = page.getByRole("button", { name: "打开属性 Drawer" });
+  await drawerOpen.click();
+  await expect(page.getByRole("dialog", { name: "规则属性" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "关闭", exact: true })).toBeFocused();
+  await page.keyboard.press("Escape");
+  await expect(drawerOpen).toBeFocused();
+
+  const popoverOpen = page.getByRole("button", { name: "筛选说明" });
+  await popoverOpen.click();
+  await expect(page.getByRole("dialog", { name: "筛选说明" })).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(popoverOpen).toBeFocused();
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.reload();
+  await assertMinimumTouchTargets(page, ".overlay-triggers > button, .overlay-triggers .popover-anchor > button, .reference-actions > button, .reference-back");
+  await assertNoHorizontalOverflow(page);
+  await capture(page, testInfo, "core-components-dark-mobile.png");
+});
+
+test("AI fixture preserves input through stop retry and completion", async ({ page }) => {
+  await seedPreferences(page, "dark");
+  await page.goto("/examples/workspace-reference/advanced-components.html#ai-assistance");
+
+  await expect(page.getByRole("note")).toContainText("不会联系模型");
+  const instruction = page.getByLabel("说明");
+  await expect(instruction).toHaveValue(/根据已验证来源/);
+  await page.getByRole("button", { name: "生成参考结果" }).click();
+  await expect(page.getByText("正在生成本地参考结果", { exact: true })).toBeVisible();
+  await page.getByRole("button", { name: "停止" }).click();
+  await expect(page.getByText("已停止 · 保留部分结果", { exact: true })).toBeVisible();
+  await expect(instruction).toHaveValue(/根据已验证来源/);
+  await page.getByRole("button", { name: "重试", exact: true }).click();
+  await expect(page.getByText("已完成 · 本地基准", { exact: true })).toBeVisible({ timeout: 2_000 });
+  await expect(page.getByText("仍需确认", { exact: true })).toBeVisible();
+  await expect(page.getByRole("link", { name: /外部渠道快照/ })).toHaveAttribute("href", "#evidence-3");
+});
+
+test("review separates acceptance execution and task creation", async ({ page }) => {
+  await seedPreferences(page, "light");
+  await page.goto("/examples/workspace-reference/advanced-components.html#review");
+
+  await page.getByRole("button", { name: "接受建议" }).click();
+  await expect(page.getByText("已接受 · 尚未执行", { exact: true })).toBeVisible();
+  await expect(page.getByText("源数据尚未修改", { exact: false })).toBeVisible();
+
+  const createTask = page.getByRole("button", { name: "确认并创建发布任务" });
+  await expect(createTask).toBeDisabled();
+  await page.getByRole("checkbox", { name: /核对目标/ }).check();
+  await expect(createTask).toBeEnabled();
+  await createTask.click();
+  await expect(page.getByText("发布任务已在本地基准中创建", { exact: false })).toBeVisible();
+  await expect(page.getByText("TASK-NEW", { exact: false })).toBeVisible();
+  await expect(page.locator("[data-created-cancel]")).toBeFocused();
+  await page.locator("[data-created-cancel]").click();
+  await expect(page.getByText("排队任务已取消", { exact: false })).toBeVisible();
+});
+
+test("media review keeps selection and approval distinct", async ({ page }) => {
+  await seedPreferences(page, "dark");
+  await page.goto("/examples/workspace-reference/advanced-components.html#media-review");
+
+  await expect(page.getByRole("img", { name: /商品主图本地占位预览/ })).toBeVisible();
+  const select = page.getByRole("button", { name: "已选择" });
+  await expect(select).toHaveAttribute("aria-pressed", "true");
+  await select.click();
+  await expect(page.getByText("资产未选择，也未批准。", { exact: true })).toBeVisible();
+  await page.getByRole("button", { name: "批准发布" }).click();
+  await expect(page.getByText("渠道 B 的裁切仍待处理", { exact: false })).toBeVisible();
+  await expect(page.getByText("品牌素材已授权", { exact: true })).toBeVisible();
+});
+
+test("background task fixture exposes durable recovery states", async ({ page }) => {
+  await seedPreferences(page, "dark");
+  await page.goto("/examples/workspace-reference/advanced-components.html#background-work");
+
+  await expect(page.getByRole("table", { name: "后台任务队列" })).toBeVisible();
+  await page.getByRole("button", { name: "重试失败任务" }).click();
+  await expect(page.getByText("排队重试", { exact: true })).toBeVisible();
+  await expect(page.getByText("原始筛选保持不变", { exact: false })).toBeVisible();
+  await page.locator("[data-task-cancel]").click();
+  await expect(page.getByText("取消请求中", { exact: true })).toBeVisible();
+});
+
+test("chart provides keyboard points and a semantic table fallback", async ({ page }, testInfo) => {
+  await seedPreferences(page, "light");
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.goto("/examples/workspace-reference/advanced-components.html#chart");
+
+  await expect(page.getByRole("img", { name: "近 7 日 Field Jacket 商品价格" })).toBeVisible();
+  const firstPoint = page.locator(".chart-points circle").first();
+  await firstPoint.focus();
+  await expect(firstPoint).toHaveAttribute("aria-label", "7 月 7 日，CNY 1,399");
+  await page.getByRole("button", { name: "数据表" }).click();
+  await expect(page.getByRole("table", { name: "近 7 日 Field Jacket 商品价格数据" })).toBeVisible();
+  await expect(page.getByRole("img", { name: "近 7 日 Field Jacket 商品价格" })).toBeHidden();
+  await assertNoHorizontalOverflow(page);
+  await page.evaluate(() => { document.activeElement?.blur(); scrollTo(0, 0); });
+  await capture(page, testInfo, "advanced-components-light-desktop.png");
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.getByRole("button", { name: "夜间" }).click();
+  await page.getByRole("button", { name: "图表", exact: true }).click();
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
+  await assertMinimumTouchTargets(page, ".reference-actions > button, .reference-back, .composer-actions button, .review-actions button, .media-actions button, .task-row button, .chart-toolbar button");
+  await assertNoHorizontalOverflow(page);
+  await capture(page, testInfo, "advanced-components-dark-mobile.png");
 });
 
 test("information site preserves reading and provenance", async ({ page }, testInfo) => {

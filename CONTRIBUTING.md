@@ -28,6 +28,7 @@ A proposal should explain:
 - External references and their status as official or third-party.
 - Validation performed.
 - Migration path for normative changes.
+- Delivery-boundary impact when a proposal changes Figma, runtime packages, generated artifacts, or adoption evidence.
 
 ## Writing conventions
 
@@ -57,15 +58,20 @@ Do not vendor external code or assets by default. Before adding an adapter, veri
 ```powershell
 node scripts/validate-docs.mjs
 node scripts/validate-design.mjs
+node scripts/validate-components.mjs
 node scripts/validate-release.mjs
 node scripts/export-tokens.mjs --check
 node scripts/export-figma-variables.mjs --check
 npm run test:tooling
 ```
 
-The validators check document structure, local links, required machine-readable Token groups, Token references, theme parity and baseline text contrast. Visual and product judgment still require human review.
+The validators check document structure, local links, component-catalog maturity and evidence paths, terminology references, required machine-readable Token groups, Token references, theme parity and baseline text contrast. Visual and product judgment still require human review.
 
 For Token changes, include the output of `node scripts/report-token-changes.mjs <base-ref>`. For component-state or reference-interface changes, run `npm run test:reference` and review the generated screenshots before opening the pull request.
+
+Accessibility and browser claims MUST follow [`principles/verification.md`](./principles/verification.md). Automated reflow, RTL, Forced Colors and cross-browser smoke checks do not replace a recorded real browser-zoom or screen-reader review when the release claims those behaviors.
+
+Proposals that change contract-first delivery, Figma interoperability, runtime packaging, or evidence stages MUST follow [`DELIVERY.md`](./DELIVERY.md) and identify separate ownership, versioning, migration, and rollback.
 
 ## Versioning
 

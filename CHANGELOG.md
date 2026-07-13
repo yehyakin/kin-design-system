@@ -6,6 +6,17 @@ The project follows semantic versioning for normative design documentation.
 
 ## Unreleased
 
+## 2.1.0 — 2026-07-13
+
+### Contract, components, and verification
+
+- Harden adoption evidence with optional immutable contract revision/checksum records, checksum validation, truthful `mapped` stage requirements, and timestamps for completed automated checks.
+- Defined the contract-first KIN delivery model and explicit Figma/runtime package gates; added machine-readable adoption evidence stages, mappings, verification, ownership, exceptions, and production observation; updated initialization and checking so unperformed work cannot be represented as verified.
+- Added a normative verification and accessibility-evidence contract; separated reduced and normal motion projects; added Firefox and WebKit smoke coverage plus automated reflow-proxy, long-content, RTL, and Forced Colors checks without claiming that automation replaces real zoom or screen-reader review.
+- Added normative AI assistance, review and approval, background work, and charts and analysis contracts; added a deterministic advanced-component reference with Composer stop/retry, Evidence List, Diff Review, Execution Preview, Media Review, durable task states, and a keyboard-accessible chart with semantic Table fallback; promoted 55 catalog components to stable.
+- Added six normative core-component contracts for actions and selection, forms and entry, navigation and disclosure, data display, feedback and progress, and overlays; added a runnable reference and Playwright acceptance coverage, and promoted 47 catalog components to stable while keeping real-backend File Upload as a candidate.
+- Added a normative component terminology dictionary and maturity catalog with machine-readable JSON, path validation, Agent routing, and CI enforcement.
+- Added a normative micro-interaction contract for paired states, committed results, async progress, disclosures, input parity, feedback ownership, and reduced-motion fallbacks.
 - Added a normative preference-control contract for Lucide-compatible icons, light/dark switches, retained system preference, and icon-triggered language menus.
 - Updated the workspace reference with the Lucide icon adapter, lazy Sonner feedback, a light/dark switch, and an icon-based English/Chinese language menu.
 - Expanded the workspace reference with Sonner success, error, undo, and loading-to-complete patterns plus press, toggle, pending, and completion button motion.

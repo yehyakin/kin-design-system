@@ -169,11 +169,13 @@
 
             <div class="feedback-grid">
               <article class="feedback-example">
-                <span class="example-label" data-i18n="toggleLabel">切换状态</span>
+                <span class="example-label" data-i18n="toggleLabel">成对状态</span>
                 <button type="button" class="motion-button" data-motion-toggle aria-pressed="false">
-                  <i data-lucide="star"></i><span data-i18n="watchButton">关注对象</span>
+                  <i class="paired-icon paired-icon-default" data-lucide="pause"></i>
+                  <i class="paired-icon paired-icon-active" data-lucide="circle-play"></i>
+                  <span data-i18n="watchButton">暂停监测</span>
                 </button>
-                <p data-i18n="toggleDescription">选中状态由颜色、图标和 aria-pressed 共同表达。</p>
+                <p data-i18n="toggleDescription">图标、下一动作标签和 aria-pressed 共同表达可逆状态。</p>
               </article>
 
               <article class="feedback-example">

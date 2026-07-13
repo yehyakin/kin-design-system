@@ -34,6 +34,8 @@ Third-party component defaults always have the lowest visual priority.
 | [Impeccable](https://github.com/pbakaus/impeccable) | context routing, progressive disclosure, scored audits and evidence formats | command structure or visual rules copied without KIN adaptation |
 | [Vercel Web Interface Guidelines](https://github.com/vercel-labs/web-interface-guidelines) | concise code-level accessibility and interface audit checks | scanner output treated as product judgment |
 | [Google Stitch Skills](https://github.com/google-labs-code/stitch-skills) | framework discovery and extraction of design intent from existing code | generated prose accepted without checking the source implementation |
+| [AMicro](https://github.com/Subhan-code/Amicro--Micro-transitions-) | discover common paired-state and result-confirmation examples for review | generated button styling, hover-as-success semantics, package dependency, or gallery aesthetics |
+| [Name That UI](https://namethatui.com/) | discover canonical interface terms, aliases, and useful non-synonym distinctions | copied descriptions or screenshots, platform styling, production behavior, or normative accessibility claims |
 
 ## Runtime-component references
 
@@ -72,7 +74,7 @@ See [`tools/brand-motion.md`](./tools/brand-motion.md) and [`tools/long-task-loa
 
 The reviewed Playwright dependency is recorded in `package-lock.json` and does not ship to consuming products. CI installs Chromium only in the reference-interface job.
 
-KIN 2.0 locks `@google/design.md` 0.3.0 and `@playwright/test` 1.61.1 as development-only dependencies. Both are published under Apache-2.0; their transitive dependency integrity is recorded in `package-lock.json` and reviewed with `npm audit` before release.
+KIN 2.1 locks `@google/design.md` 0.3.0 and `@playwright/test` 1.61.1 as development-only dependencies. Both are published under Apache-2.0; their transitive dependency integrity is recorded in `package-lock.json` and reviewed with `npm audit` before release.
 
 ## Adoption record
 

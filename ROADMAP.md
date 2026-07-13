@@ -51,9 +51,26 @@ The Figma exporter deliberately does not manage credentials or update existing l
 
 ## Next
 
+- Test the 55 stable components, including AI review, durable work, and accessible analysis contracts, against consuming projects before expanding optional variants.
 - Gather adoption evidence from real consuming projects before expanding scanner rules.
 - Add ID-aware Figma library synchronization only if an eligible team can test update and rollback behavior.
 - Evaluate cross-platform screenshot baselines after font and renderer variance is measured.
+
+## Verification baseline
+
+- Chromium runs the full deterministic suite under reduced motion.
+- A separate Chromium project verifies intended normal-motion behavior.
+- Firefox and WebKit run named smoke coverage rather than the complete Chromium suite.
+- Automated checks cover a 200% reflow proxy, long-content stress, RTL stress, and Forced Colors.
+- Real browser zoom and screen-reader checks remain recorded manual evidence; automation MUST NOT be reported as a substitute.
+
+## Delivery decision
+
+- KIN core remains contract-first.
+- Figma delivery remains Variables interoperability; no published component library or remote ID synchronization is claimed.
+- Runtime components remain project-owned; the reference interfaces are not a universal package.
+- Any future Figma Library or runtime package requires the ownership, versioning, adoption evidence, migration, and rollback gates in `DELIVERY.md` and SHOULD be released separately.
+- Adoption tooling records `initialized`, `mapped`, `verified`, and `production-observed` evidence without running project commands or fabricating pass results.
 
 ## Non-goals
 

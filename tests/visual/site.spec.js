@@ -5,6 +5,7 @@ test("showcase exposes the English contract and live foundations", async ({ page
   await expect(page).toHaveTitle("KIN Design System");
   await expect(page.getByRole("heading", { level: 1 })).toContainText("Clear interfaces");
   await expect(page.getByRole("heading", { name: "Foundations" })).toBeVisible();
+  await expect(page.getByRole("link", { name: /Delivery model/ })).toBeVisible();
   await expect(page.locator('.language-menu a[hreflang="zh-CN"]')).toHaveAttribute("lang", "zh-CN");
   await expect(page.locator('svg.lucide')).not.toHaveCount(0);
   await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
@@ -49,6 +50,8 @@ test("showcase command menu filters and restores focus", async ({ page }) => {
   const dialog = page.getByRole("dialog");
   await expect(dialog.getByRole("link", { name: /DTCG Tokens/ })).toBeVisible();
   await expect(dialog.getByRole("link", { name: /AI behavior/ })).toBeHidden();
+  await search.fill("Delivery model");
+  await expect(dialog.getByRole("link", { name: /Delivery model/ })).toBeVisible();
   await search.fill("system theme");
   await dialog.getByRole("button", { name: /Use system theme/ }).click();
   await expect(page.evaluate(() => localStorage.getItem("kin-site-theme"))).resolves.toBe("system");

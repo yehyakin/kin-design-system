@@ -1,10 +1,12 @@
 {
   "$schema": "https://raw.githubusercontent.com/yehyakin/kin-design-system/main/adoption/kin.config.schema.json",
-  "kinVersion": "2.0.0",
+  "kinVersion": "2.1.0",
   "profile": "information-site",
   "contract": {
-    "source": "https://github.com/yehyakin/kin-design-system/tree/v2.0.0",
-    "local": "docs/KIN-DESIGN.md"
+    "source": "https://github.com/yehyakin/kin-design-system/tree/v2.1.0",
+    "local": "docs/KIN-DESIGN.md",
+    "revision": "v2.1.0",
+    "checksum": "547904f0015bf0a4f6e4d8e1fe37f10724ec83373321c766630c4992d0364ee3"
   },
   "tokens": {
     "source": "src/styles/tokens.css",
@@ -13,6 +15,12 @@
   },
   "components": {
     "roots": ["src/components"]
+  },
+  "delivery": {
+    "mode": "contract-first",
+    "figma": "variables-only",
+    "runtime": "project-owned",
+    "evidence": "docs/kin-evidence.json"
   },
   "audit": {
     "include": ["src"],

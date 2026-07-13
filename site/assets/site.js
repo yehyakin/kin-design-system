@@ -276,3 +276,5 @@ createIcons({
   },
   attrs: { "aria-hidden": "true", "stroke-width": "1.5" },
 });
+
+document.documentElement.dataset.siteReady = "true";

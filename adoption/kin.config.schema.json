@@ -17,7 +17,9 @@
       "additionalProperties": false,
       "properties": {
         "source": { "type": "string", "minLength": 1 },
-        "local": { "type": "string", "minLength": 1 }
+        "local": { "type": "string", "minLength": 1 },
+        "revision": { "type": "string", "minLength": 1 },
+        "checksum": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
       }
     },
     "tokens": {
@@ -35,6 +37,17 @@
       "additionalProperties": false,
       "properties": {
         "roots": { "type": "array", "items": { "type": "string" }, "uniqueItems": true }
+      }
+    },
+    "delivery": {
+      "type": "object",
+      "required": ["mode", "figma", "runtime", "evidence"],
+      "additionalProperties": false,
+      "properties": {
+        "mode": { "const": "contract-first" },
+        "figma": { "const": "variables-only" },
+        "runtime": { "const": "project-owned" },
+        "evidence": { "type": "string", "minLength": 1 }
       }
     },
     "audit": {

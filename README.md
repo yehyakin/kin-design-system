@@ -14,7 +14,7 @@
 </p>
 
 <p align="center">
-  <a href="./DESIGN.md"><img src="https://img.shields.io/badge/Design_Contract-v2.0.0-5E6AD2" alt="KIN Design Contract v2.0.0" /></a>
+  <a href="./DESIGN.md"><img src="https://img.shields.io/badge/Design_Contract-v2.1.0-5E6AD2" alt="KIN Design Contract v2.1.0" /></a>
   <a href="https://github.com/yehyakin/kin-design-system/actions/workflows/validate-docs.yml"><img src="https://github.com/yehyakin/kin-design-system/actions/workflows/validate-docs.yml/badge.svg" alt="Documentation validation" /></a>
   <a href="./LICENSE"><img src="https://img.shields.io/badge/License-MIT-232326" alt="MIT License" /></a>
 </p>
@@ -109,17 +109,23 @@ Not every product needs a dense layout, a sidebar, an inspector, or a command me
 - Anti-Slop review for generic generated interface patterns
 - Feature flags, incremental rollout, and rollback planning
 
+## Delivery boundary
+
+KIN's core repository is contract-first. It ships design and interaction contracts, generated Tokens, framework-free references, verification tooling, an Agent Skill, and adoption evidence formats.
+
+It does not currently ship a published Figma component library or a runtime component package. Figma support means Variables interoperability; production components remain owned by each consuming project. The approval gates for any future Figma Library or `@kin/react`-style package are defined in [`DELIVERY.md`](./DELIVERY.md).
+
 ## Ways to use KIN
 
 ### Use it as a reference
 
-Read [`DESIGN.md`](./DESIGN.md) when planning or reviewing an interface. You can adopt individual rules without copying the repository into your project.
+Read [`DESIGN.md`](./DESIGN.md) and [`DELIVERY.md`](./DELIVERY.md) when planning or reviewing an interface. You can adopt individual rules without copying the repository into your project.
 
 ### Use it as a project contract
 
 Add the design contract and relevant supporting files to a project's documentation. Record project-specific exceptions next to the contract instead of silently changing the rules.
 
-KIN 2.0 includes a non-destructive adoption record and a candidate audit:
+KIN 2.1 includes a non-destructive adoption record, verification evidence, and a candidate audit:
 
 ```bash
 node scripts/init-adoption.mjs ../your-project
@@ -127,7 +133,7 @@ node scripts/check-adoption.mjs ../your-project
 node scripts/audit-project.mjs ../your-project
 ```
 
-The audit reports code patterns for review; it does not prove a visual defect or rewrite source. See [`adoption/README.md`](./adoption/README.md) for the contract, exception format, and product profiles.
+The initializer also creates a machine-readable evidence record whose checks begin as `not-run`. The audit reports code patterns for review; it does not prove a visual defect or rewrite source. See [`adoption/README.md`](./adoption/README.md) for delivery boundaries, evidence stages, exception format, and product profiles.
 
 ### Use it with a coding tool
 
@@ -142,7 +148,7 @@ The Skill classifies build, redesign, audit, and review tasks; loads only the re
 For tools without Skill support, give the tool the main contract before it edits the interface:
 
 ```md
-Read DESIGN.md before changing the interface.
+Read DESIGN.md and DELIVERY.md before changing the interface.
 
 Start from the existing product, users, content, data, routes, and components.
 Read only the principle and integration files needed for this task.
@@ -176,10 +182,43 @@ Information, ecommerce, intelligence, or canvas product work
   matching file in patterns/
   components/core-states.md
 
+Adopting KIN, migrating an existing contract, or recording evidence
+  DESIGN.md
+  DELIVERY.md
+  adoption/README.md
+  principles/verification.md
+
+Choosing or naming a component, or claiming that it is complete
+  DESIGN.md
+  components/terminology.md
+  components/catalog.md
+
+Implementing actions, forms, navigation, data display, feedback, or overlays
+  DESIGN.md
+  components/catalog.md
+  matching contract in components/
+  examples/workspace-reference/core-components.html
+
+Implementing AI assistance, review, durable tasks, media, or charts
+  DESIGN.md
+  matching product pattern
+  components/ai-assistance.md, review-and-approval.md,
+  background-work.md, or charts-and-analysis.md
+  examples/workspace-reference/advanced-components.html
+
+Paired controls, async progress, completion feedback, or disclosure motion
+  DESIGN.md
+  components/micro-interactions.md
+  integrations/sonner.md when temporary feedback adds value
+
 Theme switch, system preference, or language menu
   DESIGN.md
   components/preference-controls.md
   integrations/lucide.md
+
+Accessibility, browser, motion, zoom, localization, or RTL evidence
+  DESIGN.md
+  principles/verification.md
 ```
 
 [`AGENTS.md`](./AGENTS.md) contains repository-wide instructions for tools that support project instruction files.
@@ -190,7 +229,7 @@ Theme switch, system preference, or language menu
 git clone https://github.com/yehyakin/kin-design-system.git
 cd kin-design-system
 npm ci
-npx playwright install chromium
+npx playwright install chromium firefox webkit
 npm run validate
 npm run test:reference
 ```
@@ -261,22 +300,42 @@ Each adopting project is responsible for checking the current version, license, 
 | [`skills/kin-design/`](./skills/kin-design/) | Agent workflow, task routing, and audit protocol |
 | [`tokens/`](./tokens/) | Generated Tailwind CSS, DTCG, and Figma Variables interoperability output |
 | [`adoption/`](./adoption/) | Consuming-project configuration schema, example, and adoption guide |
+| [`DELIVERY.md`](./DELIVERY.md) | Contract-first core boundary, Figma/runtime limits, future package gates, and adoption-evidence stages |
+| [`adoption/kin.evidence.schema.json`](./adoption/kin.evidence.schema.json) | Machine-readable mapping, verification, ownership, exception, and production-observation evidence |
 | [`scripts/audit-project.mjs`](./scripts/audit-project.mjs) | Read-only static candidate audit with human-review boundaries |
 | [`scripts/export-figma-variables.mjs`](./scripts/export-figma-variables.mjs) | Create-only Figma Variables REST payload generator |
 | [`components/core-states.md`](./components/core-states.md) | Normative component state and acceptance matrices |
+| [`components/terminology.md`](./components/terminology.md) | Canonical component names and distinctions between similar interface patterns |
+| [`components/catalog.md`](./components/catalog.md) | Component maturity, coverage, and Definition of Complete |
+| [`components/catalog.json`](./components/catalog.json) | Machine-readable component maturity and support registry |
+| [`components/actions-and-selection.md`](./components/actions-and-selection.md) | Button, Link, Checkbox, Radio, Switch, Toggle, and Segmented Control contract |
+| [`components/forms-and-entry.md`](./components/forms-and-entry.md) | Input, Textarea, Search, Select, Combobox, File Upload, validation, and submission contract |
+| [`components/navigation-and-disclosure.md`](./components/navigation-and-disclosure.md) | Tabs, Breadcrumbs, menus, Tooltip, Accordion, and Pagination contract |
+| [`components/data-display.md`](./components/data-display.md) | Table, List, Tree, properties, status, Avatar, Skeleton, and truncation contract |
+| [`components/feedback-and-progress.md`](./components/feedback-and-progress.md) | Alert, Banner, Toast, progress, Meter, Spinner, and system-state contract |
+| [`components/overlays.md`](./components/overlays.md) | Dialog, Drawer, Popover, menu, focus, scroll, and stacking contract |
+| [`components/ai-assistance.md`](./components/ai-assistance.md) | AI Composer, Evidence List, Streaming Response, stop, retry, privacy, and human-control contract |
+| [`components/review-and-approval.md`](./components/review-and-approval.md) | Suggested Change, Diff, Execution Preview, Media Review, approval, audit, and rollback contract |
+| [`components/background-work.md`](./components/background-work.md) | Durable tasks, queues, cancellation, partial completion, retry, and notification contract |
+| [`components/charts-and-analysis.md`](./components/charts-and-analysis.md) | Chart context, interaction, data states, responsive behavior, and semantic Table fallback contract |
+| [`components/micro-interactions.md`](./components/micro-interactions.md) | Normative paired-state, async-result, disclosure-motion, and feedback contract |
 | [`components/preference-controls.md`](./components/preference-controls.md) | Normative theme-switch, system-preference, and language-menu contract |
 | [`examples/workspace-reference/`](./examples/workspace-reference/) | Framework-free light/dark responsive visual fixture |
+| [`examples/workspace-reference/core-components.html`](./examples/workspace-reference/core-components.html) | Runnable reference for the six core component contracts |
+| [`examples/workspace-reference/advanced-components.html`](./examples/workspace-reference/advanced-components.html) | Deterministic local reference for AI, review, durable tasks, media, and accessible charts |
 | [`patterns/`](./patterns/) | Product contracts for information, intelligence, ecommerce, and engineering interfaces |
 | [`examples/product-patterns/`](./examples/product-patterns/) | Distinct reference pages for information, ecommerce, and engineering products |
 | [`AGENTS.md`](./AGENTS.md) | Instructions for coding tools working in this repository |
 | [`REFERENCES.md`](./REFERENCES.md) | Source hierarchy, attribution, and third-party adoption |
 | [`principles/`](./principles/) | Interaction, visual review, hierarchy, density, and composition |
+| [`principles/verification.md`](./principles/verification.md) | Automated and manual evidence boundaries for motion, browsers, zoom, localization, RTL, Forced Colors, touch, and screen readers |
 | [`integrations/`](./integrations/) | Rules for optional UI libraries |
 | [`tools/`](./tools/) | Boundaries for brand motion and long-task loaders |
 | [`CONTRIBUTING.md`](./CONTRIBUTING.md) | Contribution and versioning rules |
 | [`scripts/validate-design.mjs`](./scripts/validate-design.mjs) | Token, reference, theme-parity, and contrast checks |
+| [`scripts/validate-components.mjs`](./scripts/validate-components.mjs) | Component terminology, maturity, path, and support-coverage checks |
 | [`scripts/report-token-changes.mjs`](./scripts/report-token-changes.mjs) | Machine-readable Token changes against a Git reference |
-| [`tests/visual/`](./tests/visual/) | Automated responsive, theme, focus, and overlay checks |
+| [`tests/visual/`](./tests/visual/) | Chromium regression, normal-motion, cross-browser smoke, responsive, focus, RTL, reflow-proxy, and Forced Colors checks |
 | [`ROADMAP.md`](./ROADMAP.md) | Planned examples, patterns, exports, and tooling |
 | [`RELEASING.md`](./RELEASING.md) | Release checks, tag order, repository settings, and rollback |
 | [`CHANGELOG.md`](./CHANGELOG.md) | User-visible changes |
@@ -303,6 +362,7 @@ Before opening a pull request:
 ```bash
 node scripts/validate-docs.mjs
 node scripts/validate-design.mjs
+node scripts/validate-components.mjs
 node scripts/export-tokens.mjs --check
 node scripts/export-figma-variables.mjs --check
 npm run test:tooling
