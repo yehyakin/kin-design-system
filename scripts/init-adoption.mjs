@@ -1,7 +1,7 @@
 import fs from "node:fs";
-import { createHash } from "node:crypto";
 import path from "node:path";
 import process from "node:process";
+import { contractChecksum } from "./contract-checksum.mjs";
 
 const args = process.argv.slice(2);
 const force = args.includes("--force");
@@ -11,7 +11,7 @@ const target = path.resolve(targetArg);
 const packageJson = JSON.parse(fs.readFileSync(new URL("../package.json", import.meta.url), "utf8"));
 const version = packageJson.version;
 const designContract = fs.readFileSync(new URL("../DESIGN.md", import.meta.url));
-const designChecksum = createHash("sha256").update(designContract).digest("hex");
+const designChecksum = contractChecksum(designContract);
 const configPath = path.join(target, "kin.config.json");
 const recordPath = path.join(target, "docs", "kin-adoption.md");
 const evidencePath = path.join(target, "docs", "kin-evidence.json");
@@ -69,10 +69,10 @@ This project targets KIN ${version}.
 
 - Contract: https://github.com/yehyakin/kin-design-system/tree/v${version}
 - Contract revision: v${version}
-- Expected DESIGN.md SHA-256: ${designChecksum}
+- Expected canonical DESIGN.md SHA-256: ${designChecksum}
 - Local pinned copy: docs/KIN-DESIGN.md
 
-Copy the reviewed DESIGN.md release into the local path byte for byte before implementation. The expected checksum is calculated from the KIN checkout, not from the target copy; the checker compares the target against it. Keep project-specific exceptions in kin.config.json, not in the shared contract. Record mappings, checks, owners, and production observation in docs/kin-evidence.json without changing unperformed checks to passed. The release tag must exist before another project adopts this locator.
+Copy the complete reviewed DESIGN.md release into the local path before implementation. The expected checksum is calculated from the KIN checkout after removing an optional UTF-8 BOM and normalizing CRLF or CR line endings to LF; the checker applies the same canonicalization to the target copy. Keep project-specific exceptions in kin.config.json, not in the shared contract. Record mappings, checks, owners, and production observation in docs/kin-evidence.json without changing unperformed checks to passed. The release tag must exist before another project adopts this locator.
 `;
 
 const manualChecks = [

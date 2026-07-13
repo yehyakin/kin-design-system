@@ -38,7 +38,7 @@ Consuming projects MAY use:
 - read-only audit, adoption, and validation tooling;
 - documented adapters when the product has the corresponding need.
 
-They MUST record the exact reviewed contract revision, local contract checksum, local mappings, verification results, exceptions, and owners. The revision and checksum remain optional for compatibility with earlier 2.0 configuration files, but new adoption records SHOULD supply them. The machine-readable adoption evidence format is defined in [`adoption/kin.evidence.schema.json`](./adoption/kin.evidence.schema.json).
+They MUST record the exact reviewed contract revision, local contract checksum, local mappings, verification results, exceptions, and owners. The revision and checksum remain optional for compatibility with earlier 2.0 configuration files, but new adoption records SHOULD supply them. Contract checksums MUST use KIN's canonical UTF-8 text form: remove an optional BOM and normalize CRLF or CR line endings to LF while preserving all other content. The machine-readable adoption evidence format is defined in [`adoption/kin.evidence.schema.json`](./adoption/kin.evidence.schema.json).
 
 ## Figma boundary
 

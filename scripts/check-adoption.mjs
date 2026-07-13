@@ -1,7 +1,7 @@
 import fs from "node:fs";
-import { createHash } from "node:crypto";
 import path from "node:path";
 import process from "node:process";
+import { contractChecksum } from "./contract-checksum.mjs";
 
 const args = process.argv.slice(2);
 const jsonOutput = args.includes("--json");
@@ -181,7 +181,7 @@ if (!fs.existsSync(configPath)) {
       else if (contractVersion !== config.kinVersion) errors.push(`Pinned contract version ${contractVersion} does not match kinVersion ${config.kinVersion}.`);
       if (!config.contract.checksum) warnings.push("contract.checksum is not recorded; new adoption records should verify the local contract copy.");
       else {
-        const checksum = createHash("sha256").update(contract).digest("hex");
+        const checksum = contractChecksum(contract);
         if (!/^[a-f0-9]{64}$/.test(config.contract.checksum)) errors.push("contract.checksum must be a lowercase SHA-256 value.");
         else if (checksum !== config.contract.checksum) errors.push(`Pinned contract checksum ${checksum} does not match contract.checksum.`);
       }

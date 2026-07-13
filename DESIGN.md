@@ -1,7 +1,7 @@
 ---
 version: alpha
 name: KIN Design System
-kin_version: 2.1.0
+kin_version: 2.1.1
 status: normative
 language: zh-CN
 description: A calm, precise interface system for information-rich websites, commerce tools, and professional workspaces.

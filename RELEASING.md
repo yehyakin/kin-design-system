@@ -17,7 +17,7 @@ npm audit --audit-level=moderate
 Also verify:
 
 - `DESIGN.md`, `package.json`, `package-lock.json`, README badges, the adoption example, and `CHANGELOG.md` use the same exact version.
-- The adoption example records the matching tag revision and the SHA-256 computed from the release `DESIGN.md`; consuming projects receive this expected checksum before copying the local contract.
+- The adoption example records the matching tag revision and the SHA-256 computed from canonical UTF-8 `DESIGN.md` text after optional BOM removal and line-ending normalization; consuming projects receive this expected checksum before copying the local contract.
 - `components/catalog.md`, `components/catalog.json`, and `components/terminology.json` describe the same component set; no candidate or draft component is presented as complete.
 - `DELIVERY.md`, the adoption configuration, and the evidence Schema agree on contract-first, Variables-only Figma interoperability, and project-owned runtime components.
 - The adoption evidence example remains `initialized`; a release example MUST NOT contain fabricated passing verification or production observation.

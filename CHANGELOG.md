@@ -6,6 +6,12 @@ The project follows semantic versioning for normative design documentation.
 
 ## Unreleased
 
+## 2.1.1 — 2026-07-13
+
+### Fixed
+
+- Made contract checksums stable across Windows and Unix checkouts by canonicalizing UTF-8 BOM and line endings before hashing.
+
 ## 2.1.0 — 2026-07-13
 
 ### Contract, components, and verification

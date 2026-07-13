@@ -1,10 +1,10 @@
 import assert from "node:assert/strict";
 import { execFileSync, spawn, spawnSync } from "node:child_process";
-import { createHash } from "node:crypto";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import test from "node:test";
+import { contractChecksum } from "../scripts/contract-checksum.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
 const kinVersion = JSON.parse(fs.readFileSync(path.join(root, "package.json"), "utf8")).version;
@@ -59,7 +59,7 @@ test("adoption initializer is non-destructive and checker accepts a completed re
   fs.writeFileSync(path.join(project, "src", "styles", "tokens.css"), ":root {}\n");
   const pinnedContract = "# pinned contract\n";
   fs.writeFileSync(path.join(project, "docs", "KIN-DESIGN.md"), pinnedContract);
-  config.contract.checksum = createHash("sha256").update(pinnedContract).digest("hex");
+  config.contract.checksum = contractChecksum(pinnedContract);
   fs.writeFileSync(configPath, `${JSON.stringify(config, null, 2)}\n`);
   execFileSync(process.execPath, [path.join(root, "scripts", "check-adoption.mjs"), project], { stdio: "pipe" });
   const before = fs.readFileSync(configPath, "utf8");
@@ -107,7 +107,7 @@ test("adoption checker validates a full commit revision and local contract check
   const config = JSON.parse(fs.readFileSync(configPath, "utf8"));
   config.contract.revision = "410c61a664d10963b26f48ddfd6a2ee067fa6c95";
   config.contract.source = `https://github.com/yehyakin/kin-design-system/blob/${config.contract.revision}/DESIGN.md`;
-  config.contract.checksum = createHash("sha256").update(contract).digest("hex");
+  config.contract.checksum = contractChecksum(contract);
   fs.writeFileSync(configPath, `${JSON.stringify(config, null, 2)}\n`);
 
   const valid = spawnSync(process.execPath, [path.join(root, "scripts", "check-adoption.mjs"), project, "--json"], { encoding: "utf8" });
@@ -119,6 +119,13 @@ test("adoption checker validates a full commit revision and local contract check
   const invalid = spawnSync(process.execPath, [path.join(root, "scripts", "check-adoption.mjs"), project, "--json"], { encoding: "utf8" });
   assert.equal(invalid.status, 1);
   assert.ok(JSON.parse(invalid.stdout).errors.some((message) => message.includes("does not match contract.checksum")));
+});
+
+test("contract checksum is stable across BOM and platform line endings", () => {
+  const lf = `---\nkin_version: ${kinVersion}\n---\ncontract\n`;
+  const crlfWithBom = `\uFEFF${lf.replace(/\n/g, "\r\n")}`;
+  assert.equal(contractChecksum(crlfWithBom), contractChecksum(lf));
+  assert.notEqual(contractChecksum(`${lf}\n`), contractChecksum(lf));
 });
 
 test("adoption checker rejects a mapped stage with pending mappings or missing ownership", () => {

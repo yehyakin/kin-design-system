@@ -1,7 +1,7 @@
 import fs from "node:fs";
-import { createHash } from "node:crypto";
 import path from "node:path";
 import process from "node:process";
+import { contractChecksum } from "./contract-checksum.mjs";
 
 const root = process.cwd();
 const failures = [];
@@ -42,7 +42,7 @@ JSON.parse(read("adoption/kin.evidence.schema.json"));
 if (adoption.kinVersion !== version) fail("adoption/kin.config.example.json has a different kinVersion");
 if (!adoption.contract?.source?.includes(`/v${version}`)) fail("adoption example contract source is not pinned to the matching release URL");
 if (adoption.contract?.revision !== `v${version}`) fail("adoption example contract revision does not match the release version");
-if (adoption.contract?.checksum !== createHash("sha256").update(design).digest("hex")) fail("adoption example contract checksum does not match DESIGN.md");
+if (adoption.contract?.checksum !== contractChecksum(design)) fail("adoption example contract checksum does not match canonical DESIGN.md");
 if (adoption.delivery?.mode !== "contract-first" || adoption.delivery?.figma !== "variables-only" || adoption.delivery?.runtime !== "project-owned") {
   fail("adoption example does not preserve the KIN core delivery boundary");
 }

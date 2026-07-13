@@ -20,7 +20,7 @@ It does not copy UI, install dependencies, change routes, or edit source code. E
 
 Copy the exact reviewed KIN release of `DESIGN.md` to the configured local contract path. Pinning a release avoids a consuming project changing behavior merely because KIN's `main` branch moved.
 
-New adoption records SHOULD also add `contract.revision` and the lowercase SHA-256 `contract.checksum`. A full Git commit is an acceptable revision and is more precise than a moving branch. The initializer computes the expected checksum from the KIN source checkout before the target contract is copied; do not establish trust by hashing only a potentially incomplete target copy. The fields remain optional so earlier 2.0 records stay valid, but the checker warns when either is absent and rejects a checksum that does not match the local contract.
+New adoption records SHOULD also add `contract.revision` and the lowercase SHA-256 `contract.checksum`. A full Git commit is an acceptable revision and is more precise than a moving branch. The checksum is calculated from UTF-8 contract text after removing an optional BOM and normalizing CRLF or CR line endings to LF; the final newline and all other content remain significant. The initializer computes the expected value from the KIN source checkout before the target contract is copied, so line-ending conversion across platforms does not change identity and a truncated target copy cannot establish its own trust. The fields remain optional so earlier 2.0 records stay valid, but the checker warns when either is absent and rejects a checksum that does not match the canonical local contract.
 
 ## Check the contract
 
