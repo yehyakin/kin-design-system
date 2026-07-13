@@ -46,9 +46,14 @@ if (adoption.contract?.checksum !== contractChecksum(design)) fail("adoption exa
 if (adoption.delivery?.mode !== "contract-first" || adoption.delivery?.figma !== "variables-only" || adoption.delivery?.runtime !== "project-owned") {
   fail("adoption example does not preserve the KIN core delivery boundary");
 }
+if (!adoption.scope?.implementationBrief || adoption.scope?.routeProfiles?.filter((item) => item.representative).length !== 1) {
+  fail("adoption example must include an implementation brief and exactly one representative route profile");
+}
 if (adoptionEvidence.kinVersion !== version) fail("adoption/kin.evidence.example.json has a different kinVersion");
 if (adoptionEvidence.profile !== adoption.profile) fail("adoption evidence example profile differs from the adoption configuration example");
 if (adoptionEvidence.status !== "initialized") fail("adoption evidence example must not claim unperformed verification");
+if (adoptionEvidence.visualReview?.status !== "not-run") fail("adoption evidence example must include an unperformed representative workflow visual review");
+if (adoptionEvidence.visualReview?.criteria?.length !== 9) fail("adoption evidence example must include the complete visual-review criteria matrix");
 if (!read("CHANGELOG.md").includes(`## ${version} —`)) fail(`CHANGELOG.md does not contain a ${version} release section`);
 
 const staleReferencePattern = /\bKIN\s+(\d+\.\d+(?:\.\d+)?)\b/g;

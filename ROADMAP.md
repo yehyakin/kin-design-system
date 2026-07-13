@@ -1,6 +1,17 @@
 # Roadmap
 
-The roadmap is directional. Items enter a release only after evidence, design review and maintenance ownership are clear.
+The roadmap is directional. Items enter a release only after evidence, design review and maintenance ownership are clear. [`VISION.md`](./VISION.md) defines the product direction that this roadmap serves.
+
+## Product tracks
+
+KIN develops along four connected tracks. None of them replaces the others.
+
+1. **Core language and visual signature** — foundations, composition, typography, themes, motion, accessibility and the qualities that make an interface visibly KIN.
+2. **Components, pages and product patterns** — reusable contracts for complete tasks across information, intelligence, ecommerce and engineering products.
+3. **Delivery surfaces** — documentation, generated Tokens, framework-free references and Variables interoperability.
+4. **Adoption and verification** — evidence formats, audits and optional Agent guidance that help a consuming product apply and review the system truthfully.
+
+Agent integration is one adoption capability. It is not KIN's product direction and MUST NOT displace design quality, complete workflows or human review.
 
 ## 1.0 — Documentation foundation
 
@@ -10,9 +21,9 @@ The roadmap is directional. Items enter a release only after evidence, design re
 
 ## 1.1 — Executable contract
 
-- Machine-readable tokens in `DESIGN.md` frontmatter.
-- KIN Agent Skill with build, redesign, audit, and review routing.
-- Theme-parity, reference, contrast, and contract validation.
+- Machine-readable Tokens in `DESIGN.md` frontmatter.
+- KIN Agent Skill with build, redesign, audit and review routing.
+- Theme-parity, reference, contrast and contract validation.
 - Evidence-based audit scoring and severity.
 
 ## 1.2 — Token exports and reference states
@@ -34,8 +45,8 @@ Pixel-difference gating remains deferred until cross-platform font and rendering
 
 ## 1.4 — Product patterns
 
-- Information site with search, provenance, revision, and reading structure.
-- Intelligence workspace for evidence, monitoring, risk, and investigation.
+- Information site with search, provenance, revision and reading structure.
+- Intelligence workspace for evidence, monitoring, risk and investigation.
 - Ecommerce operations workspace.
 - Engineering/CAD canvas shell.
 - AI-assisted review and approval embedded in the relevant product model.
@@ -44,38 +55,42 @@ Pixel-difference gating remains deferred until cross-platform font and rendering
 ## 2.0 — Design tooling
 
 - Figma Variables create payload and DTCG/Tokens Studio interoperability guidance.
-- Design audit CLI with source locations, severity, exceptions, and human-review output.
-- Versioned adoption configuration, initialization, structural checks, and migration records for consuming products.
+- Design audit CLI with source locations, severity, exceptions and human-review output.
+- Versioned adoption configuration, initialization, structural checks and migration records for consuming products.
 
 The Figma exporter deliberately does not manage credentials or update existing library IDs. The audit deliberately does not auto-fix heuristic findings. These boundaries prevent tooling convenience from becoming destructive product behavior.
 
 ## Next
 
-- Test the 64 stable components, including authentication and access, workspace structure, file transfer states, full-value access, AI review, durable work, and accessible analysis contracts, against consuming projects before expanding optional variants.
-- Test the stable access, onboarding, settings, recovery, Search and Results, and Help and Support page contracts in consuming products; build the remaining P1 references for Workspace Home, transfer, notifications/audit, and organization permissions only after product evidence confirms their shared boundaries.
-- Gather adoption evidence from real consuming projects before expanding scanner rules.
-- Add ID-aware Figma library synchronization only if an eligible team can test update and rollback behavior.
-- Evaluate cross-platform screenshot baselines after font and renderer variance is measured.
+1. Test the implementation brief, route/profile map, composition checkpoint, and visual-signature criteria against representative production workflows in real consuming products. Use comparable baseline and candidate screenshots to refine the contracts before expanding optional variants.
+2. Test the 64 stable components, including authentication and access, workspace structure, file transfer states, full-value access, AI review, durable work and accessible analysis contracts, inside those workflows rather than only in component references.
+3. Test the stable access, onboarding, settings, recovery, Search and Results, and Help and Support page contracts in consuming products. Build remaining P1 references only after product evidence confirms their shared boundaries.
+4. Gather adoption evidence from real consuming products before expanding scanner rules or claiming that a mapping is visibly KIN.
+5. Add ID-aware Figma library synchronization only if an eligible team can test update and rollback behavior.
+6. Evaluate cross-platform screenshot baselines after font and renderer variance is measured.
 
 ## Verification baseline
 
 - Chromium runs the full deterministic suite under reduced motion.
 - A separate Chromium project verifies intended normal-motion behavior.
 - Firefox and WebKit run named smoke coverage rather than the complete Chromium suite.
-- Automated checks cover a 200% reflow proxy, long-content stress, RTL stress, and Forced Colors.
+- Automated checks cover a 200% reflow proxy, long-content stress, RTL stress and Forced Colors.
 - Real browser zoom and screen-reader checks remain recorded manual evidence; automation MUST NOT be reported as a substitute.
+- A consuming product MUST review at least one representative production workflow before it may claim verified KIN adoption. A design lab, component gallery, isolated control or Token comparison does not satisfy this requirement.
 
 ## Delivery decision
 
 - KIN core remains contract-first.
 - Figma delivery remains Variables interoperability; no published component library or remote ID synchronization is claimed.
 - Runtime components remain project-owned; the reference interfaces are not a universal package.
-- Any future Figma Library or runtime package requires the ownership, versioning, adoption evidence, migration, and rollback gates in `DELIVERY.md` and SHOULD be released separately.
-- Adoption tooling records `initialized`, `mapped`, `verified`, and `production-observed` evidence without running project commands or fabricating pass results.
+- Any future Figma Library or runtime package requires the ownership, versioning, adoption evidence, migration and rollback gates in `DELIVERY.md` and SHOULD be released separately.
+- Adoption tooling records `initialized`, `mapped`, `verified` and `production-observed` evidence without running project commands or fabricating pass results.
+- A `verified` claim requires a passed representative-workflow visual review in addition to structural, automated and manual evidence.
 
 ## Non-goals
 
 - A universal React component framework.
 - A clone of Linear or another proprietary product.
+- An Agent product whose primary value is prompt delivery or code generation.
 - Mandatory installation of every documented third-party library.
-- A gallery of decorative themes or AI-generated templates.
+- A gallery of decorative themes or generated templates.

@@ -43,6 +43,8 @@ Use Dropdown Menu for a compact collection of actions opened from a trigger.
 - Disabled items MUST remain understandable when shown.
 - Checkable or radio menu items MUST expose their states correctly.
 - A menu MUST close after a committed action unless the action explicitly supports repeated operation.
+- When a Menu uses enter or exit motion, closing MUST disable interaction immediately but MUST keep the surface rendered until its exit finishes. Reopening during that interval MUST cancel pending hiding and continue from the current rendered state.
+- Menu icons MAY reinforce familiar actions, but they MUST use the product's established icon family, stable optical boxes, and the same meaning wherever repeated. A menu MUST NOT add icons merely to make every row look decorated.
 
 ## Context Menu
 
@@ -104,6 +106,7 @@ Use Pagination when a dataset is divided into stable pages and users need locati
 
 - Current, selected, expanded, hover, and focus-visible MUST remain distinguishable in all themes.
 - Disclosure motion MUST originate from the controlled region and remain interruptible.
+- Anchored Menu motion SHOULD use a short opacity change with no more than a few pixels of travel from the trigger origin; it MUST NOT bounce, overshoot, or delay focus.
 - Reduced motion MUST use immediate state change or short opacity change without sliding large regions.
 - Menu and Tooltip shadows MUST remain secondary to surface and border structure.
 

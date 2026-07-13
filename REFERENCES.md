@@ -36,6 +36,23 @@ Third-party component defaults always have the lowest visual priority.
 | [Google Stitch Skills](https://github.com/google-labs-code/stitch-skills) | framework discovery and extraction of design intent from existing code | generated prose accepted without checking the source implementation |
 | [AMicro](https://github.com/Subhan-code/Amicro--Micro-transitions-) | discover common paired-state and result-confirmation examples for review | generated button styling, hover-as-success semantics, package dependency, or gallery aesthetics |
 | [Name That UI](https://namethatui.com/) | discover canonical interface terms, aliases, and useful non-synonym distinctions | copied descriptions or screenshots, platform styling, production behavior, or normative accessibility claims |
+| [Boneyard](https://github.com/0xGF/boneyard) | content-shaped loading geometry, breakpoint coverage, and a reference-site structure that keeps examples inspectable | generated skeleton styling, framework packages, copied source, or treating placeholder motion as product content |
+| [Reicon](https://github.com/dqev/reicon) | icon-catalog breadth, consistent optical geometry, outline/filled family review, and discoverable delivery formats | replacing KIN's Lucide reference without product review, mixing icon families, or copying icon assets |
+| [Hiraki](https://github.com/ddoemonn/hiraki) | Drawer behavior review across focus, dismissal, spatial continuity, tests, and documentation boundaries | package adoption, copied implementation, or making drag gestures the only dismissal path |
+| [Interfaces](https://interfaces.dev/) | interactive component demonstrations that expose behavior in context rather than relying on prose alone | copied source, screenshots, default aesthetics, or claiming a demonstration is a production component package |
+| [Rico Bookmark Manager](https://github.com/ricocc/rico-bookmark-manager) | separation of source data, generated site, reusable instructions, and adoption entry points | bookmark-specific architecture, visual styling, or treating Agent installation as KIN's product direction |
+
+## Reference translation matrix
+
+External projects MUST influence KIN through an explicit translation, not visual resemblance. A proposal that cites one of these sources MUST identify the KIN-owned contract, runnable evidence, and verification it changes.
+
+| External evidence | KIN-owned translation | Required evidence | Explicit exclusion |
+|---|---|---|---|
+| Motion galleries and interactive examples | stable icon slots, paired states, committed-result feedback, and inspectable Motion Lab scenarios | normal-motion and reduced-motion tests plus keyboard operation | generated styling, hover-as-success, decorative motion |
+| Drawer libraries and overlay demos | edge ownership, interruptible open/close, focus containment, scroll ownership, and narrow-screen Sheet adaptation | rapid reversal, Escape, focus restoration, modal inertness, and responsive tests | copied runtime code, gesture-only dismissal, bounce as a default |
+| Icon catalogs | one product-owned icon grammar, semantic naming, optical-box review, and explicit exceptions | icon inventory, accessible names, theme/contrast checks, and no mixed families in one region | importing a second visual language because it has broader coverage |
+| Skeleton and reference-site projects | loading geometry shaped by real content and examples that expose source behavior | deterministic loading/empty/error fixtures and discoverable showcase links | framework dependency, decorative shimmer, or universal skeleton templates |
+| Agent-installable repositories | a clear adoption entry point, pinned contract, migration brief, and evidence stages | `kin.config`, implementation brief, validation record, and rollback ownership | making Agent integration the product direction or accepting generated output without review |
 
 ## Page-flow references
 

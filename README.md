@@ -25,6 +25,22 @@ The system covers visual foundations, layout, interaction, themes, accessibility
 
 KIN is not tied to one company, industry, framework, or product architecture. A project can adopt the whole contract, use a few relevant rules, or treat it as a review reference.
 
+[`VISION.md`](./VISION.md) explains the product direction and the boundary between the design system, its delivery surfaces and optional adoption tooling.
+
+## What makes KIN visible
+
+KIN is not identified by a dark theme, an indigo accent or a three-column shell. Its character appears when the whole interface follows the same priorities:
+
+- Put the user's task before explanation or decoration.
+- Give one content or work region clear visual priority; navigation and properties support it.
+- Prefer continuous structure, alignment and dividers to stacks of interchangeable cards.
+- Create useful density by removing repetition, not by shrinking everything.
+- Keep the structure neutral and reserve emphasis for selection, action and business meaning.
+- Keep facts, status, confidence, provenance and AI suggestions visually distinct.
+- Use motion to explain state or spatial change, never to make an idle interface feel active.
+
+The normative acceptance criteria and product-family differences are defined in [`principles/visual-signature.md`](./principles/visual-signature.md).
+
 ## What problem it solves
 
 Interfaces become inconsistent when each new page makes its own decisions about color, spacing, hierarchy, component behavior, and responsive layout. The problem is more noticeable when several people, libraries, or coding tools contribute to the same product.
@@ -126,15 +142,15 @@ Read [`DESIGN.md`](./DESIGN.md) and [`DELIVERY.md`](./DELIVERY.md) when planning
 
 Add the design contract and relevant supporting files to a project's documentation. Record project-specific exceptions next to the contract instead of silently changing the rules.
 
-KIN 2.1 includes a non-destructive adoption record, verification evidence, and a candidate audit:
+KIN 2.2 includes a non-destructive adoption record, an implementation brief, route-level product profiles, verification evidence, and a candidate audit:
 
 ```bash
-node scripts/init-adoption.mjs ../your-project
+node scripts/init-adoption.mjs ../your-project --profile intelligence-workspace
 node scripts/check-adoption.mjs ../your-project
 node scripts/audit-project.mjs ../your-project
 ```
 
-The initializer also creates a machine-readable evidence record whose checks begin as `not-run`. The audit reports code patterns for review; it does not prove a visual defect or rewrite source. See [`adoption/README.md`](./adoption/README.md) for delivery boundaries, evidence stages, exception format, and product profiles.
+The profile is explicit because no one page model is safe for every product. The initializer creates a draft, project-owned implementation brief and a machine-readable evidence record whose checks begin as `not-run`. Hybrid products can map different route families to different profiles. A project cannot claim verified KIN adoption from Token parity, wrapper components, a design lab or a component gallery. It must implement and review at least one representative production workflow with comparable baseline and candidate evidence. See [`adoption/implementation-brief.md`](./adoption/implementation-brief.md) and [`adoption/README.md`](./adoption/README.md).
 
 ### Use it with a coding tool
 
@@ -146,14 +162,19 @@ skills/kin-design/SKILL.md
 
 The Skill classifies build, redesign, audit, and review tasks; loads only the relevant workflow; and requires visual and engineering evidence before claiming compliance.
 
+The Skill is one way to apply KIN, not the purpose of the system. Designers and engineers can use the same contracts without an Agent or coding tool.
+
 For tools without Skill support, give the tool the main contract before it edits the interface:
 
 ```md
-Read DESIGN.md and DELIVERY.md before changing the interface.
+Read DESIGN.md, DELIVERY.md, and principles/visual-signature.md before changing the interface.
 
 Start from the existing product, users, content, data, routes, and components.
 Read only the principle and integration files needed for this task.
-Before coding, list the proposed changes, risks, and checks you will run.
+If kin.config.json exists, read its implementation brief and route/profile map.
+Before coding, report the KIN composition checkpoint, proposed changes, risks,
+and checks you will run. Do not implement a representative workflow while its
+brief is draft or contains TODO.
 ```
 
 Then load the smallest relevant set of documents:
@@ -200,7 +221,7 @@ Choosing or naming a component, or claiming that it is complete
   components/terminology.md
   components/catalog.md
 
-Implementing actions, forms, navigation, data display, feedback, or overlays
+Implementing authentication, actions, forms, navigation, data display, feedback, or overlays
   DESIGN.md
   components/catalog.md
   matching contract in components/
@@ -217,6 +238,7 @@ Paired controls, async progress, completion feedback, or disclosure motion
   DESIGN.md
   components/micro-interactions.md
   integrations/sonner.md when temporary feedback adds value
+  examples/workspace-reference/motion.html
 
 Theme switch, system preference, or language menu
   DESIGN.md
@@ -303,10 +325,12 @@ Each adopting project is responsible for checking the current version, license, 
 
 | Path | Purpose |
 |---|---|
+| [`VISION.md`](./VISION.md) | Product direction, scope, and release priorities |
 | [`DESIGN.md`](./DESIGN.md) | Normative design contract |
 | [`skills/kin-design/`](./skills/kin-design/) | Agent workflow, task routing, and audit protocol |
 | [`tokens/`](./tokens/) | Generated Tailwind CSS, DTCG, and Figma Variables interoperability output |
 | [`adoption/`](./adoption/) | Consuming-project configuration schema, example, and adoption guide |
+| [`adoption/implementation-brief.md`](./adoption/implementation-brief.md) | Project-owned composition, route-profile, state, evidence, and readiness contract |
 | [`DELIVERY.md`](./DELIVERY.md) | Contract-first core boundary, Figma/runtime limits, future package gates, and adoption-evidence stages |
 | [`adoption/kin.evidence.schema.json`](./adoption/kin.evidence.schema.json) | Machine-readable mapping, verification, ownership, exception, and production-observation evidence |
 | [`scripts/audit-project.mjs`](./scripts/audit-project.mjs) | Read-only static candidate audit with human-review boundaries |
@@ -330,7 +354,8 @@ Each adopting project is responsible for checking the current version, license, 
 | [`components/micro-interactions.md`](./components/micro-interactions.md) | Normative paired-state, async-result, disclosure-motion, and feedback contract |
 | [`components/preference-controls.md`](./components/preference-controls.md) | Normative theme-switch, system-preference, and language-menu contract |
 | [`examples/workspace-reference/`](./examples/workspace-reference/) | Framework-free light/dark responsive visual fixture |
-| [`examples/workspace-reference/core-components.html`](./examples/workspace-reference/core-components.html) | Runnable reference for the six core component contracts |
+| [`examples/workspace-reference/core-components.html`](./examples/workspace-reference/core-components.html) | Runnable authentication, controls, motion, feedback, data, and overlay reference |
+| [`examples/workspace-reference/motion.html`](./examples/workspace-reference/motion.html) | Motion Lab for stable icon slots, animated menus, Sonner tasks, responsive Drawer behavior, interruption, and reduced motion |
 | [`examples/workspace-reference/advanced-components.html`](./examples/workspace-reference/advanced-components.html) | Deterministic local reference for AI, review, durable tasks, media, and accessible charts |
 | [`patterns/`](./patterns/) | Product contracts for information, intelligence, ecommerce, and engineering interfaces |
 | [`examples/product-patterns/`](./examples/product-patterns/) | Distinct reference pages for information, ecommerce, and engineering products |

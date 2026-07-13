@@ -9,6 +9,10 @@ import { contractChecksum } from "../scripts/contract-checksum.mjs";
 const root = path.resolve(import.meta.dirname, "..");
 const kinVersion = JSON.parse(fs.readFileSync(path.join(root, "package.json"), "utf8")).version;
 
+function initAdoption(project, profile = "information-site") {
+  execFileSync(process.execPath, [path.join(root, "scripts", "init-adoption.mjs"), project, "--profile", profile], { stdio: "pipe" });
+}
+
 test("Figma export is a create-only Variables REST payload", () => {
   const payload = JSON.parse(fs.readFileSync(path.join(root, "tokens", "kin.figma.variables.json"), "utf8"));
   assert.equal(payload.variableCollections.length, 3);
@@ -41,7 +45,7 @@ test("Figma export is a create-only Variables REST payload", () => {
 
 test("adoption initializer is non-destructive and checker accepts a completed record", () => {
   const project = fs.mkdtempSync(path.join(os.tmpdir(), "kin-adoption-"));
-  execFileSync(process.execPath, [path.join(root, "scripts", "init-adoption.mjs"), project], { stdio: "pipe" });
+  initAdoption(project);
   const configPath = path.join(project, "kin.config.json");
   const evidencePath = path.join(project, "docs", "kin-evidence.json");
   const config = JSON.parse(fs.readFileSync(configPath, "utf8"));
@@ -51,7 +55,15 @@ test("adoption initializer is non-destructive and checker accepts a completed re
   assert.equal(config.delivery.runtime, "project-owned");
   assert.equal(config.contract.revision, `v${kinVersion}`);
   assert.match(config.contract.checksum, /^[a-f0-9]{64}$/);
+  assert.equal(config.scope.implementationBrief, "docs/kin-implementation-brief.md");
+  assert.equal(config.scope.routeProfiles.length, 1);
+  assert.equal(config.scope.routeProfiles[0].profile, "information-site");
+  assert.equal(config.scope.routeProfiles[0].representative, true);
+  assert.match(fs.readFileSync(path.join(project, config.scope.implementationBrief), "utf8"), /^status: draft$/m);
   assert.equal(evidence.status, "initialized");
+  assert.equal(evidence.visualReview.status, "not-run");
+  assert.equal(evidence.visualReview.profile, "information-site");
+  assert.equal(evidence.visualReview.criteria.length, 9);
   const incomplete = spawnSync(process.execPath, [path.join(root, "scripts", "check-adoption.mjs"), project, "--json"], { encoding: "utf8" });
   assert.equal(incomplete.status, 1);
   assert.ok(JSON.parse(incomplete.stdout).errors.some((message) => message.includes("Pinned contract is missing")));
@@ -64,9 +76,71 @@ test("adoption initializer is non-destructive and checker accepts a completed re
   execFileSync(process.execPath, [path.join(root, "scripts", "check-adoption.mjs"), project], { stdio: "pipe" });
   const before = fs.readFileSync(configPath, "utf8");
   const evidenceBefore = fs.readFileSync(evidencePath, "utf8");
-  execFileSync(process.execPath, [path.join(root, "scripts", "init-adoption.mjs"), project], { stdio: "pipe" });
+  initAdoption(project);
   assert.equal(fs.readFileSync(configPath, "utf8"), before);
   assert.equal(fs.readFileSync(evidencePath, "utf8"), evidenceBefore);
+});
+
+test("adoption initializer requires an explicit product profile", () => {
+  const project = fs.mkdtempSync(path.join(os.tmpdir(), "kin-profile-required-"));
+  const run = spawnSync(process.execPath, [path.join(root, "scripts", "init-adoption.mjs"), project], { encoding: "utf8" });
+  assert.equal(run.status, 2);
+  assert.match(run.stderr, /--profile is required/);
+});
+
+test("adoption checker blocks mapped evidence while the composition brief is unresolved", () => {
+  const project = fs.mkdtempSync(path.join(os.tmpdir(), "kin-composition-gate-"));
+  initAdoption(project, "intelligence-workspace");
+  fs.mkdirSync(path.join(project, "src", "styles"), { recursive: true });
+  fs.writeFileSync(path.join(project, "src", "styles", "tokens.css"), ":root {}\n");
+  const contract = `---\nkin_version: ${kinVersion}\n---\n`;
+  fs.writeFileSync(path.join(project, "docs", "KIN-DESIGN.md"), contract);
+
+  const configPath = path.join(project, "kin.config.json");
+  const config = JSON.parse(fs.readFileSync(configPath, "utf8"));
+  config.contract.checksum = contractChecksum(contract);
+  config.scope.routeProfiles = [
+    { route: "/entities/**", profile: "intelligence-workspace", purpose: "Investigate an entity and verify its evidence.", representative: true },
+  ];
+  fs.writeFileSync(configPath, `${JSON.stringify(config, null, 2)}\n`);
+
+  const evidencePath = path.join(project, "docs", "kin-evidence.json");
+  const evidence = JSON.parse(fs.readFileSync(evidencePath, "utf8"));
+  evidence.status = "mapped";
+  evidence.reviewedOn = "2026-07-14";
+  for (const group of Object.values(evidence.mappings)) group.status = "mapped";
+  evidence.mappings.components.items = [{ kin: "Data Row", local: "src/components/entity-row.tsx", notes: "Mapped to the current entity row." }];
+  evidence.mappings.routes.items = [{ kin: "Representative workflow", local: "/entities/**", notes: "Entity investigation route family." }];
+  evidence.ownership = { product: "Product owner", design: "Design owner", engineering: "Engineering owner", accessibility: "Accessibility owner" };
+  evidence.visualReview.workflow = "Investigate an entity and verify evidence";
+  evidence.visualReview.routes = ["/entities/**"];
+  fs.writeFileSync(evidencePath, `${JSON.stringify(evidence, null, 2)}\n`);
+
+  const run = spawnSync(process.execPath, [path.join(root, "scripts", "check-adoption.mjs"), project, "--json"], { encoding: "utf8" });
+  assert.equal(run.status, 1);
+  const result = JSON.parse(run.stdout);
+  assert.ok(result.errors.some((message) => message.includes("cannot use a draft implementation brief")));
+  assert.ok(result.errors.some((message) => message.includes("cannot contain unresolved TODO")));
+});
+
+test("adoption checker rejects a passed visual review with unreviewed criteria", () => {
+  const project = fs.mkdtempSync(path.join(os.tmpdir(), "kin-visual-criteria-"));
+  initAdoption(project);
+  const evidencePath = path.join(project, "docs", "kin-evidence.json");
+  const evidence = JSON.parse(fs.readFileSync(evidencePath, "utf8"));
+  evidence.visualReview.status = "passed";
+  evidence.visualReview.workflow = "Find and verify a record";
+  evidence.visualReview.routes = ["TODO"];
+  evidence.visualReview.baseline = "artifacts/baseline.png";
+  evidence.visualReview.candidate = "artifacts/candidate.png";
+  evidence.visualReview.environment = "Chromium 1440x900 light";
+  evidence.visualReview.reviewer = "Reviewer";
+  evidence.visualReview.reviewedOn = "2026-07-14";
+  fs.writeFileSync(evidencePath, `${JSON.stringify(evidence, null, 2)}\n`);
+
+  const run = spawnSync(process.execPath, [path.join(root, "scripts", "check-adoption.mjs"), project, "--json"], { encoding: "utf8" });
+  assert.equal(run.status, 1);
+  assert.ok(JSON.parse(run.stdout).errors.some((message) => message.includes("every visual criterion to pass")));
 });
 
 test("adoption JSON Schema and example are valid JSON", () => {
@@ -78,7 +152,7 @@ test("adoption JSON Schema and example are valid JSON", () => {
 
 test("adoption checker rejects evidence that overstates verification", () => {
   const project = fs.mkdtempSync(path.join(os.tmpdir(), "kin-evidence-"));
-  execFileSync(process.execPath, [path.join(root, "scripts", "init-adoption.mjs"), project], { stdio: "pipe" });
+  initAdoption(project);
   fs.mkdirSync(path.join(project, "src", "styles"), { recursive: true });
   fs.writeFileSync(path.join(project, "src", "styles", "tokens.css"), ":root {}\n");
   fs.writeFileSync(path.join(project, "docs", "KIN-DESIGN.md"), `---\nkin_version: ${kinVersion}\n---\n`);
@@ -94,11 +168,35 @@ test("adoption checker rejects evidence that overstates verification", () => {
   assert.equal(result.evidenceStatus, "verified");
   assert.ok(result.errors.some((message) => message.includes("every tracked automated check")));
   assert.ok(result.errors.some((message) => message.includes("mappings.tokens")));
+  assert.ok(result.errors.some((message) => message.includes("visualReview to pass")));
+});
+
+test("adoption checker keeps legacy pre-verification evidence readable with a visual review warning", () => {
+  const project = fs.mkdtempSync(path.join(os.tmpdir(), "kin-legacy-evidence-"));
+  initAdoption(project);
+  fs.mkdirSync(path.join(project, "src", "styles"), { recursive: true });
+  fs.writeFileSync(path.join(project, "src", "styles", "tokens.css"), ":root {}\n");
+  const contract = `---\nkin_version: ${kinVersion}\n---\n`;
+  fs.writeFileSync(path.join(project, "docs", "KIN-DESIGN.md"), contract);
+
+  const configPath = path.join(project, "kin.config.json");
+  const config = JSON.parse(fs.readFileSync(configPath, "utf8"));
+  config.contract.checksum = contractChecksum(contract);
+  fs.writeFileSync(configPath, `${JSON.stringify(config, null, 2)}\n`);
+
+  const evidencePath = path.join(project, "docs", "kin-evidence.json");
+  const evidence = JSON.parse(fs.readFileSync(evidencePath, "utf8"));
+  delete evidence.visualReview;
+  fs.writeFileSync(evidencePath, `${JSON.stringify(evidence, null, 2)}\n`);
+
+  const run = spawnSync(process.execPath, [path.join(root, "scripts", "check-adoption.mjs"), project, "--json"], { encoding: "utf8" });
+  assert.equal(run.status, 0, run.stdout || run.stderr);
+  assert.ok(JSON.parse(run.stdout).warnings.some((message) => message.includes("visualReview is not recorded")));
 });
 
 test("adoption checker validates a full commit revision and local contract checksum", () => {
   const project = fs.mkdtempSync(path.join(os.tmpdir(), "kin-pinned-adoption-"));
-  execFileSync(process.execPath, [path.join(root, "scripts", "init-adoption.mjs"), project], { stdio: "pipe" });
+  initAdoption(project);
   fs.mkdirSync(path.join(project, "src", "styles"), { recursive: true });
   fs.writeFileSync(path.join(project, "src", "styles", "tokens.css"), ":root {}\n");
   const contract = `---\nkin_version: ${kinVersion}\n---\n`;
@@ -130,7 +228,7 @@ test("contract checksum is stable across BOM and platform line endings", () => {
 
 test("adoption checker rejects a mapped stage with pending mappings or missing ownership", () => {
   const project = fs.mkdtempSync(path.join(os.tmpdir(), "kin-mapped-adoption-"));
-  execFileSync(process.execPath, [path.join(root, "scripts", "init-adoption.mjs"), project], { stdio: "pipe" });
+  initAdoption(project);
   fs.mkdirSync(path.join(project, "src", "styles"), { recursive: true });
   fs.writeFileSync(path.join(project, "src", "styles", "tokens.css"), ":root {}\n");
   fs.writeFileSync(path.join(project, "docs", "KIN-DESIGN.md"), `---\nkin_version: ${kinVersion}\n---\n`);
@@ -149,7 +247,7 @@ test("adoption checker rejects a mapped stage with pending mappings or missing o
 
 test("adoption checker requires timestamps for completed automated checks", () => {
   const project = fs.mkdtempSync(path.join(os.tmpdir(), "kin-check-time-"));
-  execFileSync(process.execPath, [path.join(root, "scripts", "init-adoption.mjs"), project], { stdio: "pipe" });
+  initAdoption(project);
   fs.mkdirSync(path.join(project, "src", "styles"), { recursive: true });
   fs.writeFileSync(path.join(project, "src", "styles", "tokens.css"), ":root {}\n");
   fs.writeFileSync(path.join(project, "docs", "KIN-DESIGN.md"), `---\nkin_version: ${kinVersion}\n---\n`);
@@ -172,6 +270,7 @@ test("adoption checker preserves older configuration with a delivery warning", (
   fs.writeFileSync(path.join(project, "docs", "KIN-DESIGN.md"), `---\nkin_version: ${kinVersion}\n---\n`);
   const config = JSON.parse(fs.readFileSync(path.join(root, "adoption", "kin.config.example.json"), "utf8"));
   delete config.delivery;
+  delete config.scope;
   delete config.contract.revision;
   delete config.contract.checksum;
   fs.writeFileSync(path.join(project, "kin.config.json"), `${JSON.stringify(config, null, 2)}\n`);
@@ -224,7 +323,7 @@ test("candidate audit does not penalize required browser theme-color plumbing", 
 
 test("adoption checker detects a pinned contract version mismatch", () => {
   const project = fs.mkdtempSync(path.join(os.tmpdir(), "kin-version-"));
-  execFileSync(process.execPath, [path.join(root, "scripts", "init-adoption.mjs"), project], { stdio: "pipe" });
+  initAdoption(project);
   fs.mkdirSync(path.join(project, "src", "styles"), { recursive: true });
   fs.writeFileSync(path.join(project, "src", "styles", "tokens.css"), ":root {}\n");
   fs.writeFileSync(path.join(project, "docs", "KIN-DESIGN.md"), "---\nkin_version: 1.4.0\n---\n");

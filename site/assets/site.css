@@ -235,6 +235,14 @@ h1 { max-width: 670px; margin: 0; font-size: clamp(30px, 4.5vw, 46px); font-weig
 .icon-sample:last-child { border-right: 0; }
 .icon-sample svg { width: 18px; height: 18px; color: var(--text-2); }
 
+.component-directory { margin-bottom: 18px; border-top: 1px solid var(--line); }
+.component-directory > a { display: grid; grid-template-columns: 30px minmax(0, 1fr) auto; align-items: center; gap: 12px; min-height: 62px; padding: 9px 8px; border-bottom: 1px solid var(--line); color: var(--text); text-decoration: none; }
+.component-directory > a:hover { background: var(--hover); }
+.component-directory-icon { display: inline-grid; place-items: center; width: 28px; height: 28px; border: 1px solid var(--line); border-radius: 6px; color: var(--accent); }
+.component-directory > a > span:nth-child(2) { display: grid; gap: 2px; }
+.component-directory strong { font-size: 13px; font-weight: 590; }
+.component-directory small { color: var(--muted); font-size: 11px; line-height: 1.45; }
+.component-directory b { color: var(--accent); font-size: 11px; font-weight: 550; }
 .component-demo { border: 1px solid var(--line); border-radius: 7px; overflow: hidden; background: var(--surface-1); }
 .demo-toolbar { display: flex; flex-wrap: wrap; gap: 8px; padding: 16px; border-bottom: 1px solid var(--line); }
 .demo-toolbar button { min-height: 34px; padding: 0 11px; }
@@ -436,6 +444,8 @@ h1 { max-width: 670px; margin: 0; font-size: clamp(30px, 4.5vw, 46px); font-weig
   .mini-workspace, .mini-article-layout, .mini-canvas { min-width: 660px; height: 330px; }
   .resource-link { grid-template-columns: 1fr auto; padding: 12px 0; }
   .resource-link span { grid-column: 1 / -1; grid-row: 2; }
+  .component-directory > a { grid-template-columns: 30px minmax(0, 1fr); min-height: 72px; }
+  .component-directory b { grid-column: 2; }
   .ai-row { grid-template-columns: 88px minmax(0, 1fr); gap: 14px; }
   .section-rule { margin-top: 44px; }
   .content-section { padding-top: 44px; }

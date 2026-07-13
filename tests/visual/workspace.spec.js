@@ -237,6 +237,33 @@ test("core actions preserve distinct selection semantics", async ({ page }) => {
   await expect(page.getByRole("radio", { name: "人工确认" })).toBeChecked();
 });
 
+test("core authentication reference preserves context and never submits credentials", async ({ page }, testInfo) => {
+  await seedPreferences(page, "light");
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.goto("/examples/workspace-reference/core-components.html#authentication");
+
+  await expect(page.getByRole("heading", { name: "登录与身份验证" })).toBeVisible();
+  await expect(page.getByText(/不会发送、保存或验证任何凭据/)).toBeVisible();
+  const password = page.getByLabel("密码").first();
+  await expect(password).toHaveAttribute("type", "password");
+  const reveal = page.getByRole("button", { name: "显示密码" });
+  await reveal.click();
+  await expect(password).toHaveAttribute("type", "text");
+  await expect(page.getByRole("button", { name: "隐藏密码" })).toBeVisible();
+
+  await page.getByRole("button", { name: "登录", exact: true }).click();
+  await expect(page.getByText(/未连接身份服务/)).toBeFocused();
+
+  const reauthOpen = page.getByRole("button", { name: "打开示例" });
+  await reauthOpen.click();
+  const reauth = page.getByRole("dialog", { name: "重新验证身份" });
+  await expect(reauth).toBeVisible();
+  await expect(reauth.getByLabel("密码")).toBeFocused();
+  await reauth.getByRole("button", { name: "取消" }).click();
+  await expect(reauthOpen).toBeFocused();
+  await page.locator("#authentication").screenshot({ path: testInfo.outputPath("core-authentication-light.png") });
+});
+
 test("core form retains input and commits combobox value", async ({ page }) => {
   await seedPreferences(page, "light");
   await page.goto("/examples/workspace-reference/core-components.html#forms");
@@ -391,6 +418,88 @@ test("core feedback keeps progress and recovery in context", async ({ page }) =>
   await expect(page.getByRole("button", { name: "清除筛选" })).toBeVisible();
 });
 
+test("core motion reference exposes paired async disclosure and Sonner states", async ({ page }) => {
+  await seedPreferences(page, "dark");
+  await page.goto("/examples/workspace-reference/core-components.html#motion");
+
+  const paired = page.locator("[data-motion-toggle]");
+  await paired.click();
+  await expect(paired).toHaveAttribute("aria-pressed", "true");
+  await expect(paired).toContainText("暂停监测");
+
+  const disclosure = page.locator("[data-motion-disclosure]");
+  await disclosure.click();
+  await expect(disclosure).toHaveAttribute("aria-expanded", "true");
+  await expect(page.locator("#motion-details")).toHaveAttribute("data-state", "open");
+
+  const asyncButton = page.locator("[data-motion-save]");
+  await asyncButton.click();
+  await expect(asyncButton).toHaveClass(/is-pending/);
+  await expect(asyncButton).toHaveClass(/is-complete/, { timeout: 2_000 });
+  await expect(page.getByText("视图已保存", { exact: true })).toBeVisible();
+
+  await page.locator("[data-motion-toast]").click();
+  await expect(page.getByText("正在创建导出任务", { exact: true })).toBeVisible();
+  await expect(page.getByText("导出任务已创建", { exact: true })).toBeVisible({ timeout: 2_000 });
+});
+
+test("Motion Lab exposes icon, menu, feedback, disclosure, theme and Drawer behavior", async ({ page }, testInfo) => {
+  await seedPreferences(page, "dark");
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.goto("/examples/workspace-reference/motion.html");
+
+  const paired = page.locator("[data-lab-toggle]");
+  await expect(paired.locator('[data-icon-state="default"]')).toBeVisible();
+  await paired.click();
+  await expect(paired).toHaveAttribute("aria-pressed", "true");
+  await expect(paired.locator('[data-icon-state="active"]')).toBeVisible();
+
+  await page.getByRole("button", { name: "对象操作" }).click();
+  await expect(page.getByRole("menuitem", { name: "编辑名称 E" })).toBeFocused();
+  await page.keyboard.press("ArrowDown");
+  await expect(page.getByRole("menuitem", { name: "复制链接 C" })).toBeFocused();
+  await page.keyboard.press("Escape");
+
+  const disclosure = page.locator("[data-lab-disclosure]");
+  await disclosure.click();
+  await expect(disclosure).toHaveAttribute("aria-expanded", "true");
+  await expect(page.locator("#lab-details")).toHaveAttribute("data-state", "open");
+
+  await page.locator("[data-lab-task]").click();
+  await expect(page.getByText("正在创建导出任务", { exact: true })).toBeVisible();
+  await expect(page.getByText("导出任务已创建", { exact: true })).toBeVisible({ timeout: 2_000 });
+
+  const theme = page.locator("[data-lab-theme]");
+  await theme.click();
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
+  await expect(theme).toHaveAttribute("aria-label", "切换到夜间模式");
+
+  await page.locator("[data-lab-drawer-open]").click();
+  await expect(page.getByRole("dialog", { name: "同步规则属性" })).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(page.locator("[data-lab-drawer-open]")).toBeFocused();
+  await page.evaluate(() => { document.activeElement?.blur(); scrollTo(0, 0); });
+  await page.screenshot({ path: testInfo.outputPath("motion-lab-light-desktop.png"), fullPage: true });
+});
+
+test("Motion Lab adapts Drawer to a touch-safe bottom Sheet", async ({ page }, testInfo) => {
+  await seedPreferences(page, "dark");
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/examples/workspace-reference/motion.html");
+
+  await page.locator("[data-lab-drawer-open]").click();
+  const drawer = page.locator(".motion-drawer");
+  await expect(drawer).toBeVisible();
+  await expect(drawer).toHaveCSS("bottom", "0px");
+  await assertMinimumTouchTargets(page, ".motion-drawer button");
+  await page.locator("[data-lab-drawer-close]").click();
+  await expect(page.locator("[data-lab-drawer-open]")).toBeFocused();
+  await expect(page.locator("[data-lab-drawer-layer]")).toHaveAttribute("data-phase", "closed");
+  await assertNoHorizontalOverflow(page);
+  await page.evaluate(() => { document.activeElement?.blur(); scrollTo(0, 0); });
+  await page.screenshot({ path: testInfo.outputPath("motion-lab-dark-mobile.png"), fullPage: true });
+});
+
 test("core overlays restore focus and contain modal tasks", async ({ page }, testInfo) => {
   await seedPreferences(page, "dark");
   await page.goto("/examples/workspace-reference/core-components.html#overlays");
@@ -404,9 +513,12 @@ test("core overlays restore focus and contain modal tasks", async ({ page }, tes
 
   const drawerOpen = page.getByRole("button", { name: "打开属性 Drawer" });
   await drawerOpen.click();
+  await expect(drawerOpen).toHaveAttribute("aria-expanded", "true");
+  await expect(page.locator("[data-drawer-layer]")).toHaveAttribute("data-state", "open");
   await expect(page.getByRole("dialog", { name: "规则属性" })).toBeVisible();
-  await expect(page.getByRole("button", { name: "关闭", exact: true })).toBeFocused();
+  await expect(page.getByRole("dialog", { name: "规则属性" }).getByRole("button", { name: "关闭属性 Drawer" })).toBeFocused();
   await page.keyboard.press("Escape");
+  await expect(drawerOpen).toHaveAttribute("aria-expanded", "false");
   await expect(drawerOpen).toBeFocused();
 
   const popoverOpen = page.getByRole("button", { name: "筛选说明" });

@@ -5,6 +5,7 @@ import process from "node:process";
 const root = process.cwd();
 const ignored = new Set([".git", ".site-dist", "node_modules", "dist", "build", "coverage"]);
 const required = [
+  "VISION.md",
   "DESIGN.md",
   "DELIVERY.md",
   "README.md",
@@ -16,6 +17,7 @@ const required = [
   "AGENTS.md",
   "LICENSE",
   "principles/verification.md",
+  "principles/visual-signature.md",
   "components/catalog.md",
   "components/catalog.json",
   "components/actions-and-selection.md",
@@ -35,10 +37,12 @@ const required = [
   "components/terminology.json",
   "skills/kin-design/SKILL.md",
   "skills/kin-design/references/adoption.md",
+  "skills/kin-design/references/composition.md",
   "tokens/kin.tailwind.css",
   "tokens/kin.tokens.json",
   "tokens/kin.figma.variables.json",
   "adoption/README.md",
+  "adoption/implementation-brief.md",
   "adoption/kin.config.example.json",
   "adoption/kin.config.schema.json",
   "adoption/kin.evidence.example.json",

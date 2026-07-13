@@ -75,7 +75,7 @@
               <button type="button" class="icon-button" data-language-trigger aria-haspopup="menu" aria-expanded="false" data-i18n-aria="language">
                 <i data-lucide="languages"></i>
               </button>
-              <div class="language-menu" data-language-menu role="menu" hidden>
+              <div class="language-menu" data-language-menu role="menu" data-state="closed" hidden>
                 <button type="button" role="menuitem" data-locale-value="zh"><span>中文</span><i data-lucide="check"></i></button>
                 <button type="button" role="menuitem" data-locale-value="en"><span>English</span><i data-lucide="check"></i></button>
               </div>
@@ -88,7 +88,7 @@
             </button>
             <div class="location-overflow" data-location-overflow>
               <button type="button" class="icon-button" data-location-overflow-trigger aria-haspopup="menu" aria-expanded="false" data-i18n-aria="moreActions"><i data-lucide="ellipsis"></i></button>
-              <div class="location-overflow-menu" data-location-overflow-menu role="menu" hidden>
+              <div class="location-overflow-menu" data-location-overflow-menu role="menu" data-state="closed" hidden>
                 <button type="button" role="menuitemcheckbox" data-contrast-toggle aria-checked="false"><i data-lucide="contrast"></i><span data-i18n="contrast">切换高对比度</span></button>
                 <button type="button" role="menuitem" data-copy-location><i data-lucide="link"></i><span data-i18n="copyLink">复制对象链接</span></button>
               </div>
@@ -216,7 +216,9 @@
         </article>
       </main>
 
-      <aside id="inspector" class="inspector" aria-labelledby="inspector-title">
+      <div class="inspector-scrim" data-inspector-scrim aria-hidden="true"></div>
+
+      <aside id="inspector" class="inspector" aria-labelledby="inspector-title" aria-hidden="false">
         <header>
           <div><span data-i18n="currentObject">当前对象</span><h2 id="inspector-title">Alpha Network</h2></div>
           <button type="button" class="icon-button" data-inspector-close data-i18n-aria="closeInspector"><i data-lucide="x"></i></button>

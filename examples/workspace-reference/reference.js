@@ -29,9 +29,12 @@ const media = matchMedia("(prefers-color-scheme: dark)");
 const themeColor = document.querySelector('meta[name="theme-color"]');
 const themeSwitch = document.querySelector("[data-theme-switch]");
 const appShell = document.querySelector(".app-shell");
+const sidebar = document.querySelector(".sidebar");
+const workspace = document.querySelector(".workspace");
 const inspector = document.querySelector(".inspector");
 const inspectorOpen = document.querySelector("[data-inspector-open]");
 const inspectorClose = document.querySelector("[data-inspector-close]");
+const inspectorScrim = document.querySelector("[data-inspector-scrim]");
 const contrastToggle = document.querySelector("[data-contrast-toggle]");
 const locationOverflow = document.querySelector("[data-location-overflow]");
 const locationOverflowTrigger = document.querySelector("[data-location-overflow-trigger]");
@@ -43,8 +46,54 @@ const languageControl = document.querySelector("[data-language-control]");
 const languageTrigger = document.querySelector("[data-language-trigger]");
 const languageMenu = document.querySelector("[data-language-menu]");
 const localeButtons = [...document.querySelectorAll("[data-locale-value]")];
-const compactLayout = matchMedia("(max-width: 760px)");
+const overlayLayout = matchMedia("(max-width: 1180px)");
+const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
 let sonnerModulePromise;
+const transientSurfaceCleanups = new WeakMap();
+
+function transientIsOpen(surface) {
+  return surface.dataset.state === "opening" || surface.dataset.state === "open";
+}
+
+function setTransientSurface(surface, open, { trigger, focusTarget, restoreFocus = false } = {}) {
+  transientSurfaceCleanups.get(surface)?.();
+  if (open) {
+    surface.hidden = false;
+    surface.inert = false;
+    surface.dataset.state = "opening";
+    trigger.setAttribute("aria-expanded", "true");
+    requestAnimationFrame(() => {
+      if (surface.dataset.state !== "opening") return;
+      surface.dataset.state = "open";
+      focusTarget?.focus();
+    });
+    return;
+  }
+
+  trigger.setAttribute("aria-expanded", "false");
+  surface.inert = true;
+  surface.dataset.state = "closing";
+  if (restoreFocus) trigger.focus();
+
+  let timer;
+  const detach = () => {
+    window.clearTimeout(timer);
+    surface.removeEventListener("transitionend", onTransitionEnd);
+    transientSurfaceCleanups.delete(surface);
+  };
+  const finish = () => {
+    if (surface.dataset.state !== "closing") return;
+    detach();
+    surface.hidden = true;
+    surface.dataset.state = "closed";
+  };
+  const onTransitionEnd = (event) => {
+    if (event.target === surface && (event.propertyName === "opacity" || event.propertyName === "transform")) finish();
+  };
+  surface.addEventListener("transitionend", onTransitionEnd);
+  timer = window.setTimeout(finish, reducedMotion.matches ? 90 : 190);
+  transientSurfaceCleanups.set(surface, detach);
+}
 
 const copy = {
   zh: {
@@ -177,14 +226,14 @@ function applyContrast(enabled, persist = true) {
 }
 
 function setLocationOverflow(open, moveFocus = true) {
-  locationOverflowMenu.hidden = !open;
-  locationOverflowTrigger.setAttribute("aria-expanded", String(open));
-  if (!moveFocus) return;
-  if (open) locationOverflowItems[0].focus();
-  else locationOverflowTrigger.focus();
+  setTransientSurface(locationOverflowMenu, open, {
+    trigger: locationOverflowTrigger,
+    focusTarget: moveFocus ? locationOverflowItems[0] : null,
+    restoreFocus: moveFocus && !open,
+  });
 }
 
-locationOverflowTrigger.addEventListener("click", () => setLocationOverflow(locationOverflowMenu.hidden));
+locationOverflowTrigger.addEventListener("click", () => setLocationOverflow(!transientIsOpen(locationOverflowMenu)));
 locationOverflowMenu.addEventListener("keydown", (event) => {
   const index = locationOverflowItems.indexOf(document.activeElement);
   if (event.key === "ArrowDown" || event.key === "ArrowUp") {
@@ -218,14 +267,14 @@ copyLocation.addEventListener("click", async () => {
 });
 
 function setLanguageMenu(open, moveFocus = true) {
-  languageMenu.hidden = !open;
-  languageTrigger.setAttribute("aria-expanded", String(open));
-  if (!moveFocus) return;
-  if (open) languageMenu.querySelector('[role="menuitem"]').focus();
-  else languageTrigger.focus();
+  setTransientSurface(languageMenu, open, {
+    trigger: languageTrigger,
+    focusTarget: moveFocus ? languageMenu.querySelector('[role="menuitem"]') : null,
+    restoreFocus: moveFocus && !open,
+  });
 }
 
-languageTrigger.addEventListener("click", () => setLanguageMenu(languageMenu.hidden));
+languageTrigger.addEventListener("click", () => setLanguageMenu(!transientIsOpen(languageMenu)));
 for (const button of localeButtons) {
   button.addEventListener("click", () => {
     translate(button.dataset.localeValue);
@@ -233,8 +282,8 @@ for (const button of localeButtons) {
   });
 }
 document.addEventListener("click", (event) => {
-  if (!languageMenu.hidden && !languageControl.contains(event.target)) setLanguageMenu(false, false);
-  if (!locationOverflowMenu.hidden && !locationOverflow.contains(event.target)) setLocationOverflow(false, false);
+  if (transientIsOpen(languageMenu) && !languageControl.contains(event.target)) setLanguageMenu(false, false);
+  if (transientIsOpen(locationOverflowMenu) && !locationOverflow.contains(event.target)) setLocationOverflow(false, false);
 });
 
 addEventListener("storage", (event) => {
@@ -243,11 +292,31 @@ addEventListener("storage", (event) => {
   if (event.key === "kin-reference-locale") translate(event.newValue === "en" ? "en" : "zh", false);
 });
 
+function inspectorIsOpen() {
+  return appShell.classList.contains("inspector-open");
+}
+
+function syncInspectorMode() {
+  if (overlayLayout.matches) {
+    inspector.setAttribute("role", "dialog");
+    inspector.setAttribute("aria-modal", "true");
+  } else {
+    inspector.removeAttribute("role");
+    inspector.removeAttribute("aria-modal");
+  }
+}
+
 function setInspector(open, moveFocus = true) {
+  const modal = overlayLayout.matches && open;
   appShell.classList.toggle("inspector-closed", !open);
   appShell.classList.toggle("inspector-open", open);
-  inspector.hidden = !open;
   inspectorOpen.setAttribute("aria-expanded", String(open));
+  inspector.setAttribute("aria-hidden", String(!open));
+  inspector.inert = !open;
+  sidebar.inert = modal;
+  workspace.inert = modal;
+  document.body.classList.toggle("inspector-modal-open", modal);
+  syncInspectorMode();
   if (moveFocus) {
     if (open) inspectorClose.focus();
     else inspectorOpen.focus();
@@ -256,13 +325,30 @@ function setInspector(open, moveFocus = true) {
 
 inspectorOpen.addEventListener("click", () => setInspector(true));
 inspectorClose.addEventListener("click", () => setInspector(false));
+inspectorScrim.addEventListener("click", () => setInspector(false));
+
+inspector.addEventListener("keydown", (event) => {
+  if (!overlayLayout.matches || !inspectorIsOpen() || event.key !== "Tab") return;
+  const focusable = [...inspector.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])')]
+    .filter((element) => !element.disabled && !element.hidden);
+  const first = focusable[0];
+  const last = focusable.at(-1);
+  if (!first || !last) return;
+  if (event.shiftKey && document.activeElement === first) {
+    event.preventDefault();
+    last.focus();
+  } else if (!event.shiftKey && document.activeElement === last) {
+    event.preventDefault();
+    first.focus();
+  }
+});
 
 document.addEventListener("keydown", (event) => {
-  if (event.key === "Escape" && !languageMenu.hidden) {
+  if (event.key === "Escape" && transientIsOpen(languageMenu)) {
     setLanguageMenu(false);
-  } else if (event.key === "Escape" && !locationOverflowMenu.hidden) {
+  } else if (event.key === "Escape" && transientIsOpen(locationOverflowMenu)) {
     setLocationOverflow(false);
-  } else if (event.key === "Escape" && !inspector.hidden) {
+  } else if (event.key === "Escape" && inspectorIsOpen()) {
     setInspector(false);
   }
 });
@@ -338,11 +424,11 @@ document.querySelector("[data-motion-task]").addEventListener("click", async () 
   });
 });
 
-compactLayout.addEventListener("change", (event) => setInspector(!event.matches, false));
+overlayLayout.addEventListener("change", (event) => setInspector(!event.matches, false));
 applyTheme(root.dataset.themePreference || "system", false);
 applyContrast(root.dataset.contrast === "more", false);
 translate(root.dataset.locale === "en" ? "en" : "zh", false);
-setInspector(!compactLayout.matches, false);
+setInspector(!overlayLayout.matches, false);
 
 createIcons({
   icons: {

@@ -37,6 +37,7 @@
         }
       }
     },
+    "visualReview": { "$ref": "#/$defs/visualReview" },
     "production": {
       "type": "object",
       "required": ["status", "observedOn", "evidence", "owner", "rollback"],
@@ -96,6 +97,38 @@
             }
           }
         },
+        "notes": { "type": "string" }
+      }
+    },
+    "visualReview": {
+      "type": "object",
+      "required": ["status", "workflow", "routes", "baseline", "candidate", "environment", "reviewer", "reviewedOn", "findings", "notes"],
+      "additionalProperties": false,
+      "properties": {
+        "status": { "enum": ["not-run", "passed", "failed", "blocked"] },
+        "profile": { "enum": ["information-site", "intelligence-workspace", "ecommerce-operations", "engineering-canvas"] },
+        "workflow": { "type": "string" },
+        "routes": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+        "baseline": { "type": "string" },
+        "candidate": { "type": "string" },
+        "environment": { "type": "string" },
+        "reviewer": { "type": "string" },
+        "reviewedOn": { "type": ["string", "null"], "format": "date" },
+        "criteria": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/reviewCriterion" }
+        },
+        "findings": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+        "notes": { "type": "string" }
+      }
+    },
+    "reviewCriterion": {
+      "type": "object",
+      "required": ["id", "status", "notes"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "status": { "enum": ["not-run", "passed", "failed", "not-applicable"] },
         "notes": { "type": "string" }
       }
     },

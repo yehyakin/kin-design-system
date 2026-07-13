@@ -52,6 +52,8 @@ Requirements:
 - The control MUST expose the current state programmatically with `aria-pressed`, `aria-expanded`, `role="switch"`, or another correct native/ARIA state.
 - The accessible name MUST describe the action that will occur next when that is clearer than naming the current state.
 - The source icon MAY fade or move a few pixels while the target icon enters from the corresponding direction.
+- Participating icons SHOULD remain mounted in one stable optical slot so rapid reversal can continue from the rendered state without geometry change.
+- Replacing an icon by deleting and recreating the only visual node during normal motion SHOULD be avoided because it removes continuity and can restart unrelated animation.
 - Icon replacement MUST complete within the fast or normal duration Token.
 - Keyboard and pointer activation MUST produce the same final state.
 - Reduced motion MUST replace directional movement with an immediate swap or short opacity change.
@@ -104,9 +106,11 @@ Use for menus, Inspectors, Drawers, Popovers, expandable sections, and inline de
 Requirements:
 
 - Content MUST enter from and return toward its owning edge or trigger when movement helps orientation.
+- Temporary surfaces that show exit motion MUST remain rendered during their closing phase and MUST become unavailable to pointer and keyboard input immediately. `hidden` or unmounting MUST occur only after the exit finishes, unless reduced motion uses an immediate change.
 - `aria-expanded` and `aria-controls` MUST reflect the rendered state where applicable.
 - Focus MUST move only when required by the disclosure pattern and MUST return on keyboard close.
 - Reversing the action while motion is running MUST continue from the current visual state.
+- A rapid `open -> close -> open` or `close -> open -> close` sequence MUST end in the last requested state without a delayed timer hiding, disabling, or refocusing the reopened surface.
 - A closed disclosure MUST NOT retain focusable descendants.
 - Reduced motion MUST use an immediate state change or short opacity transition without spatial travel.
 
@@ -203,7 +207,7 @@ Every implemented pattern MUST be checked against the applicable rows.
 | Theme | Contrast and state meaning remain valid in light, dark, and higher-contrast modes |
 | Localization | Longer labels and direction changes do not break geometry or reading order |
 
-Reference implementations MUST test at least one paired-state replacement, one committed asynchronous result, one failure/retry path, and one disclosure with focus restoration.
+Reference implementations MUST test at least one paired-state replacement, one committed asynchronous result, one failure/retry path, one animated Menu, and one disclosure or Drawer with focus restoration and rapid reversal.
 
 ## External-example boundary
 

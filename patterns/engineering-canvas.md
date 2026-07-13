@@ -23,6 +23,22 @@ Help a user create, select, inspect, modify, compare, and safely reverse changes
 
 Toolbar and Split View behavior MUST follow [`components/workspace-structure.md`](../components/workspace-structure.md).
 
+### Default editing composition
+
+For direct manipulation of a document or model, begin with:
+
+```text
+Document location and compact commands
+Tool / object structure rail | dominant canvas | selection Inspector
+Status bar: units, coordinates, zoom, constraints, save and revision
+Command layer: menus, dialogs, review and long-task progress
+```
+
+- The canvas keeps the largest area and strongest task focus.
+- The Inspector follows the current selection and disappears or changes mode when no selection exists.
+- Narrow screens MUST choose a focused edit, inspect, or review mode rather than compressing every rail around a tiny canvas.
+- Generated changes appear in preview/review context before they become document history.
+
 ## Visual register
 
 - Chrome is compact and neutral so geometry and selection dominate.
@@ -52,8 +68,13 @@ Toolbar and Split View behavior MUST follow [`components/workspace-structure.md`
 - AI modifying the document without preview, diff, accept/reject, and undo.
 - Animating precise geometry merely to make the interface feel alive.
 
+## Visual-signature requirement
+
+Apply the common and engineering-canvas requirements in [`principles/visual-signature.md`](../principles/visual-signature.md). A representative production workflow MUST be visually reviewed before a product claims visible KIN adoption.
+
 ## Acceptance
 
 - The current mode, selection, unit, coordinate/measurement context, save state, and exit path are always discoverable.
 - Pointer, keyboard, zoom, pan, resize, and high-contrast behavior remain usable at supported viewports.
 - An accepted generated change is attributable and reversible.
+- The representative workflow demonstrates selection, modification, state commitment, and recovery; a static canvas shell is insufficient.

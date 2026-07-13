@@ -41,6 +41,7 @@ Every overlay MUST define opening, initial focus, keyboard traversal, dismissal,
 ## Drawer and Sheet
 
 - Drawer MUST enter from the edge that matches its spatial role and exit toward that edge.
+- Drawer opening and closing MUST be reversible from the current rendered position. Delayed cleanup from an earlier close MUST NOT hide, disable, unlock, or restore focus after a later reopen.
 - On mobile, it MUST respect safe areas and provide 44px touch targets.
 - A modal Drawer MUST follow the same focus containment and background rules as Dialog.
 - A persistent desktop side panel is not automatically a modal Drawer; it may remain part of the page focus order.
@@ -62,6 +63,7 @@ Every overlay MUST define opening, initial focus, keyboard traversal, dismissal,
 - Activating an item MUST close the menu unless repeated selection is the explicit task.
 - Nested submenus SHOULD be avoided on touch and MUST remain navigable without precision pointer movement.
 - The same command MUST not execute from both pointer-down and click.
+- A Menu that animates closed MUST reject interaction during the closing phase and MUST not remain in the accessibility tree after that phase completes.
 
 ## Tooltip and Hover Card overlays
 

@@ -22,6 +22,23 @@ Help an operator understand what changed, what is blocked, what has financial or
 
 Preview surfaces and operational records MUST remain distinct. A product image can be large in a creative review, but should not displace price, stock, channel, and approval state in an operations queue.
 
+### Default operations composition
+
+For repeated catalog, order, inventory, campaign, or approval work, begin with:
+
+```text
+Location and current operating scope
+View controls: query, filters, sort, saved view, batch scope
+Actionable queue or comparable records
+Selected product/order/campaign context
+Inspector: state, ownership, money/quantity/channel, approval, activity
+```
+
+- The actionable queue or selected record owns attention; KPI summaries remain compact and secondary.
+- Batch actions stay attached to visible selection and state their exact scope.
+- Product imagery remains subordinate in operational lists and expands only for identity or media-review decisions.
+- Narrow screens preserve `identity -> blocking state -> affected money/quantity/channel -> safe action -> activity`.
+
 ## Visual register
 
 - Use compact rows for comparison and exception handling.
@@ -51,8 +68,13 @@ Preview surfaces and operational records MUST remain distinct. A product image c
 - Combining creative generation, approval, publication, and performance into one ambiguous “AI status”.
 - Making all product content draggable when order has no user-owned meaning.
 
+## Visual-signature requirement
+
+Apply the common and ecommerce requirements in [`principles/visual-signature.md`](../principles/visual-signature.md). A representative production workflow MUST be visually reviewed before a product claims visible KIN adoption.
+
 ## Acceptance
 
 - An operator can identify the affected product, channel, quantity or money, current owner, and safe next action.
 - Batch actions cannot silently expand beyond the visible selection/filter scope.
 - Empty, partial, stale, permission-denied, and upstream-failure states preserve operational context.
+- The representative workflow demonstrates a real operating decision and committed result; a dashboard overview or component gallery is insufficient.

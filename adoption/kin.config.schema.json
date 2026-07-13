@@ -39,6 +39,41 @@
         "roots": { "type": "array", "items": { "type": "string" }, "uniqueItems": true }
       }
     },
+    "scope": {
+      "type": "object",
+      "required": ["mode", "implementationBrief", "routeProfiles", "exclusions"],
+      "additionalProperties": false,
+      "properties": {
+        "mode": { "enum": ["partial", "full"] },
+        "implementationBrief": { "type": "string", "minLength": 1 },
+        "routeProfiles": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["route", "profile", "purpose", "representative"],
+            "additionalProperties": false,
+            "properties": {
+              "route": { "type": "string", "minLength": 1 },
+              "profile": { "enum": ["information-site", "intelligence-workspace", "ecommerce-operations", "engineering-canvas"] },
+              "purpose": { "type": "string", "minLength": 1 },
+              "representative": { "type": "boolean" }
+            }
+          }
+        },
+        "exclusions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["route", "reason"],
+            "additionalProperties": false,
+            "properties": {
+              "route": { "type": "string", "minLength": 1 },
+              "reason": { "type": "string", "minLength": 12 }
+            }
+          }
+        }
+      }
+    },
     "delivery": {
       "type": "object",
       "required": ["mode", "figma", "runtime", "evidence"],

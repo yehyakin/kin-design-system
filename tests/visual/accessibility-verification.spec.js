@@ -92,3 +92,38 @@ test("Forced Colors preserves focus and state boundaries", async ({ page }, test
 
   await page.screenshot({ path: testInfo.outputPath("forced-colors-feedback.png"), fullPage: false });
 });
+
+test("reduced motion removes spatial travel from Inspector and Drawer", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.setViewportSize({ width: 1024, height: 800 });
+  await page.goto("/examples/workspace-reference/");
+  await page.locator("[data-inspector-open]").click();
+  await expect(page.locator(".inspector").evaluate((element) => getComputedStyle(element).transform)).resolves.toBe("none");
+
+  await page.goto("/examples/workspace-reference/core-components.html#overlays");
+  await page.locator("[data-drawer-open]").click();
+  await expect(page.locator(".core-drawer").evaluate((element) => getComputedStyle(element).transform)).resolves.toBe("none");
+  await expect(page.locator("[data-drawer-layer]")).toHaveAttribute("data-state", "open");
+});
+
+test("reduced motion keeps Motion Lab state and focus without directional travel", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/examples/workspace-reference/motion.html");
+
+  await expect(page.getByText("减少动态效果", { exact: true })).toBeVisible();
+  const paired = page.locator("[data-lab-toggle]");
+  await paired.click();
+  await expect(paired).toHaveAttribute("aria-pressed", "true");
+  await expect(paired.locator('[data-icon-state="active"]').evaluate((element) => getComputedStyle(element).transform)).resolves.toBe("none");
+
+  const menuTrigger = page.getByRole("button", { name: "对象操作" });
+  await menuTrigger.click();
+  const menu = page.locator(".lab-menu");
+  await expect(menu).toHaveAttribute("data-state", "open");
+  await expect(menu.evaluate((element) => getComputedStyle(element).transform)).resolves.toBe("none");
+  await page.keyboard.press("Escape");
+  await expect(menuTrigger).toBeFocused();
+
+  await page.locator("[data-lab-drawer-open]").click();
+  await expect(page.locator(".motion-drawer").evaluate((element) => getComputedStyle(element).transform)).resolves.toBe("none");
+});

@@ -19,6 +19,11 @@ const required = [
   "sitemap.xml",
   "examples/workspace-reference/index.html",
   "examples/workspace-reference/reference.js",
+  "examples/workspace-reference/core-components.html",
+  "examples/workspace-reference/core-components.js",
+  "examples/workspace-reference/motion.html",
+  "examples/workspace-reference/motion-reference.js",
+  "examples/page-patterns/access.html",
   "examples/product-patterns/information.html",
   "tokens/kin.tokens.json",
 ];
@@ -40,7 +45,15 @@ for (const file of required) {
 }
 
 if (fs.existsSync(output)) {
-  const htmlFiles = ["index.html", "zh/index.html", "404.html", "examples/workspace-reference/index.html"].map((file) => path.join(output, file));
+  const htmlFiles = [
+    "index.html",
+    "zh/index.html",
+    "404.html",
+    "examples/workspace-reference/index.html",
+    "examples/workspace-reference/core-components.html",
+    "examples/workspace-reference/motion.html",
+    "examples/page-patterns/access.html",
+  ].map((file) => path.join(output, file));
   const attributePattern = /\b(?:href|src)=["']([^"']+)["']/g;
   for (const file of htmlFiles) {
     const source = fs.readFileSync(file, "utf8");
@@ -73,11 +86,15 @@ if (fs.existsSync(output)) {
 const workspaceAssetDirectory = path.join(output, "examples/workspace-reference");
 if (fs.existsSync(workspaceAssetDirectory)) {
   const bundle = path.join(workspaceAssetDirectory, "reference.js");
+  const coreBundle = path.join(workspaceAssetDirectory, "core-components.js");
+  const motionBundle = path.join(workspaceAssetDirectory, "motion-reference.js");
   const chunks = fs.existsSync(path.join(workspaceAssetDirectory, "chunks"))
     ? fs.readdirSync(path.join(workspaceAssetDirectory, "chunks"))
     : [];
   if (!chunks.some((file) => file.startsWith("sonner-island-") && file.endsWith(".js"))) failures.push("workspace-reference/chunks: lazy Sonner bundle is missing");
   if (fs.existsSync(bundle) && fs.statSync(bundle).size > 50_000) failures.push("workspace-reference/reference.js: initial JavaScript bundle exceeds 50 KB");
+  if (fs.existsSync(coreBundle) && fs.statSync(coreBundle).size > 50_000) failures.push("workspace-reference/core-components.js: initial JavaScript bundle exceeds 50 KB");
+  if (fs.existsSync(motionBundle) && fs.statSync(motionBundle).size > 50_000) failures.push("workspace-reference/motion-reference.js: initial JavaScript bundle exceeds 50 KB");
 }
 
 const assetDirectory = path.join(output, "assets");

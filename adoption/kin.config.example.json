@@ -6,7 +6,7 @@
     "source": "https://github.com/yehyakin/kin-design-system/tree/v2.2.0",
     "local": "docs/KIN-DESIGN.md",
     "revision": "v2.2.0",
-    "checksum": "e7e32da9dcbc30b97568351c059c9dd3563478d38f1788ee615219608f549215"
+    "checksum": "2679a55dde0360ab927c39771feed32da8522b592c3b33220332d2ffd992b895"
   },
   "tokens": {
     "source": "src/styles/tokens.css",
@@ -15,6 +15,19 @@
   },
   "components": {
     "roots": ["src/components"]
+  },
+  "scope": {
+    "mode": "partial",
+    "implementationBrief": "docs/kin-implementation-brief.md",
+    "routeProfiles": [
+      {
+        "route": "/records/**",
+        "profile": "information-site",
+        "purpose": "Search, open, verify, and return to a published record.",
+        "representative": true
+      }
+    ],
+    "exclusions": []
   },
   "delivery": {
     "mode": "contract-first",

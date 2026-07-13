@@ -41,6 +41,7 @@ Default, hover, focus-visible, active, busy, disabled, success-after-commit, and
 
 - Enter and Space MUST activate a Button once.
 - Busy state MUST retain stable width and an understandable label.
+- When a Button changes between idle, busy, success, error, or paired states, its icon slot MUST retain stable geometry. Implementations SHOULD keep the participating icons mounted in one optical box and change explicit state rather than remove and insert a single icon during the transition.
 - Success state MUST occur only after the real action succeeds.
 - A reversible action SHOULD offer Undo through contextual or temporary feedback.
 - A disabled action SHOULD explain why when the reason is not already visible.
@@ -115,6 +116,7 @@ Use a Segmented Control for two to five peer views or modes when the whole set c
 - Light, dark, and higher-contrast themes MUST preserve hierarchy and state distinctions.
 - Checked or selected state MUST not rely only on accent color.
 - Press feedback SHOULD use short surface or sub-pixel transform changes without bounce.
+- Icon transition travel MUST remain inside the icon optical box and MUST NOT move the label or surrounding controls.
 - Reduced motion MUST remove nonessential icon replacement, spin, or scale while preserving the committed state.
 
 ## Acceptance

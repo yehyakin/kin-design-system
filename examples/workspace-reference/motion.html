@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="dark" data-contrast="normal">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#08090a" />
+    <title>KIN Motion Lab</title>
+    <script>
+      (() => {
+        const preference = localStorage.getItem("kin-reference-theme") || "system";
+        const resolved = preference === "system"
+          ? (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")
+          : preference;
+        document.documentElement.dataset.theme = resolved;
+        document.documentElement.dataset.themePreference = preference;
+        document.documentElement.dataset.contrast = localStorage.getItem("kin-reference-contrast") === "more" ? "more" : "normal";
+      })();
+    </script>
+    <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="./states.css" />
+    <link rel="stylesheet" href="../../assets/sonner.css" />
+    <link rel="stylesheet" href="./core-components.css" />
+    <link rel="stylesheet" href="./motion.css" />
+    <script type="module" src="./motion-reference.js"></script>
+  </head>
+  <body class="states-page core-reference-page motion-lab-page">
+    <a class="skip-link" href="#motion-lab">跳到动效参考</a>
+
+    <header class="reference-header">
+      <div>
+        <p>KIN reference</p>
+        <h1>Motion Lab</h1>
+      </div>
+      <div class="reference-actions">
+        <a class="reference-back icon-action" href="./core-components.html#motion"><i data-lucide="blocks"></i><span>核心组件</span></a>
+        <a class="reference-back icon-action" href="./index.html"><i data-lucide="panel-left"></i><span>工作台</span></a>
+        <button type="button" class="icon-only-control" data-lab-theme aria-label="切换到日间模式">
+          <span class="motion-icon-slot" aria-hidden="true"><i data-lucide="moon" data-icon-state="dark"></i><i data-lucide="sun" data-icon-state="light"></i></span>
+        </button>
+      </div>
+    </header>
+
+    <main id="motion-lab" class="reference-main motion-lab" tabindex="-1">
+      <section class="motion-lab-intro" aria-labelledby="motion-lab-title">
+        <div><p class="motion-kicker">State before spectacle</p><h2 id="motion-lab-title">动效用来解释状态、结果与空间关系</h2><p>每个示例保留稳定几何、键盘路径和减弱动效替代。它们是行为证据，不是可直接复制的运行时组件包。</p></div>
+        <dl class="motion-preference"><div><dt>系统偏好</dt><dd data-motion-preference>正在读取</dd></div><div><dt>空间位移</dt><dd data-motion-travel>正在读取</dd></div></dl>
+      </section>
+
+      <section aria-labelledby="control-motion-title">
+        <header class="reference-section-heading"><div><h2 id="control-motion-title">控件状态</h2><p>图标始终保留在同一光学槽内；标签和按钮宽度不会在状态变化时跳动。</p></div><span>Control motion</span></header>
+        <div class="motion-control-strip">
+          <article><span>成对状态</span><button type="button" class="icon-action" data-control-state="default" data-lab-toggle aria-pressed="false"><span class="motion-icon-slot" aria-hidden="true"><i data-lucide="circle-play" data-icon-state="default"></i><i data-lucide="pause" data-icon-state="active"></i></span><span data-action-label>开始同步</span></button><p>再次激活会从当前状态反向，而不是重启动画序列。</p></article>
+          <article><span>异步结果</span><button type="button" class="primary-action icon-action stateful-action" data-control-state="default" data-lab-async><span class="motion-icon-slot" aria-hidden="true"><i data-lucide="save" data-icon-state="default"></i><i data-lucide="loader-circle" data-icon-state="pending"></i><i data-lucide="check" data-icon-state="success"></i></span><span data-action-label>保存布局</span></button><p>只有本地任务完成后才进入成功状态；等待期间禁止重复提交。</p></article>
+          <article><span>任务反馈</span><button type="button" class="icon-action" data-lab-task><i data-lucide="download"></i><span>创建导出任务</span></button><p>Sonner 更新同一条通知，不为每个阶段堆叠新 Toast。</p></article>
+        </div>
+      </section>
+
+      <section aria-labelledby="anchored-motion-title">
+        <header class="reference-section-heading"><div><h2 id="anchored-motion-title">锚定浮层</h2><p>菜单和 Popover 从触发位置出现，关闭阶段立即停止交互，但保留到退出结束。</p></div><span>Anchored surfaces</span></header>
+        <div class="motion-anchor-row">
+          <div class="menu-sample">
+            <button type="button" class="icon-action" aria-haspopup="menu" aria-expanded="false" data-lab-menu-trigger><i data-lucide="ellipsis"></i><span>对象操作</span></button>
+            <div class="sample-menu lab-menu" role="menu" data-state="closed" hidden>
+              <button type="button" role="menuitem"><span class="menu-item-icon"><i data-lucide="pencil"></i></span><span>编辑名称</span><kbd>E</kbd></button>
+              <button type="button" role="menuitem"><span class="menu-item-icon"><i data-lucide="copy"></i></span><span>复制链接</span><kbd>C</kbd></button>
+              <button type="button" role="menuitem"><span class="menu-item-icon"><i data-lucide="archive"></i></span><span>移入归档</span></button>
+            </div>
+          </div>
+          <span class="popover-anchor"><button type="button" class="icon-action" aria-haspopup="dialog" aria-expanded="false" data-lab-popover-trigger><i data-lucide="info"></i><span>查看范围</span></button><div class="sample-popover lab-popover" role="dialog" aria-label="当前操作范围" data-state="closed" hidden><strong>当前操作范围</strong><p>只更新当前保存视图；源记录、权限与审核历史保持不变。</p><button type="button" data-lab-popover-close>关闭</button></div></span>
+          <button type="button" class="icon-action disclosure-trigger" aria-expanded="false" aria-controls="lab-details" data-lab-disclosure><i data-lucide="chevron-down"></i><span>展开影响说明</span></button>
+        </div>
+        <div id="lab-details" class="motion-disclosure lab-disclosure" data-state="closed" aria-hidden="true" inert><p>布局密度、列顺序和筛选条件会保存在当前视图；其他用户的视图不会变化。</p></div>
+      </section>
+
+      <section aria-labelledby="spatial-motion-title">
+        <header class="reference-section-heading"><div><h2 id="spatial-motion-title">空间连续性</h2><p>桌面 Drawer 从右侧进入；窄屏 Sheet 从底部进入。关闭和快速反向沿同一路径继续。</p></div><span>Spatial motion</span></header>
+        <div class="drawer-stage">
+          <div class="drawer-stage-copy"><span>当前对象</span><strong>同步规则 / SYNC-024</strong><p>打开属性不会改变主工作区的滚动位置或当前选择。</p></div>
+          <button type="button" class="primary-action icon-action" data-lab-drawer-open aria-controls="motion-drawer" aria-expanded="false"><i data-lucide="panel-right-open"></i><span>打开属性</span></button>
+        </div>
+      </section>
+
+      <section aria-labelledby="motion-boundaries-title">
+        <header class="reference-section-heading"><div><h2 id="motion-boundaries-title">边界</h2><p>动效完成不等于业务完成；Agent 仍需连接真实操作、错误与回滚。</p></div><span>Implementation boundary</span></header>
+        <div class="motion-boundary-list"><p><strong>允许：</strong>短按压反馈、状态图标交替、锚定浮层、空间一致的 Drawer、真实任务进度。</p><p><strong>禁止：</strong>Hover 伪装成功、默认弹跳、装饰性循环、全屏入场、用动画隐藏延迟或证据不足。</p></div>
+      </section>
+    </main>
+
+    <div class="drawer-layer" data-state="closed" data-phase="closed" data-lab-drawer-layer aria-hidden="true" inert>
+      <button class="drawer-scrim" type="button" aria-label="关闭属性 Drawer" data-lab-drawer-scrim></button>
+      <aside id="motion-drawer" class="core-drawer motion-drawer" role="dialog" aria-modal="true" aria-labelledby="motion-drawer-title">
+        <header><div><p>SYNC-024</p><h2 id="motion-drawer-title">同步规则属性</h2></div><button type="button" class="icon-only-control" aria-label="关闭属性 Drawer" data-lab-drawer-close><i data-lucide="x"></i></button></header>
+        <dl class="property-sample"><div><dt>状态</dt><dd>运行中</dd></div><div><dt>频率</dt><dd>每 30 分钟</dd></div><div><dt>目标</dt><dd>当前工作区</dd></div><div><dt>最近完成</dt><dd>今天 09:42</dd></div></dl>
+        <div class="drawer-action-row"><button type="button" class="icon-action" data-lab-drawer-reverse><i data-lucide="repeat-2"></i><span>演示快速反向</span></button><p data-lab-drawer-status role="status">Drawer 已打开。</p></div>
+      </aside>
+    </div>
+    <div data-sonner-root></div>
+  </body>
+</html>

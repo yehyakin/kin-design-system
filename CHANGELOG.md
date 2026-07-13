@@ -6,6 +6,25 @@ The project follows semantic versioning for normative design documentation.
 
 ## Unreleased
 
+### Interruptible motion and external-reference translation
+
+- Added an explicit translation matrix for Boneyard, Reicon, Hiraki, Interfaces, Rico Bookmark Manager, and motion-gallery evidence so external references produce KIN-owned contracts, runnable evidence, and verification rather than copied aesthetics.
+- Required stable icon slots for paired and asynchronous Button states, animated Menu closing phases that remain non-interactive until cleanup, and rapid-reversal safety for Menu and Drawer motion.
+- Added a discoverable Motion Lab with Lucide-supported Menu actions, stable paired and async Button icons, updating Sonner tasks, animated Popover and Disclosure, and a reversible right-edge Drawer that adapts to a bottom Sheet on narrow screens; the primary workspace language and overflow menus now use the same interruptible surface contract.
+
+### Project-level composition and Agent adoption gate
+
+- Added a normative project-owned implementation brief so adopting Agents must resolve the real task, route/profile map, representative workflow, first meaningful view, dominant region, persistent context, Surface and density strategy, narrow-screen order, states, interactions, evidence, and rollback before page implementation.
+- Removed the initializer's implicit information-site default; new adoptions must choose a product profile explicitly and may map different route families to different profiles for hybrid products.
+- Strengthened adoption evidence with a nine-criterion visual-signature matrix and blocked `mapped` or `verified` claims when the brief, representative route, visual criteria, or human approval remains unresolved.
+- Added profile-specific composition guidance to the information, intelligence, ecommerce, and engineering patterns, plus a progressive Agent Skill composition reference and checkpoint.
+
+### Showcase discovery and interaction references
+
+- Promoted sign-in, password visibility, contextual reauthentication, motion, Sonner task feedback, and overlay examples into the core component page and added direct English and Chinese showcase links so these references are discoverable from the component section.
+- Replaced instant Inspector and Drawer visibility changes with directionally consistent, interruptible transitions, scrim feedback, focus containment, background inertness, scroll locking, focus restoration, and reduced-motion crossfades without changing their normative component status.
+- Added normal-motion and reduced-motion browser checks for Inspector and Drawer travel, plus deterministic authentication and core feedback interaction coverage.
+
 ### Page contracts and reference flows
 
 - Added a machine-readable page-family catalog with stable, candidate, draft, and deprecated maturity states plus a page-level Definition of Complete.

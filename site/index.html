@@ -162,8 +162,15 @@
         <section class="content-section" id="components" aria-labelledby="components-title">
           <div class="section-heading">
             <h2 id="components-title">Component behavior</h2>
-            <p>States are part of the contract. Focus, selection, status, stale data, and error must remain separate.</p>
+            <p>Open runnable references for authentication, controls, motion, feedback, overlays, and specialist workflows. States are part of the contract.</p>
           </div>
+          <nav class="component-directory" aria-label="Runnable component references">
+            <a href="examples/workspace-reference/core-components.html#authentication"><span class="component-directory-icon"><i data-lucide="log-in"></i></span><span><strong>Authentication and access</strong><small>Sign-in form, password visibility, in-page reauthentication, and OTP boundaries.</small></span><b>Open</b></a>
+            <a href="examples/workspace-reference/core-components.html#actions"><span class="component-directory-icon"><i data-lucide="list-checks"></i></span><span><strong>Controls and forms</strong><small>Actions, selection, fields, upload, navigation, data display, and states.</small></span><b>Open</b></a>
+            <a href="examples/workspace-reference/motion.html"><span class="component-directory-icon"><i data-lucide="circle-play"></i></span><span><strong>Motion Lab</strong><small>Stable icon slots, animated menus, async completion, Sonner tasks, disclosure, and reversible Drawer motion.</small></span><b>Open</b></a>
+            <a href="examples/workspace-reference/core-components.html#overlays"><span class="component-directory-icon"><i data-lucide="panel-right-open"></i></span><span><strong>Overlays and inspector</strong><small>Dialog, spatial Drawer, Popover, focus containment, and reduced motion.</small></span><b>Open</b></a>
+            <a href="examples/workspace-reference/advanced-components.html"><span class="component-directory-icon"><i data-lucide="bot"></i></span><span><strong>AI and review workflows</strong><small>Evidence, approval, execution scope, media, persistent tasks, and charts.</small></span><b>Open</b></a>
+          </nav>
           <div class="component-demo">
             <div class="demo-toolbar" aria-label="Button examples">
               <button class="primary-button" type="button" data-toast-title="Changes saved" data-toast-description="The reference settings are now current." data-toast-action="Undo" data-toast-undo="Save reverted"><i data-lucide="check"></i>Save changes</button><button type="button">Preview</button><button class="ghost-button" type="button">More actions</button><button class="danger-button" type="button">Remove</button><button type="button" disabled>Unavailable</button>
@@ -230,11 +237,13 @@
         <hr class="section-rule">
         <section class="content-section" id="agents" aria-labelledby="agents-title">
           <div class="section-heading"><h2 id="agents-title">Give coding tools a design contract</h2><p>Pin an exact KIN version, keep a local contract copy, and record the project’s own decisions instead of relying on a vague style prompt.</p></div>
-          <div class="code-block"><button class="copy-button" type="button" data-copy="agent-prompt" data-success="Prompt copied." data-failure="Copy failed. Select the text manually." data-toast-description="The Agent prompt is available on your clipboard." aria-describedby="copy-status"><i data-lucide="copy"></i>Copy</button><code id="agent-prompt">Read DESIGN.md and DELIVERY.md completely before changing UI.
+          <div class="code-block"><button class="copy-button" type="button" data-copy="agent-prompt" data-success="Prompt copied." data-failure="Copy failed. Select the text manually." data-toast-description="The Agent prompt is available on your clipboard." aria-describedby="copy-status"><i data-lucide="copy"></i>Copy</button><code id="agent-prompt">Read DESIGN.md, DELIVERY.md, and principles/visual-signature.md completely before changing UI.
 
 Treat it as a normative product design contract. Start from the real user task,
 entity model, data states, and existing components. Preserve themes, mobile,
-keyboard, accessibility, real APIs, and human control.</code></div>
+keyboard, accessibility, real APIs, and human control. If kin.config.json exists,
+read its implementation brief and route/profile map. Report the KIN composition
+checkpoint before coding; do not implement a draft or unresolved workflow.</code></div>
           <p class="inline-status" id="copy-status" role="status" aria-live="polite"></p>
           <div class="intro-actions"><a class="button primary" href="https://github.com/yehyakin/kin-design-system/tree/v2.2.0/skills/kin-design">Open the Agent Skill</a><a class="button" href="https://github.com/yehyakin/kin-design-system/tree/v2.2.0/adoption">Read adoption guide</a></div>
         </section>
@@ -245,11 +254,13 @@ keyboard, accessibility, real APIs, and human control.</code></div>
           <div class="resource-list">
             <a class="resource-link" href="https://github.com/yehyakin/kin-design-system/blob/v2.2.0/DESIGN.md"><strong>DESIGN.md</strong><span>Normative principles, Tokens, behavior, accessibility, and delivery contract.</span><b>Read</b></a>
             <a class="resource-link" href="https://github.com/yehyakin/kin-design-system/blob/main/DELIVERY.md"><strong>Delivery model</strong><span>Contract-first core, Figma/runtime boundaries, future package gates, and adoption evidence stages.</span><b>Read</b></a>
+            <a class="resource-link" href="https://github.com/yehyakin/kin-design-system/blob/main/adoption/implementation-brief.md"><strong>Implementation brief</strong><span>Project-level route profiles, composition decisions, representative workflow, states, evidence, and readiness gate.</span><b>Read</b></a>
             <a class="resource-link" href="tokens/kin.tokens.json"><strong>DTCG Tokens</strong><span>Machine-readable theme, typography, spacing, radius, and component primitives.</span><b>Download</b></a>
             <a class="resource-link" href="tokens/kin.tailwind.css"><strong>Tailwind Tokens</strong><span>Generated CSS variables and Tailwind-compatible theme values.</span><b>Download</b></a>
             <a class="resource-link" href="tokens/kin.figma.variables.json"><strong>Figma Variables</strong><span>Create-only payload with light, dark, and high-contrast modes.</span><b>Download</b></a>
             <a class="resource-link" href="examples/workspace-reference/states.html"><strong>State reference</strong><span>Inputs, data rows, feedback, dialog, focus, and Command Menu behavior.</span><b>Open</b></a>
             <a class="resource-link" href="examples/workspace-reference/core-components.html"><strong>Core component reference</strong><span>Runnable actions, forms, navigation, data, feedback, progress, and overlay contracts.</span><b>Open</b></a>
+            <a class="resource-link" href="examples/workspace-reference/motion.html"><strong>Motion Lab</strong><span>Interruptible Button, Menu, Popover, Disclosure, Sonner, and responsive Drawer behavior.</span><b>Open</b></a>
             <a class="resource-link" href="examples/workspace-reference/advanced-components.html"><strong>AI and professional-workflow reference</strong><span>Deterministic Composer, evidence, review, scope, media, durable task, and accessible chart states.</span><b>Open</b></a>
             <a class="resource-link" href="https://github.com/yehyakin/kin-design-system/blob/main/principles/verification.md"><strong>Verification evidence</strong><span>Boundaries for automated checks, screenshots, browser smoke, zoom, RTL, Forced Colors, touch, and screen-reader review.</span><b>Read</b></a>
             <a class="resource-link" href="https://github.com/yehyakin/kin-design-system/blob/main/components/micro-interactions.md"><strong>Micro-interactions</strong><span>Paired states, committed results, progress, disclosures, and reduced-motion behavior.</span><b>Read</b></a>
@@ -260,7 +271,7 @@ keyboard, accessibility, real APIs, and human control.</code></div>
         </section>
 
         <hr class="section-rule">
-        <section class="content-section" aria-labelledby="page-flows-title">
+        <section class="content-section" id="flows" aria-labelledby="page-flows-title">
           <div class="section-heading"><h2 id="page-flows-title">Cross-product page flows</h2><p>Authentication, onboarding, settings, recovery, search/results, and help/support are complete references with URL state, failure paths, focus behavior, and product-owned backend boundaries.</p></div>
           <div class="intro-actions"><a class="button primary" href="examples/page-patterns/access.html">Open access reference</a><a class="button" href="examples/page-patterns/search.html">Search and results</a><a class="button" href="examples/page-patterns/onboarding.html">Setup</a><a class="button" href="examples/page-patterns/settings.html">Settings</a><a class="button" href="examples/page-patterns/system.html">Recovery states</a><a class="button" href="examples/page-patterns/support.html">Help and support</a><a class="button" href="https://github.com/yehyakin/kin-design-system/blob/main/pages/catalog.md">Review page maturity</a></div>
         </section>
@@ -271,7 +282,7 @@ keyboard, accessibility, real APIs, and human control.</code></div>
 
     <aside class="section-rail" aria-label="On this page">
       <h2>On this page</h2>
-      <a href="#overview">Overview</a><a href="#principles">Principles</a><a href="#foundations">Foundations</a><a href="#components">Components</a><a href="#patterns">Patterns</a><a href="#ai-contract">AI behavior</a><a href="#agents">Coding tools</a><a href="#resources">Resources</a>
+      <a href="#overview">Overview</a><a href="#principles">Principles</a><a href="#foundations">Foundations</a><a href="#components">Components</a><a href="#patterns">Patterns</a><a href="#ai-contract">AI behavior</a><a href="#agents">Coding tools</a><a href="#resources">Resources</a><a href="#flows">Page flows</a>
       <p class="release-note">KIN 2.2.0<br>Released 13 July 2026<br><br>Reference values are live and theme-aware.</p>
     </aside>
   </div>
@@ -285,6 +296,7 @@ keyboard, accessibility, real APIs, and human control.</code></div>
       <a class="command-item" data-command-item href="#components">Component behavior <span>Section</span></a>
       <a class="command-item" data-command-item href="#patterns">Product patterns <span>Section</span></a>
       <a class="command-item" data-command-item href="#ai-contract">AI behavior <span>Section</span></a>
+      <a class="command-item" data-command-item href="#flows">Page flows <span>Section</span></a>
       <div class="command-group-label">Resources</div>
       <a class="command-item" data-command-item href="https://github.com/yehyakin/kin-design-system/blob/v2.2.0/DESIGN.md">Design contract <span>GitHub</span></a>
       <a class="command-item" data-command-item href="https://github.com/yehyakin/kin-design-system/blob/main/DELIVERY.md">Delivery model <span>GitHub</span></a>

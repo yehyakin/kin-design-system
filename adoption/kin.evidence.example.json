@@ -47,6 +47,30 @@
       { "id": "screen-reader", "status": "not-run", "environment": "", "reviewedOn": null, "reviewer": "", "findings": [], "notes": "" }
     ]
   },
+  "visualReview": {
+    "status": "not-run",
+    "profile": "information-site",
+    "workflow": "",
+    "routes": [],
+    "baseline": "",
+    "candidate": "",
+    "environment": "",
+    "reviewer": "",
+    "reviewedOn": null,
+    "criteria": [
+      { "id": "task-first", "status": "not-run", "notes": "" },
+      { "id": "dominant-region", "status": "not-run", "notes": "" },
+      { "id": "continuous-structure", "status": "not-run", "notes": "" },
+      { "id": "density-without-repetition", "status": "not-run", "notes": "" },
+      { "id": "semantic-separation", "status": "not-run", "notes": "" },
+      { "id": "theme-integrity", "status": "not-run", "notes": "" },
+      { "id": "motion-continuity", "status": "not-run", "notes": "" },
+      { "id": "responsive-priority", "status": "not-run", "notes": "" },
+      { "id": "no-fabricated-data-or-behavior", "status": "not-run", "notes": "" }
+    ],
+    "findings": [],
+    "notes": "Select one representative production workflow; a component gallery or design lab does not qualify."
+  },
   "production": {
     "status": "not-observed",
     "observedOn": null,

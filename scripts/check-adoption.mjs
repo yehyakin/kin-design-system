@@ -16,6 +16,27 @@ const evidenceStages = new Set(["initialized", "mapped", "verified", "production
 const mappingStates = new Set(["pending", "mapped", "verified", "not-applicable"]);
 const automatedStates = new Set(["not-run", "passed", "failed", "blocked"]);
 const manualStates = new Set(["not-run", "passed", "failed", "blocked", "not-applicable"]);
+const visualCriterionStates = new Set(["not-run", "passed", "failed", "not-applicable"]);
+const requiredVisualCriteria = new Set([
+  "task-first",
+  "dominant-region",
+  "continuous-structure",
+  "density-without-repetition",
+  "semantic-separation",
+  "theme-integrity",
+  "motion-continuity",
+  "responsive-priority",
+  "no-fabricated-data-or-behavior",
+]);
+const requiredBriefHeadings = [
+  "Product truth",
+  "Route and profile map",
+  "Representative workflow",
+  "Composition contract",
+  "Required interactions and states",
+  "Prohibited substitutions",
+  "Evidence, rollout, and approval",
+];
 let evidenceStatus = null;
 
 function validateEvidence(evidence, config, evidenceFile) {
@@ -96,6 +117,89 @@ function validateEvidence(evidence, config, evidenceFile) {
     }
   }
 
+  const visualReview = evidence.visualReview;
+  if (visualReview === undefined) {
+    if (["verified", "production-observed"].includes(evidence.status)) {
+      errors.push(`${evidenceFile}: ${evidence.status} status requires a representative production workflow visualReview.`);
+    } else {
+      warnings.push(`${evidenceFile}: visualReview is not recorded; new adoption records should name a representative production workflow.`);
+    }
+  } else if (!visualReview || typeof visualReview !== "object" || Array.isArray(visualReview)) {
+    errors.push(`${evidenceFile}: visualReview must be an object.`);
+  } else {
+    const fields = ["workflow", "baseline", "candidate", "environment", "reviewer", "notes"];
+    if (!automatedStates.has(visualReview.status)) {
+      errors.push(`${evidenceFile}: visualReview.status is not supported.`);
+    }
+    if (!Array.isArray(visualReview.routes) || !Array.isArray(visualReview.findings) || fields.some((field) => typeof visualReview[field] !== "string")) {
+      errors.push(`${evidenceFile}: visualReview requires string fields plus routes and findings arrays.`);
+    } else {
+      if (visualReview.routes.some((route) => typeof route !== "string" || !route.trim())) {
+        errors.push(`${evidenceFile}: visualReview.routes must contain non-empty route strings.`);
+      }
+      if (visualReview.findings.some((finding) => typeof finding !== "string" || !finding.trim())) {
+        errors.push(`${evidenceFile}: visualReview.findings must contain non-empty finding strings.`);
+      }
+      if (["passed", "failed"].includes(visualReview.status)) {
+        const missingContext = ["workflow", "baseline", "candidate", "environment", "reviewer"].filter((field) => !visualReview[field].trim());
+        if (missingContext.length > 0 || visualReview.routes.length === 0 || !visualReview.reviewedOn) {
+          errors.push(`${evidenceFile}: completed visualReview requires a workflow, routes, baseline, candidate, environment, reviewer, and reviewedOn.`);
+        }
+      }
+      if (visualReview.status === "blocked" && visualReview.notes.trim().length < 12) {
+        errors.push(`${evidenceFile}: blocked visualReview requires a specific reason.`);
+      }
+    }
+
+    if (visualReview.profile !== undefined && !profiles.has(visualReview.profile)) {
+      errors.push(`${evidenceFile}: visualReview.profile is not a supported KIN product profile.`);
+    }
+
+    if (!Array.isArray(visualReview.criteria)) {
+      if (["mapped", "verified", "production-observed"].includes(evidence.status)) {
+        errors.push(`${evidenceFile}: ${evidence.status} status requires the visualReview criteria matrix.`);
+      } else {
+        warnings.push(`${evidenceFile}: visualReview criteria are not recorded.`);
+      }
+    } else {
+      const criterionIds = new Set();
+      for (const [index, criterion] of visualReview.criteria.entries()) {
+        if (!criterion?.id || criterionIds.has(criterion.id) || !visualCriterionStates.has(criterion.status) || typeof criterion.notes !== "string") {
+          errors.push(`${evidenceFile}: visualReview.criteria[${index}] requires a unique id, supported status, and notes.`);
+          continue;
+        }
+        criterionIds.add(criterion.id);
+        if (criterion.status === "not-applicable" && criterion.notes.trim().length < 12) {
+          errors.push(`${evidenceFile}: visualReview criterion ${criterion.id} marked not-applicable requires a specific reason.`);
+        }
+      }
+      for (const id of requiredVisualCriteria) {
+        if (!criterionIds.has(id)) errors.push(`${evidenceFile}: visualReview criteria are missing ${id}.`);
+      }
+      if (visualReview.status === "passed" && visualReview.criteria.some((criterion) => !["passed", "not-applicable"].includes(criterion.status))) {
+        errors.push(`${evidenceFile}: a passed visualReview requires every visual criterion to pass or be documented as not-applicable.`);
+      }
+    }
+
+    if (["mapped", "verified", "production-observed"].includes(evidence.status)) {
+      if (!visualReview.profile) errors.push(`${evidenceFile}: ${evidence.status} status requires visualReview.profile.`);
+      if (!visualReview.workflow?.trim() || !visualReview.routes?.length) {
+        errors.push(`${evidenceFile}: ${evidence.status} status requires a named representative workflow and routes before implementation evidence can be mapped.`);
+      }
+
+      const representativeRoutes = config.scope?.routeProfiles?.filter((item) => item.representative) ?? [];
+      if (representativeRoutes.length === 1) {
+        const representative = representativeRoutes[0];
+        if (visualReview.profile && representative.profile !== visualReview.profile) {
+          errors.push(`${evidenceFile}: visualReview.profile must match the representative route profile ${representative.profile}.`);
+        }
+        if (Array.isArray(visualReview.routes) && !visualReview.routes.includes(representative.route)) {
+          errors.push(`${evidenceFile}: visualReview.routes must include the configured representative route ${representative.route}.`);
+        }
+      }
+    }
+  }
+
   if (!evidence.production || !["not-observed", "observed"].includes(evidence.production.status)) {
     errors.push(`${evidenceFile}: production requires not-observed or observed status.`);
   } else if (["evidence", "owner", "rollback"].some((field) => typeof evidence.production[field] !== "string")) {
@@ -127,6 +231,9 @@ function validateEvidence(evidence, config, evidenceFile) {
     if (!manual?.length || manual.some((check) => !["passed", "not-applicable"].includes(check.status))) {
       errors.push(`${evidenceFile}: ${evidence.status} status requires every manual check to pass or be documented as not-applicable.`);
     }
+    if (visualReview?.status !== "passed") {
+      errors.push(`${evidenceFile}: ${evidence.status} status requires the representative production workflow visualReview to pass.`);
+    }
   }
 
   if (evidence.status === "production-observed") {
@@ -151,7 +258,7 @@ if (!fs.existsSync(target) || !fs.statSync(target).isDirectory()) {
 }
 
 if (!fs.existsSync(configPath)) {
-  errors.push("kin.config.json does not exist. Run scripts/init-adoption.mjs <project> first.");
+  errors.push("kin.config.json does not exist. Run scripts/init-adoption.mjs <project> --profile <profile> first.");
 } else {
   let config;
   try {
@@ -188,6 +295,31 @@ if (!fs.existsSync(configPath)) {
     }
     if (!config.tokens?.source) errors.push("tokens.source is required.");
     else if (!fs.existsSync(path.join(target, config.tokens.source))) errors.push(`Token integration file is missing: ${config.tokens.source}`);
+    if (!config.scope) {
+      warnings.push("scope is not recorded; new adoption records should include a project-owned implementation brief and route/profile map.");
+    } else {
+      if (!new Set(["partial", "full"]).has(config.scope.mode)) errors.push("scope.mode must be partial or full.");
+      if (!config.scope.implementationBrief) errors.push("scope.implementationBrief is required when scope is configured.");
+      else if (!fs.existsSync(path.join(target, config.scope.implementationBrief))) errors.push(`Implementation brief is missing: ${config.scope.implementationBrief}`);
+      if (!Array.isArray(config.scope.routeProfiles)) errors.push("scope.routeProfiles must be an array.");
+      else {
+        const representative = config.scope.routeProfiles.filter((item) => item?.representative === true);
+        if (representative.length !== 1) errors.push("scope.routeProfiles must contain exactly one representative route family.");
+        for (const [index, item] of config.scope.routeProfiles.entries()) {
+          if (!item?.route || !profiles.has(item.profile) || !item.purpose || typeof item.representative !== "boolean") {
+            errors.push(`scope.routeProfiles[${index}] requires route, supported profile, purpose, and representative.`);
+          }
+        }
+      }
+      if (!Array.isArray(config.scope.exclusions)) errors.push("scope.exclusions must be an array.");
+      else {
+        for (const [index, item] of config.scope.exclusions.entries()) {
+          if (!item?.route || typeof item.reason !== "string" || item.reason.trim().length < 12) {
+            errors.push(`scope.exclusions[${index}] requires route and a specific reason.`);
+          }
+        }
+      }
+    }
     if (!Array.isArray(config.audit?.include)) errors.push("audit.include must be an array.");
     for (const [index, exception] of (config.audit?.exceptions ?? []).entries()) {
       if (!exception.rule || !exception.path || typeof exception.reason !== "string" || exception.reason.trim().length < 12) {
@@ -216,6 +348,32 @@ if (!fs.existsSync(configPath)) {
           }
         }
       }
+    }
+
+    if (config.scope?.implementationBrief && fs.existsSync(path.join(target, config.scope.implementationBrief))) {
+      const briefFile = config.scope.implementationBrief;
+      const brief = fs.readFileSync(path.join(target, briefFile), "utf8");
+      const briefStatus = brief.match(/^status:\s*(draft|ready|approved)\s*$/m)?.[1];
+      if (!briefStatus) errors.push(`${briefFile}: frontmatter must declare status as draft, ready, or approved.`);
+      for (const heading of requiredBriefHeadings) {
+        if (!new RegExp(`^## ${heading.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\s*$`, "m").test(brief)) {
+          errors.push(`${briefFile}: required section is missing: ${heading}.`);
+        }
+      }
+      if (["mapped", "verified", "production-observed"].includes(evidenceStatus)) {
+        if (briefStatus === "draft") errors.push(`${briefFile}: ${evidenceStatus} evidence cannot use a draft implementation brief.`);
+        if (/\bTODO\b/.test(brief)) errors.push(`${briefFile}: ${evidenceStatus} evidence cannot contain unresolved TODO placeholders.`);
+        const routeProfiles = config.scope.routeProfiles ?? [];
+        if (routeProfiles.some((item) => /\bTODO\b/.test(`${item.route} ${item.purpose}`))) {
+          errors.push(`kin.config.json: ${evidenceStatus} evidence cannot use TODO route/profile mappings.`);
+        }
+      }
+      if (["verified", "production-observed"].includes(evidenceStatus) && briefStatus !== "approved") {
+        errors.push(`${briefFile}: ${evidenceStatus} evidence requires an approved implementation brief.`);
+      }
+    }
+    if (["mapped", "verified", "production-observed"].includes(evidenceStatus) && !config.scope) {
+      errors.push(`kin.config.json: ${evidenceStatus} evidence requires scope, routeProfiles, and a project-owned implementation brief.`);
     }
   }
 }

@@ -5,12 +5,13 @@ These instructions apply to the entire repository.
 ## Required reading
 
 1. Read `DESIGN.md` completely.
-2. Read `DELIVERY.md` before changing Figma, runtime-package, adoption, generated-artifact or repository boundaries.
-3. Read `REFERENCES.md` before using external design claims or packages.
-4. Read `components/catalog.md` and `components/terminology.md` before adding, renaming or claiming completion of a component.
-5. Read only the relevant files in `principles/`, `patterns/`, `components/`, `integrations/` and `tools/`.
-6. Read `CONTRIBUTING.md` before changing normative rules.
-7. Read `principles/verification.md` before claiming accessibility, cross-browser, motion, zoom or RTL completion.
+2. Read `VISION.md` and `principles/visual-signature.md` before changing product direction, page composition, a complete workflow, showcase structure or visible KIN adoption requirements.
+3. Read `DELIVERY.md` and `adoption/implementation-brief.md` before changing adoption, Figma, runtime-package, generated-artifact or repository boundaries.
+4. Read `REFERENCES.md` before using external design claims or packages.
+5. Read `components/catalog.md` and `components/terminology.md` before adding, renaming or claiming completion of a component.
+6. Read only the relevant files in `principles/`, `patterns/`, `components/`, `integrations/` and `tools/`.
+7. Read `CONTRIBUTING.md` before changing normative rules.
+8. Read `principles/verification.md` before claiming accessibility, cross-browser, motion, zoom or RTL completion.
 
 ## Editing rules
 

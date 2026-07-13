@@ -2,21 +2,28 @@
 
 KIN is a design contract, not a package that should silently rewrite a product. Adoption starts by pinning a reviewed contract version, choosing the closest product profile, and recording local paths, delivery boundaries, evidence, owners, and exceptions. The core delivery decision is defined in [`DELIVERY.md`](../DELIVERY.md).
 
+Adoption is not complete when a project only maps Tokens, creates wrapper components, or builds a design lab. Page and workflow work MUST also follow the [`KIN visual signature`](../principles/visual-signature.md).
+
 ## Start
 
 From a KIN checkout:
 
 ```bash
-node scripts/init-adoption.mjs ../your-project
+node scripts/init-adoption.mjs ../your-project --profile intelligence-workspace
 ```
+
+`--profile` is required. There is no universal default. Choose `information-site`, `intelligence-workspace`, `ecommerce-operations`, or `engineering-canvas` from the product's real primary task.
 
 The command creates three files only when they do not already exist:
 
-- `kin.config.json` — machine-readable version, profile, paths, exceptions, and verification commands.
+- `kin.config.json` — machine-readable version, primary profile, route/profile scope, paths, exceptions, and verification commands.
 - `docs/kin-adoption.md` — the decisions a team must complete before implementation.
+- `docs/kin-implementation-brief.md` — the project-specific task, composition, state, responsive, and visual-evidence contract.
 - `docs/kin-evidence.json` — machine-readable mapping, automated/manual verification, ownership, exception, and production-observation evidence.
 
-It does not copy UI, install dependencies, change routes, or edit source code. Every generated evidence check begins as `not-run`; the initializer never fabricates a pass result. Use `--force` only after reviewing the existing files.
+It does not copy UI, install dependencies, change routes, or edit source code. Every generated evidence check begins as `not-run`; the implementation brief begins as `draft`; the initializer never fabricates a decision or pass result. Use `--force` only after reviewing the existing files.
+
+The implementation brief follows [`implementation-brief.md`](./implementation-brief.md). A consuming Agent MUST complete its product truth, route/profile map, representative workflow, composition contract, required states and interactions, prohibited substitutions, evidence, and rollback before changing the representative workflow.
 
 Copy the exact reviewed KIN release of `DESIGN.md` to the configured local contract path. Pinning a release avoids a consuming project changing behavior merely because KIN's `main` branch moved.
 
@@ -63,11 +70,26 @@ The evidence record follows the Schema in [`kin.evidence.schema.json`](./kin.evi
 | Stage | Required evidence |
 |---|---|
 | `initialized` | Version, profile, product revision placeholder, delivery mode, pending mappings, and named checks |
-| `mapped` | Reviewed local Token, component, and route relationships, named owners, scoped exceptions, and a review date |
-| `verified` | Reviewed mappings, passing automated commands, completed or justified manual checks, review date, and owners |
+| `mapped` | Reviewed local Token, component, and route relationships, one representative production workflow, named owners, scoped exceptions, and a review date |
+| `verified` | Reviewed mappings, passing automated commands, completed or justified manual checks, a passed visual-signature review with comparable artifacts, review date, and owners |
 | `production-observed` | Verified evidence plus dated production observation, evidence location, owner, and rollback |
 
 Checks that were not performed MUST remain `not-run`, `blocked`, or `not-applicable` with a reason. A successful build alone is not `verified`. Manual evidence follows [`principles/verification.md`](../principles/verification.md).
+
+### Representative workflow and visual review
+
+New evidence records include `visualReview`. Before moving to `verified`, the project MUST record:
+
+- one high-value production workflow, its routes, entry point, current object, and completion condition;
+- a baseline artifact and candidate artifact with realistic, comparable content, viewport, theme, and state;
+- the review environment, reviewer, date, findings, and unresolved issues;
+- a `passed` result only after the common and selected product-family visual signatures have been reviewed.
+
+The generated visual review contains explicit criteria for task priority, dominant region, continuous structure, density, semantic separation, theme integrity, motion continuity, responsive priority, and fabricated behavior. A review cannot pass while any required criterion remains `not-run` or `failed`.
+
+A component gallery, Storybook, design lab, static fixture, or isolated migrated header MUST NOT be used as the representative production workflow. A project MAY remain partially adopted, but it MUST name covered routes and exclusions instead of claiming whole-product adoption.
+
+Older evidence records without `visualReview` remain readable for migration. The checker warns while they are below `verified` and rejects a `verified` or `production-observed` claim until the visual review is recorded.
 
 ## Run the candidate audit
 
@@ -104,3 +126,9 @@ An exception needs a rule, path, and specific reason. The audit ignores incomple
 | `engineering-canvas` | editing geometry, layers, revisions, measurements, or simulations |
 
 Profiles supply task-specific defaults. They do not replace the consuming product's real content model or brand.
+
+### Hybrid products
+
+The top-level `profile` is the project's primary profile. `scope.routeProfiles` assigns the appropriate profile to each in-scope route family. This prevents a public information entry, an operational database, and an engineering editor from being forced into one layout merely because they share a product.
+
+Exactly one route family is marked `representative: true` during the first adoption phase. The checker rejects `mapped` evidence while the route map or implementation brief contains `TODO`, and rejects `verified` evidence until the brief is human-approved and the representative visual review passes.

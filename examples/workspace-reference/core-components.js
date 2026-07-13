@@ -1,6 +1,79 @@
+import {
+  Activity,
+  Bell,
+  Check,
+  ChevronDown,
+  CircleAlert,
+  CirclePause,
+  CirclePlay,
+  Copy,
+  createIcons,
+  Ellipsis,
+  Eye,
+  EyeOff,
+  ExternalLink,
+  History,
+  KeyRound,
+  Link,
+  ListFilter,
+  LoaderCircle,
+  LockKeyhole,
+  LogIn,
+  MousePointerClick,
+  PanelRightOpen,
+  PanelTop,
+  Pause,
+  Save,
+  ShieldCheck,
+  SlidersHorizontal,
+  TableProperties,
+  TextCursorInput,
+  X,
+} from "lucide";
+
 const media = matchMedia("(prefers-color-scheme: dark)");
 const themeButtons = [...document.querySelectorAll("[data-theme-value]")];
 const contrastButton = document.querySelector("[data-contrast-toggle]");
+let coreSonnerModulePromise;
+
+const iconSet = {
+  Activity,
+  Bell,
+  Check,
+  ChevronDown,
+  CircleAlert,
+  CirclePause,
+  CirclePlay,
+  Copy,
+  Ellipsis,
+  Eye,
+  EyeOff,
+  ExternalLink,
+  History,
+  KeyRound,
+  Link,
+  ListFilter,
+  LoaderCircle,
+  LockKeyhole,
+  LogIn,
+  MousePointerClick,
+  PanelRightOpen,
+  PanelTop,
+  Pause,
+  Save,
+  ShieldCheck,
+  SlidersHorizontal,
+  TableProperties,
+  TextCursorInput,
+  X,
+};
+
+function renderIcons() {
+  createIcons({
+    icons: iconSet,
+    attrs: { "aria-hidden": "true", "stroke-width": 1.5 },
+  });
+}
 
 function applyTheme(preference, persist = true) {
   const theme = preference === "system" ? (media.matches ? "dark" : "light") : preference;
@@ -9,6 +82,7 @@ function applyTheme(preference, persist = true) {
   document.querySelector('meta[name="theme-color"]').content = theme === "dark" ? "#08090a" : "#f6f7f8";
   for (const button of themeButtons) button.setAttribute("aria-pressed", String(button.dataset.themeValue === preference));
   if (persist) localStorage.setItem("kin-reference-theme", preference);
+  if (coreSonnerModulePromise) coreSonnerModulePromise.then((module) => module.updateToasterTheme(theme, "zh"));
 }
 
 function applyContrast(enabled, persist = true) {
@@ -286,16 +360,57 @@ for (const [index, tab] of tabs.entries()) {
 const menuTrigger = document.querySelector("[data-menu-trigger]");
 const sampleMenu = document.querySelector(".sample-menu");
 const menuItems = [...sampleMenu.querySelectorAll('[role="menuitem"]')];
+const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+const transientSurfaceCleanups = new WeakMap();
+
+function setTransientSurface(surface, open, { trigger, focusTarget, restoreFocus = false } = {}) {
+  const cleanup = transientSurfaceCleanups.get(surface);
+  if (cleanup) cleanup();
+
+  if (open) {
+    surface.hidden = false;
+    surface.inert = false;
+    surface.dataset.state = "opening";
+    trigger?.setAttribute("aria-expanded", "true");
+    requestAnimationFrame(() => {
+      if (surface.dataset.state !== "opening") return;
+      surface.dataset.state = "open";
+      focusTarget?.focus();
+    });
+    return;
+  }
+
+  trigger?.setAttribute("aria-expanded", "false");
+  surface.inert = true;
+  surface.dataset.state = "closing";
+  if (restoreFocus) trigger?.focus();
+
+  let timer;
+  const detach = () => {
+    window.clearTimeout(timer);
+    surface.removeEventListener("transitionend", onTransitionEnd);
+    transientSurfaceCleanups.delete(surface);
+  };
+  const finish = () => {
+    if (surface.dataset.state !== "closing") return;
+    detach();
+    surface.hidden = true;
+    surface.dataset.state = "closed";
+  };
+  const onTransitionEnd = (event) => {
+    if (event.target === surface && (event.propertyName === "opacity" || event.propertyName === "transform")) finish();
+  };
+  surface.addEventListener("transitionend", onTransitionEnd);
+  timer = window.setTimeout(finish, reducedMotion.matches ? 90 : 190);
+  transientSurfaceCleanups.set(surface, detach);
+}
+
 function closeMenu(restore = true) {
-  sampleMenu.hidden = true;
-  menuTrigger.setAttribute("aria-expanded", "false");
-  if (restore) menuTrigger.focus();
+  setTransientSurface(sampleMenu, false, { trigger: menuTrigger, restoreFocus: restore });
 }
 menuTrigger.addEventListener("click", () => {
-  const open = sampleMenu.hidden;
-  sampleMenu.hidden = !open;
-  menuTrigger.setAttribute("aria-expanded", String(open));
-  if (open) menuItems[0].focus();
+  const open = sampleMenu.hidden || sampleMenu.dataset.state === "closing";
+  setTransientSurface(sampleMenu, open, { trigger: menuTrigger, focusTarget: menuItems[0] });
 });
 sampleMenu.addEventListener("keydown", (event) => {
   const index = menuItems.indexOf(document.activeElement);
@@ -311,12 +426,9 @@ const contextTarget = document.querySelector("[data-context-target]");
 const contextMenu = document.querySelector(".context-menu");
 const contextItems = [...contextMenu.querySelectorAll('[role="menuitem"]')];
 function setContextMenu(open, restore = false) {
-  contextMenu.hidden = !open;
-  contextTarget.setAttribute("aria-expanded", String(open));
-  if (open) contextItems[0].focus();
-  else if (restore) contextTarget.focus();
+  setTransientSurface(contextMenu, open, { trigger: contextTarget, focusTarget: contextItems[0], restoreFocus: restore });
 }
-contextTarget.addEventListener("click", () => setContextMenu(contextMenu.hidden));
+contextTarget.addEventListener("click", () => setContextMenu(contextMenu.hidden || contextMenu.dataset.state === "closing"));
 contextTarget.addEventListener("contextmenu", (event) => { event.preventDefault(); setContextMenu(true); });
 contextTarget.addEventListener("keydown", (event) => {
   if ((event.shiftKey && event.key === "F10") || event.key === "ContextMenu") { event.preventDefault(); setContextMenu(true); }
@@ -377,6 +489,119 @@ for (const toggle of document.querySelectorAll("[data-truncation-toggle]")) {
   });
 }
 
+const authForm = document.querySelector("[data-auth-form]");
+const authPassword = authForm.querySelector("[data-auth-password]");
+const passwordToggle = authForm.querySelector("[data-password-toggle]");
+const authStatus = authForm.querySelector("[data-auth-status]");
+
+passwordToggle.addEventListener("click", () => {
+  const revealing = authPassword.type === "password";
+  authPassword.type = revealing ? "text" : "password";
+  passwordToggle.setAttribute("aria-pressed", String(revealing));
+  passwordToggle.setAttribute("aria-label", revealing ? "隐藏密码" : "显示密码");
+  passwordToggle.dataset.controlState = revealing ? "active" : "default";
+  authPassword.focus();
+});
+
+authForm.addEventListener("submit", (event) => {
+  event.preventDefault();
+  if (!authForm.checkValidity()) {
+    authForm.reportValidity();
+    return;
+  }
+  authStatus.textContent = "这是本地界面参考，未连接身份服务，也不会发送凭据。";
+  authStatus.focus();
+});
+
+const reauthDialog = document.querySelector("[data-reauth-dialog]");
+const reauthOpen = document.querySelector("[data-reauth-open]");
+const reauthCancel = reauthDialog.querySelector("[data-reauth-cancel]");
+const reauthForm = reauthDialog.querySelector("[data-reauth-form]");
+const reauthStatus = reauthDialog.querySelector("[data-reauth-status]");
+
+reauthOpen.addEventListener("click", () => {
+  reauthStatus.textContent = "";
+  reauthDialog.showModal();
+  reauthForm.elements.namedItem("reauth-password").focus();
+});
+reauthCancel.addEventListener("click", () => reauthDialog.close("cancel"));
+reauthForm.addEventListener("submit", (event) => {
+  event.preventDefault();
+  if (!reauthForm.checkValidity()) {
+    reauthForm.reportValidity();
+    return;
+  }
+  reauthStatus.textContent = "这是本地界面参考；连接真实身份服务后才能继续。";
+  reauthStatus.focus();
+});
+reauthDialog.addEventListener("close", () => reauthOpen.focus());
+
+async function getCoreSonner() {
+  coreSonnerModulePromise ??= import("../../site/assets/sonner-island.js");
+  return coreSonnerModulePromise;
+}
+
+const motionToggle = document.querySelector("[data-motion-toggle]");
+motionToggle.addEventListener("click", () => {
+  const active = motionToggle.getAttribute("aria-pressed") !== "true";
+  motionToggle.setAttribute("aria-pressed", String(active));
+  motionToggle.dataset.controlState = active ? "active" : "default";
+  motionToggle.querySelector("[data-action-label]").textContent = active ? "暂停监测" : "开始监测";
+});
+
+const motionSave = document.querySelector("[data-motion-save]");
+motionSave.addEventListener("click", () => {
+  if (motionSave.disabled) return;
+  const label = motionSave.querySelector("[data-action-label]");
+  motionSave.disabled = true;
+  motionSave.classList.add("is-pending");
+  motionSave.dataset.controlState = "pending";
+  label.textContent = "正在保存";
+  window.setTimeout(async () => {
+    motionSave.classList.remove("is-pending");
+    motionSave.classList.add("is-complete");
+    motionSave.dataset.controlState = "success";
+    label.textContent = "已保存";
+    const sonner = await getCoreSonner();
+    sonner.showKinToast({
+      title: "视图已保存",
+      description: "筛选条件和列顺序已更新。",
+      theme: document.documentElement.dataset.theme,
+      locale: "zh",
+      tone: "success",
+    });
+    window.setTimeout(() => {
+      motionSave.classList.remove("is-complete");
+      motionSave.disabled = false;
+      motionSave.dataset.controlState = "default";
+      label.textContent = "保存视图";
+    }, 1100);
+  }, 650);
+});
+
+document.querySelector("[data-motion-toast]").addEventListener("click", async () => {
+  const sonner = await getCoreSonner();
+  sonner.showKinTaskToast({
+    loadingTitle: "正在创建导出任务",
+    successTitle: "导出任务已创建",
+    description: "完成后可在下载中心查看。",
+    theme: document.documentElement.dataset.theme,
+    locale: "zh",
+    duration: 850,
+  });
+});
+
+const motionDisclosure = document.querySelector("[data-motion-disclosure]");
+const motionDetails = document.querySelector(`#${motionDisclosure.getAttribute("aria-controls")}`);
+motionDetails.inert = true;
+motionDisclosure.addEventListener("click", () => {
+  const open = motionDisclosure.getAttribute("aria-expanded") !== "true";
+  motionDisclosure.setAttribute("aria-expanded", String(open));
+  motionDetails.dataset.state = open ? "open" : "closed";
+  motionDetails.setAttribute("aria-hidden", String(!open));
+  motionDetails.inert = !open;
+});
+
 const dialog = document.querySelector(".core-dialog");
 const dialogOpen = document.querySelector("[data-dialog-open]");
 dialogOpen.addEventListener("click", () => {
@@ -390,21 +615,35 @@ const drawer = drawerLayer.querySelector(".core-drawer");
 const drawerOpen = document.querySelector("[data-drawer-open]");
 const drawerClose = drawer.querySelector("[data-drawer-close]");
 const drawerScrim = drawerLayer.querySelector("[data-drawer-scrim]");
+const referenceHeader = document.querySelector(".reference-header");
+const coreReference = document.querySelector("#core-reference");
+let drawerPhaseTimer;
 
-function closeDrawer() {
-  drawerLayer.hidden = true;
-  document.body.style.overflow = "";
-  drawerOpen.focus();
+function setDrawer(open, restoreFocus = true) {
+  window.clearTimeout(drawerPhaseTimer);
+  drawerLayer.dataset.state = open ? "open" : "closed";
+  drawerLayer.dataset.phase = open ? "opening" : "closing";
+  drawerLayer.setAttribute("aria-hidden", String(!open));
+  drawerLayer.inert = !open;
+  referenceHeader.inert = open;
+  coreReference.inert = open;
+  document.body.classList.toggle("drawer-modal-open", open);
+  drawerOpen.setAttribute("aria-expanded", String(open));
+  if (open) drawerClose.focus();
+  else if (restoreFocus) drawerOpen.focus();
+  drawerPhaseTimer = window.setTimeout(() => {
+    if (drawerLayer.dataset.state === (open ? "open" : "closed")) drawerLayer.dataset.phase = open ? "open" : "closed";
+  }, reducedMotion.matches ? 90 : 240);
 }
-drawerOpen.addEventListener("click", () => {
-  drawerLayer.hidden = false;
-  document.body.style.overflow = "hidden";
-  drawerClose.focus();
-});
-drawerClose.addEventListener("click", closeDrawer);
-drawerScrim.addEventListener("click", closeDrawer);
+drawerLayer.inert = true;
+drawerOpen.addEventListener("click", () => setDrawer(true));
+drawerClose.addEventListener("click", () => setDrawer(false));
+drawerScrim.addEventListener("click", () => setDrawer(false));
 drawer.addEventListener("keydown", (event) => {
-  if (event.key === "Escape") closeDrawer();
+  if (event.key === "Escape") {
+    event.preventDefault();
+    setDrawer(false);
+  }
   if (event.key !== "Tab") return;
   const focusable = [...drawer.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])')].filter((element) => !element.disabled);
   const first = focusable[0];
@@ -417,14 +656,12 @@ const popoverTrigger = document.querySelector("[data-popover-trigger]");
 const popover = document.querySelector(".sample-popover");
 const popoverClose = popover.querySelector("[data-popover-close]");
 function setPopover(open, restore = false) {
-  popover.hidden = !open;
-  popoverTrigger.setAttribute("aria-expanded", String(open));
-  if (open) popoverClose.focus();
-  else if (restore) popoverTrigger.focus();
+  setTransientSurface(popover, open, { trigger: popoverTrigger, focusTarget: popoverClose, restoreFocus: restore });
 }
-popoverTrigger.addEventListener("click", () => setPopover(popover.hidden));
+popoverTrigger.addEventListener("click", () => setPopover(popover.hidden || popover.dataset.state === "closing"));
 popoverClose.addEventListener("click", () => setPopover(false, true));
 popover.addEventListener("keydown", (event) => { if (event.key === "Escape") setPopover(false, true); });
 
 applyTheme(document.documentElement.dataset.themePreference || "system", false);
 applyContrast(document.documentElement.dataset.contrast === "more", false);
+renderIcons();

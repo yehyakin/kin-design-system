@@ -14,7 +14,7 @@ The machine-readable adoption values are `mode: contract-first`, `figma: variabl
 
 | Layer | Core repository delivers | Core repository does not claim |
 |---|---|---|
-| Product contract | `DESIGN.md`, principles, component contracts, product patterns, terminology, maturity catalog | One layout or visual treatment suitable for every product |
+| Product contract | `VISION.md`, `DESIGN.md`, the visual signature, principles, component contracts, product patterns, terminology, and maturity catalogs | One copied layout or visual treatment suitable for every product |
 | Tokens | Normative source values plus generated CSS, DTCG, Tailwind-compatible, and Figma Variables interoperability files | Automatic synchronization with an existing design library |
 | Reference interfaces | Framework-free deterministic examples and browser tests | Production-ready application components |
 | Agent support | KIN Skill, repository instructions, audit candidates, adoption checks, and evidence templates | Autonomous product redesign without project context or review |
@@ -39,6 +39,8 @@ Consuming projects MAY use:
 - documented adapters when the product has the corresponding need.
 
 They MUST record the exact reviewed contract revision, local contract checksum, local mappings, verification results, exceptions, and owners. The revision and checksum remain optional for compatibility with earlier 2.0 configuration files, but new adoption records SHOULD supply them. Contract checksums MUST use KIN's canonical UTF-8 text form: remove an optional BOM and normalize CRLF or CR line endings to LF while preserving all other content. The machine-readable adoption evidence format is defined in [`adoption/kin.evidence.schema.json`](./adoption/kin.evidence.schema.json).
+
+New adoptions MUST select the primary product profile explicitly and SHOULD record route-level profiles for hybrid products. They MUST complete the project-owned implementation brief defined in [`adoption/implementation-brief.md`](./adoption/implementation-brief.md) before moving evidence to `mapped`.
 
 ## Figma boundary
 
@@ -132,12 +134,14 @@ An adoption record uses four stages:
 | Stage | Meaning |
 |---|---|
 | `initialized` | A KIN version, profile, delivery mode, local paths, and owners are being identified |
-| `mapped` | Tokens, components, routes, exceptions, and product-specific decisions are mapped to local sources |
-| `verified` | Required automated and manual checks are recorded with no unresolved blocking result |
+| `mapped` | Tokens, components, route profiles, exceptions, a ready implementation brief, product-specific decisions, and one representative production workflow are mapped to local sources |
+| `verified` | The brief is human-approved and required automated/manual checks plus every visual-signature criterion for that workflow are recorded with no unresolved blocking result |
 | `production-observed` | The verified mapping has dated production evidence, an owner, and a rollback path |
 
 - A project MUST NOT move directly from `initialized` to `verified` without mapping evidence.
 - `verified` MUST NOT be inferred from a successful build alone.
+- `verified` MUST NOT be inferred from Token parity, a component gallery, a design lab, or screenshots of isolated controls. It requires a representative production workflow and comparable baseline/candidate visual evidence as defined in [`principles/visual-signature.md`](./principles/visual-signature.md).
+- A hybrid product MUST NOT apply one profile to unrelated route families merely to simplify implementation. The route/profile map records where each product pattern governs composition.
 - `production-observed` MUST name a product revision, observation date, evidence location, and owner.
 - Evidence MUST follow [`principles/verification.md`](./principles/verification.md).
 - A project MAY adopt only part of KIN, but the scope and exclusions MUST be explicit.
@@ -165,3 +169,5 @@ Examples and experiments MAY explore a future boundary, but they MUST be labeled
 - Production components remain owned by the consuming project.
 - Optional package or design-library work has separate ownership and release gates.
 - Adoption evidence records mappings, verification, exceptions, owners, and production observation without fabricated pass results.
+- New adoption records select a profile explicitly, map route families, and complete a project-owned implementation brief before `mapped`.
+- Verified adoption records a passed visual review for one named production workflow; partial route coverage remains explicit.

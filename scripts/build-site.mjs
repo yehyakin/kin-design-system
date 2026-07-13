@@ -41,7 +41,11 @@ await build({
 fs.rmSync(path.join(output, "assets", "sonner-island.js"), { force: true });
 
 await build({
-  entryPoints: [path.join(root, "examples", "workspace-reference", "reference.js")],
+  entryPoints: [
+    path.join(root, "examples", "workspace-reference", "reference.js"),
+    path.join(root, "examples", "workspace-reference", "core-components.js"),
+    path.join(root, "examples", "workspace-reference", "motion-reference.js"),
+  ],
   outdir: path.join(output, "examples", "workspace-reference"),
   bundle: true,
   splitting: true,
