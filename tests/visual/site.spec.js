@@ -6,6 +6,7 @@ test("showcase exposes the English contract and live foundations", async ({ page
   await expect(page.getByRole("heading", { level: 1 })).toContainText("Clear interfaces");
   await expect(page.getByRole("heading", { name: "Foundations" })).toBeVisible();
   await expect(page.getByRole("link", { name: /Delivery model/ })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Search and results" })).toHaveAttribute("href", "examples/page-patterns/search.html");
   await expect(page.locator('.language-menu a[hreflang="zh-CN"]')).toHaveAttribute("lang", "zh-CN");
   await expect(page.locator('svg.lucide')).not.toHaveCount(0);
   await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
@@ -26,6 +27,7 @@ test("showcase theme contrast and language preferences work", async ({ page }) =
   await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
   await expect(page.locator("html")).toHaveAttribute("data-contrast", "more");
   await expect(page.getByRole("heading", { level: 1 })).toContainText("清楚的界面");
+  await expect(page.getByRole("link", { name: "搜索与结果" })).toHaveAttribute("href", "../examples/page-patterns/search.html");
   await page.screenshot({ path: "test-results/playwright/site-light-zh.png", fullPage: true });
 });
 

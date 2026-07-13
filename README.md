@@ -14,7 +14,7 @@
 </p>
 
 <p align="center">
-  <a href="./DESIGN.md"><img src="https://img.shields.io/badge/Design_Contract-v2.1.1-5E6AD2" alt="KIN Design Contract v2.1.1" /></a>
+  <a href="./DESIGN.md"><img src="https://img.shields.io/badge/Design_Contract-v2.2.0-5E6AD2" alt="KIN Design Contract v2.2.0" /></a>
   <a href="https://github.com/yehyakin/kin-design-system/actions/workflows/validate-docs.yml"><img src="https://github.com/yehyakin/kin-design-system/actions/workflows/validate-docs.yml/badge.svg" alt="Documentation validation" /></a>
   <a href="./LICENSE"><img src="https://img.shields.io/badge/License-MIT-232326" alt="MIT License" /></a>
 </p>
@@ -83,6 +83,7 @@ Not every product needs a dense layout, a sidebar, an inspector, or a command me
 
 - Information hierarchy before decoration
 - Public content pages and focused reading widths
+- Access, resumable setup, settings, administration, and recovery flows
 - Application shells, sidebars, view controls, work areas, and inspectors
 - List, split, detail, board, timeline, canvas, and fullscreen views
 - Responsive behavior that changes priority instead of merely shrinking desktop UI
@@ -181,6 +182,12 @@ Information, ecommerce, intelligence, or canvas product work
   DESIGN.md
   matching file in patterns/
   components/core-states.md
+
+Authentication, onboarding, settings, recovery, or another complete page flow
+  DESIGN.md
+  pages/catalog.md
+  matching contract in pages/
+  matching reference in examples/page-patterns/
 
 Adopting KIN, migrating an existing contract, or recording evidence
   DESIGN.md
@@ -305,9 +312,11 @@ Each adopting project is responsible for checking the current version, license, 
 | [`scripts/audit-project.mjs`](./scripts/audit-project.mjs) | Read-only static candidate audit with human-review boundaries |
 | [`scripts/export-figma-variables.mjs`](./scripts/export-figma-variables.mjs) | Create-only Figma Variables REST payload generator |
 | [`components/core-states.md`](./components/core-states.md) | Normative component state and acceptance matrices |
+| [`components/workspace-structure.md`](./components/workspace-structure.md) | Location Bar, Toolbar, and Split View structure, input, responsive, and persistence contract |
 | [`components/terminology.md`](./components/terminology.md) | Canonical component names and distinctions between similar interface patterns |
 | [`components/catalog.md`](./components/catalog.md) | Component maturity, coverage, and Definition of Complete |
 | [`components/catalog.json`](./components/catalog.json) | Machine-readable component maturity and support registry |
+| [`components/authentication.md`](./components/authentication.md) | Authentication Shell, sign-in, recovery, verification challenge, and contextual reauthentication contract |
 | [`components/actions-and-selection.md`](./components/actions-and-selection.md) | Button, Link, Checkbox, Radio, Switch, Toggle, and Segmented Control contract |
 | [`components/forms-and-entry.md`](./components/forms-and-entry.md) | Input, Textarea, Search, Select, Combobox, File Upload, validation, and submission contract |
 | [`components/navigation-and-disclosure.md`](./components/navigation-and-disclosure.md) | Tabs, Breadcrumbs, menus, Tooltip, Accordion, and Pagination contract |
@@ -325,6 +334,9 @@ Each adopting project is responsible for checking the current version, license, 
 | [`examples/workspace-reference/advanced-components.html`](./examples/workspace-reference/advanced-components.html) | Deterministic local reference for AI, review, durable tasks, media, and accessible charts |
 | [`patterns/`](./patterns/) | Product contracts for information, intelligence, ecommerce, and engineering interfaces |
 | [`examples/product-patterns/`](./examples/product-patterns/) | Distinct reference pages for information, ecommerce, and engineering products |
+| [`pages/catalog.md`](./pages/catalog.md) | Page-family maturity, evidence boundaries, known gaps, and the page-level Definition of Complete |
+| [`pages/catalog.json`](./pages/catalog.json) | Machine-readable page-family maturity and support registry |
+| [`examples/page-patterns/`](./examples/page-patterns/) | Bilingual references for access, onboarding, settings, system recovery, search/results, and help/support flows |
 | [`AGENTS.md`](./AGENTS.md) | Instructions for coding tools working in this repository |
 | [`REFERENCES.md`](./REFERENCES.md) | Source hierarchy, attribution, and third-party adoption |
 | [`principles/`](./principles/) | Interaction, visual review, hierarchy, density, and composition |
@@ -334,6 +346,7 @@ Each adopting project is responsible for checking the current version, license, 
 | [`CONTRIBUTING.md`](./CONTRIBUTING.md) | Contribution and versioning rules |
 | [`scripts/validate-design.mjs`](./scripts/validate-design.mjs) | Token, reference, theme-parity, and contrast checks |
 | [`scripts/validate-components.mjs`](./scripts/validate-components.mjs) | Component terminology, maturity, path, and support-coverage checks |
+| [`scripts/validate-pages.mjs`](./scripts/validate-pages.mjs) | Page-family maturity, evidence-path, gap, and support-coverage checks |
 | [`scripts/report-token-changes.mjs`](./scripts/report-token-changes.mjs) | Machine-readable Token changes against a Git reference |
 | [`tests/visual/`](./tests/visual/) | Chromium regression, normal-motion, cross-browser smoke, responsive, focus, RTL, reflow-proxy, and Forced Colors checks |
 | [`ROADMAP.md`](./ROADMAP.md) | Planned examples, patterns, exports, and tooling |
@@ -349,7 +362,7 @@ Translations are maintained as complete documents. A language should not be adde
 
 ## Status and roadmap
 
-Version 2.0 adds design-tool interoperability, a review-first static audit, and a versioned adoption contract. It keeps the 1.4 product profiles and reference interfaces while making project integration more explicit and testable.
+The 2.2 release completes the non-conditional component baseline while preserving design-tool interoperability, adoption evidence, and verification boundaries. KIN remains contract-first: reference interfaces are executable evidence, while production components remain owned by each consuming project.
 
 Planned work now depends on evidence from real adoptions rather than adding more universal rules. See [`ROADMAP.md`](./ROADMAP.md) for the current plan and non-goals.
 
@@ -363,6 +376,7 @@ Before opening a pull request:
 node scripts/validate-docs.mjs
 node scripts/validate-design.mjs
 node scripts/validate-components.mjs
+node scripts/validate-pages.mjs
 node scripts/export-tokens.mjs --check
 node scripts/export-figma-variables.mjs --check
 npm run test:tooling

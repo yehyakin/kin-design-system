@@ -4,7 +4,9 @@ This reference page exercises KIN's app shell, navigation, data rows, activity f
 
 It is a visual regression fixture, not a component package or a required product layout.
 
-`states.html` covers shared state relationships. `core-components.html` is the runnable acceptance reference for actions and selection, forms and entry, navigation and disclosure, data display, feedback and progress, and overlays.
+`states.html` covers shared state relationships. `core-components.html` is the runnable acceptance reference for actions and selection, forms and entry, navigation and disclosure, data display, feedback and progress, and overlays. It includes a deterministic local File Upload lifecycle and full-value Truncation access without claiming a production storage pipeline.
+
+The main workspace page also demonstrates Location Bar action priority and overflow. The engineering canvas product pattern carries the Toolbar and Split View reference used by the workspace-structure contract.
 
 `advanced-components.html` is a deterministic local interaction fixture for AI Composer, streaming stop/retry, evidence, suggested changes, execution scope, media review, background tasks, and accessible charts. It does not contact a model or remote service.
 

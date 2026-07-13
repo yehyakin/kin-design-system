@@ -15,17 +15,35 @@
     <main class="canvas-shell">
       <header class="canvas-topbar">
         <div class="canvas-title"><strong>Bracket Assembly</strong><span>Revision 18 · 已保存</span></div>
-        <div class="canvas-actions"><button type="button">撤销</button><button type="button">重做</button><button type="button">导出</button><button type="button" class="mobile-only" data-canvas-properties-open aria-controls="canvas-properties" aria-expanded="false">属性</button><div class="pattern-theme-actions"><div class="theme-control" role="group" aria-label="界面主题"><button type="button" data-theme-value="light">日间</button><button type="button" data-theme-value="dark">夜间</button><button type="button" data-theme-value="system">系统</button></div><button type="button" data-contrast-toggle aria-pressed="false">高对比</button></div></div>
+        <div class="canvas-actions">
+          <div class="canvas-toolbar" role="toolbar" aria-label="编辑操作" data-canvas-toolbar>
+            <button type="button" data-toolbar-item data-toolbar-action="undo">撤销</button>
+            <button type="button" data-toolbar-item data-toolbar-action="redo" tabindex="-1">重做</button>
+            <button type="button" class="mobile-only" data-toolbar-item data-canvas-layers-open aria-controls="canvas-layers" aria-expanded="false" tabindex="-1">对象</button>
+            <button type="button" class="compact-inspector-trigger" data-toolbar-item data-canvas-properties-open aria-controls="canvas-properties" aria-expanded="false" tabindex="-1">属性</button>
+            <div class="toolbar-overflow" data-toolbar-overflow>
+              <button type="button" data-toolbar-item data-toolbar-overflow-trigger aria-haspopup="menu" aria-expanded="false" tabindex="-1">更多</button>
+              <div class="toolbar-menu" data-toolbar-menu role="menu" hidden>
+                <button type="button" role="menuitem" data-toolbar-action="export">导出</button>
+                <button type="button" role="menuitem" data-toolbar-action="settings">文档设置</button>
+              </div>
+            </div>
+          </div>
+          <span class="visually-hidden" role="status" aria-live="polite" data-toolbar-status></span>
+          <div class="pattern-theme-actions"><div class="theme-control" role="group" aria-label="界面主题"><button type="button" data-theme-value="light">日间</button><button type="button" data-theme-value="dark">夜间</button><button type="button" data-theme-value="system">系统</button></div><button type="button" data-contrast-toggle aria-pressed="false">高对比</button></div>
+        </div>
       </header>
 
       <nav class="tool-rail" aria-label="绘图工具">
         <button type="button" data-tool aria-label="选择" aria-pressed="true">S</button><button type="button" data-tool aria-label="直线" aria-pressed="false">L</button><button type="button" data-tool aria-label="矩形" aria-pressed="false">R</button><button type="button" data-tool aria-label="尺寸" aria-pressed="false">D</button><button type="button" data-tool aria-label="约束" aria-pressed="false">C</button>
       </nav>
 
-      <aside class="layer-panel" aria-label="图层和对象">
-        <header class="panel-heading"><strong>对象</strong><span>6</span></header>
+      <aside id="canvas-layers" class="layer-panel" aria-label="图层和对象">
+        <header class="panel-heading"><strong>对象</strong><span>6</span><button type="button" class="mobile-layer-close" data-canvas-layers-close aria-label="关闭对象面板">关闭</button></header>
         <div class="layer-tree"><button type="button" data-object aria-pressed="false">Assembly <small>可见</small></button><div class="nested"><button type="button" data-object aria-pressed="true">Bracket-01 <small>已选</small></button><button type="button" data-object aria-pressed="false">Plate-02 <small>可见</small></button><button type="button" data-object aria-pressed="false">Bolt × 4 <small>锁定</small></button></div><button type="button" data-object aria-pressed="false">Construction <small>隐藏</small></button></div>
       </aside>
+
+      <div class="split-separator" role="separator" aria-label="调整对象面板宽度" aria-orientation="vertical" aria-valuemin="160" aria-valuemax="320" aria-valuenow="210" tabindex="0" data-split-resizer></div>
 
       <section class="drawing-area" aria-label="工程图画布">
         <span class="canvas-mode">选择 · 正交视图</span>

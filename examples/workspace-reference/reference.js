@@ -5,9 +5,11 @@ import {
   Contrast,
   createIcons,
   Database,
+  Ellipsis,
   ExternalLink,
   Languages,
   LayoutDashboard,
+  Link,
   LoaderCircle,
   Moon,
   PanelRight,
@@ -31,6 +33,12 @@ const inspector = document.querySelector(".inspector");
 const inspectorOpen = document.querySelector("[data-inspector-open]");
 const inspectorClose = document.querySelector("[data-inspector-close]");
 const contrastToggle = document.querySelector("[data-contrast-toggle]");
+const locationOverflow = document.querySelector("[data-location-overflow]");
+const locationOverflowTrigger = document.querySelector("[data-location-overflow-trigger]");
+const locationOverflowMenu = document.querySelector("[data-location-overflow-menu]");
+const locationOverflowItems = [...locationOverflowMenu.querySelectorAll('[role^="menuitem"]')];
+const copyLocation = document.querySelector("[data-copy-location]");
+const locationStatus = document.querySelector("[data-location-status]");
 const languageControl = document.querySelector("[data-language-control]");
 const languageTrigger = document.querySelector("[data-language-trigger]");
 const languageMenu = document.querySelector("[data-language-menu]");
@@ -44,7 +52,8 @@ const copy = {
     database: "对象数据库", signals: "风险信号", monitoring: "监测任务", savedViews: "保存视图",
     stable: "近期稳定", changed: "最近变化", review: "等待复核", workspaceSettings: "工作区设置",
     admin: "管理员", breadcrumb: "面包屑", search: "搜索", properties: "属性", language: "切换语言",
-    contrast: "切换高对比度", entityViews: "对象视图", summaryTab: "概览", activityTab: "事件",
+    contrast: "切换高对比度", moreActions: "更多操作", copyLink: "复制对象链接", copiedLink: "对象链接已复制", copyLinkFailed: "无法复制对象链接",
+    entityViews: "对象视图", summaryTab: "概览", activityTab: "事件",
     sourcesTab: "来源", relationsTab: "关联", description: "持续记录入口、公开频道、运行状态和可验证事件。",
     follow: "加入关注", runScan: "运行检测", metrics: "关键指标", currentStatus: "当前状态",
     healthy: "正常", operatingRecord: "运营记录", operatingValue: "6 年 3 个月", completeness: "数据完整度",
@@ -78,7 +87,8 @@ const copy = {
     database: "Entity database", signals: "Risk signals", monitoring: "Monitoring", savedViews: "Saved views",
     stable: "Recently stable", changed: "Recent changes", review: "Pending review", workspaceSettings: "Workspace settings",
     admin: "Administrator", breadcrumb: "Breadcrumb", search: "Search", properties: "Properties", language: "Change language",
-    contrast: "Toggle high contrast", entityViews: "Entity views", summaryTab: "Summary", activityTab: "Activity",
+    contrast: "Toggle high contrast", moreActions: "More actions", copyLink: "Copy entity link", copiedLink: "Entity link copied", copyLinkFailed: "Unable to copy entity link",
+    entityViews: "Entity views", summaryTab: "Summary", activityTab: "Activity",
     sourcesTab: "Sources", relationsTab: "Relations", description: "Tracks public endpoints, channels, operating status, and verifiable events.",
     follow: "Follow", runScan: "Run scan", metrics: "Key metrics", currentStatus: "Current status",
     healthy: "Healthy", operatingRecord: "Operating record", operatingValue: "6 years 3 months", completeness: "Data completeness",
@@ -162,11 +172,50 @@ media.addEventListener("change", () => {
 
 function applyContrast(enabled, persist = true) {
   root.dataset.contrast = enabled ? "more" : "normal";
-  contrastToggle.setAttribute("aria-pressed", String(enabled));
+  contrastToggle.setAttribute("aria-checked", String(enabled));
   if (persist) localStorage.setItem("kin-reference-contrast", enabled ? "more" : "normal");
 }
 
-contrastToggle.addEventListener("click", () => applyContrast(root.dataset.contrast !== "more"));
+function setLocationOverflow(open, moveFocus = true) {
+  locationOverflowMenu.hidden = !open;
+  locationOverflowTrigger.setAttribute("aria-expanded", String(open));
+  if (!moveFocus) return;
+  if (open) locationOverflowItems[0].focus();
+  else locationOverflowTrigger.focus();
+}
+
+locationOverflowTrigger.addEventListener("click", () => setLocationOverflow(locationOverflowMenu.hidden));
+locationOverflowMenu.addEventListener("keydown", (event) => {
+  const index = locationOverflowItems.indexOf(document.activeElement);
+  if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+    event.preventDefault();
+    locationOverflowItems[(index + (event.key === "ArrowDown" ? 1 : -1) + locationOverflowItems.length) % locationOverflowItems.length].focus();
+  }
+  if (event.key === "Home" || event.key === "End") {
+    event.preventDefault();
+    locationOverflowItems[event.key === "Home" ? 0 : locationOverflowItems.length - 1].focus();
+  }
+  if (event.key === "Escape") {
+    event.preventDefault();
+    event.stopPropagation();
+    setLocationOverflow(false);
+  }
+});
+
+contrastToggle.addEventListener("click", () => {
+  applyContrast(root.dataset.contrast !== "more");
+  setLocationOverflow(false);
+});
+
+copyLocation.addEventListener("click", async () => {
+  try {
+    await navigator.clipboard.writeText(location.href);
+    locationStatus.textContent = copy[currentLocale()].copiedLink;
+  } catch {
+    locationStatus.textContent = copy[currentLocale()].copyLinkFailed;
+  }
+  setLocationOverflow(false);
+});
 
 function setLanguageMenu(open, moveFocus = true) {
   languageMenu.hidden = !open;
@@ -185,6 +234,7 @@ for (const button of localeButtons) {
 }
 document.addEventListener("click", (event) => {
   if (!languageMenu.hidden && !languageControl.contains(event.target)) setLanguageMenu(false, false);
+  if (!locationOverflowMenu.hidden && !locationOverflow.contains(event.target)) setLocationOverflow(false, false);
 });
 
 addEventListener("storage", (event) => {
@@ -210,6 +260,8 @@ inspectorClose.addEventListener("click", () => setInspector(false));
 document.addEventListener("keydown", (event) => {
   if (event.key === "Escape" && !languageMenu.hidden) {
     setLanguageMenu(false);
+  } else if (event.key === "Escape" && !locationOverflowMenu.hidden) {
+    setLocationOverflow(false);
   } else if (event.key === "Escape" && !inspector.hidden) {
     setInspector(false);
   }
@@ -299,9 +351,11 @@ createIcons({
     CirclePlay,
     Contrast,
     Database,
+    Ellipsis,
     ExternalLink,
     Languages,
     LayoutDashboard,
+    Link,
     LoaderCircle,
     Moon,
     PanelRight,

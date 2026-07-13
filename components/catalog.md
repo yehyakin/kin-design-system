@@ -46,15 +46,16 @@ Verification evidence MUST follow [`principles/verification.md`](../principles/v
 
 ## Current stable components
 
-The catalog currently contains 55 stable components. The machine-readable registry remains the source of truth for each component's exact paths and support fields.
+The catalog currently contains 64 stable components. The machine-readable registry remains the source of truth for each component's exact paths and support fields.
 
 | Contract group | Stable components | Primary reference |
 |---|---|---|
-| Workspace foundation | App Shell, Sidebar, Inspector, Data Row, Activity Feed, Metric Strip | Workspace and product-pattern references |
+| Workspace foundation | App Shell, Sidebar, Inspector, Location Bar, Toolbar, Split View, Data Row, Activity Feed, Metric Strip | [`workspace-structure.md`](./workspace-structure.md), workspace reference, and product-pattern references |
 | Actions and selection | Button, Icon Button, Link, Checkbox, Radio Group, Switch, Segmented Control | [`actions-and-selection.md`](./actions-and-selection.md) and the core component reference |
-| Forms and entry | Text Input, Textarea, Form Field, Search Field, Select, Combobox | [`forms-and-entry.md`](./forms-and-entry.md) and the core component reference |
+| Forms and entry | Text Input, Textarea, Form Field, Search Field, Select, Combobox, File Upload | [`forms-and-entry.md`](./forms-and-entry.md) and the core component reference |
+| Authentication and access | Authentication Shell, Sign-in Form, Account Recovery Form, Session Re-authentication Dialog | [`authentication.md`](./authentication.md) and the access reference |
 | Navigation and disclosure | Tabs, Breadcrumbs, Dropdown Menu, Context Menu, Overflow Menu, Tooltip, Accordion, Pagination | [`navigation-and-disclosure.md`](./navigation-and-disclosure.md) and the core component reference |
-| Data display | Data Table, Property List, Status Indicator, Empty State, Skeleton, Tree View, Avatar | [`data-display.md`](./data-display.md) and the core component reference |
+| Data display | Data Table, Property List, Status Indicator, Empty State, Skeleton, Tree View, Avatar, Truncation | [`data-display.md`](./data-display.md) and the core component reference |
 | Feedback and progress | Inline Alert, Banner, Toast, Progress Indicator, Meter, Spinner | [`feedback-and-progress.md`](./feedback-and-progress.md), Sonner reference, and core component reference |
 | Overlays | Dialog, Drawer, Popover | [`overlays.md`](./overlays.md) and the core component reference |
 | AI assistance | AI Composer, Streaming Response, Evidence List | [`ai-assistance.md`](./ai-assistance.md) and the advanced component reference |
@@ -64,19 +65,21 @@ The catalog currently contains 55 stable components. The machine-readable regist
 
 ## Candidate components
 
-These components are useful but have named gaps before they can become stable:
+The remaining candidates are conditional integrations with named adoption gaps:
 
-- Location Bar and Toolbar;
-- File Upload with a real validating, uploading, cancellation, failure, and retry lifecycle;
-- conditional Drag and Drop, OTP, Live Chart, and Number Transition integrations.
+- Drag and Drop;
+- OTP;
+- Live Chart;
+- Number Transition;
+- Verification Challenge.
 
 See [`catalog.json`](./catalog.json) for exact contract, reference, test, and gap fields.
 
 ## Draft gaps
 
-Priority draft components include:
+Draft components are conditional patterns that still require product evidence:
 
-- Hover Card, Split View, and Truncation;
+- Hover Card;
 - Token Field and Combo Button;
 - Slider, Stepper, and Color Well.
 
@@ -96,6 +99,8 @@ The following remain conditional rather than becoming universal KIN requirements
 - brand reveal.
 
 Conditional components require an adoption decision in the consuming product.
+
+The central File Upload reference is deliberately a deterministic local fixture. It verifies the KIN state and interaction contract without claiming network transfer. A consuming product MUST verify its real storage, cancellation, cleanup, retry, authorization, and privacy lifecycle before marking its own adoption evidence as `verified`.
 
 ## Updating the catalog
 

@@ -115,11 +115,26 @@
               <button type="button" role="option" data-combo-option>陈默</button>
             </div>
           </label>
-          <label class="core-field file-field">
-            <span>补充证据</span>
-            <input type="file" name="evidence" accept=".pdf,.png,.jpg" />
-            <small>PDF、PNG 或 JPG，单个文件不超过 10 MB。</small>
-          </label>
+          <div class="core-field file-upload-sample" data-file-upload role="group" aria-labelledby="evidence-upload-label" aria-describedby="evidence-upload-help evidence-upload-fixture">
+            <span id="evidence-upload-label">补充证据</span>
+            <small id="evidence-upload-help">PDF、PNG 或 JPG，单个文件不超过 10 MB。文件会先验证，再进入上传流程。</small>
+            <small id="evidence-upload-fixture" class="fixture-note">本地交互 fixture：不会连接服务器，也不会把模拟完成描述成真实上传。</small>
+            <input class="visually-hidden" id="evidence-upload" type="file" name="evidence" accept=".pdf,.png,.jpg,.jpeg,application/pdf,image/png,image/jpeg" aria-label="补充证据文件" data-file-input />
+            <div class="file-dropzone" data-file-dropzone>
+              <p>将一个文件拖放到这里，或使用文件选择器。</p>
+              <button type="button" data-file-browse>选择文件</button>
+            </div>
+            <div class="file-upload-status" data-file-status data-state="empty" aria-busy="false">
+              <div class="file-upload-summary"><strong data-file-name>尚未选择文件</strong><span data-file-state>等待选择</span></div>
+              <progress max="100" value="0" data-file-progress hidden aria-label="模拟上传进度">0%</progress>
+              <p data-file-message role="status" aria-live="polite">选择前可查看类型、大小和隐私约束。</p>
+              <div class="file-upload-actions">
+                <button type="button" data-file-cancel hidden>取消</button>
+                <button type="button" data-file-retry hidden>重试</button>
+                <button type="button" data-file-remove hidden>移除</button>
+              </div>
+            </div>
+          </div>
           <div class="form-actions core-form-actions"><p class="form-result" role="status" data-form-result></p><button type="submit" class="primary-action">保存规则</button></div>
         </form>
       </section>
@@ -159,6 +174,27 @@
           <div class="data-side-samples"><dl class="property-sample"><div><dt>规则 ID</dt><dd class="mono">RULE-024</dd></div><div><dt>负责人</dt><dd><span class="avatar-sample" aria-hidden="true">林</span> 林晨</dd></div><div><dt>标签</dt><dd><span class="tag-sample">价格</span><span class="tag-sample">人工复核</span></dd></div><div><dt>数据完整度</dt><dd>86 / 100</dd></div><div><dt>来源</dt><dd>3 个已验证来源</dd></div></dl><div class="tree-sample" role="tree" aria-label="规则分组"><div role="treeitem" aria-expanded="true" aria-selected="true" tabindex="0">价格规则<div role="group"><div role="treeitem" tabindex="-1">异常变化</div><div role="treeitem" tabindex="-1">渠道折扣</div></div></div><div role="treeitem" tabindex="-1">库存规则</div></div></div>
         </div>
         <div class="skeleton-sample" aria-label="正在载入下一批审核记录" aria-busy="true"><span></span><span></span><span></span></div>
+        <div class="truncation-grid" aria-labelledby="truncation-title">
+          <div class="truncation-heading"><strong id="truncation-title">截断与完整值</strong><span>End · Middle · Line clamp · RTL</span></div>
+          <div class="truncation-sample">
+            <span>域名</span>
+            <span class="truncate-end" data-truncation-preview aria-label="monitoring-primary-endpoint.alpha-network.example.com">monitoring-primary-endpoint.alpha-network.example.com</span>
+            <p id="full-domain" class="truncation-full" hidden>monitoring-primary-endpoint.alpha-network.example.com</p>
+            <button type="button" data-truncation-toggle aria-expanded="false" aria-controls="full-domain">显示完整值</button>
+          </div>
+          <div class="truncation-sample" dir="rtl">
+            <span>معرّف المصدر</span>
+            <bdi dir="ltr" class="truncate-middle" data-truncation-preview aria-label="PRX-1027-4f2ab8c1397e8d91.json">PRX-1027-4f2a…8d91.json</bdi>
+            <p id="full-source-id" class="truncation-full" dir="ltr" hidden>PRX-1027-4f2ab8c1397e8d91.json</p>
+            <button type="button" data-truncation-toggle aria-expanded="false" aria-controls="full-source-id">显示完整值</button>
+          </div>
+          <div class="truncation-sample truncation-prose">
+            <span>事件摘要</span>
+            <p class="truncate-clamp" data-truncation-preview aria-label="证书续期后签发机构保持不变，解析记录与监测入口均未发生变化；当前证据不足以调整对象风险等级。">证书续期后签发机构保持不变，解析记录与监测入口均未发生变化；当前证据不足以调整对象风险等级。</p>
+            <p id="full-event-summary" class="truncation-full" hidden>证书续期后签发机构保持不变，解析记录与监测入口均未发生变化；当前证据不足以调整对象风险等级。</p>
+            <button type="button" data-truncation-toggle aria-expanded="false" aria-controls="full-event-summary">显示完整值</button>
+          </div>
+        </div>
       </section>
 
       <section id="feedback" aria-labelledby="feedback-core-title">

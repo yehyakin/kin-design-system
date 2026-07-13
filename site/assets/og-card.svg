@@ -9,5 +9,5 @@
   <text x="112" y="365" fill="#c9cbd1" font-family="Inter,Arial,sans-serif" font-size="28">Clear interfaces for work that needs attention.</text>
   <line x1="112" y1="430" x2="1088" y2="430" stroke="#2a2c30"/>
   <text x="112" y="486" fill="#8b8f98" font-family="Inter,Arial,sans-serif" font-size="22">Light · Dark · Accessible · Evidence-aware · Human-controlled</text>
-  <text x="1008" y="518" fill="#8b8f98" font-family="ui-monospace,monospace" font-size="18">2.1.1</text>
+  <text x="1008" y="518" fill="#8b8f98" font-family="ui-monospace,monospace" font-size="18">2.2.0</text>
 </svg>

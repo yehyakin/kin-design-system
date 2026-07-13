@@ -51,7 +51,8 @@ The Figma exporter deliberately does not manage credentials or update existing l
 
 ## Next
 
-- Test the 55 stable components, including AI review, durable work, and accessible analysis contracts, against consuming projects before expanding optional variants.
+- Test the 64 stable components, including authentication and access, workspace structure, file transfer states, full-value access, AI review, durable work, and accessible analysis contracts, against consuming projects before expanding optional variants.
+- Test the stable access, onboarding, settings, recovery, Search and Results, and Help and Support page contracts in consuming products; build the remaining P1 references for Workspace Home, transfer, notifications/audit, and organization permissions only after product evidence confirms their shared boundaries.
 - Gather adoption evidence from real consuming projects before expanding scanner rules.
 - Add ID-aware Figma library synchronization only if an eligible team can test update and rollback behavior.
 - Evaluate cross-platform screenshot baselines after font and renderer variance is measured.

@@ -6,6 +6,26 @@ The project follows semantic versioning for normative design documentation.
 
 ## Unreleased
 
+### Page contracts and reference flows
+
+- Added a machine-readable page-family catalog with stable, candidate, draft, and deprecated maturity states plus a page-level Definition of Complete.
+- Added normative contracts for authentication and access, resumable onboarding, settings and administration, and system recovery; documented search, workspace home, import, notifications, organization, and billing as explicit candidate or conditional page families rather than implying completion.
+- Added Authentication Shell, Sign-in Form, Account Recovery Form, and Session Re-authentication Dialog to the stable component catalog while keeping Verification Challenge conditional and candidate until a real verification flow can support a runnable reference.
+- Added bilingual, theme-aware reference pages for sign-in and account recovery, in-page reauthentication, resumable setup, settings and session management, and 401/403/404/offline/429/5xx recovery states.
+- Added a page-catalog validator, CI coverage, and Playwright checks for keyboard focus, URL state, persistence, mobile touch targets, localization, theme changes, and contextual recovery.
+- Added and promoted a bilingual Help and Support page contract and deterministic reference after a supplemental fintech-template review; covered help search and no results, local-only request validation, ticket history, status-source boundaries, themes, responsive behavior, and cross-browser smoke checks without adopting the template's styling or mock behavior.
+- Completed and promoted the Search and Results page contract with a bilingual deterministic reference for shareable query, filter, sort and selected-result state; partial, stale, empty and service-error boundaries; keyboard traversal; responsive filters; browser history; and product-owned ranking, authorization and privacy checks.
+- Strengthened Workspace Home personalization, actionable notification, and simulated/live-data boundaries.
+
+## 2.2.0 — 2026-07-13
+
+### Contract and component maturity
+
+- Added a normative workspace-structure contract for Location Bar action priority, Toolbar grouping and keyboard behavior, and Split View resizing, persistence, and mobile fallback.
+- Completed the File Upload contract and deterministic local fixture across validation, simulated transfer, cancellation, failure, retry, and completion while keeping real backend verification in the consuming product.
+- Completed the Truncation contract and reference for end, middle, line-clamp, full-value access, localization, and mixed-direction content.
+- Promoted Location Bar, Toolbar, File Upload, Split View, and Truncation to stable, bringing the catalog to 60 stable components while leaving optional package integrations conditional.
+
 ## 2.1.1 — 2026-07-13
 
 ### Fixed

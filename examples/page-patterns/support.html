@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light" data-theme-preference="system">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f6f7f8" />
+    <title>KIN Help and Support Reference</title>
+    <script>
+      (() => {
+        const preference = localStorage.getItem("kin-reference-theme") || "system";
+        const resolved = preference === "system" ? (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light") : preference;
+        document.documentElement.dataset.theme = resolved;
+        document.documentElement.dataset.themePreference = preference;
+      })();
+    </script>
+    <link rel="stylesheet" href="../product-patterns/patterns.css" />
+    <link rel="stylesheet" href="./page-patterns.css" />
+    <script type="module" src="./reference.js"></script>
+  </head>
+  <body class="flow-page" data-page="support">
+    <header class="flow-header">
+      <a class="flow-brand" href="../../"><strong>KIN</strong><span data-i18n="common.reference">页面流程参考</span></a>
+      <div class="flow-preferences">
+        <div class="language-control">
+          <button class="icon-control" type="button" data-language-trigger aria-expanded="false" aria-controls="language-menu" data-i18n-aria="common.language"><i data-lucide="languages" aria-hidden="true"></i></button>
+          <div class="language-menu" id="language-menu" data-language-menu role="menu" hidden><button type="button" role="menuitemradio" aria-checked="true" data-language-option="zh-CN">中文</button><button type="button" role="menuitemradio" aria-checked="false" data-language-option="en">English</button></div>
+        </div>
+        <button class="icon-control theme-switch" type="button" role="switch" aria-checked="false" data-theme-switch data-i18n-aria="common.themeDark"><i class="theme-sun" data-lucide="sun" aria-hidden="true"></i><i class="theme-moon" data-lucide="moon" aria-hidden="true"></i></button>
+      </div>
+    </header>
+
+    <main class="support-shell">
+      <nav class="support-nav" aria-labelledby="support-nav-title">
+        <h1 id="support-nav-title" data-i18n="support.title">帮助与支持</h1>
+        <div class="support-nav-list">
+          <button type="button" data-support-nav="help"><i data-lucide="book-open" aria-hidden="true"></i><span data-i18n="support.helpNav">查找答案</span></button>
+          <button type="button" data-support-nav="request"><i data-lucide="message-square-plus" aria-hidden="true"></i><span data-i18n="support.requestNav">提交请求</span></button>
+          <button type="button" data-support-nav="tickets"><i data-lucide="ticket-check" aria-hidden="true"></i><span data-i18n="support.ticketsNav">请求记录</span></button>
+          <button type="button" data-support-nav="status"><i data-lucide="activity" aria-hidden="true"></i><span data-i18n="support.statusNav">服务状态</span></button>
+        </div>
+      </nav>
+
+      <div class="support-main">
+        <section class="support-section" data-support-section="help">
+          <header>
+            <h2 tabindex="-1" data-i18n="support.helpTitle">查找可靠的产品说明</h2>
+            <p data-i18n="support.helpBody">搜索结果保留产品区域和复核时间。没有答案时，可以带着当前上下文提交请求。</p>
+          </header>
+          <div class="support-search-controls">
+            <div class="flow-field support-search-wrap">
+              <label class="visually-hidden" for="support-search" data-i18n="support.searchLabel">搜索帮助内容</label>
+              <i data-lucide="search" aria-hidden="true"></i>
+              <input id="support-search" type="search" autocomplete="off" data-help-search data-i18n-placeholder="support.searchPlaceholder" />
+            </div>
+            <div class="flow-field">
+              <label class="visually-hidden" for="support-category" data-i18n="support.categoryLabel">产品区域</label>
+              <select id="support-category" data-help-category>
+                <option value="all" data-i18n="support.categoryAll">全部区域</option>
+                <option value="access" data-i18n="support.categoryAccess">账号与权限</option>
+                <option value="data" data-i18n="support.categoryData">数据与导出</option>
+                <option value="workspace" data-i18n="support.categoryWorkspace">工作区</option>
+              </select>
+            </div>
+          </div>
+          <p class="support-result-summary" data-help-summary aria-live="polite"></p>
+          <div class="support-result-list" data-help-results>
+            <article class="support-article" data-help-article data-category="access" data-search="权限 access permission role 邀请 invitation">
+              <button type="button" aria-expanded="false"><span><strong data-i18n="support.article1Title">为什么我只能查看，不能修改记录？</strong><span data-i18n="support.article1Meta">账号与权限 · 2026-07-10 复核</span></span><i data-lucide="chevron-down" aria-hidden="true"></i></button>
+              <div class="support-article-answer" hidden data-i18n="support.article1Answer">修改能力由工作区角色和对象权限共同决定。权限不足时，保留当前记录并通过真实的权限申请流程处理。</div>
+            </article>
+            <article class="support-article" data-help-article data-category="data" data-search="导出 export csv 下载 download 失败 failed">
+              <button type="button" aria-expanded="false"><span><strong data-i18n="support.article2Title">导出任务失败后会发生什么？</strong><span data-i18n="support.article2Meta">数据与导出 · 2026-07-08 复核</span></span><i data-lucide="chevron-down" aria-hidden="true"></i></button>
+              <div class="support-article-answer" hidden data-i18n="support.article2Answer">失败结果应保留筛选范围、格式和参考 ID。重试只处理明确失败的范围，不能重复已经完成的不可逆操作。</div>
+            </article>
+            <article class="support-article" data-help-article data-category="workspace" data-search="布局 layout 工作区 workspace 重置 reset 同步 sync">
+              <button type="button" aria-expanded="false"><span><strong data-i18n="support.article3Title">工作区布局保存在哪里？</strong><span data-i18n="support.article3Meta">工作区 · 2026-07-06 复核</span></span><i data-lucide="chevron-down" aria-hidden="true"></i></button>
+              <div class="support-article-answer" hidden data-i18n="support.article3Answer">产品必须说明布局属于当前设备、当前用户还是整个组织，并为失败保存、重置和共享变更提供清楚结果。</div>
+            </article>
+          </div>
+          <div class="support-empty" data-help-empty hidden>
+            <div><i data-lucide="circle-help" aria-hidden="true"></i><strong data-i18n="support.noResultsTitle">没有匹配的说明</strong><span data-i18n="support.noResultsBody">保留当前搜索词，调整产品区域，或提交包含当前上下文的支持请求。</span></div>
+          </div>
+        </section>
+
+        <section class="support-section" data-support-section="request" hidden>
+          <header>
+            <h2 tabindex="-1" data-i18n="support.requestTitle">提交支持请求</h2>
+            <p data-i18n="support.requestBody">说明影响范围和已经尝试的恢复步骤。参考页不会发送内容或创建真实工单。</p>
+          </header>
+          <div class="support-privacy-note"><i data-lucide="shield-alert" aria-hidden="true"></i><span data-i18n="support.privacyNote">不要提交密码、一次性验证码、API 密钥、支付凭据或其他秘密。</span></div>
+          <form class="support-request-form" data-support-request-form>
+            <div class="support-form-grid">
+              <div class="flow-field">
+                <label for="request-type" data-i18n="support.typeLabel">问题类型</label>
+                <select id="request-type" name="type" required><option value="" data-i18n="support.typePlaceholder">请选择</option><option value="access" data-i18n="support.typeAccess">访问与权限</option><option value="data" data-i18n="support.typeData">数据或导出</option><option value="incident" data-i18n="support.typeIncident">故障或异常</option></select>
+              </div>
+              <div class="flow-field">
+                <label for="affected-reference" data-i18n="support.referenceLabel">受影响对象或参考 ID</label>
+                <input id="affected-reference" name="reference" required data-i18n-placeholder="support.referencePlaceholder" />
+              </div>
+            </div>
+            <div class="flow-field">
+              <label for="request-description" data-i18n="support.descriptionLabel">问题说明</label>
+              <textarea id="request-description" name="description" required minlength="20" data-i18n-placeholder="support.descriptionPlaceholder"></textarea>
+              <p class="field-help" data-i18n="support.descriptionHelp">包含预期结果、实际结果、发生时间和已尝试步骤；不要包含秘密。</p>
+            </div>
+            <label class="support-confirm"><input type="checkbox" name="safe-content" required /><span data-i18n="support.safeConfirm">我确认说明中不包含密码、验证码、密钥或支付凭据。</span></label>
+            <div class="form-actions"><button class="flow-button primary-action" type="submit"><i data-lucide="send" aria-hidden="true"></i><span data-i18n="support.submitRequest">提交参考请求</span></button></div>
+            <p class="form-status" data-support-request-status tabindex="-1" aria-live="polite"></p>
+          </form>
+          <div class="support-result" data-support-request-result hidden>
+            <strong data-i18n="support.requestAccepted">本地参考请求已记录</strong>
+            <span><span data-i18n="support.requestResultBody">没有内容发送到服务器。真实产品必须在服务端确认后才显示工单已创建。</span> <span data-i18n="support.requestResultId">参考 ID</span>：<code>REF-SUP-2407</code></span>
+          </div>
+        </section>
+
+        <section class="support-section" data-support-section="tickets" hidden>
+          <header>
+            <h2 tabindex="-1" data-i18n="support.ticketsTitle">请求记录</h2>
+            <p data-i18n="support.ticketsBody">阅读状态不会改变工单状态。工单身份、更新时间和等待方保持可见。</p>
+          </header>
+          <div class="support-reference-note"><i data-lucide="shield-check" aria-hidden="true"></i><span data-i18n="support.ticketReferenceNote">以下内容是确定性本地样例，不代表真实客服系统、响应时限或处理结果。</span></div>
+          <div class="ticket-layout">
+            <div class="ticket-list" aria-label="Support requests" data-i18n-aria="support.ticketListLabel">
+              <button class="ticket-row" type="button" data-ticket-select="SUP-1042"><span><strong data-i18n="support.ticket1Title">导出任务缺少两条记录</strong><span>SUP-1042 · 2026-07-12 16:20 CST</span></span><span class="ticket-status waiting" data-i18n="support.waitingSupport">等待支持团队</span></button>
+              <button class="ticket-row" type="button" data-ticket-select="SUP-1037"><span><strong data-i18n="support.ticket2Title">确认新的工作区角色</strong><span>SUP-1037 · 2026-07-11 09:14 CST</span></span><span class="ticket-status resolved" data-i18n="support.resolved">已解决</span></button>
+            </div>
+            <article class="ticket-detail" data-ticket-detail="SUP-1042">
+              <h3 tabindex="-1" data-i18n="support.ticket1Title">导出任务缺少两条记录</h3>
+              <p data-i18n="support.ticket1Body">参考记录保留导出范围和任务 ID，等待产品后端返回真实检查结果。</p>
+              <dl class="ticket-metadata"><div><dt data-i18n="support.ticketStatus">状态</dt><dd data-i18n="support.waitingSupport">等待支持团队</dd></div><div><dt data-i18n="support.ticketNext">下一步</dt><dd data-i18n="support.ticket1Next">支持团队检查任务结果</dd></div><div><dt data-i18n="support.ticketUpdated">最后更新</dt><dd>2026-07-12 16:20 CST</dd></div></dl>
+            </article>
+            <article class="ticket-detail" data-ticket-detail="SUP-1037" hidden>
+              <h3 tabindex="-1" data-i18n="support.ticket2Title">确认新的工作区角色</h3>
+              <p data-i18n="support.ticket2Body">角色说明已经确认。真实产品应链接到对应权限变更和审计记录。</p>
+              <dl class="ticket-metadata"><div><dt data-i18n="support.ticketStatus">状态</dt><dd data-i18n="support.resolved">已解决</dd></div><div><dt data-i18n="support.ticketNext">下一步</dt><dd data-i18n="support.ticket2Next">查看权限变更记录</dd></div><div><dt data-i18n="support.ticketUpdated">最后更新</dt><dd>2026-07-11 09:14 CST</dd></div></dl>
+            </article>
+          </div>
+        </section>
+
+        <section class="support-section" data-support-section="status" hidden>
+          <header>
+            <h2 tabindex="-1" data-i18n="support.statusTitle">服务状态与来源</h2>
+            <p data-i18n="support.statusBody">状态必须来自权威来源并显示更新时间。本页只演示结构，不提供实时监控。</p>
+          </header>
+          <div class="support-reference-note"><i data-lucide="activity" aria-hidden="true"></i><span data-i18n="support.statusReferenceNote">确定性样例 · 非实时 · 记录于 2026-07-13 14:32 CST</span></div>
+          <div class="service-list">
+            <div class="service-row"><span><strong data-i18n="support.serviceWorkspace">工作区与记录</strong><span data-i18n="support.serviceWorkspaceMeta">样例来源：REF-STATUS-01</span></span><span class="service-state" data-i18n="support.operational">运行正常</span></div>
+            <div class="service-row"><span><strong data-i18n="support.serviceExport">导出任务</strong><span data-i18n="support.serviceExportMeta">样例来源：REF-STATUS-02 · 最近检查 14:28</span></span><span class="service-state degraded" data-i18n="support.degraded">部分延迟</span></div>
+            <div class="service-row"><span><strong data-i18n="support.serviceIdentity">身份服务</strong><span data-i18n="support.serviceIdentityMeta">样例来源：REF-STATUS-03</span></span><span class="service-state" data-i18n="support.operational">运行正常</span></div>
+          </div>
+          <div class="form-actions" style="margin-top:16px"><button class="flow-button" type="button" data-support-status-source><i data-lucide="external-link" aria-hidden="true"></i><span data-i18n="support.openStatusSource">打开权威状态来源</span></button></div>
+          <p class="form-status" data-support-status-feedback tabindex="-1" aria-live="polite"></p>
+        </section>
+      </div>
+    </main>
+
+    <script type="application/json" data-i18n-dictionary>
+      {
+        "zh-CN": {
+          "common.direction":"ltr","common.reference":"页面流程参考","common.language":"切换语言","common.themeDark":"切换到夜间模式","common.themeLight":"切换到日间模式","meta.title":"KIN 帮助与支持参考",
+          "support.title":"帮助与支持","support.helpNav":"查找答案","support.requestNav":"提交请求","support.ticketsNav":"请求记录","support.statusNav":"服务状态","support.helpTitle":"查找可靠的产品说明","support.helpBody":"搜索结果保留产品区域和复核时间。没有答案时，可以带着当前上下文提交请求。","support.searchLabel":"搜索帮助内容","support.searchPlaceholder":"搜索权限、导出或工作区…","support.categoryLabel":"产品区域","support.categoryAll":"全部区域","support.categoryAccess":"账号与权限","support.categoryData":"数据与导出","support.categoryWorkspace":"工作区","support.resultsCount":"找到 {count} 条说明","support.noResultsTitle":"没有匹配的说明","support.noResultsBody":"保留当前搜索词，调整产品区域，或提交包含当前上下文的支持请求。","support.article1Title":"为什么我只能查看，不能修改记录？","support.article1Meta":"账号与权限 · 2026-07-10 复核","support.article1Answer":"修改能力由工作区角色和对象权限共同决定。权限不足时，保留当前记录并通过真实的权限申请流程处理。","support.article2Title":"导出任务失败后会发生什么？","support.article2Meta":"数据与导出 · 2026-07-08 复核","support.article2Answer":"失败结果应保留筛选范围、格式和参考 ID。重试只处理明确失败的范围，不能重复已经完成的不可逆操作。","support.article3Title":"工作区布局保存在哪里？","support.article3Meta":"工作区 · 2026-07-06 复核","support.article3Answer":"产品必须说明布局属于当前设备、当前用户还是整个组织，并为失败保存、重置和共享变更提供清楚结果。",
+          "support.requestTitle":"提交支持请求","support.requestBody":"说明影响范围和已经尝试的恢复步骤。参考页不会发送内容或创建真实工单。","support.privacyNote":"不要提交密码、一次性验证码、API 密钥、支付凭据或其他秘密。","support.typeLabel":"问题类型","support.typePlaceholder":"请选择","support.typeAccess":"访问与权限","support.typeData":"数据或导出","support.typeIncident":"故障或异常","support.referenceLabel":"受影响对象或参考 ID","support.referencePlaceholder":"例如 TASK-204 或记录链接","support.descriptionLabel":"问题说明","support.descriptionPlaceholder":"说明预期结果、实际结果和已尝试步骤…","support.descriptionHelp":"包含预期结果、实际结果、发生时间和已尝试步骤；不要包含秘密。","support.safeConfirm":"我确认说明中不包含密码、验证码、密钥或支付凭据。","support.submitRequest":"提交参考请求","support.requestAccepted":"本地参考请求已记录","support.requestResultBody":"没有内容发送到服务器。真实产品必须在服务端确认后才显示工单已创建。","support.requestResultId":"参考 ID","support.requestStatus":"本地参考已经完成；未发送到支持系统。",
+          "support.ticketsTitle":"请求记录","support.ticketsBody":"阅读状态不会改变工单状态。工单身份、更新时间和等待方保持可见。","support.ticketReferenceNote":"以下内容是确定性本地样例，不代表真实客服系统、响应时限或处理结果。","support.ticketListLabel":"支持请求列表","support.ticket1Title":"导出任务缺少两条记录","support.ticket2Title":"确认新的工作区角色","support.waitingSupport":"等待支持团队","support.resolved":"已解决","support.ticket1Body":"参考记录保留导出范围和任务 ID，等待产品后端返回真实检查结果。","support.ticket2Body":"角色说明已经确认。真实产品应链接到对应权限变更和审计记录。","support.ticketStatus":"状态","support.ticketNext":"下一步","support.ticketUpdated":"最后更新","support.ticket1Next":"支持团队检查任务结果","support.ticket2Next":"查看权限变更记录",
+          "support.statusTitle":"服务状态与来源","support.statusBody":"状态必须来自权威来源并显示更新时间。本页只演示结构，不提供实时监控。","support.statusReferenceNote":"确定性样例 · 非实时 · 记录于 2026-07-13 14:32 CST","support.serviceWorkspace":"工作区与记录","support.serviceWorkspaceMeta":"样例来源：REF-STATUS-01","support.serviceExport":"导出任务","support.serviceExportMeta":"样例来源：REF-STATUS-02 · 最近检查 14:28","support.serviceIdentity":"身份服务","support.serviceIdentityMeta":"样例来源：REF-STATUS-03","support.operational":"运行正常","support.degraded":"部分延迟","support.openStatusSource":"打开权威状态来源","support.statusSourceResult":"参考页没有配置外部状态服务；采用产品必须连接真实来源。"
+        },
+        "en": {
+          "common.direction":"ltr","common.reference":"Page flow reference","common.language":"Change language","common.themeDark":"Switch to dark theme","common.themeLight":"Switch to light theme","meta.title":"KIN help and support reference",
+          "support.title":"Help and support","support.helpNav":"Find answers","support.requestNav":"Submit request","support.ticketsNav":"Request history","support.statusNav":"Service status","support.helpTitle":"Find reliable product guidance","support.helpBody":"Results retain product area and review time. When guidance is insufficient, submit a request with the current context intact.","support.searchLabel":"Search help content","support.searchPlaceholder":"Search permissions, exports, or workspace…","support.categoryLabel":"Product area","support.categoryAll":"All areas","support.categoryAccess":"Account and access","support.categoryData":"Data and exports","support.categoryWorkspace":"Workspace","support.resultsCount":"{count} guidance items found","support.noResultsTitle":"No matching guidance","support.noResultsBody":"Keep the query, adjust the product area, or submit a support request with the current context.","support.article1Title":"Why can I view a record but not edit it?","support.article1Meta":"Account and access · reviewed 2026-07-10","support.article1Answer":"Editing depends on both workspace role and object permission. Preserve the record when access is insufficient and use the product's real access-request flow.","support.article2Title":"What happens when an export task fails?","support.article2Meta":"Data and exports · reviewed 2026-07-08","support.article2Answer":"A failed result should retain filter scope, format, and reference ID. Retry only the explicit failed scope and do not duplicate completed irreversible work.","support.article3Title":"Where is workspace layout stored?","support.article3Meta":"Workspace · reviewed 2026-07-06","support.article3Answer":"The product must state whether layout belongs to this device, this user, or the organization and provide clear results for failed save, reset, and shared changes.",
+          "support.requestTitle":"Submit a support request","support.requestBody":"Describe the affected scope and recovery already attempted. This reference sends nothing and creates no real ticket.","support.privacyNote":"Do not submit passwords, one-time codes, API keys, payment credentials, or other secrets.","support.typeLabel":"Issue type","support.typePlaceholder":"Select one","support.typeAccess":"Access and permissions","support.typeData":"Data or export","support.typeIncident":"Failure or incident","support.referenceLabel":"Affected object or reference ID","support.referencePlaceholder":"For example TASK-204 or a record link","support.descriptionLabel":"Issue description","support.descriptionPlaceholder":"Describe the expected result, actual result, and attempted recovery…","support.descriptionHelp":"Include expected result, actual result, time, and attempted steps; never include secrets.","support.safeConfirm":"I confirm this description contains no password, verification code, key, or payment credential.","support.submitRequest":"Submit reference request","support.requestAccepted":"Local reference request recorded","support.requestResultBody":"Nothing was sent to a server. A real product may show ticket creation only after server confirmation.","support.requestResultId":"Reference ID","support.requestStatus":"The local reference completed; nothing was sent to a support system.",
+          "support.ticketsTitle":"Request history","support.ticketsBody":"Reading does not change ticket status. Identity, update time, and the waiting party remain visible.","support.ticketReferenceNote":"These are deterministic local samples, not evidence of a real support system, response target, or outcome.","support.ticketListLabel":"Support request list","support.ticket1Title":"Two records missing from an export task","support.ticket2Title":"Confirm a new workspace role","support.waitingSupport":"Waiting on support","support.resolved":"Resolved","support.ticket1Body":"The reference record retains export scope and task ID while waiting for a real backend result.","support.ticket2Body":"The role explanation has been confirmed. A real product should link the permission change and audit event.","support.ticketStatus":"Status","support.ticketNext":"Next step","support.ticketUpdated":"Last updated","support.ticket1Next":"Support reviews the task result","support.ticket2Next":"Review the permission change",
+          "support.statusTitle":"Service status and source","support.statusBody":"Status must come from an authoritative source and expose freshness. This page demonstrates structure and provides no live monitoring.","support.statusReferenceNote":"Deterministic sample · not live · recorded 2026-07-13 14:32 CST","support.serviceWorkspace":"Workspace and records","support.serviceWorkspaceMeta":"Sample source: REF-STATUS-01","support.serviceExport":"Export tasks","support.serviceExportMeta":"Sample source: REF-STATUS-02 · last checked 14:28","support.serviceIdentity":"Identity service","support.serviceIdentityMeta":"Sample source: REF-STATUS-03","support.operational":"Operational","support.degraded":"Partially delayed","support.openStatusSource":"Open authoritative status source","support.statusSourceResult":"No external status service is configured in this reference; an adopting product must connect a real source."
+        }
+      }
+    </script>
+  </body>
+</html>

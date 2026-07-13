@@ -88,10 +88,67 @@ Use File Upload only when the product accepts a real file and can state supporte
 
 - Browse and drag-drop paths MUST lead to the same validation and upload pipeline.
 - The control MUST state accepted type, size, count, and privacy implications before selection.
-- Selected, validating, uploading, paused, failed, cancelled, and complete states MUST be distinct.
+- Selected, validating, uploading, failed, cancelled, and complete states MUST be distinct. Paused MUST remain distinct when the transfer supports pausing.
 - Progress MUST identify the file and preserve retry or removal actions.
 - Drag-drop MUST have a keyboard-accessible browse alternative.
 - A file MUST NOT be described as uploaded before the server confirms completion.
+
+### Anatomy
+
+A File Upload contains, when applicable:
+
+1. a visible label;
+2. accepted type, maximum size, count, and privacy guidance;
+3. a native file input or named browse control backed by one;
+4. an optional Drop Zone that uses the same processing path;
+5. selected-file identity and validation result;
+6. per-file or aggregate progress;
+7. cancel, retry, remove, and replace actions according to state;
+8. a persistent result or link to the committed file after completion.
+
+The native file input MUST remain available to keyboard and assistive-technology users. A visually hidden input MUST use a technique that keeps it operable; `display: none` MUST NOT be the only implementation when the input itself owns the accessible interaction.
+
+### State model
+
+| State | Required behavior | Available actions |
+|---|---|---|
+| Empty | Explain constraints before selection | Browse; Drop when supported |
+| Selected | Name the local file without claiming transfer | Remove or replace |
+| Validating | Check type, size, count, and product rules | Cancel when validation is meaningfully asynchronous |
+| Uploading | Show transferred amount or indeterminate progress and retain file identity | Cancel when supported |
+| Paused | Explain why transfer paused and whether progress is retained | Resume or cancel |
+| Failed | Preserve file identity and specific recoverable context | Retry, remove, or replace |
+| Cancelled | Confirm that the active transfer stopped without implying server deletion | Retry, remove, or replace |
+| Complete | Show the server-confirmed result in context | Open, copy link, remove, or replace according to permissions |
+
+- Validation failure and transfer failure MUST remain distinct.
+- Retrying MUST not create a duplicate committed file unless the product explicitly supports versions or copies.
+- Cancellation MUST state whether a partial server object may remain and how cleanup is handled.
+- Removing a completed file is a separate destructive or reversible product action; it MUST NOT be conflated with cancelling an in-progress transfer.
+- Multiple-file uploads MUST preserve each file's identity and state. Aggregate progress MUST not hide an individual failure.
+
+### Drag and drop
+
+- Drop Zone instructions MUST not imply that drag-drop is the only path.
+- Enter or Space on the named browse control MUST open the native file picker.
+- Drag enter and leave feedback MUST not report a successful selection or upload.
+- Unsupported files MUST be rejected through the same validation messages as browsed files.
+- Dropping a directory, URL, or multiple files when unsupported MUST produce a specific recoverable result.
+- Global browser drop behavior MUST be prevented only inside the declared Drop Zone.
+
+### Progress, recovery, and announcements
+
+- Progress updates SHOULD be throttled so assistive technology is not flooded.
+- The current state, file name, and final result MUST be available without relying on animation.
+- Cancel and retry MUST target the intended file and preserve already completed siblings.
+- When a transfer continues in the background, use the Background Task Queue contract rather than keeping a temporary overlay open.
+- A Toast MAY report completion after the committed file is visible elsewhere; it MUST NOT be the only evidence of completion.
+
+### Reference and product verification
+
+KIN's framework-free reference MAY simulate selection, validation, progress, cancellation, failure, retry, and completion locally. It MUST label the simulation as a fixture, MUST NOT contact a server, and MUST NOT present simulated completion as a real upload.
+
+An adopting product MUST verify its real validation and transfer pipeline before claiming the File Upload mapping as `verified`. That evidence MUST include server-confirmed completion, cancellation behavior, retry idempotency, permission failure, cleanup behavior, and the product's real file constraints.
 
 ## Form submission
 

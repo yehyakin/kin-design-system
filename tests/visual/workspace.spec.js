@@ -71,12 +71,33 @@ test("workspace high contrast", async ({ page }, testInfo) => {
   await page.goto("/examples/workspace-reference/");
 
   await expect(page.locator("html")).toHaveAttribute("data-contrast", "more");
-  await expect(page.locator("[data-contrast-toggle]")).toHaveAttribute("aria-pressed", "true");
+  await expect(page.locator("[data-contrast-toggle]")).toHaveAttribute("aria-checked", "true");
   const lineColor = await page.locator("html").evaluate((element) => getComputedStyle(element).getPropertyValue("--line").trim());
   const positiveColor = await page.locator("html").evaluate((element) => getComputedStyle(element).getPropertyValue("--positive").trim());
   expect(lineColor).toBe("#747a86");
   expect(positiveColor).toBe("#50ad7d");
   await capture(page, testInfo, "workspace-high-contrast.png");
+});
+
+test("location bar preserves identity and moves secondary actions into overflow", async ({ page }) => {
+  await seedPreferences(page, "dark");
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/examples/workspace-reference/");
+
+  const location = page.locator(".location-identity");
+  const more = page.locator("[data-location-overflow-trigger]");
+  await expect(location.getByText("Alpha Network", { exact: true })).toBeVisible();
+  await more.click();
+  await expect(page.getByRole("menuitemcheckbox", { name: "切换高对比度" })).toBeFocused();
+  await page.keyboard.press("ArrowDown");
+  await expect(page.getByRole("menuitem", { name: "复制对象链接" })).toBeFocused();
+  await page.keyboard.press("Escape");
+  await expect(more).toBeFocused();
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  await expect(location.getByText("Alpha Network", { exact: true })).toBeVisible();
+  await expect(location.getByText("对象数据库", { exact: true })).toBeHidden();
+  await assertNoHorizontalOverflow(page);
 });
 
 test("theme and contrast preferences synchronize across tabs", async ({ context }) => {
@@ -91,6 +112,7 @@ test("theme and contrast preferences synchronize across tabs", async ({ context 
 
   await firstPage.locator("[data-theme-switch]").click();
   await expect(secondPage.locator("html")).toHaveAttribute("data-theme", "light");
+  await firstPage.locator("[data-location-overflow-trigger]").click();
   await firstPage.locator("[data-contrast-toggle]").click();
   await expect(secondPage.locator("html")).toHaveAttribute("data-contrast", "more");
 });
@@ -149,8 +171,9 @@ test("workspace mobile and inspector behavior", async ({ page }, testInfo) => {
 
   await expect(page.locator(".sidebar")).toBeHidden();
   await expect(page.locator(".inspector")).toBeHidden();
-  await expect(page.locator(".breadcrumb")).toBeHidden();
-  await assertMinimumTouchTargets(page, ".workspace-actions > button, .workspace-actions > .language-control > button, .view-bar a, .entity-actions button, .text-button");
+  await expect(page.locator(".location-identity strong")).toHaveText("Alpha Network");
+  await expect(page.locator(".location-identity strong")).toBeVisible();
+  await assertMinimumTouchTargets(page, ".workspace-actions > button, .workspace-actions > .language-control > button, .workspace-actions > .location-overflow > button, .view-bar a, .entity-actions button, .text-button");
   await assertNoHorizontalOverflow(page);
   await capture(page, testInfo, "workspace-dark-mobile.png");
 
@@ -234,7 +257,52 @@ test("core form retains input and commits combobox value", async ({ page }) => {
   await expect(page.getByText("正在筛选“SKU-024”", { exact: true })).toBeVisible();
   await page.getByRole("button", { name: "清除", exact: true }).click();
   await expect(page.getByLabel("搜索商品")).toHaveValue("");
-  await expect(page.getByLabel("补充证据")).toHaveAttribute("accept", ".pdf,.png,.jpg");
+  await expect(page.getByLabel("补充证据文件")).toHaveAttribute("accept", /application\/pdf/);
+});
+
+test("file upload fixture distinguishes validation transfer retry cancel and completion", async ({ page }, testInfo) => {
+  await seedPreferences(page, "light");
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.goto("/examples/workspace-reference/core-components.html#forms");
+
+  const input = page.getByLabel("补充证据文件");
+  const upload = page.locator("[data-file-upload]");
+  await input.setInputFiles({ name: "retry-evidence.pdf", mimeType: "application/pdf", buffer: Buffer.from("fixture") });
+  await expect(page.getByText("模拟传输失败", { exact: true })).toBeVisible({ timeout: 2_000 });
+  await expect(page.getByText(/没有文件离开此页面/)).toBeVisible();
+  await upload.getByRole("button", { name: "重试", exact: true }).click();
+  await expect(page.getByText("本地模拟完成", { exact: true })).toBeVisible({ timeout: 2_000 });
+  await expect(page.getByText(/未连接服务器/)).toBeVisible();
+  await upload.screenshot({ path: testInfo.outputPath("file-upload-local-complete-light.png") });
+
+  await upload.getByRole("button", { name: "移除", exact: true }).click();
+  await input.setInputFiles({ name: "unsupported.exe", mimeType: "application/octet-stream", buffer: Buffer.from("fixture") });
+  await expect(page.getByText("验证失败", { exact: true })).toBeVisible();
+  await expect(page.getByText(/文件类型不受支持/)).toBeVisible();
+
+  await upload.getByRole("button", { name: "移除", exact: true }).click();
+  await input.setInputFiles({ name: "cancel-evidence.pdf", mimeType: "application/pdf", buffer: Buffer.from("fixture") });
+  await expect(page.getByText("本地模拟中", { exact: true })).toBeVisible();
+  await upload.getByRole("button", { name: "取消", exact: true }).click();
+  await expect(page.getByText("已取消", { exact: true })).toBeVisible();
+  await expect(upload.getByRole("button", { name: "重试", exact: true })).toBeVisible();
+
+  await upload.getByRole("button", { name: "移除", exact: true }).click();
+  await page.locator("[data-file-dropzone]").evaluate((dropzone) => {
+    const dataTransfer = new DataTransfer();
+    dataTransfer.items.add(new File(["one"], "one.pdf", { type: "application/pdf" }));
+    dataTransfer.items.add(new File(["two"], "two.pdf", { type: "application/pdf" }));
+    dropzone.dispatchEvent(new DragEvent("drop", { bubbles: true, cancelable: true, dataTransfer }));
+  });
+  await expect(page.getByText("一次只能选择 1 个文件。", { exact: true })).toBeVisible();
+
+  await page.locator("[data-file-dropzone]").evaluate((dropzone) => {
+    const dataTransfer = new DataTransfer();
+    dataTransfer.items.add(new File(["fixture"], "drop-evidence.pdf", { type: "application/pdf" }));
+    dropzone.dispatchEvent(new DragEvent("drop", { bubbles: true, cancelable: true, dataTransfer }));
+  });
+  await expect(page.getByText("drop-evidence.pdf · 7 B", { exact: true })).toBeVisible();
+  await expect(page.getByText("本地模拟完成", { exact: true })).toBeVisible({ timeout: 2_000 });
 });
 
 test("core navigation separates tabs menus disclosures and pagination", async ({ page }) => {
@@ -290,6 +358,23 @@ test("core data display preserves labels status and loading meaning", async ({ p
   await assertNoHorizontalOverflow(page);
   await page.evaluate(() => { document.activeElement?.blur(); scrollTo(0, 0); });
   await capture(page, testInfo, "core-components-light-desktop.png");
+});
+
+test("truncation preserves full values and mixed-direction access", async ({ page }, testInfo) => {
+  await seedPreferences(page, "light");
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/examples/workspace-reference/core-components.html#data-display");
+
+  const domainPreview = page.locator("[data-truncation-preview]").first();
+  await expect(domainPreview).toHaveAccessibleName("monitoring-primary-endpoint.alpha-network.example.com");
+  const domainToggle = page.locator("[data-truncation-toggle]").first();
+  await domainToggle.click();
+  await expect(domainToggle).toHaveAttribute("aria-expanded", "true");
+  await expect(page.locator("#full-domain")).toBeVisible();
+  await expect(domainPreview).toBeHidden();
+  await expect(page.locator(".truncation-sample[dir='rtl'] bdi")).toHaveAttribute("dir", "ltr");
+  await assertNoHorizontalOverflow(page);
+  await page.locator(".truncation-grid").screenshot({ path: testInfo.outputPath("truncation-mobile-light.png") });
 });
 
 test("core feedback keeps progress and recovery in context", async ({ page }) => {
@@ -480,14 +565,64 @@ test("engineering canvas separates tools, selection, and generated changes", asy
   await lineTool.nth(0).click();
   await expect(selectedObject).toHaveCount(1);
   await expect(page.locator(".generated-change")).toBeVisible();
+  const toolbar = page.getByRole("toolbar", { name: "编辑操作" });
+  const undo = toolbar.getByRole("button", { name: "撤销" });
+  await undo.focus();
+  await page.keyboard.press("ArrowRight");
+  await expect(toolbar.getByRole("button", { name: "重做" })).toBeFocused();
+  const toolbarMore = toolbar.getByRole("button", { name: "更多" });
+  await toolbarMore.click();
+  await expect(page.getByRole("menuitem", { name: "导出" })).toBeFocused();
+  await page.keyboard.press("Escape");
+  await expect(toolbarMore).toBeFocused();
+
+  const split = page.getByRole("separator", { name: "调整对象面板宽度" });
+  const splitBounds = await split.boundingBox();
+  await page.mouse.move(splitBounds.x + splitBounds.width / 2, splitBounds.y + splitBounds.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(splitBounds.x + splitBounds.width / 2 + 30, splitBounds.y + splitBounds.height / 2);
+  await page.mouse.up();
+  expect(Number(await split.getAttribute("aria-valuenow"))).toBeGreaterThan(210);
+  await split.dblclick();
+  await expect(split).toHaveAttribute("aria-valuenow", "210");
+  await split.focus();
+  await page.keyboard.press("ArrowRight");
+  await expect(split).toHaveAttribute("aria-valuenow", "220");
+  await page.keyboard.press("End");
+  await expect(split).toHaveAttribute("aria-valuenow", "320");
+  await page.reload();
+  await expect(page.getByRole("separator", { name: "调整对象面板宽度" })).toHaveAttribute("aria-valuenow", "320");
   await assertNoHorizontalOverflow(page);
   await capture(page, testInfo, "canvas-dark-desktop.png");
+
+  await page.setViewportSize({ width: 900, height: 844 });
+  await page.reload();
+  await expect(page.locator(".layer-panel")).toBeVisible();
+  await expect(page.locator(".property-panel")).toBeHidden();
+  const compactPropertiesOpen = page.locator("[data-canvas-properties-open]");
+  await expect(compactPropertiesOpen).toBeVisible();
+  await compactPropertiesOpen.click();
+  await expect(page.locator(".property-panel")).toBeVisible();
+  await expect(page.locator("[data-canvas-properties-close]")).toBeFocused();
+  await page.keyboard.press("Escape");
+  await expect(compactPropertiesOpen).toBeFocused();
+  await assertNoHorizontalOverflow(page);
 
   await page.setViewportSize({ width: 390, height: 844 });
   await page.reload();
   await expect(page.locator(".layer-panel")).toBeHidden();
   await expect(page.locator(".property-panel")).toBeHidden();
-  await assertMinimumTouchTargets(page, ".canvas-actions > button, .tool-rail button");
+  await assertMinimumTouchTargets(page, ".canvas-toolbar button, .canvas-actions > button, .tool-rail button");
+  await expect(page.getByRole("separator", { name: "调整对象面板宽度" })).toBeHidden();
+  const layersOpen = page.locator("[data-canvas-layers-open]");
+  const layersClose = page.locator("[data-canvas-layers-close]");
+  await expect(layersOpen).toBeVisible();
+  await layersOpen.click();
+  await expect(page.locator(".layer-panel")).toBeVisible();
+  await expect(layersClose).toBeFocused();
+  await layersClose.click();
+  await expect(page.locator(".layer-panel")).toBeHidden();
+  await expect(layersOpen).toBeFocused();
   const propertiesOpen = page.locator("[data-canvas-properties-open]");
   const propertiesClose = page.locator("[data-canvas-properties-close]");
   await propertiesOpen.click();
@@ -497,4 +632,5 @@ test("engineering canvas separates tools, selection, and generated changes", asy
   await expect(page.locator(".property-panel")).toBeHidden();
   await expect(propertiesOpen).toBeFocused();
   await assertNoHorizontalOverflow(page);
+  await capture(page, testInfo, "canvas-dark-mobile.png", false);
 });

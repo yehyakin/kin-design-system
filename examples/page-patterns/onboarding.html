@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light" data-theme-preference="system">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f6f7f8" />
+    <title>KIN Onboarding Reference</title>
+    <script>
+      (() => {
+        const preference = localStorage.getItem("kin-reference-theme") || "system";
+        const resolved = preference === "system" ? (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light") : preference;
+        document.documentElement.dataset.theme = resolved;
+        document.documentElement.dataset.themePreference = preference;
+      })();
+    </script>
+    <link rel="stylesheet" href="../product-patterns/patterns.css" />
+    <link rel="stylesheet" href="./page-patterns.css" />
+    <script type="module" src="./reference.js"></script>
+  </head>
+  <body class="flow-page" data-page="onboarding">
+    <header class="flow-header">
+      <a class="flow-brand" href="../../"><strong>KIN</strong><span data-i18n="common.reference">页面流程参考</span></a>
+      <div class="flow-preferences">
+        <div class="language-control">
+          <button class="icon-control" type="button" data-language-trigger aria-expanded="false" aria-controls="language-menu" data-i18n-aria="common.language"><i data-lucide="languages" aria-hidden="true"></i></button>
+          <div class="language-menu" id="language-menu" data-language-menu role="menu" hidden>
+            <button type="button" role="menuitemradio" aria-checked="true" data-language-option="zh-CN">中文</button>
+            <button type="button" role="menuitemradio" aria-checked="false" data-language-option="en">English</button>
+          </div>
+        </div>
+        <button class="icon-control theme-switch" type="button" role="switch" aria-checked="false" data-theme-switch data-i18n-aria="common.themeDark"><i class="theme-sun" data-lucide="sun" aria-hidden="true"></i><i class="theme-moon" data-lucide="moon" aria-hidden="true"></i></button>
+      </div>
+    </header>
+
+    <main class="onboarding-shell">
+      <aside class="onboarding-progress" aria-labelledby="setup-progress-title">
+        <h1 id="setup-progress-title" data-i18n="onboarding.title">设置工作区</h1>
+        <p data-i18n="onboarding.resume">进度保存在当前设备，可从中断处继续。</p>
+        <ol class="step-list">
+          <li data-step-indicator="1"><span class="step-index">01</span><div><strong data-i18n="onboarding.step1">基本信息</strong><span data-i18n="onboarding.step1Hint">名称与区域</span></div></li>
+          <li data-step-indicator="2"><span class="step-index">02</span><div><strong data-i18n="onboarding.step2">数据来源</strong><span data-i18n="onboarding.step2Hint">新建或导入</span></div></li>
+          <li data-step-indicator="3"><span class="step-index">03</span><div><strong data-i18n="onboarding.step3">协作者</strong><span data-i18n="onboarding.step3Hint">可跳过</span></div></li>
+          <li data-step-indicator="4"><span class="step-index">04</span><div><strong data-i18n="onboarding.step4">确认</strong><span data-i18n="onboarding.step4Hint">进入工作区</span></div></li>
+        </ol>
+      </aside>
+
+      <section class="onboarding-main">
+        <article class="onboarding-step" data-onboarding-step="1">
+          <p class="object-id" data-i18n="onboarding.progress1">第 1 步，共 4 步</p>
+          <h2 tabindex="-1" data-i18n="onboarding.identityTitle">先设置工作区身份</h2>
+          <p data-i18n="onboarding.identityBody">这些信息会出现在导航、通知和导出文件中，之后仍可修改。</p>
+          <form class="step-form">
+            <div class="flow-field"><label for="workspace-name" data-i18n="onboarding.workspaceName">工作区名称</label><input id="workspace-name" name="workspace" required value="Northstar Operations" /></div>
+            <div class="flow-field"><label for="workspace-region" data-i18n="onboarding.region">数据区域</label><select id="workspace-region" name="region" required><option value="apac" data-i18n="onboarding.regionApac">亚太</option><option value="eu" data-i18n="onboarding.regionEu">欧洲</option><option value="us" data-i18n="onboarding.regionUs">北美</option></select><p class="field-help" data-i18n="onboarding.regionHelp">采用产品必须说明区域对存储和合规的真实影响。</p></div>
+            <div class="onboarding-actions"><span></span><button class="flow-button primary-action" type="button" data-onboarding-next><span data-i18n="common.continue">继续</span><i data-lucide="arrow-right" aria-hidden="true"></i></button></div>
+          </form>
+        </article>
+
+        <article class="onboarding-step" data-onboarding-step="2" hidden>
+          <p class="object-id" data-i18n="onboarding.progress2">第 2 步，共 4 步</p>
+          <h2 tabindex="-1" data-i18n="onboarding.sourceTitle">选择开始方式</h2>
+          <p data-i18n="onboarding.sourceBody">先做一个可撤销的决定。导入任务应在工作区内显示进度，而不是阻塞设置。</p>
+          <form class="step-form">
+            <fieldset class="flow-field"><legend class="field-label" data-i18n="onboarding.sourceLegend">数据来源</legend><div class="choice-list">
+              <label class="choice-row"><input type="radio" name="source" value="blank" checked /><span><strong data-i18n="onboarding.blankTitle">从空工作区开始</strong><span data-i18n="onboarding.blankBody">先进入产品，再按需创建记录。</span></span></label>
+              <label class="choice-row"><input type="radio" name="source" value="import" /><span><strong data-i18n="onboarding.importTitle">准备导入</strong><span data-i18n="onboarding.importBody">进入后打开可恢复的导入任务；本参考不会上传文件。</span></span></label>
+            </div></fieldset>
+            <div class="onboarding-actions"><button class="flow-button quiet" type="button" data-onboarding-back><i data-lucide="arrow-left" aria-hidden="true"></i><span data-i18n="common.back">返回</span></button><button class="flow-button primary-action" type="button" data-onboarding-next><span data-i18n="common.continue">继续</span><i data-lucide="arrow-right" aria-hidden="true"></i></button></div>
+          </form>
+        </article>
+
+        <article class="onboarding-step" data-onboarding-step="3" hidden>
+          <p class="object-id" data-i18n="onboarding.progress3">第 3 步，共 4 步</p>
+          <h2 tabindex="-1" data-i18n="onboarding.peopleTitle">邀请协作者</h2>
+          <p data-i18n="onboarding.peopleBody">邀请不是完成设置的前提。角色说明必须与产品真实权限一致。</p>
+          <form class="step-form">
+            <div class="flow-field"><label for="invite-email" data-i18n="onboarding.inviteEmail">邮箱（可选）</label><input id="invite-email" name="invite" type="email" autocomplete="off" data-i18n-placeholder="onboarding.invitePlaceholder" /></div>
+            <div class="flow-field"><label for="invite-role" data-i18n="onboarding.role">初始角色</label><select id="invite-role" name="role"><option data-i18n="onboarding.roleMember">成员 — 可查看和编辑分配内容</option><option data-i18n="onboarding.roleAdmin">管理员 — 可管理成员和设置</option></select><p class="field-help" data-i18n="onboarding.inviteHelp">确定性参考不会发送邀请。</p></div>
+            <div class="onboarding-actions"><button class="flow-button quiet" type="button" data-onboarding-back><i data-lucide="arrow-left" aria-hidden="true"></i><span data-i18n="common.back">返回</span></button><button class="flow-button primary-action" type="button" data-onboarding-next><span data-i18n="common.continue">继续</span><i data-lucide="arrow-right" aria-hidden="true"></i></button></div>
+          </form>
+        </article>
+
+        <article class="onboarding-step" data-onboarding-step="4" hidden>
+          <p class="object-id" data-i18n="onboarding.progress4">第 4 步，共 4 步</p>
+          <h2 tabindex="-1" data-i18n="onboarding.completeTitle">工作区已经可以使用</h2>
+          <p data-i18n="onboarding.completeBody">完成页说明发生了什么，并给出一个清楚的下一步，不用庆祝动画掩盖结果。</p>
+          <dl class="completion-summary">
+            <div><dt data-i18n="onboarding.summaryWorkspace">工作区</dt><dd>Northstar Operations</dd></div>
+            <div><dt data-i18n="onboarding.summaryRegion">区域</dt><dd data-i18n="onboarding.regionApac">亚太</dd></div>
+            <div><dt data-i18n="onboarding.summarySource">开始方式</dt><dd data-i18n="onboarding.summaryBlank">空工作区</dd></div>
+          </dl>
+          <div class="onboarding-actions"><button class="flow-button quiet" type="button" data-onboarding-back><i data-lucide="arrow-left" aria-hidden="true"></i><span data-i18n="common.back">返回</span></button><a class="flow-button primary-action" href="../workspace-reference/"><span data-i18n="onboarding.openWorkspace">打开工作区参考</span><i data-lucide="arrow-right" aria-hidden="true"></i></a></div>
+        </article>
+      </section>
+    </main>
+
+    <script type="application/json" data-i18n-dictionary>
+      {
+        "zh-CN": {
+          "common.direction":"ltr","common.reference":"页面流程参考","common.language":"切换语言","common.themeDark":"切换到夜间模式","common.themeLight":"切换到日间模式","common.continue":"继续","common.back":"返回","meta.title":"KIN 设置流程参考","onboarding.title":"设置工作区","onboarding.resume":"进度保存在当前设备，可从中断处继续。","onboarding.step1":"基本信息","onboarding.step1Hint":"名称与区域","onboarding.step2":"数据来源","onboarding.step2Hint":"新建或导入","onboarding.step3":"协作者","onboarding.step3Hint":"可跳过","onboarding.step4":"确认","onboarding.step4Hint":"进入工作区","onboarding.progress1":"第 1 步，共 4 步","onboarding.progress2":"第 2 步，共 4 步","onboarding.progress3":"第 3 步，共 4 步","onboarding.progress4":"第 4 步，共 4 步","onboarding.identityTitle":"先设置工作区身份","onboarding.identityBody":"这些信息会出现在导航、通知和导出文件中，之后仍可修改。","onboarding.workspaceName":"工作区名称","onboarding.region":"数据区域","onboarding.regionApac":"亚太","onboarding.regionEu":"欧洲","onboarding.regionUs":"北美","onboarding.regionHelp":"采用产品必须说明区域对存储和合规的真实影响。","onboarding.sourceTitle":"选择开始方式","onboarding.sourceBody":"先做一个可撤销的决定。导入任务应在工作区内显示进度，而不是阻塞设置。","onboarding.sourceLegend":"数据来源","onboarding.blankTitle":"从空工作区开始","onboarding.blankBody":"先进入产品，再按需创建记录。","onboarding.importTitle":"准备导入","onboarding.importBody":"进入后打开可恢复的导入任务；本参考不会上传文件。","onboarding.peopleTitle":"邀请协作者","onboarding.peopleBody":"邀请不是完成设置的前提。角色说明必须与产品真实权限一致。","onboarding.inviteEmail":"邮箱（可选）","onboarding.invitePlaceholder":"name@company.com","onboarding.role":"初始角色","onboarding.roleMember":"成员 — 可查看和编辑分配内容","onboarding.roleAdmin":"管理员 — 可管理成员和设置","onboarding.inviteHelp":"确定性参考不会发送邀请。","onboarding.completeTitle":"工作区已经可以使用","onboarding.completeBody":"完成页说明发生了什么，并给出一个清楚的下一步，不用庆祝动画掩盖结果。","onboarding.summaryWorkspace":"工作区","onboarding.summaryRegion":"区域","onboarding.summarySource":"开始方式","onboarding.summaryBlank":"空工作区","onboarding.openWorkspace":"打开工作区参考"
+        },
+        "en": {
+          "common.direction":"ltr","common.reference":"Page flow reference","common.language":"Change language","common.themeDark":"Switch to dark theme","common.themeLight":"Switch to light theme","common.continue":"Continue","common.back":"Back","meta.title":"KIN setup flow reference","onboarding.title":"Set up the workspace","onboarding.resume":"Progress is saved on this device so the flow can resume.","onboarding.step1":"Basics","onboarding.step1Hint":"Name and region","onboarding.step2":"Data source","onboarding.step2Hint":"Start or import","onboarding.step3":"Collaborators","onboarding.step3Hint":"Optional","onboarding.step4":"Confirm","onboarding.step4Hint":"Enter workspace","onboarding.progress1":"Step 1 of 4","onboarding.progress2":"Step 2 of 4","onboarding.progress3":"Step 3 of 4","onboarding.progress4":"Step 4 of 4","onboarding.identityTitle":"Set the workspace identity","onboarding.identityBody":"This information appears in navigation, notifications, and exports. It can be changed later.","onboarding.workspaceName":"Workspace name","onboarding.region":"Data region","onboarding.regionApac":"Asia Pacific","onboarding.regionEu":"Europe","onboarding.regionUs":"North America","onboarding.regionHelp":"The adopting product must explain the real storage and compliance impact of the region.","onboarding.sourceTitle":"Choose how to start","onboarding.sourceBody":"Make a reversible decision first. Import progress belongs in the workspace and should not block setup.","onboarding.sourceLegend":"Data source","onboarding.blankTitle":"Start with an empty workspace","onboarding.blankBody":"Enter the product first, then create records as needed.","onboarding.importTitle":"Prepare an import","onboarding.importBody":"Open a resumable import task after entry; this reference uploads no files.","onboarding.peopleTitle":"Invite collaborators","onboarding.peopleBody":"Inviting people is not required to finish setup. Role descriptions must match real product permissions.","onboarding.inviteEmail":"Email (optional)","onboarding.invitePlaceholder":"name@company.com","onboarding.role":"Initial role","onboarding.roleMember":"Member — view and edit assigned content","onboarding.roleAdmin":"Administrator — manage members and settings","onboarding.inviteHelp":"The deterministic reference sends no invitation.","onboarding.completeTitle":"The workspace is ready","onboarding.completeBody":"The completion page explains what happened and gives one clear next step without celebratory motion obscuring the result.","onboarding.summaryWorkspace":"Workspace","onboarding.summaryRegion":"Region","onboarding.summarySource":"Starting point","onboarding.summaryBlank":"Empty workspace","onboarding.openWorkspace":"Open workspace reference"
+        }
+      }
+    </script>
+  </body>
+</html>

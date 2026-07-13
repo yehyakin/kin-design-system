@@ -59,15 +59,16 @@ Do not vendor external code or assets by default. Before adding an adapter, veri
 node scripts/validate-docs.mjs
 node scripts/validate-design.mjs
 node scripts/validate-components.mjs
+node scripts/validate-pages.mjs
 node scripts/validate-release.mjs
 node scripts/export-tokens.mjs --check
 node scripts/export-figma-variables.mjs --check
 npm run test:tooling
 ```
 
-The validators check document structure, local links, component-catalog maturity and evidence paths, terminology references, required machine-readable Token groups, Token references, theme parity and baseline text contrast. Visual and product judgment still require human review.
+The validators check document structure, local links, component and page-catalog maturity, evidence paths, terminology references, required machine-readable Token groups, Token references, theme parity and baseline text contrast. Visual and product judgment still require human review.
 
-For Token changes, include the output of `node scripts/report-token-changes.mjs <base-ref>`. For component-state or reference-interface changes, run `npm run test:reference` and review the generated screenshots before opening the pull request.
+For Token changes, include the output of `node scripts/report-token-changes.mjs <base-ref>`. For component-state, page-flow or reference-interface changes, run `npm run test:reference` and review the generated screenshots before opening the pull request.
 
 Accessibility and browser claims MUST follow [`principles/verification.md`](./principles/verification.md). Automated reflow, RTL, Forced Colors and cross-browser smoke checks do not replace a recorded real browser-zoom or screen-reader review when the release claims those behaviors.
 

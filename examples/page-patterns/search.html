@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light" data-theme-preference="system">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f6f7f8" />
+    <title>KIN Search and Results Reference</title>
+    <script>
+      (() => {
+        const preference = localStorage.getItem("kin-reference-theme") || "system";
+        const resolved = preference === "system" ? (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light") : preference;
+        document.documentElement.dataset.theme = resolved;
+        document.documentElement.dataset.themePreference = preference;
+      })();
+    </script>
+    <link rel="stylesheet" href="../product-patterns/patterns.css" />
+    <link rel="stylesheet" href="./page-patterns.css" />
+    <script type="module" src="./reference.js"></script>
+  </head>
+  <body class="flow-page" data-page="search">
+    <header class="flow-header">
+      <a class="flow-brand" href="../../"><strong>KIN</strong><span data-i18n="common.reference">页面流程参考</span></a>
+      <div class="flow-preferences">
+        <div class="language-control">
+          <button class="icon-control" type="button" data-language-trigger aria-expanded="false" aria-controls="language-menu" data-i18n-aria="common.language"><i data-lucide="languages" aria-hidden="true"></i></button>
+          <div class="language-menu" id="language-menu" data-language-menu role="menu" hidden><button type="button" role="menuitemradio" aria-checked="true" data-language-option="zh-CN">中文</button><button type="button" role="menuitemradio" aria-checked="false" data-language-option="en">English</button></div>
+        </div>
+        <button class="icon-control theme-switch" type="button" role="switch" aria-checked="false" data-theme-switch data-i18n-aria="common.themeDark"><i class="theme-sun" data-lucide="sun" aria-hidden="true"></i><i class="theme-moon" data-lucide="moon" aria-hidden="true"></i></button>
+      </div>
+    </header>
+
+    <main class="search-page">
+      <header class="search-page-heading">
+        <div>
+          <p class="search-eyebrow" data-i18n="search.eyebrow">跨对象搜索参考</p>
+          <h1 data-i18n="search.title">查找记录、文档和任务</h1>
+          <p data-i18n="search.body">提交后更新结果和 URL；筛选、排序、选择与错误状态保持独立。</p>
+        </div>
+        <p class="search-fixture-note"><i data-lucide="shield-check" aria-hidden="true"></i><span data-i18n="search.fixtureNote">确定性本地数据 · 不连接搜索服务 · 不代表真实排名或权限</span></p>
+        <form class="search-query-form" role="search" data-search-form>
+          <div class="search-query-field">
+            <label class="visually-hidden" for="global-search" data-i18n="search.queryLabel">搜索全部参考对象</label>
+            <i data-lucide="search" aria-hidden="true"></i>
+            <input id="global-search" type="search" name="q" autocomplete="off" data-search-query data-i18n-placeholder="search.queryPlaceholder" />
+            <button class="search-clear" type="button" data-search-clear data-i18n-aria="search.clearQuery" hidden><i data-lucide="x" aria-hidden="true"></i></button>
+          </div>
+          <button class="flow-button primary-action" type="submit"><i data-lucide="search" aria-hidden="true"></i><span data-i18n="search.submit">搜索</span></button>
+        </form>
+        <div class="search-controls">
+          <button class="flow-button search-filter-toggle" type="button" data-search-filter-toggle aria-expanded="false" aria-controls="search-filters"><i data-lucide="sliders-horizontal" aria-hidden="true"></i><span data-i18n="search.filters">筛选</span><span class="search-filter-count" data-search-active-filter-count hidden></span></button>
+          <label class="search-compact-control"><span data-i18n="search.sortLabel">排序</span><select data-search-sort><option value="relevance" data-i18n="search.sortRelevance">匹配度</option><option value="updated" data-i18n="search.sortUpdated">最近更新</option><option value="name" data-i18n="search.sortName">名称</option></select></label>
+          <label class="search-compact-control fixture-control"><span data-i18n="search.stateLabel">本地参考状态</span><select data-search-state><option value="results" data-i18n="search.stateResults">完整结果</option><option value="partial" data-i18n="search.statePartial">部分结果</option><option value="stale" data-i18n="search.stateStale">过期索引</option><option value="no-results" data-i18n="search.stateEmpty">无结果</option><option value="error" data-i18n="search.stateError">服务错误</option></select></label>
+          <p class="search-shortcuts" data-i18n="search.shortcuts">结果区域可使用 J / K 移动焦点</p>
+        </div>
+      </header>
+
+      <div class="search-layout">
+        <aside class="search-filters" id="search-filters" data-search-filters data-open="false" aria-labelledby="search-filter-title">
+          <div class="search-filter-heading"><h2 id="search-filter-title" data-i18n="search.filters">筛选</h2><button class="icon-control search-filter-close" type="button" data-search-filter-close data-i18n-aria="search.closeFilters"><i data-lucide="x" aria-hidden="true"></i></button></div>
+          <form data-search-filter-form>
+            <fieldset>
+              <legend data-i18n="search.scopeLegend">对象范围</legend>
+              <label><input type="radio" name="scope" value="all" checked /><span data-i18n="search.scopeAll">全部对象</span></label>
+              <label><input type="radio" name="scope" value="record" /><span data-i18n="search.scopeRecords">记录</span></label>
+              <label><input type="radio" name="scope" value="document" /><span data-i18n="search.scopeDocuments">文档</span></label>
+              <label><input type="radio" name="scope" value="task" /><span data-i18n="search.scopeTasks">任务</span></label>
+            </fieldset>
+            <fieldset>
+              <legend data-i18n="search.accessLegend">可用性</legend>
+              <label><input type="radio" name="access" value="all" checked /><span data-i18n="search.accessAll">全部状态</span></label>
+              <label><input type="radio" name="access" value="available" /><span data-i18n="search.accessAvailable">可以打开</span></label>
+              <label><input type="radio" name="access" value="restricted" /><span data-i18n="search.accessRestricted">权限受限</span></label>
+            </fieldset>
+            <div class="search-filter-actions"><button class="flow-button primary-action" type="submit" data-search-filter-apply data-i18n="search.applyFilters">应用筛选</button><button class="flow-button quiet" type="button" data-search-filter-reset><i data-lucide="refresh-cw" aria-hidden="true"></i><span data-i18n="search.resetFilters">重置筛选</span></button></div>
+          </form>
+        </aside>
+
+        <section class="search-results-region" aria-labelledby="search-results-title">
+          <div class="search-state-banner" data-search-state-banner role="status" hidden><i data-lucide="alert-triangle" aria-hidden="true"></i><div><strong data-search-state-title></strong><span data-search-state-body></span></div></div>
+          <div class="search-results-heading">
+            <div><h2 id="search-results-title" tabindex="-1" data-search-summary>4 条结果</h2><p data-search-context data-i18n="search.defaultContext">全部对象 · 所有可用性状态</p></div>
+            <span data-search-count-kind data-i18n="search.countExact">精确计数</span>
+          </div>
+          <p class="form-status search-selection-status" data-search-selection-status aria-live="polite"></p>
+          <ul class="search-result-list" data-search-result-list aria-label="搜索结果" data-i18n-aria="search.resultListLabel">
+            <li data-search-result data-result-id="REC-204" data-scope="record" data-access="available" data-updated="20260712" data-name="Workspace role review" data-title-key="search.result1Title" data-description-key="search.result1Description" data-type-key="search.typeRecord" data-source-key="search.sourceWorkspace" data-access-key="search.accessAvailable" data-updated-key="search.result1Updated" data-search="workspace role review 工作区 角色 权限 记录 access permission">
+              <a class="search-result-link" data-search-result-link href="?selected=REC-204"><span class="search-result-icon"><i data-lucide="database" aria-hidden="true"></i></span><span class="search-result-copy"><span class="search-result-identity"><strong data-i18n="search.result1Title">工作区角色复核</strong><code>REC-204</code></span><span class="search-result-context" data-i18n="search.result1Context">匹配：角色权限与最近一次复核记录</span><span class="search-result-meta"><span data-i18n="search.typeRecord">记录</span><span data-i18n="search.sourceWorkspace">工作区</span><span data-i18n="search.result1Updated">2026-07-12 更新</span><span class="available" data-i18n="search.accessAvailable">可以打开</span></span></span><i data-lucide="arrow-right" aria-hidden="true"></i></a>
+            </li>
+            <li data-search-result data-result-id="DOC-118" data-scope="document" data-access="available" data-updated="20260710" data-name="Export recovery guidance" data-title-key="search.result2Title" data-description-key="search.result2Description" data-type-key="search.typeDocument" data-source-key="search.sourceKnowledge" data-access-key="search.accessAvailable" data-updated-key="search.result2Updated" data-search="export recovery guidance 导出 恢复 文档 data failure retry">
+              <a class="search-result-link" data-search-result-link href="?selected=DOC-118"><span class="search-result-icon"><i data-lucide="file-text" aria-hidden="true"></i></span><span class="search-result-copy"><span class="search-result-identity"><strong data-i18n="search.result2Title">导出失败恢复说明</strong><code>DOC-118</code></span><span class="search-result-context" data-i18n="search.result2Context">匹配：失败任务、重试范围与结果保留</span><span class="search-result-meta"><span data-i18n="search.typeDocument">文档</span><span data-i18n="search.sourceKnowledge">知识库</span><span data-i18n="search.result2Updated">2026-07-10 复核</span><span class="available" data-i18n="search.accessAvailable">可以打开</span></span></span><i data-lucide="arrow-right" aria-hidden="true"></i></a>
+            </li>
+            <li data-search-result data-result-id="TASK-074" data-scope="task" data-access="available" data-updated="20260709" data-name="Domain source verification" data-title-key="search.result3Title" data-description-key="search.result3Description" data-type-key="search.typeTask" data-source-key="search.sourceMonitoring" data-access-key="search.accessAvailable" data-updated-key="search.result3Updated" data-search="domain source verification 域名 来源 验证 任务 monitor evidence" data-partial-excluded="true">
+              <a class="search-result-link" data-search-result-link href="?selected=TASK-074"><span class="search-result-icon"><i data-lucide="list-checks" aria-hidden="true"></i></span><span class="search-result-copy"><span class="search-result-identity"><strong data-i18n="search.result3Title">域名来源验证任务</strong><code>TASK-074</code></span><span class="search-result-context" data-i18n="search.result3Context">匹配：来源校验、证据时间与负责人</span><span class="search-result-meta"><span data-i18n="search.typeTask">任务</span><span data-i18n="search.sourceMonitoring">监测队列</span><span data-i18n="search.result3Updated">2026-07-09 更新</span><span class="available" data-i18n="search.accessAvailable">可以打开</span></span></span><i data-lucide="arrow-right" aria-hidden="true"></i></a>
+            </li>
+            <li data-search-result data-result-id="REC-055" data-scope="record" data-access="restricted" data-updated="20260708" data-name="Restricted audit record" data-title-key="search.result4Title" data-description-key="search.result4Description" data-type-key="search.typeRecord" data-source-key="search.sourceAudit" data-access-key="search.accessRestricted" data-updated-key="search.result4Updated" data-search="restricted audit record 受限 审计 权限 记录 permission">
+              <a class="search-result-link" data-search-result-link href="?selected=REC-055"><span class="search-result-icon"><i data-lucide="lock-keyhole" aria-hidden="true"></i></span><span class="search-result-copy"><span class="search-result-identity"><strong data-i18n="search.result4Title">受限审计记录</strong><code>REC-055</code></span><span class="search-result-context" data-i18n="search.result4Context">仅显示允许披露的身份与权限状态</span><span class="search-result-meta"><span data-i18n="search.typeRecord">记录</span><span data-i18n="search.sourceAudit">审计</span><span data-i18n="search.result4Updated">2026-07-08 更新</span><span class="restricted" data-i18n="search.accessRestricted">权限受限</span></span></span><i data-lucide="arrow-right" aria-hidden="true"></i></a>
+            </li>
+          </ul>
+          <div class="search-empty-state" data-search-empty hidden><i data-lucide="circle-help" aria-hidden="true"></i><strong data-i18n="search.emptyTitle">没有匹配结果</strong><p data-i18n="search.emptyBody">查询与筛选仍然保留。可以调整其中一项，或重置后重新开始。</p><div><button class="flow-button" type="button" data-search-edit-query data-i18n="search.editQuery">修改查询</button><button class="flow-button quiet" type="button" data-search-reset-all><i data-lucide="refresh-cw" aria-hidden="true"></i><span data-i18n="search.resetAll">清除查询和筛选</span></button></div></div>
+          <div class="search-error-state" data-search-error hidden><i data-lucide="alert-triangle" aria-hidden="true"></i><strong data-i18n="search.errorTitle">无法取得搜索结果</strong><p data-i18n="search.errorBody">查询、筛选与排序均已保留。错误不能显示为零条结果。</p><button class="flow-button" type="button" data-search-retry><i data-lucide="refresh-cw" aria-hidden="true"></i><span data-i18n="search.retry">重试本地参考</span></button></div>
+          <footer class="search-result-footer"><span data-search-range>1–4 / 4</span><span data-i18n="search.footerNote">参考数据不使用无限滚动</span></footer>
+        </section>
+
+        <aside class="search-detail" data-search-detail aria-labelledby="search-detail-title">
+          <div class="search-detail-empty" data-search-detail-empty><i data-lucide="panel-right" aria-hidden="true"></i><strong data-i18n="search.detailEmptyTitle">选择一个结果</strong><p data-i18n="search.detailEmptyBody">选择会写入 URL。浏览器返回可恢复上一项，而不会重置查询。</p></div>
+          <article data-search-detail-content hidden>
+            <div class="search-detail-heading"><div><p data-search-detail-type></p><h2 id="search-detail-title" tabindex="-1" data-search-detail-title></h2><code data-search-detail-id></code></div><button class="icon-control" type="button" data-search-detail-close data-i18n-aria="search.closeDetail"><i data-lucide="x" aria-hidden="true"></i></button></div>
+            <p class="search-detail-description" data-search-detail-description></p>
+            <dl class="search-detail-metadata"><div><dt data-i18n="search.sourceLabel">来源</dt><dd data-search-detail-source></dd></div><div><dt data-i18n="search.updatedLabel">更新时间</dt><dd data-search-detail-updated></dd></div><div><dt data-i18n="search.availabilityLabel">可用性</dt><dd data-search-detail-access></dd></div></dl>
+            <p class="search-detail-boundary" data-search-detail-boundary></p>
+          </article>
+        </aside>
+      </div>
+    </main>
+
+    <script type="application/json" data-i18n-dictionary>
+      {
+        "zh-CN": {
+          "common.direction":"ltr","common.reference":"页面流程参考","common.language":"切换语言","common.themeDark":"切换到夜间模式","common.themeLight":"切换到日间模式","meta.title":"KIN 搜索与结果参考",
+          "search.eyebrow":"跨对象搜索参考","search.title":"查找记录、文档和任务","search.body":"提交后更新结果和 URL；筛选、排序、选择与错误状态保持独立。","search.fixtureNote":"确定性本地数据 · 不连接搜索服务 · 不代表真实排名或权限","search.queryLabel":"搜索全部参考对象","search.queryPlaceholder":"搜索名称、ID、来源或说明…","search.clearQuery":"清除查询","search.submit":"搜索","search.filters":"筛选","search.closeFilters":"关闭筛选","search.sortLabel":"排序","search.sortRelevance":"匹配度","search.sortUpdated":"最近更新","search.sortName":"名称","search.stateLabel":"本地参考状态","search.stateResults":"完整结果","search.statePartial":"部分结果","search.stateStale":"过期索引","search.stateEmpty":"无结果","search.stateError":"服务错误","search.shortcuts":"结果区域可使用 J / K 移动焦点","search.scopeLegend":"对象范围","search.scopeAll":"全部对象","search.scopeRecords":"记录","search.scopeDocuments":"文档","search.scopeTasks":"任务","search.accessLegend":"可用性","search.accessAll":"全部状态","search.accessAvailable":"可以打开","search.accessRestricted":"权限受限","search.applyFilters":"应用筛选","search.resetFilters":"重置筛选","search.defaultContext":"全部对象 · 所有可用性状态","search.countExact":"精确计数","search.countPartial":"部分计数","search.countUnknown":"计数未知","search.resultListLabel":"搜索结果","search.resultsCount":"{count} 条结果","search.partialCount":"{count} 条可用结果；一个来源不可用","search.noResultCount":"0 条结果","search.errorCount":"结果不可用","search.partialTitle":"部分来源暂时不可用","search.partialBody":"监测队列没有返回结果；现有结果保持可用，计数仅覆盖已返回来源。","search.staleTitle":"结果来自过期索引","search.staleBody":"本地样例索引记录于 2026-07-12 18:00 CST；采用产品必须显示真实新鲜度。","search.filterContext":"{scope} · {access}","search.activeFilterCount":"{count}",
+          "search.typeRecord":"记录","search.typeDocument":"文档","search.typeTask":"任务","search.sourceWorkspace":"工作区","search.sourceKnowledge":"知识库","search.sourceMonitoring":"监测队列","search.sourceAudit":"审计","search.result1Title":"工作区角色复核","search.result1Context":"匹配：角色权限与最近一次复核记录","search.result1Updated":"2026-07-12 更新","search.result1Description":"记录工作区角色的当前范围、最近变更和复核负责人。内容是本地样例。","search.result2Title":"导出失败恢复说明","search.result2Context":"匹配：失败任务、重试范围与结果保留","search.result2Updated":"2026-07-10 复核","search.result2Description":"说明失败导出如何保留筛选范围、任务 ID 和可重试边界。内容是本地样例。","search.result3Title":"域名来源验证任务","search.result3Context":"匹配：来源校验、证据时间与负责人","search.result3Updated":"2026-07-09 更新","search.result3Description":"跟踪域名来源、证据时间和人工复核责任。部分结果状态会明确隐藏这一来源。","search.result4Title":"受限审计记录","search.result4Context":"仅显示允许披露的身份与权限状态","search.result4Updated":"2026-07-08 更新","search.result4Description":"只展示允许披露的记录身份。真实产品必须在数据源执行授权，不能依赖界面隐藏。",
+          "search.emptyTitle":"没有匹配结果","search.emptyBody":"查询与筛选仍然保留。可以调整其中一项，或重置后重新开始。","search.editQuery":"修改查询","search.resetAll":"清除查询和筛选","search.errorTitle":"无法取得搜索结果","search.errorBody":"查询、筛选与排序均已保留。错误不能显示为零条结果。","search.retry":"重试本地参考","search.footerNote":"参考数据不使用无限滚动","search.selectionCleared":"所选结果不在当前结果范围内；详情已关闭。","search.detailEmptyTitle":"选择一个结果","search.detailEmptyBody":"选择会写入 URL。浏览器返回可恢复上一项，而不会重置查询。","search.closeDetail":"关闭结果详情","search.sourceLabel":"来源","search.updatedLabel":"更新时间","search.availabilityLabel":"可用性","search.availableBoundary":"稳定选择 URL 已建立；采用产品必须连接权威记录路由和真实权限。","search.restrictedBoundary":"此样例只披露允许显示的身份。采用产品不得泄露未授权记录内容。"
+        },
+        "en": {
+          "common.direction":"ltr","common.reference":"Page flow reference","common.language":"Change language","common.themeDark":"Switch to dark theme","common.themeLight":"Switch to light theme","meta.title":"KIN search and results reference",
+          "search.eyebrow":"Cross-object search reference","search.title":"Find records, documents, and tasks","search.body":"Submission updates results and the URL while filters, sort, selection, and failure remain distinct.","search.fixtureNote":"Deterministic local data · no search service · no claim of real ranking or permission","search.queryLabel":"Search all reference objects","search.queryPlaceholder":"Search name, ID, source, or description…","search.clearQuery":"Clear query","search.submit":"Search","search.filters":"Filters","search.closeFilters":"Close filters","search.sortLabel":"Sort","search.sortRelevance":"Relevance","search.sortUpdated":"Recently updated","search.sortName":"Name","search.stateLabel":"Local reference state","search.stateResults":"Complete results","search.statePartial":"Partial results","search.stateStale":"Stale index","search.stateEmpty":"No results","search.stateError":"Service error","search.shortcuts":"Use J / K to move focus in the result region","search.scopeLegend":"Object scope","search.scopeAll":"All objects","search.scopeRecords":"Records","search.scopeDocuments":"Documents","search.scopeTasks":"Tasks","search.accessLegend":"Availability","search.accessAll":"All states","search.accessAvailable":"Available to open","search.accessRestricted":"Permission restricted","search.applyFilters":"Apply filters","search.resetFilters":"Reset filters","search.defaultContext":"All objects · all availability states","search.countExact":"Exact count","search.countPartial":"Partial count","search.countUnknown":"Count unknown","search.resultListLabel":"Search results","search.resultsCount":"{count} results","search.partialCount":"{count} available results; one source unavailable","search.noResultCount":"0 results","search.errorCount":"Results unavailable","search.partialTitle":"Some sources are unavailable","search.partialBody":"The monitoring queue returned no result. Available results remain usable and the count covers returned sources only.","search.staleTitle":"Results come from a stale index","search.staleBody":"The local sample index was recorded at 2026-07-12 18:00 CST; an adopting product must expose real freshness.","search.filterContext":"{scope} · {access}","search.activeFilterCount":"{count}",
+          "search.typeRecord":"Record","search.typeDocument":"Document","search.typeTask":"Task","search.sourceWorkspace":"Workspace","search.sourceKnowledge":"Knowledge base","search.sourceMonitoring":"Monitoring queue","search.sourceAudit":"Audit","search.result1Title":"Workspace role review","search.result1Context":"Match: role permissions and the latest review record","search.result1Updated":"Updated 2026-07-12","search.result1Description":"Records the current workspace-role scope, latest change, and review owner. This is local sample content.","search.result2Title":"Export failure recovery guidance","search.result2Context":"Match: failed task, retry scope, and retained result","search.result2Updated":"Reviewed 2026-07-10","search.result2Description":"Explains how a failed export retains filter scope, task ID, and retry boundaries. This is local sample content.","search.result3Title":"Domain source verification task","search.result3Context":"Match: source validation, evidence time, and owner","search.result3Updated":"Updated 2026-07-09","search.result3Description":"Tracks domain source, evidence time, and human review ownership. The partial state explicitly omits this source.","search.result4Title":"Restricted audit record","search.result4Context":"Shows only identity and permission state allowed for disclosure","search.result4Updated":"Updated 2026-07-08","search.result4Description":"Shows only the record identity allowed for disclosure. A real product must authorize at the data source, not through interface hiding.",
+          "search.emptyTitle":"No matching results","search.emptyBody":"The query and filters remain intact. Adjust one dimension or reset and begin again.","search.editQuery":"Edit query","search.resetAll":"Clear query and filters","search.errorTitle":"Search results are unavailable","search.errorBody":"Query, filters, and sort are preserved. An error must not be reported as zero results.","search.retry":"Retry local reference","search.footerNote":"The reference does not use infinite loading","search.selectionCleared":"The selected result is outside the current result scope; its detail was closed.","search.detailEmptyTitle":"Select a result","search.detailEmptyBody":"Selection is written to the URL. Browser Back restores the previous item without resetting the query.","search.closeDetail":"Close result detail","search.sourceLabel":"Source","search.updatedLabel":"Updated","search.availabilityLabel":"Availability","search.availableBoundary":"A stable selected-result URL is established; an adopting product must connect the authoritative record route and real permission.","search.restrictedBoundary":"This sample exposes only identity allowed for disclosure. An adopting product must not reveal unauthorized record content."
+        }
+      }
+    </script>
+  </body>
+</html>

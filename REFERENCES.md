@@ -37,6 +37,33 @@ Third-party component defaults always have the lowest visual priority.
 | [AMicro](https://github.com/Subhan-code/Amicro--Micro-transitions-) | discover common paired-state and result-confirmation examples for review | generated button styling, hover-as-success semantics, package dependency, or gallery aesthetics |
 | [Name That UI](https://namethatui.com/) | discover canonical interface terms, aliases, and useful non-synonym distinctions | copied descriptions or screenshots, platform styling, production behavior, or normative accessibility claims |
 
+## Page-flow references
+
+These projects were reviewed for page taxonomy, workflow boundaries and state coverage. KIN does not inherit their visual style, framework architecture or product assumptions.
+
+| Reference | Evidence used by KIN | Excluded use |
+|---|---|---|
+| [Logto](https://github.com/logto-io/logto) | identity lifecycle coverage across sign-in, verification, multi-factor authentication, organizations and invitations | identity-provider code, branding or a claim that KIN implements authentication |
+| [Ory Elements](https://github.com/ory/elements) | separation of login, registration, recovery, verification and account settings | copied components, backend contracts or default styling |
+| [Better Auth UI](https://github.com/better-auth-ui/better-auth-ui) | practical boundaries among sign-in, password recovery, account settings and organization controls | package adoption without a consuming-product review |
+| [Cal.com](https://github.com/calcom/cal.diy) | resumable onboarding sequence, persisted personal settings, integration decisions and explicit completion | scheduling-specific fields or a universal onboarding order |
+| [Formbricks](https://github.com/formbricks/formbricks) | organization setup, invitations, integrations, exports and localization as connected product flows | survey-specific information architecture or visual imitation |
+| [Chatwoot](https://github.com/chatwoot/chatwoot) | durable inbox, team assignment, filtering, reporting and multilingual operational states | support-inbox terminology outside a real support task |
+| [Twenty](https://github.com/twentyhq/twenty) | workspace, object and saved-view boundaries in a data-intensive product | CRM object models presented as universal KIN architecture |
+| [Saleor Dashboard](https://github.com/saleor/saleor-dashboard) | mature commerce administration coverage for products, orders, channels and configuration | GraphQL or commerce architecture requirements for other product families |
+| [Ant Design Pro](https://github.com/ant-design/ant-design-pro) | broad page taxonomy including forms, lists, profiles, result states, account pages and access failures | template layout, page copying or visual defaults |
+| [Refine](https://github.com/refinedev/refine) | CRUD lifecycle, authentication, access control, URL state and unsaved-change concerns | framework adoption or generated-resource conventions as KIN requirements |
+| [Shadcn Fintech Template](https://github.com/Weebapp003/shadcn-fintech-template) | supplemental coverage for transaction filtering, bulk export, dashboard personalization, notification read state, account settings, and help/support routes | shadcn defaults, Card-wall composition, mock financial data, simulated transfers or market activity, decorative authentication, and framework/package adoption |
+
+## Authentication, recovery and accessibility sources
+
+| Source | KIN use | Boundary |
+|---|---|---|
+| [W3C Accessible Authentication](https://www.w3.org/WAI/WCAG22/Understanding/accessible-authentication-minimum.html) | password-manager support, paste and autofill, and alternatives to cognitive-function tests | does not prove a consuming product's login flow conforms |
+| [OWASP Authentication Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html) | reauthentication and generic authentication-error principles | security implementation remains owned and verified by the consuming product |
+| [OWASP Forgot Password Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Forgot_Password_Cheat_Sheet.html) | neutral recovery responses and resistance to account enumeration | the deterministic reference does not send reset messages |
+| [OWASP Multifactor Authentication Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Multifactor_Authentication_Cheat_Sheet.html) | recovery, factor-change and one-time-code risk boundaries | KIN does not provide an MFA backend |
+
 ## Runtime-component references
 
 | Candidate | Adoption tier | KIN document |

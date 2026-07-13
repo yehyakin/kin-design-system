@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light" data-theme-preference="system">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f6f7f8" />
+    <title>KIN Settings Reference</title>
+    <script>
+      (() => {
+        const preference = localStorage.getItem("kin-reference-theme") || "system";
+        const resolved = preference === "system" ? (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light") : preference;
+        document.documentElement.dataset.theme = resolved;
+        document.documentElement.dataset.themePreference = preference;
+      })();
+    </script>
+    <link rel="stylesheet" href="../product-patterns/patterns.css" />
+    <link rel="stylesheet" href="./page-patterns.css" />
+    <script type="module" src="./reference.js"></script>
+  </head>
+  <body class="flow-page" data-page="settings">
+    <header class="flow-header">
+      <a class="flow-brand" href="../../"><strong>KIN</strong><span data-i18n="common.reference">页面流程参考</span></a>
+      <div class="flow-preferences">
+        <div class="language-control">
+          <button class="icon-control" type="button" data-language-trigger aria-expanded="false" aria-controls="language-menu" data-i18n-aria="common.language"><i data-lucide="languages" aria-hidden="true"></i></button>
+          <div class="language-menu" id="language-menu" data-language-menu role="menu" hidden><button type="button" role="menuitemradio" aria-checked="true" data-language-option="zh-CN">中文</button><button type="button" role="menuitemradio" aria-checked="false" data-language-option="en">English</button></div>
+        </div>
+        <button class="icon-control theme-switch" type="button" role="switch" aria-checked="false" data-theme-switch data-i18n-aria="common.themeDark"><i class="theme-sun" data-lucide="sun" aria-hidden="true"></i><i class="theme-moon" data-lucide="moon" aria-hidden="true"></i></button>
+      </div>
+    </header>
+
+    <main class="settings-shell">
+      <nav class="settings-nav" aria-labelledby="settings-title">
+        <h1 id="settings-title" data-i18n="settings.title">设置</h1>
+        <div class="settings-nav-list">
+          <button type="button" data-settings-nav="profile"><i data-lucide="user-round" aria-hidden="true"></i><span data-i18n="settings.profileNav">个人资料</span></button>
+          <button type="button" data-settings-nav="appearance"><i data-lucide="palette" aria-hidden="true"></i><span data-i18n="settings.appearanceNav">外观</span></button>
+          <button type="button" data-settings-nav="security"><i data-lucide="shield-check" aria-hidden="true"></i><span data-i18n="settings.securityNav">安全与会话</span></button>
+          <button type="button" data-settings-nav="notifications"><i data-lucide="bell" aria-hidden="true"></i><span data-i18n="settings.notificationsNav">通知</span></button>
+        </div>
+      </nav>
+
+      <section class="settings-main">
+        <article class="settings-section" data-settings-section="profile">
+          <header><h2 tabindex="-1" data-i18n="settings.profileTitle">个人资料</h2><p data-i18n="settings.profileBody">这些信息用于协作、审计记录和通知，不改变登录标识。</p></header>
+          <form data-settings-form>
+            <section class="settings-group"><h3 data-i18n="settings.identity">显示身份</h3><p data-i18n="settings.identityBody">让协作者能够识别操作人。</p><div class="settings-fields">
+              <div class="flow-field"><label for="profile-name" data-i18n="settings.name">姓名</label><input id="profile-name" name="name" value="林简" autocomplete="name" /></div>
+              <div class="flow-field"><label for="profile-role" data-i18n="settings.role">职位或职责</label><input id="profile-role" name="role" value="运营负责人" autocomplete="organization-title" /></div>
+              <div class="flow-field"><label for="profile-locale" data-i18n="settings.locale">内容语言</label><select id="profile-locale" name="locale"><option>简体中文</option><option>English</option></select></div>
+            </div></section>
+            <div class="settings-action-bar"><p class="form-status" data-settings-status tabindex="-1" aria-live="polite"></p><div class="form-actions"><button class="flow-button quiet" type="button" data-settings-cancel disabled data-i18n="common.cancel">取消</button><button class="flow-button primary-action" type="submit" data-settings-save disabled><i data-lucide="save" aria-hidden="true"></i><span data-i18n="common.save">保存</span></button></div></div>
+          </form>
+        </article>
+
+        <article class="settings-section" data-settings-section="appearance" hidden>
+          <header><h2 tabindex="-1" data-i18n="settings.appearanceTitle">外观</h2><p data-i18n="settings.appearanceBody">主题偏好立即生效，并可在多个标签页之间同步。</p></header>
+          <section class="settings-group"><h3 data-i18n="settings.theme">主题</h3><p data-i18n="settings.themeBody">系统模式跟随设备；工具栏开关只在日间与夜间之间快速切换。</p><div class="appearance-options">
+            <label class="appearance-option"><span class="appearance-preview" aria-hidden="true"></span><span><input type="radio" name="appearance-theme" value="system" /> <span data-i18n="settings.systemTheme">跟随系统</span></span></label>
+            <label class="appearance-option"><span class="appearance-preview" aria-hidden="true"></span><span><input type="radio" name="appearance-theme" value="light" /> <span data-i18n="settings.lightTheme">日间</span></span></label>
+            <label class="appearance-option"><span class="appearance-preview" aria-hidden="true"></span><span><input type="radio" name="appearance-theme" value="dark" /> <span data-i18n="settings.darkTheme">夜间</span></span></label>
+          </div><p class="form-status" data-appearance-status aria-live="polite"></p></section>
+        </article>
+
+        <article class="settings-section" data-settings-section="security" hidden>
+          <header><h2 tabindex="-1" data-i18n="settings.securityTitle">安全与会话</h2><p data-i18n="settings.securityBody">会话列表必须说明设备、地点、最近活动和当前会话。</p></header>
+          <section class="settings-group"><h3 data-i18n="settings.sessions">活动会话</h3><p data-i18n="settings.sessionsBody">撤销其他会话是有后果的操作，需要确认并返回明确结果。</p><div class="session-list">
+            <div class="session-row"><div><strong data-i18n="settings.currentDevice">Windows · Chrome（当前）</strong><span data-i18n="settings.currentMeta">上海 · 刚刚</span></div><span class="flow-meta" data-i18n="settings.current">当前会话</span></div>
+            <div class="session-row"><div><strong data-i18n="settings.otherDevice">macOS · Safari</strong><span data-i18n="settings.otherMeta">杭州 · 2 天前</span></div><button class="flow-button danger" type="button" data-revoke-open data-i18n="settings.revoke">撤销</button></div>
+          </div><p class="form-status" data-session-status tabindex="-1" aria-live="polite"></p></section>
+        </article>
+
+        <article class="settings-section" data-settings-section="notifications" hidden>
+          <header><h2 tabindex="-1" data-i18n="settings.notificationsTitle">通知</h2><p data-i18n="settings.notificationsBody">围绕触发条件和渠道组织设置，不按组件类型堆叠开关。</p></header>
+          <section class="settings-group"><h3 data-i18n="settings.reviewEvents">审查事件</h3><p data-i18n="settings.reviewEventsBody">仅发送需要你处理或已明确关注的变化。</p><div class="settings-fields">
+            <label class="choice-row"><input type="checkbox" checked /><span><strong data-i18n="settings.assigned">分配给我的审查</strong><span data-i18n="settings.assignedBody">通过站内通知和邮箱发送。</span></span></label>
+            <label class="choice-row"><input type="checkbox" /><span><strong data-i18n="settings.daily">每日摘要</strong><span data-i18n="settings.dailyBody">每天汇总关注对象的变化。</span></span></label>
+          </div></section>
+        </article>
+      </section>
+    </main>
+
+    <dialog class="auth-dialog" data-revoke-dialog aria-labelledby="revoke-title">
+      <header><h2 id="revoke-title" data-i18n="settings.revokeTitle">撤销这个会话？</h2><p data-i18n="settings.revokeBody">该设备需要重新登录。当前会话不受影响。</p></header>
+      <div class="dialog-body"><p class="form-note" data-i18n="settings.revokeDevice">macOS · Safari · 杭州</p></div>
+      <footer><button class="flow-button" type="button" data-revoke-cancel data-i18n="common.cancel">取消</button><button class="flow-button danger" type="button" data-revoke-confirm data-i18n="settings.revokeConfirm">撤销会话</button></footer>
+    </dialog>
+
+    <script type="application/json" data-i18n-dictionary>
+      {
+        "zh-CN": {
+          "common.direction":"ltr","common.reference":"页面流程参考","common.language":"切换语言","common.themeDark":"切换到夜间模式","common.themeLight":"切换到日间模式","common.cancel":"取消","common.save":"保存","meta.title":"KIN 设置页参考","settings.title":"设置","settings.profileNav":"个人资料","settings.appearanceNav":"外观","settings.securityNav":"安全与会话","settings.notificationsNav":"通知","settings.profileTitle":"个人资料","settings.profileBody":"这些信息用于协作、审计记录和通知，不改变登录标识。","settings.identity":"显示身份","settings.identityBody":"让协作者能够识别操作人。","settings.name":"姓名","settings.role":"职位或职责","settings.locale":"内容语言","settings.noChanges":"没有待保存的更改","settings.unsaved":"有尚未保存的更改","settings.savedReference":"参考值已保存到当前页面状态。","settings.appearanceTitle":"外观","settings.appearanceBody":"主题偏好立即生效，并可在多个标签页之间同步。","settings.theme":"主题","settings.themeBody":"系统模式跟随设备；工具栏开关只在日间与夜间之间快速切换。","settings.systemTheme":"跟随系统","settings.lightTheme":"日间","settings.darkTheme":"夜间","settings.appearanceUpdated":"主题偏好已更新。","settings.securityTitle":"安全与会话","settings.securityBody":"会话列表必须说明设备、地点、最近活动和当前会话。","settings.sessions":"活动会话","settings.sessionsBody":"撤销其他会话是有后果的操作，需要确认并返回明确结果。","settings.currentDevice":"Windows · Chrome（当前）","settings.currentMeta":"上海 · 刚刚","settings.current":"当前会话","settings.otherDevice":"macOS · Safari","settings.otherMeta":"杭州 · 2 天前","settings.revoke":"撤销","settings.sessionReference":"参考会话已从列表中撤销。","settings.notificationsTitle":"通知","settings.notificationsBody":"围绕触发条件和渠道组织设置，不按组件类型堆叠开关。","settings.reviewEvents":"审查事件","settings.reviewEventsBody":"仅发送需要你处理或已明确关注的变化。","settings.assigned":"分配给我的审查","settings.assignedBody":"通过站内通知和邮箱发送。","settings.daily":"每日摘要","settings.dailyBody":"每天汇总关注对象的变化。","settings.revokeTitle":"撤销这个会话？","settings.revokeBody":"该设备需要重新登录。当前会话不受影响。","settings.revokeDevice":"macOS · Safari · 杭州","settings.revokeConfirm":"撤销会话"
+        },
+        "en": {
+          "common.direction":"ltr","common.reference":"Page flow reference","common.language":"Change language","common.themeDark":"Switch to dark theme","common.themeLight":"Switch to light theme","common.cancel":"Cancel","common.save":"Save","meta.title":"KIN settings page reference","settings.title":"Settings","settings.profileNav":"Profile","settings.appearanceNav":"Appearance","settings.securityNav":"Security and sessions","settings.notificationsNav":"Notifications","settings.profileTitle":"Profile","settings.profileBody":"This information supports collaboration, audit records, and notifications without changing the sign-in identifier.","settings.identity":"Display identity","settings.identityBody":"Help collaborators identify the person behind an action.","settings.name":"Name","settings.role":"Role or responsibility","settings.locale":"Content language","settings.noChanges":"No changes to save","settings.unsaved":"There are unsaved changes","settings.savedReference":"Reference values were saved to the current page state.","settings.appearanceTitle":"Appearance","settings.appearanceBody":"Theme preference applies immediately and can synchronize across tabs.","settings.theme":"Theme","settings.themeBody":"System follows the device; the toolbar switch is a quick light/dark override.","settings.systemTheme":"Follow system","settings.lightTheme":"Light","settings.darkTheme":"Dark","settings.appearanceUpdated":"Theme preference updated.","settings.securityTitle":"Security and sessions","settings.securityBody":"Session lists must identify the device, location, recent activity, and current session.","settings.sessions":"Active sessions","settings.sessionsBody":"Revoking another session has consequences and requires confirmation with a clear result.","settings.currentDevice":"Windows · Chrome (current)","settings.currentMeta":"Shanghai · Just now","settings.current":"Current session","settings.otherDevice":"macOS · Safari","settings.otherMeta":"Hangzhou · 2 days ago","settings.revoke":"Revoke","settings.sessionReference":"The reference session was revoked from the list.","settings.notificationsTitle":"Notifications","settings.notificationsBody":"Organize settings around triggers and channels rather than stacking controls by component type.","settings.reviewEvents":"Review events","settings.reviewEventsBody":"Only send changes that need your attention or belong to an explicit watchlist.","settings.assigned":"Reviews assigned to me","settings.assignedBody":"Send in-product and email notifications.","settings.daily":"Daily digest","settings.dailyBody":"Summarize changes to watched records each day.","settings.revokeTitle":"Revoke this session?","settings.revokeBody":"That device will need to sign in again. The current session is not affected.","settings.revokeDevice":"macOS · Safari · Hangzhou","settings.revokeConfirm":"Revoke session"
+        }
+      }
+    </script>
+  </body>
+</html>

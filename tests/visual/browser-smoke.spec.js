@@ -39,4 +39,25 @@ test("cross-browser smoke preserves navigation focus and advanced states", async
   await accept.scrollIntoViewIfNeeded();
   await accept.click();
   await expect(page.getByText("已接受 · 尚未执行", { exact: true })).toBeVisible();
+
+  await page.goto("/examples/page-patterns/access.html", { waitUntil: "domcontentloaded" });
+  await expect(page.locator("[data-sign-in-view]")).toBeVisible();
+  await page.locator("[data-recovery-open]").click();
+  await expect(page.locator("[data-recovery-view]")).toBeVisible();
+
+  await page.goto("/examples/page-patterns/system.html#conflict", { waitUntil: "domcontentloaded" });
+  await expect(page.locator("[data-system-code]")).toHaveText("409");
+  await expect(page.locator("[data-system-primary]")).toBeVisible();
+
+  await page.goto("/examples/page-patterns/support.html#tickets", { waitUntil: "domcontentloaded" });
+  await expect(page.locator('[data-support-section="tickets"]')).toBeVisible();
+  await page.locator('[data-ticket-select="SUP-1037"]').click();
+  await expect(page.locator('[data-ticket-detail="SUP-1037"]')).toBeVisible();
+
+  await page.goto("/examples/page-patterns/search.html?q=export", { waitUntil: "domcontentloaded" });
+  await expect(page.locator("[data-search-query]")).toHaveValue("export");
+  await expect(page.locator("[data-search-summary]")).toHaveText("1 条结果");
+  await page.locator('[data-result-id="DOC-118"] [data-search-result-link]').click();
+  await expect(page).toHaveURL(/selected=DOC-118/);
+  await expect(page.locator("[data-search-detail-title]")).toHaveText("导出失败恢复说明");
 });

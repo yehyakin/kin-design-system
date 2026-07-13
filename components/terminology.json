@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "terminology_version": "1.0.0",
+  "terminology_version": "1.1.0",
   "reviewed_on": "2026-07-13",
   "entries": [
     {
@@ -290,6 +290,51 @@
       "plain_definition": "A durable list of accepted work with identity, state, progress, result, cancellation, and recovery.",
       "use_when": "Work survives navigation, affects multiple targets, or needs durable status and history.",
       "do_not_use_when": "A brief foreground action completes within the current context."
+    },
+    {
+      "canonical_name": "Authentication Shell",
+      "catalog_id": "authentication-shell",
+      "aliases": ["authentication page shell", "access shell"],
+      "not_synonyms": ["Marketing Split Screen", "App Shell", "Authentication Dialog"],
+      "plain_definition": "A full-page structure containing one active sign-in, recovery, verification, registration, or invitation task and its destination context.",
+      "use_when": "Access requires a stable route or a flow that should not be confined to an overlay.",
+      "do_not_use_when": "A bounded protected action only needs recent authentication while its context remains visible."
+    },
+    {
+      "canonical_name": "Sign-in Form",
+      "catalog_id": "sign-in-form",
+      "aliases": ["login form", "credential form"],
+      "not_synonyms": ["Registration Form", "Account Recovery Form", "Verification Challenge"],
+      "plain_definition": "A configured identity-method form that submits credentials or starts a supported provider flow and retains a clear recovery path.",
+      "use_when": "A real identity backend accepts one or more sign-in methods.",
+      "do_not_use_when": "The product is registering a new account, recovering access, or only renewing a recent session."
+    },
+    {
+      "canonical_name": "Account Recovery Form",
+      "catalog_id": "account-recovery-form",
+      "aliases": ["forgot-password form", "access recovery form"],
+      "not_synonyms": ["Sign-in Form", "Password Change Form", "Verification Challenge"],
+      "plain_definition": "A non-enumerating request and result flow for starting product-owned account recovery.",
+      "use_when": "A person cannot use the configured sign-in method and the product supports a recovery route.",
+      "do_not_use_when": "An authenticated user is changing credentials or a challenge is already in progress."
+    },
+    {
+      "canonical_name": "Session Re-authentication Dialog",
+      "catalog_id": "session-reauthentication-dialog",
+      "aliases": ["step-up authentication dialog", "recent-auth dialog"],
+      "not_synonyms": ["Sign-in Page", "Confirmation Dialog", "Permission Dialog"],
+      "plain_definition": "A modal identity check that preserves a bounded task and resumes only its already requested protected action.",
+      "use_when": "A session expired or product policy requires recent authentication before a sensitive action.",
+      "do_not_use_when": "The user needs registration, long recovery, provider administration, or a new destination."
+    },
+    {
+      "canonical_name": "Verification Challenge",
+      "catalog_id": "verification-challenge",
+      "aliases": ["identity challenge", "factor challenge"],
+      "not_synonyms": ["One-Time Password Input", "Sign-in Form", "Account Recovery Form"],
+      "plain_definition": "A time- and method-bound proof step such as a link, passkey, device approval, code, or recovery factor.",
+      "use_when": "A real backend has issued or requested a configured proof and can report expiration, retry, and alternatives.",
+      "do_not_use_when": "The interface would simulate delivery, verification, timers, or factor availability."
     },
     {
       "canonical_name": "Chart",

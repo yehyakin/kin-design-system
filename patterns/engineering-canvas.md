@@ -16,8 +16,12 @@ Help a user create, select, inspect, modify, compare, and safely reverse changes
 
 - Canvas remains the primary surface.
 - Tool rail controls modes; object/layer rail controls structure; Inspector controls selected properties.
+- Compact document commands belong to a named Toolbar with grouped actions, roving focus, and deterministic overflow priority.
+- Resizable structural panels use the Split View contract, including an operable separator, bounded sizes, state preservation, and a small-screen replacement.
 - Status bar exposes coordinates, zoom, units, snap/constraint state, save state, and revision.
 - History or comparison appears when revision is the task; it does not permanently crowd the canvas.
+
+Toolbar and Split View behavior MUST follow [`components/workspace-structure.md`](../components/workspace-structure.md).
 
 ## Visual register
 

@@ -35,6 +35,9 @@ jobs:
       - name: Validate component catalog
         run: node scripts/validate-components.mjs
 
+      - name: Validate page catalog
+        run: node scripts/validate-pages.mjs
+
       - name: Validate release consistency
         run: node scripts/validate-release.mjs
 

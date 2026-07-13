@@ -52,4 +52,16 @@ await build({
   chunkNames: "chunks/[name]-[hash]",
 });
 
+await build({
+  entryPoints: [path.join(root, "examples", "page-patterns", "reference.js")],
+  outdir: path.join(output, "examples", "page-patterns"),
+  bundle: true,
+  splitting: true,
+  format: "esm",
+  target: ["es2022"],
+  minify: true,
+  entryNames: "[name]",
+  chunkNames: "chunks/[name]-[hash]",
+});
+
 console.log(`KIN showcase built: ${path.relative(root, output)}`);

@@ -192,6 +192,15 @@ test("component catalog and terminology pass structural validation", () => {
   assert.equal(result.summary.errors, 0);
 });
 
+test("page catalog passes maturity and evidence-path validation", () => {
+  const run = spawnSync(process.execPath, [path.join(root, "scripts", "validate-pages.mjs"), "--json"], { encoding: "utf8" });
+  assert.equal(run.status, 0, run.stderr);
+  const result = JSON.parse(run.stdout);
+  assert.ok(result.summary.pageEntries >= 10);
+  assert.ok(result.summary.stable >= 8);
+  assert.equal(result.summary.errors, 0);
+});
+
 test("candidate audit reports context and does not fail on P2 alone", () => {
   const project = fs.mkdtempSync(path.join(os.tmpdir(), "kin-audit-"));
   fs.mkdirSync(path.join(project, "src"));

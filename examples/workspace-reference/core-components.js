@@ -101,6 +101,157 @@ document.querySelector("[data-core-form]").addEventListener("submit", (event) =>
   document.querySelector("[data-form-result]").textContent = "规则已保存到当前工作区。";
 });
 
+const fileUpload = document.querySelector("[data-file-upload]");
+const fileInput = fileUpload.querySelector("[data-file-input]");
+const fileDropzone = fileUpload.querySelector("[data-file-dropzone]");
+const fileBrowse = fileUpload.querySelector("[data-file-browse]");
+const fileStatus = fileUpload.querySelector("[data-file-status]");
+const fileName = fileUpload.querySelector("[data-file-name]");
+const fileState = fileUpload.querySelector("[data-file-state]");
+const fileProgress = fileUpload.querySelector("[data-file-progress]");
+const fileMessage = fileUpload.querySelector("[data-file-message]");
+const fileCancel = fileUpload.querySelector("[data-file-cancel]");
+const fileRetry = fileUpload.querySelector("[data-file-retry]");
+const fileRemove = fileUpload.querySelector("[data-file-remove]");
+const acceptedFileTypes = new Set(["application/pdf", "image/png", "image/jpeg"]);
+const maxFileSize = 10 * 1024 * 1024;
+let selectedFile = null;
+let uploadTimer = 0;
+let validationTimer = 0;
+let transferAttempt = 0;
+
+function formatFileSize(bytes) {
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${Math.round(bytes / 1024)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+}
+
+function stopFileTimers() {
+  clearInterval(uploadTimer);
+  clearTimeout(validationTimer);
+  uploadTimer = 0;
+  validationTimer = 0;
+}
+
+function renderFileState(state, label, message, progress = 0) {
+  fileStatus.dataset.state = state;
+  fileStatus.setAttribute("aria-busy", String(["validating", "uploading"].includes(state)));
+  fileState.textContent = label;
+  fileMessage.textContent = message;
+  fileProgress.value = progress;
+  fileProgress.textContent = `${progress}%`;
+  fileProgress.hidden = state !== "uploading";
+  fileCancel.hidden = !["validating", "uploading"].includes(state);
+  fileRetry.hidden = !["failed", "cancelled"].includes(state) || !selectedFile || state === "failed-validation";
+  fileRemove.hidden = !selectedFile || ["validating", "uploading"].includes(state);
+}
+
+function resetFileUpload() {
+  stopFileTimers();
+  selectedFile = null;
+  transferAttempt = 0;
+  fileInput.value = "";
+  fileName.textContent = "尚未选择文件";
+  renderFileState("empty", "等待选择", "选择前可查看类型、大小和隐私约束。");
+}
+
+function failFileValidation(message) {
+  renderFileState("failed-validation", "验证失败", message);
+  fileRetry.hidden = true;
+  fileRemove.hidden = false;
+}
+
+function rejectDroppedSelection(message) {
+  stopFileTimers();
+  selectedFile = null;
+  transferAttempt = 0;
+  fileInput.value = "";
+  fileName.textContent = "未接受拖放内容";
+  failFileValidation(message);
+  fileRemove.hidden = true;
+}
+
+function startLocalTransfer() {
+  stopFileTimers();
+  transferAttempt += 1;
+  let progress = 0;
+  renderFileState("uploading", "本地模拟中", "正在运行本地交互 fixture；文件不会发送到服务器。", progress);
+  uploadTimer = setInterval(() => {
+    progress = Math.min(100, progress + 20);
+    fileProgress.value = progress;
+    fileProgress.textContent = `${progress}%`;
+    if (selectedFile?.name.toLocaleLowerCase().includes("retry") && transferAttempt === 1 && progress >= 60) {
+      stopFileTimers();
+      renderFileState("failed", "模拟传输失败", "本地 fixture 在传输阶段失败。可重试；没有文件离开此页面。", progress);
+      return;
+    }
+    if (progress >= 100) {
+      stopFileTimers();
+      renderFileState("complete", "本地模拟完成", "本地交互已完成；未连接服务器，也未创建真实上传记录。", 100);
+    }
+  }, 55);
+}
+
+function validateSelectedFile(file) {
+  stopFileTimers();
+  selectedFile = file;
+  transferAttempt = 0;
+  fileName.textContent = `${file.name} · ${formatFileSize(file.size)}`;
+  renderFileState("validating", "正在验证", "正在检查文件类型与大小；尚未开始模拟传输。");
+  validationTimer = setTimeout(() => {
+    const extensionAccepted = /\.(pdf|png|jpe?g)$/i.test(file.name);
+    if (!acceptedFileTypes.has(file.type) && !extensionAccepted) {
+      failFileValidation("文件类型不受支持。请选择 PDF、PNG 或 JPG。");
+      return;
+    }
+    if (file.size > maxFileSize) {
+      failFileValidation("文件超过 10 MB 限制。请选择更小的文件。");
+      return;
+    }
+    startLocalTransfer();
+  }, 70);
+}
+
+fileBrowse.addEventListener("click", () => fileInput.click());
+fileInput.addEventListener("change", () => {
+  const [file] = fileInput.files;
+  if (file) validateSelectedFile(file);
+});
+for (const eventName of ["dragenter", "dragover"]) {
+  fileDropzone.addEventListener(eventName, (event) => {
+    event.preventDefault();
+    fileDropzone.classList.add("is-drag-active");
+  });
+}
+for (const eventName of ["dragleave", "drop"]) {
+  fileDropzone.addEventListener(eventName, (event) => {
+    event.preventDefault();
+    fileDropzone.classList.remove("is-drag-active");
+  });
+}
+fileDropzone.addEventListener("drop", (event) => {
+  const files = [...event.dataTransfer.files];
+  const hasDirectory = [...event.dataTransfer.items].some((item) => {
+    const entry = typeof item.webkitGetAsEntry === "function" ? item.webkitGetAsEntry() : null;
+    return entry?.isDirectory;
+  });
+  if (hasDirectory) {
+    rejectDroppedSelection("不支持文件夹。请选择一个 PDF、PNG 或 JPG 文件。");
+    return;
+  }
+  if (files.length !== 1) {
+    rejectDroppedSelection(files.length > 1 ? "一次只能选择 1 个文件。" : "未检测到本地文件；不接受 URL 或文本拖放。");
+    return;
+  }
+  validateSelectedFile(files[0]);
+});
+fileCancel.addEventListener("click", () => {
+  stopFileTimers();
+  renderFileState("cancelled", "已取消", "本地模拟已取消。可重试或移除所选文件。", Number(fileProgress.value));
+});
+fileRetry.addEventListener("click", startLocalTransfer);
+fileRemove.addEventListener("click", resetFileUpload);
+
 const searchField = document.querySelector("[data-core-search]");
 const searchStatus = document.querySelector("[data-search-status]");
 document.querySelector("[data-search-clear]").addEventListener("click", () => {
@@ -212,6 +363,19 @@ tree.addEventListener("keydown", (event) => {
     else if (current.hasAttribute("aria-expanded")) { event.preventDefault(); current.setAttribute("aria-expanded", "false"); }
   }
 });
+
+for (const toggle of document.querySelectorAll("[data-truncation-toggle]")) {
+  const fullValue = document.querySelector(`#${toggle.getAttribute("aria-controls")}`);
+  const sample = toggle.closest(".truncation-sample");
+  const preview = sample.querySelector("[data-truncation-preview]");
+  toggle.addEventListener("click", () => {
+    const expanded = toggle.getAttribute("aria-expanded") === "true";
+    toggle.setAttribute("aria-expanded", String(!expanded));
+    toggle.textContent = expanded ? "显示完整值" : "收起完整值";
+    preview.hidden = !expanded;
+    fullValue.hidden = expanded;
+  });
+}
 
 const dialog = document.querySelector(".core-dialog");
 const dialogOpen = document.querySelector("[data-dialog-open]");

@@ -60,8 +60,8 @@
 
       <main id="workspace" class="workspace" tabindex="-1">
         <header class="workspace-bar">
-          <div class="breadcrumb" data-i18n-aria="breadcrumb">
-            <span data-i18n="database">对象数据库</span><span aria-hidden="true">/</span><strong>Alpha Network</strong>
+          <div class="location-identity" data-i18n-aria="breadcrumb">
+            <span data-i18n="database">对象数据库</span><span aria-hidden="true">/</span><strong aria-current="page" title="Alpha Network">Alpha Network</strong>
           </div>
           <div class="workspace-actions">
             <button type="button" class="search-button" data-i18n-aria="search">
@@ -86,7 +86,14 @@
               <span class="theme-switch-track" aria-hidden="true"><span></span></span>
               <span class="theme-switch-icon"><i data-lucide="moon"></i></span>
             </button>
-            <button type="button" class="icon-button" data-contrast-toggle aria-pressed="false" data-i18n-aria="contrast"><i data-lucide="contrast"></i></button>
+            <div class="location-overflow" data-location-overflow>
+              <button type="button" class="icon-button" data-location-overflow-trigger aria-haspopup="menu" aria-expanded="false" data-i18n-aria="moreActions"><i data-lucide="ellipsis"></i></button>
+              <div class="location-overflow-menu" data-location-overflow-menu role="menu" hidden>
+                <button type="button" role="menuitemcheckbox" data-contrast-toggle aria-checked="false"><i data-lucide="contrast"></i><span data-i18n="contrast">切换高对比度</span></button>
+                <button type="button" role="menuitem" data-copy-location><i data-lucide="link"></i><span data-i18n="copyLink">复制对象链接</span></button>
+              </div>
+            </div>
+            <span class="visually-hidden" role="status" aria-live="polite" data-location-status></span>
           </div>
         </header>
 

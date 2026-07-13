@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "catalog_version": "1.2.1",
+  "catalog_version": "1.4.0",
   "reviewed_on": "2026-07-13",
   "status_definitions": {
     "stable": "Normative contract, runnable reference, and applicable automated acceptance checks exist.",
@@ -214,14 +214,14 @@
       "id": "location-bar",
       "canonical_name": "Location Bar",
       "tier": "workspace",
-      "status": "candidate",
-      "contract_paths": ["DESIGN.md"],
+      "status": "stable",
+      "contract_paths": ["DESIGN.md", "components/workspace-structure.md"],
       "reference_paths": ["examples/workspace-reference/index.html"],
       "test_paths": ["tests/visual/workspace.spec.js"],
       "product_families": ["intelligence", "ecommerce", "engineering"],
       "support": { "themes": true, "responsive": true, "keyboard": true, "touch": true, "reduced_motion": true },
-      "manual_checks": ["long hierarchy", "localization"],
-      "known_gaps": ["overflow and action-priority contract"]
+      "manual_checks": ["long hierarchy at 200% zoom", "localization and RTL action order"],
+      "known_gaps": []
     },
     {
       "id": "tabs",
@@ -474,14 +474,14 @@
       "id": "toolbar",
       "canonical_name": "Toolbar",
       "tier": "workspace",
-      "status": "candidate",
-      "contract_paths": ["DESIGN.md", "patterns/engineering-canvas.md"],
+      "status": "stable",
+      "contract_paths": ["DESIGN.md", "components/workspace-structure.md", "patterns/engineering-canvas.md"],
       "reference_paths": ["examples/product-patterns/canvas.html"],
       "test_paths": ["tests/visual/workspace.spec.js"],
       "product_families": ["engineering", "ecommerce"],
-      "support": { "themes": true, "responsive": false, "keyboard": true, "touch": true, "reduced_motion": true },
-      "manual_checks": ["roving focus", "overflow priority"],
-      "known_gaps": ["grouping, overflow, and responsive contract"]
+      "support": { "themes": true, "responsive": true, "keyboard": true, "touch": true, "reduced_motion": true },
+      "manual_checks": ["roving focus with a screen reader", "touch overflow priority"],
+      "known_gaps": []
     },
     {
       "id": "evidence-list",
@@ -630,14 +630,14 @@
       "id": "file-upload",
       "canonical_name": "File Upload",
       "tier": "core",
-      "status": "candidate",
+      "status": "stable",
       "contract_paths": ["components/forms-and-entry.md"],
       "reference_paths": ["examples/workspace-reference/core-components.html"],
       "test_paths": ["tests/visual/workspace.spec.js"],
-      "product_families": ["ecommerce", "engineering"],
+      "product_families": ["all"],
       "support": { "themes": true, "responsive": true, "keyboard": true, "touch": true, "reduced_motion": true },
-      "manual_checks": ["real upload lifecycle, cancellation, failure, and retry"],
-      "known_gaps": ["the reference does not connect to a real upload backend"]
+      "manual_checks": ["consuming-product real backend lifecycle, cancellation, cleanup, failure, and retry before adoption evidence is verified"],
+      "known_gaps": []
     },
     {
       "id": "pagination",
@@ -708,27 +708,27 @@
       "id": "split-view",
       "canonical_name": "Split View",
       "tier": "workspace",
-      "status": "draft",
-      "contract_paths": ["components/terminology.md"],
+      "status": "stable",
+      "contract_paths": ["components/terminology.md", "components/workspace-structure.md"],
       "reference_paths": ["examples/product-patterns/canvas.html"],
-      "test_paths": [],
+      "test_paths": ["tests/visual/workspace.spec.js"],
       "product_families": ["engineering", "intelligence"],
-      "support": { "themes": true, "responsive": false, "keyboard": false, "touch": false, "reduced_motion": true },
-      "manual_checks": [],
-      "known_gaps": ["resize handle, min/max, keyboard resize, persistence, and mobile fallback"]
+      "support": { "themes": true, "responsive": true, "keyboard": true, "touch": true, "reduced_motion": true },
+      "manual_checks": ["pointer and touch resize", "200% zoom and mobile fallback", "persisted width after product schema changes"],
+      "known_gaps": []
     },
     {
       "id": "truncation",
       "canonical_name": "Truncation",
       "tier": "core",
-      "status": "draft",
-      "contract_paths": ["components/terminology.md"],
-      "reference_paths": ["examples/workspace-reference/index.html"],
-      "test_paths": [],
+      "status": "stable",
+      "contract_paths": ["components/terminology.md", "components/data-display.md"],
+      "reference_paths": ["examples/workspace-reference/core-components.html"],
+      "test_paths": ["tests/visual/workspace.spec.js"],
       "product_families": ["all"],
-      "support": { "themes": true, "responsive": false, "keyboard": false, "touch": false, "reduced_motion": true },
-      "manual_checks": [],
-      "known_gaps": ["full-value access, middle truncation, line clamp, RTL, and tests"]
+      "support": { "themes": true, "responsive": true, "keyboard": true, "touch": true, "reduced_motion": true },
+      "manual_checks": ["long localization at 200% zoom", "RTL and mixed-direction identifiers", "screen-reader full-value access"],
+      "known_gaps": []
     },
     {
       "id": "overflow-menu",
@@ -885,6 +885,71 @@
       "support": { "themes": true, "responsive": true, "keyboard": false, "touch": false, "reduced_motion": true },
       "manual_checks": ["existing-value continuity", "screen-reader value"],
       "known_gaps": ["runnable reference and theme non-replay test"]
+    },
+    {
+      "id": "authentication-shell",
+      "canonical_name": "Authentication Shell",
+      "tier": "core",
+      "status": "stable",
+      "contract_paths": ["components/authentication.md", "pages/authentication-and-access.md"],
+      "reference_paths": ["examples/page-patterns/access.html"],
+      "test_paths": ["tests/visual/page-patterns.spec.js", "tests/visual/browser-smoke.spec.js"],
+      "product_families": ["all"],
+      "support": { "themes": true, "responsive": true, "keyboard": true, "touch": true, "reduced_motion": true },
+      "manual_checks": ["real identity-provider integration", "password-manager and autofill behavior", "200% zoom and screen-reader task order"],
+      "known_gaps": []
+    },
+    {
+      "id": "sign-in-form",
+      "canonical_name": "Sign-in Form",
+      "tier": "core",
+      "status": "stable",
+      "contract_paths": ["components/authentication.md", "pages/authentication-and-access.md"],
+      "reference_paths": ["examples/page-patterns/access.html"],
+      "test_paths": ["tests/visual/page-patterns.spec.js"],
+      "product_families": ["all"],
+      "support": { "themes": true, "responsive": true, "keyboard": true, "touch": true, "reduced_motion": true },
+      "manual_checks": ["real authentication errors and throttling", "autofill, paste, and password-manager behavior", "screen-reader field and error relationships"],
+      "known_gaps": []
+    },
+    {
+      "id": "account-recovery-form",
+      "canonical_name": "Account Recovery Form",
+      "tier": "core",
+      "status": "stable",
+      "contract_paths": ["components/authentication.md", "pages/authentication-and-access.md"],
+      "reference_paths": ["examples/page-patterns/access.html"],
+      "test_paths": ["tests/visual/page-patterns.spec.js"],
+      "product_families": ["all"],
+      "support": { "themes": true, "responsive": true, "keyboard": true, "touch": true, "reduced_motion": true },
+      "manual_checks": ["real delivery and expiration lifecycle", "enumeration resistance and rate limiting", "screen-reader result announcement"],
+      "known_gaps": []
+    },
+    {
+      "id": "session-reauthentication-dialog",
+      "canonical_name": "Session Re-authentication Dialog",
+      "tier": "core",
+      "status": "stable",
+      "contract_paths": ["components/authentication.md", "components/overlays.md", "pages/authentication-and-access.md"],
+      "reference_paths": ["examples/page-patterns/access.html"],
+      "test_paths": ["tests/visual/page-patterns.spec.js"],
+      "product_families": ["all"],
+      "support": { "themes": true, "responsive": true, "keyboard": true, "touch": true, "reduced_motion": true },
+      "manual_checks": ["real recent-authentication policy", "underlying draft preservation", "modal screen-reader and mobile-sheet behavior"],
+      "known_gaps": []
+    },
+    {
+      "id": "verification-challenge",
+      "canonical_name": "Verification Challenge",
+      "tier": "conditional",
+      "status": "candidate",
+      "contract_paths": ["components/authentication.md", "integrations/input-otp.md"],
+      "reference_paths": [],
+      "test_paths": [],
+      "product_families": ["all"],
+      "support": { "themes": true, "responsive": true, "keyboard": true, "touch": true, "reduced_motion": true },
+      "manual_checks": ["real verification backend", "expiration, resend, and lost-factor behavior", "autofill, paste, and screen-reader review"],
+      "known_gaps": ["no runnable reference or automated checks without a real verification flow"]
     },
     {
       "id": "slider",

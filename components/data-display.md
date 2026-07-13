@@ -8,6 +8,7 @@ This contract defines comparable records, hierarchical data, properties, status,
 
 - Display structure MUST follow the task: reading, comparison, scanning, hierarchy, or inspection.
 - Values MUST retain unit, scope, source, freshness, and uncertainty where those affect interpretation.
+- Demo, fixture, estimated, delayed, cached, and simulated values MUST be labeled when a user could otherwise interpret them as current product data. `Live` and `real-time` MUST be reserved for a real updating source with observable freshness and failure behavior.
 - Empty, unknown, zero, unavailable, stale, and error MUST remain distinct.
 - Truncation MUST preserve access to the full value.
 - Color MUST NOT be the only carrier of status or comparison.
@@ -108,6 +109,57 @@ Use Skeleton only when content geometry is known and a brief loading placeholder
 - The full value MUST remain available through accessible text, a Tooltip for short values, expansion, copy, or detail view.
 - Critical identifiers SHOULD preserve distinguishable prefixes and suffixes.
 - Overflow MUST not hide units, negative signs, status, or the only action.
+
+### Modes
+
+Use one declared mode according to the content:
+
+- **End truncation** for names or paths whose beginning carries identity.
+- **Middle truncation** for identifiers, hashes, domains, and file names where both prefix and suffix distinguish values.
+- **Line clamp** for prose when a preview is useful and an explicit expansion path exists.
+- **Wrap** instead of truncation when the complete value is required for the task or comparison.
+
+Truncation MUST NOT be applied merely to make unrelated rows share an artificial height.
+
+### Full-value access
+
+- The full value MUST be available to pointer, keyboard, touch, and assistive-technology users.
+- A native `title` attribute alone is insufficient because it is unreliable for touch and keyboard users.
+- Tooltip MAY expose a short full value when the Tooltip contract is satisfied. Long or interactive content MUST use expansion, copy, Popover, or detail view instead.
+- A shortened visual rendering MUST expose the unshortened accessible value when assistive technology would otherwise receive only the shortened text.
+- Copy MUST use the source value, not the visible ellipsis string.
+- Expansion MUST state its target with `aria-controls` and current state with `aria-expanded` when applicable.
+- Collapsing an expanded value MUST preserve focus and MUST NOT lose selection or edits elsewhere.
+
+### Content rules
+
+- Ellipsis MUST be a rendering decision, not destructive modification of stored or submitted content.
+- Middle truncation MUST preserve meaningful prefix and suffix lengths for the content type; fixed character counts are not universally safe.
+- Units, signs, status words, extensions, and version suffixes MUST remain interpretable.
+- Similar values shown together SHOULD retain enough distinguishing text to avoid false matches.
+- Security-sensitive values MUST follow the product's redaction policy. Truncation is not redaction.
+
+### Responsive, localization, and RTL
+
+- Truncation MUST be recalculated or released when the available width changes.
+- Localized text expansion MUST be tested before choosing truncation over wrapping or alternate layout.
+- In RTL content, visual ellipsis placement MUST follow reading direction while preserving the declared semantic prefix and suffix.
+- Mixed-direction identifiers SHOULD isolate their direction so punctuation and suffixes remain stable.
+- At 200% zoom, users MUST retain a direct path to the full value without horizontal page overflow.
+
+### Themes, contrast, and motion
+
+- Full-value controls MUST retain visible focus in every theme and Forced Colors.
+- Expanding or collapsing a clamped region MAY use a short opacity or size transition only when it remains interruptible and content does not jump unexpectedly.
+- Reduced motion MUST use immediate expansion or a short crossfade.
+
+### Acceptance
+
+- End, middle, and line-clamp examples expose their complete source values.
+- Keyboard and touch users can reveal or copy the same value available on pointer hover.
+- Copied and submitted values never contain visual ellipsis characters unless those characters are part of the source.
+- Long localization, mixed-direction identifiers, RTL, and 200% zoom preserve identity and required actions.
+- Truncation does not hide a changed value, validation error, unit, status, or only recovery action.
 
 ## Themes, contrast, and localization
 
