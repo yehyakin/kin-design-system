@@ -1,6 +1,6 @@
 {
   "name": "kin-design-system",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "description": "Design contracts, tokens, reference interfaces, and review tooling for information-rich products.",
   "private": true,
   "license": "MIT",

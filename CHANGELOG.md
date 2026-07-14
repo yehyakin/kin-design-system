@@ -6,6 +6,16 @@ The project follows semantic versioning for normative design documentation.
 
 ## Unreleased
 
+## 2.3.0 — 2026-07-14
+
+### Scheduling workspace and contextual layout
+
+- Added a candidate Scheduling Workspace page contract covering time semantics, period and URL state, schedule and agenda parity, conflicts, recurrence boundaries, non-drag alternatives, time zones, failure recovery, and narrow-screen behavior.
+- Added the candidate Context Sidecar component and canonical terminology, distinguishing persistent task context from Inspector, Sidebar, Drawer, Popover, and generic AI chat.
+- Strengthened Sidebar collapse choreography and container-aware density rules with reversible motion, stable labels and focus, layout-versioned persistence, and mobile alternatives.
+- Added Serena as a third-party interaction observation with explicit exclusions for copied assets, hosted fonts, simulated AI, desktop-only rejection, and unsupported production claims.
+- Added a bilingual deterministic scheduling reference and automated checks for themes, period and selected-item URL state, Sidebar collapse, Sidecar wide reflow, narrow modal adaptation, focus restoration, agenda presentation, and Reduced Motion.
+
 ### Interruptible motion and external-reference translation
 
 - Added an explicit translation matrix for Boneyard, Reicon, Hiraki, Interfaces, Rico Bookmark Manager, and motion-gallery evidence so external references produce KIN-owned contracts, runnable evidence, and verification rather than copied aesthetics.

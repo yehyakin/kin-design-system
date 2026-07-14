@@ -14,7 +14,7 @@
 </p>
 
 <p align="center">
-  <a href="./DESIGN.md"><img src="https://img.shields.io/badge/Design_Contract-v2.2.0-5E6AD2" alt="KIN Design Contract v2.2.0" /></a>
+  <a href="./DESIGN.md"><img src="https://img.shields.io/badge/Design_Contract-v2.3.0-5E6AD2" alt="KIN Design Contract v2.3.0" /></a>
   <a href="https://github.com/yehyakin/kin-design-system/actions/workflows/validate-docs.yml"><img src="https://github.com/yehyakin/kin-design-system/actions/workflows/validate-docs.yml/badge.svg" alt="Documentation validation" /></a>
   <a href="./LICENSE"><img src="https://img.shields.io/badge/License-MIT-232326" alt="MIT License" /></a>
 </p>
@@ -100,8 +100,8 @@ Not every product needs a dense layout, a sidebar, an inspector, or a command me
 - Information hierarchy before decoration
 - Public content pages and focused reading widths
 - Access, resumable setup, settings, administration, and recovery flows
-- Application shells, sidebars, view controls, work areas, and inspectors
-- List, split, detail, board, timeline, canvas, and fullscreen views
+- Application shells, reversible sidebars, view controls, work areas, inspectors, and task-scoped Context Sidecars
+- List, split, detail, board, timeline, schedule, canvas, and fullscreen views
 - Responsive behavior that changes priority instead of merely shrinking desktop UI
 
 ### Components and states
@@ -142,7 +142,7 @@ Read [`DESIGN.md`](./DESIGN.md) and [`DELIVERY.md`](./DELIVERY.md) when planning
 
 Add the design contract and relevant supporting files to a project's documentation. Record project-specific exceptions next to the contract instead of silently changing the rules.
 
-KIN 2.2 includes a non-destructive adoption record, an implementation brief, route-level product profiles, verification evidence, and a candidate audit:
+KIN 2.3 includes a non-destructive adoption record, an implementation brief, route-level product profiles, verification evidence, and a candidate audit:
 
 ```bash
 node scripts/init-adoption.mjs ../your-project --profile intelligence-workspace
@@ -336,7 +336,7 @@ Each adopting project is responsible for checking the current version, license, 
 | [`scripts/audit-project.mjs`](./scripts/audit-project.mjs) | Read-only static candidate audit with human-review boundaries |
 | [`scripts/export-figma-variables.mjs`](./scripts/export-figma-variables.mjs) | Create-only Figma Variables REST payload generator |
 | [`components/core-states.md`](./components/core-states.md) | Normative component state and acceptance matrices |
-| [`components/workspace-structure.md`](./components/workspace-structure.md) | Location Bar, Toolbar, and Split View structure, input, responsive, and persistence contract |
+| [`components/workspace-structure.md`](./components/workspace-structure.md) | Sidebar collapse, Location Bar, Toolbar, Split View, and Context Sidecar structure, input, responsive, and persistence contract |
 | [`components/terminology.md`](./components/terminology.md) | Canonical component names and distinctions between similar interface patterns |
 | [`components/catalog.md`](./components/catalog.md) | Component maturity, coverage, and Definition of Complete |
 | [`components/catalog.json`](./components/catalog.json) | Machine-readable component maturity and support registry |
@@ -361,7 +361,8 @@ Each adopting project is responsible for checking the current version, license, 
 | [`examples/product-patterns/`](./examples/product-patterns/) | Distinct reference pages for information, ecommerce, and engineering products |
 | [`pages/catalog.md`](./pages/catalog.md) | Page-family maturity, evidence boundaries, known gaps, and the page-level Definition of Complete |
 | [`pages/catalog.json`](./pages/catalog.json) | Machine-readable page-family maturity and support registry |
-| [`examples/page-patterns/`](./examples/page-patterns/) | Bilingual references for access, onboarding, settings, system recovery, search/results, and help/support flows |
+| [`examples/page-patterns/`](./examples/page-patterns/) | Bilingual references for scheduling, access, onboarding, settings, system recovery, search/results, and help/support flows |
+| [`examples/page-patterns/scheduling.html`](./examples/page-patterns/scheduling.html) | Candidate scheduling workspace with URL state, agenda adaptation, reversible Sidebar collapse, and responsive Context Sidecar |
 | [`AGENTS.md`](./AGENTS.md) | Instructions for coding tools working in this repository |
 | [`REFERENCES.md`](./REFERENCES.md) | Source hierarchy, attribution, and third-party adoption |
 | [`principles/`](./principles/) | Interaction, visual review, hierarchy, density, and composition |

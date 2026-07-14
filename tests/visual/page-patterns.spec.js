@@ -297,3 +297,79 @@ test("help and support separates guidance requests tickets and sourced status", 
   await assertNoHorizontalOverflow(page);
   await capture(page, testInfo, "page-support-dark-mobile.png");
 });
+
+test("scheduling preserves period, selection, Sidebar, Sidecar, agenda, and responsive focus", async ({ page }, testInfo) => {
+  await seedPreferences(page, "dark");
+  await page.addInitScript(() => localStorage.removeItem("kin-reference-sidebar-collapsed-v1"));
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/examples/page-patterns/scheduling.html");
+
+  const shell = page.locator("[data-schedule-shell]");
+  const primary = page.locator("[data-schedule-primary]");
+  const sidecar = page.locator("[data-schedule-sidecar]");
+  const conflict = page.locator('[data-event-id="SCH-103"]');
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
+  await expect(page.getByRole("heading", { name: "发布与审核排期", level: 1 })).toBeVisible();
+  await expect(page.locator("[data-schedule-period]")).toContainText("2026");
+
+  await page.locator("[data-theme-switch]").click();
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
+  await page.locator("[data-theme-switch]").click();
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
+
+  const expandedWidth = await primary.evaluate((element) => element.getBoundingClientRect().width);
+  await page.locator("[data-schedule-collapse]").click();
+  await expect(shell).toHaveAttribute("data-sidebar-collapsed", "true");
+  await expect(page.locator("[data-schedule-collapse]")).toHaveAttribute("aria-expanded", "false");
+  await expect.poll(() => primary.evaluate((element) => element.getBoundingClientRect().width)).toBeGreaterThan(expandedWidth + 100);
+  const collapsedWidth = await primary.evaluate((element) => element.getBoundingClientRect().width);
+  expect(collapsedWidth).toBeGreaterThan(expandedWidth);
+
+  await conflict.click();
+  await expect(page).toHaveURL(/selected=SCH-103/);
+  await expect(shell).toHaveAttribute("data-sidecar-open", "true");
+  await expect(sidecar).toHaveAttribute("role", "region");
+  await expect(sidecar).not.toHaveAttribute("aria-modal", "true");
+  await expect(page.locator("[data-sidecar-title]")).toHaveText("主图审核");
+  await expect(page.locator("[data-sidecar-title]")).toBeFocused();
+  await expect(primary).not.toHaveAttribute("inert", "");
+  await expect.poll(() => primary.evaluate((element) => element.getBoundingClientRect().width)).toBeLessThan(collapsedWidth - 250);
+
+  await page.locator("[data-sidecar-close]").click();
+  await expect(sidecar).toHaveAttribute("aria-hidden", "true");
+  await expect(page).not.toHaveURL(/selected=/);
+  await expect(conflict).toBeFocused();
+
+  await page.locator("[data-schedule-next]").click();
+  await expect(page).toHaveURL(/week=2026-07-20/);
+  await expect(page.locator("[data-schedule-empty]")).toBeVisible();
+  await page.locator("[data-schedule-today]").click();
+  await expect(page).not.toHaveURL(/week=/);
+  await page.locator('[data-schedule-view-button="agenda"]').click();
+  await expect(page).toHaveURL(/view=agenda/);
+  await expect(page.locator("[data-schedule-agenda]")).toBeVisible();
+  await page.locator("[data-language-trigger]").click();
+  await page.locator('[data-language-option="en"]').click();
+  await expect(page.getByRole("heading", { name: "Publication and review schedule", level: 1 })).toBeVisible();
+  await assertNoHorizontalOverflow(page);
+  await capture(page, testInfo, "page-scheduling-dark-desktop.png");
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.reload();
+  await expect(page.locator("[data-schedule-agenda]")).toBeVisible();
+  const mobileItem = page.locator('[data-agenda-event="SCH-103"]');
+  await mobileItem.click();
+  await expect(sidecar).toHaveAttribute("role", "dialog");
+  await expect(sidecar).toHaveAttribute("aria-modal", "true");
+  await expect(primary).toHaveAttribute("inert", "");
+  await expect(page.locator("body")).toHaveClass(/schedule-modal-open/);
+  await page.keyboard.press("Shift+Tab");
+  await expect(sidecar.locator(":focus")).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(sidecar).toHaveAttribute("aria-hidden", "true");
+  await expect(page.locator("body")).not.toHaveClass(/schedule-modal-open/);
+  await expect(page.locator('[data-agenda-event="SCH-103"]')).toBeFocused();
+  await assertMinimumTouchTargets(page, ".schedule-mobile-nav a, .schedule-sidecar button, .schedule-toolbar button, .schedule-filter select, .schedule-agenda-item");
+  await assertNoHorizontalOverflow(page);
+  await capture(page, testInfo, "page-scheduling-dark-mobile.png");
+});

@@ -2,9 +2,44 @@
 
 Status: normative
 
-This contract defines Location Bar, Toolbar, and Split View behavior for dense applications. It supplements [`DESIGN.md`](../DESIGN.md), [`navigation-and-disclosure.md`](./navigation-and-disclosure.md), [`overlays.md`](./overlays.md), and [`terminology.md`](./terminology.md).
+This contract defines Sidebar collapse, Location Bar, Toolbar, Split View, and Context Sidecar behavior for dense applications. It supplements [`DESIGN.md`](../DESIGN.md), [`navigation-and-disclosure.md`](./navigation-and-disclosure.md), [`overlays.md`](./overlays.md), and [`terminology.md`](./terminology.md).
 
 These components organize a working surface. They MUST preserve location, action meaning, permissions, and task state when their presentation changes.
+
+## Sidebar collapse
+
+Collapsing a Sidebar changes the amount of chrome, not the information architecture. It MUST NOT change destination identity, active location, permissions, saved-view order, badges with operational meaning, or the user's current task.
+
+### State and content continuity
+
+- Expanded and collapsed states MUST use the same navigation model and command handlers.
+- The active destination MUST remain visible and programmatically current in both states.
+- Icon position SHOULD remain optically stable while labels leave or enter a clipped label region.
+- Labels MUST remain available as accessible names. Unfamiliar icon-only items MUST expose a Tooltip on hover and keyboard focus.
+- Collapsing MUST NOT remount destination content, reset scroll, close an unrelated Inspector, discard unsaved input, or change the browser URL.
+- Badges or counts MAY collapse into a compact indicator only when their full meaning remains available through focus, detail, or the destination itself.
+
+### Motion and interruption
+
+- Collapse and expansion SHOULD use the panel duration Token and the standard or enter easing defined in [`DESIGN.md`](../DESIGN.md).
+- Layout tracks MAY animate when the implementation has bounded affected regions and measurements show no unusable jank. Labels SHOULD use opacity or clipping rather than translating every navigation row.
+- A rapid `collapse -> expand -> collapse` sequence MUST end in the last requested state. Delayed cleanup MUST NOT hide labels, restore stale width, or move focus after a reversal.
+- Focus MUST remain on the collapse control or a logical surviving navigation item.
+- Reduced Motion MUST use an immediate width change or short crossfade without label travel.
+
+### Responsive and persistence rules
+
+- A collapsed desktop rail is not a mobile navigation solution. Narrow touch layouts MUST provide an explicit Drawer, bottom navigation, or route-level alternative.
+- A collapsed rail MUST NOT reduce touch targets below 44 by 44 CSS pixels on touch layouts where it remains visible.
+- Persisted state MUST be namespaced to the product and layout version. Invalid or inapplicable values MUST fall back safely.
+- The collapse control MUST describe the next action and expose the controlled Sidebar relationship.
+
+### Acceptance
+
+- Destination, active location, accessible name, focus, and shortcuts remain unchanged across collapse.
+- Pointer, keyboard, touch, 200% zoom, long localization, and RTL do not make collapsed navigation ambiguous.
+- Motion is reversible and does not reset Workspace or Inspector state.
+- The mobile fallback does not depend on hover labels.
 
 ## Location Bar
 
@@ -194,6 +229,73 @@ The separator MUST use separator semantics, expose orientation, and report curre
 - Resizing preserves selection, input, scroll, and task state.
 - At 200% zoom, neither pane loses its identity or only recovery action.
 
+## Context Sidecar
+
+Use Context Sidecar for persistent, task-scoped context that users repeatedly consult while continuing the primary task. Examples include evidence for an investigation, conflict details for a schedule, a review queue, document references, or a real AI tool attached to the current object.
+
+Context Sidecar is optional. It MUST NOT be added merely to make a page resemble a desktop application.
+
+### Distinction from adjacent components
+
+- Use Inspector for stable properties of the current selection.
+- Use Drawer for a temporary edge task or narrow-screen adaptation.
+- Use Popover for compact anchored content.
+- Use Sidebar for global or section navigation.
+- Use Dialog for a bounded decision that requires modal focus.
+- Use Context Sidecar only when the auxiliary context remains useful during continued work in the Workspace.
+
+### Anatomy
+
+1. a named trigger or command;
+2. a visible title describing the context, not the container type;
+3. the current object or task relationship;
+4. one dominant context region;
+5. optional local actions;
+6. a close control;
+7. a declared narrow-screen fallback.
+
+The Sidecar MAY contain its own local tabs or history only when they belong to the same context. It MUST NOT become an unrelated miniature application or a stack of dashboard cards.
+
+### Layout and width ownership
+
+- On wide screens, a Sidecar MAY occupy an adjacent layout track and reflow the Workspace.
+- Reflow is allowed only when the Workspace retains its documented minimum task width and the Sidecar can present required content without destructive truncation.
+- If either region becomes unusable, the Sidecar MUST adapt to Drawer, Sheet, detail route, or another documented overlay rather than continuing to compress the Workspace.
+- Opening MUST preserve Workspace scroll, selection, filters, input, and resizable-pane state.
+- The Sidecar and Inspector MAY coexist only when the product proves that one dominant work region remains and all three regions meet their minimum widths. Otherwise they SHOULD be mutually exclusive.
+- Optional resizing MUST follow the Split View separator contract and use bounded, versioned persistence.
+
+### Focus, dismissal, and history
+
+- A non-modal wide Sidecar remains in normal page focus order and MUST NOT trap focus or make the Workspace inert.
+- Focus MAY move to the Sidecar when the invocation explicitly requests its content; otherwise opening MAY preserve focus on the trigger.
+- Closing with Escape while focus is inside MUST return focus to the trigger or selected object that opened it.
+- A Drawer or Sheet adaptation MUST use modal focus containment, background unavailability, scroll ownership, and return focus from [`overlays.md`](./overlays.md).
+- Open state MAY be locally persistent when safe, but object identity, private content, or sensitive prompts MUST NOT be encoded in a shared preference key.
+- When selection is shareable, the selected object or context MAY be represented in the URL. Browser Back MUST follow the adopting product's declared selection and disclosure model.
+
+### Motion and state continuity
+
+- The Sidecar MUST enter from and leave toward its owning edge.
+- Track reflow, panel translation, and opacity MUST form one coordinated transition no longer than the panel or Drawer duration Token.
+- It MUST remain interruptible. Delayed unmount, inert cleanup, focus restoration, or scroll unlock from an earlier close MUST NOT affect a later reopen.
+- Closed content MUST not remain focusable or pointer interactive.
+- Reduced Motion MUST use immediate reflow or a short opacity change while preserving the same final state and focus behavior.
+
+### Content and AI boundary
+
+- Context MUST name its source, freshness, selection, or scope when those affect a decision.
+- Errors, stale data, permissions, and unavailable sources MUST remain visible without erasing safe prior context.
+- An AI Sidecar MUST follow [`ai-assistance.md`](./ai-assistance.md). It MUST NOT simulate a model, invent citations, display fake thinking, or imply execution without a real task boundary.
+- A deterministic reference MAY demonstrate local selection and disclosure behavior, but MUST label fixture data and backend exclusions.
+
+### Acceptance
+
+- Users can distinguish Sidecar, Inspector, Sidebar, Drawer, and Popover by task and behavior rather than appearance alone.
+- Wide reflow and narrow overlay preserve the primary task, selection, scroll, and only recovery action.
+- Escape, close, rapid reversal, focus return, 200% zoom, long localization, RTL, and Reduced Motion remain coherent.
+- Sidecar content does not create a second equal-priority dashboard or unsupported AI claim.
+
 ## Migration
 
-Before adapting an existing header, Toolbar, or split layout, inventory every action, permission, shortcut, pane state, persistence key, and responsive fallback. Visual restructuring MUST NOT change command meaning, location semantics, saved layout compatibility, or destructive-action protection without a separately reviewed migration.
+Before adapting an existing Sidebar, header, Toolbar, Split View, or Sidecar, inventory every action, permission, shortcut, pane state, persistence key, and responsive fallback. Visual restructuring MUST NOT change command meaning, location semantics, saved layout compatibility, or destructive-action protection without a separately reviewed migration.

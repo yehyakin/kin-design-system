@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
-  "catalog_version": "1.3.0",
-  "reviewed_on": "2026-07-13",
+  "catalog_version": "1.4.0",
+  "reviewed_on": "2026-07-14",
   "status_definitions": {
     "stable": "Normative contract, runnable reference, applicable automated acceptance checks, and named manual checks exist.",
     "candidate": "The page job and contract exist, but one or more completion dimensions remain open.",
@@ -144,6 +144,19 @@
       "support": { "themes": true, "responsive": false, "keyboard": true, "touch": false, "reduced_motion": true, "localization": true },
       "manual_checks": ["task relevance and ranking"],
       "known_gaps": ["runnable reference", "personalization boundary", "responsive and automated checks"]
+    },
+    {
+      "id": "scheduling-workspace",
+      "canonical_name": "Scheduling Workspace Page",
+      "tier": "workspace",
+      "status": "candidate",
+      "contract_paths": ["pages/scheduling-workspace.md", "components/workspace-structure.md", "components/data-display.md"],
+      "reference_paths": ["examples/page-patterns/scheduling.html"],
+      "test_paths": ["tests/visual/page-patterns.spec.js", "tests/visual/browser-smoke.spec.js"],
+      "product_families": ["intelligence", "ecommerce", "engineering"],
+      "support": { "themes": true, "responsive": true, "keyboard": true, "touch": true, "reduced_motion": true, "localization": true },
+      "manual_checks": ["real time-zone and daylight-saving behavior", "recurrence and persisted rescheduling", "screen-reader schedule traversal and 200% zoom"],
+      "known_gaps": ["real-product time-zone and DST evidence", "recurrence and persisted rescheduling behavior", "manual assistive-technology verification in an adopting product"]
     },
     {
       "id": "transfer-and-import",

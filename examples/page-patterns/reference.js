@@ -5,9 +5,17 @@ import {
   ArrowRight,
   Bell,
   BookOpen,
+  CalendarDays,
+  CalendarRange,
   Check,
   ChevronDown,
+  ChevronLeft,
+  ChevronRight,
   CircleHelp,
+  CircleAlert,
+  ClipboardCheck,
+  Clock,
+  Copy,
   createIcons,
   Database,
   Eye,
@@ -18,10 +26,15 @@ import {
   KeyRound,
   Languages,
   ListChecks,
+  LayoutList,
   LockKeyhole,
   MessageSquarePlus,
+  Megaphone,
   Moon,
+  PanelLeftClose,
+  PanelLeftOpen,
   PanelRight,
+  PanelRightOpen,
   Palette,
   RefreshCw,
   Save,
@@ -768,6 +781,383 @@ function setupSupportPage() {
   });
 }
 
+function setupSchedulingPage() {
+  const shell = document.querySelector("[data-schedule-shell]");
+  if (!shell) return;
+
+  const sidebar = document.querySelector("[data-schedule-sidebar]");
+  const collapse = document.querySelector("[data-schedule-collapse]");
+  const primary = document.querySelector("[data-schedule-primary]");
+  const sidecar = document.querySelector("[data-schedule-sidecar]");
+  const sidecarTrigger = document.querySelector("[data-sidecar-trigger]");
+  const sidecarClose = document.querySelector("[data-sidecar-close]");
+  const sidecarScrim = document.querySelector("[data-sidecar-scrim]");
+  const sidecarTitle = document.querySelector("[data-sidecar-title]");
+  const sidecarEmpty = document.querySelector("[data-sidecar-empty]");
+  const sidecarContent = document.querySelector("[data-sidecar-content]");
+  const status = document.querySelector("[data-schedule-status]");
+  const scope = document.querySelector("[data-schedule-scope]");
+  const week = document.querySelector("[data-schedule-week]");
+  const agenda = document.querySelector("[data-schedule-agenda]");
+  const agendaList = document.querySelector("[data-schedule-agenda-list]");
+  const empty = document.querySelector("[data-schedule-empty]");
+  const events = [...document.querySelectorAll("[data-schedule-event]")];
+  const overlayMedia = matchMedia("(max-width: 1100px)");
+  const baseMonday = new Date("2026-07-13T12:00:00");
+  const sidebarStorageKey = "kin-reference-sidebar-collapsed-v1";
+  let lastSidecarTrigger = sidecarTrigger;
+
+  function template(key, values = {}) {
+    return Object.entries(values).reduce((value, [name, replacement]) => value.replaceAll(`{${name}}`, replacement), text(key));
+  }
+
+  function validDate(candidate) {
+    return candidate instanceof Date && !Number.isNaN(candidate.getTime());
+  }
+
+  function parseDate(value) {
+    const parsed = typeof value === "string" && /^\d{4}-\d{2}-\d{2}$/.test(value) ? new Date(`${value}T12:00:00`) : null;
+    return validDate(parsed) ? parsed : new Date(baseMonday);
+  }
+
+  function isoDate(date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  }
+
+  function addDays(date, days) {
+    const next = new Date(date);
+    next.setDate(next.getDate() + days);
+    return next;
+  }
+
+  function readState() {
+    const params = new URLSearchParams(location.search);
+    const selected = events.some((event) => event.dataset.eventId === params.get("selected")) ? params.get("selected") : null;
+    const selectedScope = ["all", "campaign", "review", "automation"].includes(params.get("scope")) ? params.get("scope") : "all";
+    return {
+      monday: parseDate(params.get("week")),
+      view: params.get("view") === "agenda" ? "agenda" : "week",
+      scope: selectedScope,
+      selected,
+    };
+  }
+
+  let state = readState();
+
+  function writeUrl(method = "push") {
+    const params = new URLSearchParams();
+    if (isoDate(state.monday) !== isoDate(baseMonday)) params.set("week", isoDate(state.monday));
+    if (state.view !== "week") params.set("view", state.view);
+    if (state.scope !== "all") params.set("scope", state.scope);
+    if (state.selected) params.set("selected", state.selected);
+    const target = `${location.pathname}${params.size ? `?${params}` : ""}`;
+    history[method === "replace" ? "replaceState" : "pushState"]({}, "", target);
+  }
+
+  function localeDate(date, options) {
+    return new Intl.DateTimeFormat(root.lang || "zh-CN", options).format(date);
+  }
+
+  function dateForEvent(event) {
+    return addDays(state.monday, Number(event.dataset.eventDay));
+  }
+
+  function eventLabel(event) {
+    return template("schedule.dateTimeLabel", {
+      date: localeDate(dateForEvent(event), { year: "numeric", month: "long", day: "numeric", weekday: "long" }),
+      start: event.dataset.eventStart,
+      end: event.dataset.eventEnd,
+      title: text(event.dataset.titleKey),
+      status: text(event.dataset.statusKey),
+      conflict: text(event.dataset.conflictKey),
+    });
+  }
+
+  function visibleEvents() {
+    if (isoDate(state.monday) !== isoDate(baseMonday)) return [];
+    return events.filter((event) => state.scope === "all" || event.dataset.eventType === state.scope);
+  }
+
+  function updateNavLabels() {
+    const labels = ["schedule.navSchedule", "schedule.navSearch", "schedule.navSupport", "schedule.viewCampaigns", "schedule.viewReviews"];
+    document.querySelectorAll("[data-nav-label]").forEach((item, index) => {
+      if (labels[index]) item.dataset.navLabel = text(labels[index]);
+    });
+  }
+
+  function renderSidebar() {
+    const collapsed = localStorage.getItem(sidebarStorageKey) === "true";
+    shell.dataset.sidebarCollapsed = String(collapsed);
+    collapse?.setAttribute("aria-expanded", String(!collapsed));
+    collapse?.setAttribute("aria-label", text(collapsed ? "schedule.expand" : "schedule.collapse"));
+    if (collapse) {
+      collapse.innerHTML = `<i data-lucide="${collapsed ? "panel-left-open" : "panel-left-close"}" aria-hidden="true"></i>`;
+      createIcons({ icons: { PanelLeftClose, PanelLeftOpen } });
+    }
+  }
+
+  function applySidecarMode() {
+    const open = shell.dataset.sidecarOpen === "true";
+    const modal = open && overlayMedia.matches;
+    primary.inert = modal;
+    sidebar.inert = modal;
+    document.body.classList.toggle("schedule-modal-open", modal);
+    sidecarScrim.hidden = !modal;
+    if (modal) {
+      sidecar.setAttribute("role", "dialog");
+      sidecar.setAttribute("aria-modal", "true");
+    } else {
+      sidecar.setAttribute("role", "region");
+      sidecar.removeAttribute("aria-modal");
+    }
+  }
+
+  function setSidecar(open, { moveFocus = true, restoreFocus = true } = {}) {
+    shell.dataset.sidecarOpen = String(open);
+    sidecar.setAttribute("aria-hidden", String(!open));
+    sidecar.inert = !open;
+    sidecarTrigger?.setAttribute("aria-expanded", String(open));
+    applySidecarMode();
+    if (open && moveFocus) sidecarTitle?.focus();
+    if (!open && restoreFocus) (lastSidecarTrigger?.isConnected ? lastSidecarTrigger : sidecarTrigger)?.focus();
+  }
+
+  function renderSidecar() {
+    const event = events.find((candidate) => candidate.dataset.eventId === state.selected);
+    sidecarEmpty.hidden = Boolean(event);
+    sidecarContent.hidden = !event;
+    sidecarTitle.textContent = event ? text(event.dataset.titleKey) : text("schedule.noSelection");
+    if (!event) return;
+    document.querySelector("[data-sidecar-status]").textContent = text(event.dataset.statusKey);
+    document.querySelector("[data-sidecar-context]").textContent = text(event.dataset.contextKey);
+    document.querySelector("[data-sidecar-id]").textContent = event.dataset.eventId;
+    document.querySelector("[data-sidecar-date]").textContent = localeDate(dateForEvent(event), { year: "numeric", month: "short", day: "numeric", weekday: "short" });
+    document.querySelector("[data-sidecar-time]").textContent = `${event.dataset.eventStart}–${event.dataset.eventEnd}`;
+    document.querySelector("[data-sidecar-owner]").textContent = text(event.dataset.ownerKey);
+    document.querySelector("[data-sidecar-conflict]").textContent = text(event.dataset.conflictKey);
+  }
+
+  function selectEvent(id, trigger, updateHistory = true) {
+    state.selected = id;
+    lastSidecarTrigger = trigger ?? events.find((event) => event.dataset.eventId === id) ?? sidecarTrigger;
+    if (updateHistory) writeUrl("push");
+    render();
+    setSidecar(true);
+    status.textContent = template("schedule.selectionChanged", { title: text(events.find((event) => event.dataset.eventId === id).dataset.titleKey) });
+  }
+
+  function closeSidecar(updateHistory = true, restoreFocus = true) {
+    const closingId = state.selected;
+    if (updateHistory && state.selected) {
+      state.selected = null;
+      writeUrl("push");
+      render();
+      const candidates = [
+        ...document.querySelectorAll(`[data-agenda-event="${closingId}"]`),
+        ...events.filter((event) => event.dataset.eventId === closingId),
+      ];
+      lastSidecarTrigger = candidates.find((candidate) => candidate.getClientRects().length > 0) ?? lastSidecarTrigger;
+    }
+    setSidecar(false, { restoreFocus });
+    status.textContent = text("schedule.contextClosed");
+  }
+
+  function renderAgenda(items) {
+    agendaList.replaceChildren();
+    for (let day = 0; day < 5; day += 1) {
+      const dayEvents = items.filter((event) => Number(event.dataset.eventDay) === day);
+      if (dayEvents.length === 0) continue;
+      const group = document.createElement("section");
+      group.className = "schedule-agenda-group";
+      const heading = document.createElement("h3");
+      heading.textContent = localeDate(addDays(state.monday, day), { month: "short", day: "numeric", weekday: "short" });
+      const list = document.createElement("div");
+      list.className = "schedule-agenda-items";
+      for (const event of dayEvents) {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "schedule-agenda-item";
+        button.dataset.agendaEvent = event.dataset.eventId;
+        button.setAttribute("aria-pressed", String(state.selected === event.dataset.eventId));
+        button.setAttribute("aria-label", eventLabel(event));
+        const time = document.createElement("time");
+        time.textContent = `${event.dataset.eventStart}–${event.dataset.eventEnd}`;
+        const copy = document.createElement("span");
+        const title = document.createElement("strong");
+        title.textContent = text(event.dataset.titleKey);
+        const meta = document.createElement("small");
+        meta.textContent = `${text(event.dataset.statusKey)} · ${text(event.dataset.ownerKey)}`;
+        copy.append(title, meta);
+        const stateMark = document.createElement("small");
+        stateMark.textContent = event.classList.contains("has-conflict") ? "!" : "";
+        stateMark.setAttribute("aria-hidden", "true");
+        button.append(time, copy, stateMark);
+        button.addEventListener("click", () => selectEvent(event.dataset.eventId, button));
+        list.append(button);
+      }
+      group.append(heading, list);
+      agendaList.append(group);
+    }
+  }
+
+  function render() {
+    shell.dataset.scheduleView = state.view;
+    scope.value = state.scope;
+    for (const button of document.querySelectorAll("[data-schedule-view-button]")) button.setAttribute("aria-pressed", String(button.dataset.scheduleViewButton === state.view));
+
+    const periodEnd = addDays(state.monday, 4);
+    const period = template("schedule.weekLabel", {
+      start: localeDate(state.monday, { year: "numeric", month: "short", day: "numeric" }),
+      end: localeDate(periodEnd, { month: "short", day: "numeric" }),
+    });
+    document.querySelector("[data-schedule-period]").textContent = period;
+    document.querySelectorAll("[data-schedule-day]").forEach((day) => {
+      day.querySelector("[data-day-date]").textContent = localeDate(addDays(state.monday, Number(day.dataset.scheduleDay)), { month: "numeric", day: "numeric" });
+    });
+
+    const items = visibleEvents();
+    const visibleIds = new Set(items.map((event) => event.dataset.eventId));
+    if (state.selected && !visibleIds.has(state.selected)) {
+      state.selected = null;
+      writeUrl("replace");
+      setSidecar(false, { moveFocus: false, restoreFocus: false });
+    }
+    for (const event of events) {
+      event.hidden = !visibleIds.has(event.dataset.eventId);
+      event.setAttribute("aria-pressed", String(state.selected === event.dataset.eventId));
+      event.setAttribute("aria-label", eventLabel(event));
+    }
+    const hasItems = items.length > 0;
+    week.hidden = !hasItems;
+    agenda.hidden = !hasItems;
+    empty.hidden = hasItems;
+    renderAgenda(items);
+    renderSidecar();
+    updateNavLabels();
+  }
+
+  collapse?.addEventListener("click", () => {
+    const collapsed = shell.dataset.sidebarCollapsed !== "true";
+    localStorage.setItem(sidebarStorageKey, String(collapsed));
+    renderSidebar();
+  });
+
+  for (const event of events) event.addEventListener("click", () => selectEvent(event.dataset.eventId, event));
+
+  for (const button of document.querySelectorAll("[data-schedule-view-button]")) {
+    button.addEventListener("click", () => {
+      state.view = button.dataset.scheduleViewButton;
+      writeUrl("push");
+      render();
+    });
+  }
+
+  scope?.addEventListener("change", () => {
+    state.scope = scope.value;
+    writeUrl("push");
+    render();
+    status.textContent = template("schedule.scopeChanged", { scope: scope.selectedOptions[0].textContent });
+  });
+
+  for (const shortcut of document.querySelectorAll("[data-schedule-scope-shortcut]")) {
+    shortcut.addEventListener("click", () => {
+      state.scope = shortcut.dataset.scheduleScopeShortcut;
+      writeUrl("push");
+      render();
+    });
+  }
+
+  document.querySelector("[data-schedule-reset]")?.addEventListener("click", () => {
+    state.scope = "all";
+    writeUrl("push");
+    render();
+  });
+
+  function changeWeek(days) {
+    state.monday = addDays(state.monday, days);
+    writeUrl("push");
+    render();
+    status.textContent = template("schedule.periodChanged", { period: document.querySelector("[data-schedule-period]").textContent });
+  }
+
+  document.querySelector("[data-schedule-previous]")?.addEventListener("click", () => changeWeek(-7));
+  document.querySelector("[data-schedule-next]")?.addEventListener("click", () => changeWeek(7));
+  document.querySelector("[data-schedule-today]")?.addEventListener("click", () => {
+    state.monday = new Date(baseMonday);
+    writeUrl("push");
+    render();
+  });
+
+  sidecarTrigger?.addEventListener("click", () => {
+    lastSidecarTrigger = sidecarTrigger;
+    if (shell.dataset.sidecarOpen === "true") closeSidecar();
+    else setSidecar(true);
+  });
+  sidecarClose?.addEventListener("click", () => closeSidecar());
+  sidecarScrim?.addEventListener("click", () => closeSidecar());
+
+  document.querySelector("[data-schedule-copy-link]")?.addEventListener("click", async () => {
+    const result = document.querySelector("[data-schedule-copy-status]");
+    try {
+      await navigator.clipboard.writeText(location.href);
+      result.textContent = text("schedule.linkCopied");
+    } catch {
+      result.textContent = text("schedule.linkFailed");
+    }
+  });
+
+  sidecar?.addEventListener("keydown", (event) => {
+    if (event.key !== "Tab" || sidecar.getAttribute("role") !== "dialog") return;
+    const focusable = [...sidecar.querySelectorAll('button:not([disabled]), a[href], input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])')].filter((element) => !element.hidden);
+    if (focusable.length === 0) return;
+    const first = focusable[0];
+    const last = focusable.at(-1);
+    if (event.shiftKey && (document.activeElement === first || document.activeElement === sidecarTitle)) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
+  });
+
+  overlayMedia.addEventListener("change", applySidecarMode);
+  addEventListener("popstate", () => {
+    state = readState();
+    render();
+    if (state.selected) {
+      lastSidecarTrigger = events.find((event) => event.dataset.eventId === state.selected) ?? sidecarTrigger;
+      setSidecar(true, { moveFocus: false });
+    } else {
+      setSidecar(false, { restoreFocus: false });
+    }
+  });
+
+  document.addEventListener("kin:localechange", () => {
+    renderSidebar();
+    render();
+  });
+
+  addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && shell.dataset.sidecarOpen === "true") {
+      event.preventDefault();
+      closeSidecar();
+    }
+  });
+
+  renderSidebar();
+  render();
+  if (state.selected) {
+    lastSidecarTrigger = events.find((event) => event.dataset.eventId === state.selected) ?? sidecarTrigger;
+    setSidecar(true, { moveFocus: false });
+  } else {
+    setSidecar(false, { moveFocus: false, restoreFocus: false });
+  }
+}
+
 createIcons({
   icons: {
     Activity,
@@ -776,9 +1166,17 @@ createIcons({
     ArrowRight,
     Bell,
     BookOpen,
+    CalendarDays,
+    CalendarRange,
     Check,
     ChevronDown,
+    ChevronLeft,
+    ChevronRight,
+    CircleAlert,
     CircleHelp,
+    ClipboardCheck,
+    Clock,
+    Copy,
     Database,
     Eye,
     EyeOff,
@@ -787,11 +1185,16 @@ createIcons({
     Globe2,
     KeyRound,
     Languages,
+    LayoutList,
     ListChecks,
     LockKeyhole,
     MessageSquarePlus,
+    Megaphone,
     Moon,
+    PanelLeftClose,
+    PanelLeftOpen,
     PanelRight,
+    PanelRightOpen,
     Palette,
     RefreshCw,
     Save,
@@ -819,6 +1222,7 @@ if (document.body.dataset.page === "settings") setupSettingsPage();
 if (document.body.dataset.page === "system") setupSystemPage();
 if (document.body.dataset.page === "search") setupSearchPage();
 if (document.body.dataset.page === "support") setupSupportPage();
+if (document.body.dataset.page === "scheduling") setupSchedulingPage();
 
 addEventListener("keydown", (event) => {
   if (event.key === "Escape" && languageMenu && !languageMenu.hidden) setLanguageMenu(false);

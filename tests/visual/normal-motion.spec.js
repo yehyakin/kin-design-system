@@ -139,3 +139,37 @@ test("normal motion streaming can be stopped without losing input", async ({ pag
   await expect(instruction).toHaveValue(originalValue);
   await expect(page.getByText("已停止 · 保留部分结果", { exact: true })).toBeVisible();
 });
+
+test("normal motion coordinates Sidebar collapse and reversible Context Sidecar reflow", async ({ page }) => {
+  await page.addInitScript(() => {
+    localStorage.setItem("kin-reference-theme", "dark");
+    localStorage.removeItem("kin-reference-sidebar-collapsed-v1");
+  });
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/examples/page-patterns/scheduling.html");
+
+  const shell = page.locator("[data-schedule-shell]");
+  const sidecar = page.locator("[data-schedule-sidecar]");
+  const shellDuration = await shell.evaluate((element) => getComputedStyle(element).transitionDuration);
+  const sidecarDuration = await sidecar.evaluate((element) => getComputedStyle(element).transitionDuration);
+  expect(shellDuration.split(",").some((value) => value.trim() !== "0s")).toBe(true);
+  expect(sidecarDuration.split(",").some((value) => value.trim() !== "0s")).toBe(true);
+
+  const collapse = page.locator("[data-schedule-collapse]");
+  await collapse.click();
+  await collapse.click();
+  await collapse.click();
+  await page.waitForTimeout(300);
+  await expect(shell).toHaveAttribute("data-sidebar-collapsed", "true");
+  await expect(collapse).toBeFocused();
+
+  const item = page.locator('[data-event-id="SCH-103"]');
+  await item.click();
+  await expect(shell).toHaveAttribute("data-sidecar-open", "true");
+  await page.locator("[data-sidecar-close]").click();
+  await page.locator("[data-sidecar-trigger]").click();
+  await page.waitForTimeout(320);
+  await expect(shell).toHaveAttribute("data-sidecar-open", "true");
+  await expect(sidecar.evaluate((element) => getComputedStyle(element).transform)).resolves.toMatch(/matrix\(1, 0, 0, 1, 0, 0\)|none/);
+  await expect(sidecar).toBeVisible();
+});

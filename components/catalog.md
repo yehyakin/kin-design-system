@@ -65,8 +65,9 @@ The catalog currently contains 64 stable components. The machine-readable regist
 
 ## Candidate components
 
-The remaining candidates are conditional integrations with named adoption gaps:
+Current candidates have named completion or adoption gaps:
 
+- Context Sidecar;
 - Drag and Drop;
 - OTP;
 - Live Chart;
@@ -74,6 +75,8 @@ The remaining candidates are conditional integrations with named adoption gaps:
 - Verification Challenge.
 
 See [`catalog.json`](./catalog.json) for exact contract, reference, test, and gap fields.
+
+Context Sidecar is a workspace candidate rather than a package integration. Its contract and deterministic scheduling reference cover wide-screen reflow, narrow-screen overlay adaptation, focus return, URL selection, and Reduced Motion. It remains candidate until one adopting product records production workflow and manual assistive-technology evidence.
 
 ## Draft gaps
 

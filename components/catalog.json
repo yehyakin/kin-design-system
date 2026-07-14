@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "catalog_version": "1.4.1",
+  "catalog_version": "1.5.0",
   "reviewed_on": "2026-07-14",
   "status_definitions": {
     "stable": "Normative contract, runnable reference, and applicable automated acceptance checks exist.",
@@ -53,6 +53,19 @@
       "support": { "themes": true, "responsive": true, "keyboard": true, "touch": true, "reduced_motion": true },
       "manual_checks": ["screen-reader property relationships"],
       "known_gaps": []
+    },
+    {
+      "id": "context-sidecar",
+      "canonical_name": "Context Sidecar",
+      "tier": "workspace",
+      "status": "candidate",
+      "contract_paths": ["DESIGN.md", "components/workspace-structure.md", "components/overlays.md", "components/ai-assistance.md"],
+      "reference_paths": ["examples/page-patterns/scheduling.html"],
+      "test_paths": ["tests/visual/page-patterns.spec.js"],
+      "product_families": ["intelligence", "ecommerce", "engineering"],
+      "support": { "themes": true, "responsive": true, "keyboard": true, "touch": true, "reduced_motion": true },
+      "manual_checks": ["screen-reader wide reflow and modal fallback", "200% zoom with long localized context", "adopting-product minimum workspace width"],
+      "known_gaps": ["production evidence across one real workflow", "manual screen-reader verification in an adopting product"]
     },
     {
       "id": "button",

@@ -58,6 +58,7 @@ A successful screenshot or build MUST NOT be treated as page completion.
 ## Candidate page contracts
 
 - [`workspace-home.md`](./workspace-home.md)
+- [`scheduling-workspace.md`](./scheduling-workspace.md)
 - [`transfer-and-import.md`](./transfer-and-import.md)
 - [`notifications-and-audit.md`](./notifications-and-audit.md)
 - [`organization-and-permissions.md`](./organization-and-permissions.md)

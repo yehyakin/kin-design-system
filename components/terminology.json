@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
-  "terminology_version": "1.1.0",
-  "reviewed_on": "2026-07-13",
+  "terminology_version": "1.2.0",
+  "reviewed_on": "2026-07-14",
   "entries": [
     {
       "canonical_name": "Tooltip",
@@ -65,6 +65,15 @@
       "plain_definition": "A panel entering from an edge for secondary navigation, properties, or a task.",
       "use_when": "Spatial continuity with an edge or selected object helps preserve context.",
       "do_not_use_when": "The region is permanent navigation or the task needs a compact modal decision."
+    },
+    {
+      "canonical_name": "Context Sidecar",
+      "catalog_id": "context-sidecar",
+      "aliases": ["context panel", "task sidecar", "adjacent context"],
+      "not_synonyms": ["Inspector", "Sidebar", "Drawer", "Popover", "AI Chat"],
+      "plain_definition": "A persistent task-scoped context region used beside the primary Workspace when both remain usable.",
+      "use_when": "Users repeatedly cross-reference evidence, conflicts, review context, a queue, or a real task tool while continuing the main work.",
+      "do_not_use_when": "The content is stable object properties, global navigation, a short temporary task, or a generic assistant added without a real capability."
     },
     {
       "canonical_name": "Sheet",

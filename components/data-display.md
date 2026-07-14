@@ -161,6 +161,20 @@ Truncation MUST NOT be applied merely to make unrelated rows share an artificial
 - Long localization, mixed-direction identifiers, RTL, and 200% zoom preserve identity and required actions.
 - Truncation does not hide a changed value, validation error, unit, status, or only recovery action.
 
+## Container-aware density
+
+When records, schedule cells, result rows, or adjacent panes change width independently of the viewport, implementations SHOULD adapt from the available container rather than relying only on page breakpoints.
+
+- Each repeated item MUST declare a priority order such as `identity -> blocking state -> primary value -> secondary metadata -> auxiliary label`.
+- Identity, current state, units, conflict, and the only action or recovery path MUST NOT disappear only because the container becomes narrow.
+- Secondary metadata MAY collapse into a named detail path, Inspector, Popover, or compact summary. Hiding it visually MUST NOT leave focusable descendants or remove the only accessible value.
+- Container-query changes MUST preserve source order, accessible names, selection, and keyboard behavior.
+- The same fact MUST NOT be rendered twice to assistive technology merely because desktop and compact variants coexist.
+- Long localization, RTL, 200% zoom, and user-resized panes MUST be tested in addition to viewport breakpoints.
+- Density adaptation MUST NOT turn a comparable table into unlabeled cards or reduce touch targets below the supported input contract.
+
+Schedule and calendar cells SHOULD remove decorative or redundant metadata before hiding status, time, conflict, or object identity. A compact cell MAY show a shortened title only when the full value remains available through the same keyboard and touch path.
+
 ## Themes, contrast, and localization
 
 - Row boundaries, header hierarchy, focus, and selection MUST survive all themes and higher contrast.

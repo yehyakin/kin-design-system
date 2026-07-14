@@ -24,6 +24,7 @@ const required = [
   "examples/workspace-reference/motion.html",
   "examples/workspace-reference/motion-reference.js",
   "examples/page-patterns/access.html",
+  "examples/page-patterns/scheduling.html",
   "examples/product-patterns/information.html",
   "tokens/kin.tokens.json",
 ];
@@ -53,6 +54,7 @@ if (fs.existsSync(output)) {
     "examples/workspace-reference/core-components.html",
     "examples/workspace-reference/motion.html",
     "examples/page-patterns/access.html",
+    "examples/page-patterns/scheduling.html",
   ].map((file) => path.join(output, file));
   const attributePattern = /\b(?:href|src)=["']([^"']+)["']/g;
   for (const file of htmlFiles) {

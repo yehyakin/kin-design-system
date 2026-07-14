@@ -91,6 +91,7 @@ The machine-readable source is [`terminology.json`](./terminology.json). Compone
 | Toolbar | A stable row or column of actions for the current view or object | Navigation Bar, arbitrary button collection |
 | Split View | Resizable adjacent panes separated by a draggable divider | Fixed grid columns, Drawer |
 | Sidebar | Persistent or collapsible global or section navigation | Inspector, Drawer used for a short task |
+| Context Sidecar | Optional adjacent context that may reflow a wide Workspace and adapts to an overlay or route when narrow | permanent navigation, object-property Inspector, short-lived Popover |
 | Scroll Region | A bounded viewport that scrolls its own content | clipped region with inaccessible overflow |
 
 ## Text and positioning terms

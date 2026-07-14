@@ -60,4 +60,10 @@ test("cross-browser smoke preserves navigation focus and advanced states", async
   await page.locator('[data-result-id="DOC-118"] [data-search-result-link]').click();
   await expect(page).toHaveURL(/selected=DOC-118/);
   await expect(page.locator("[data-search-detail-title]")).toHaveText("导出失败恢复说明");
+
+  await page.goto("/examples/page-patterns/scheduling.html?selected=SCH-103", { waitUntil: "domcontentloaded" });
+  await expect(page.locator("[data-schedule-sidecar]")).toHaveAttribute("aria-hidden", "false");
+  await expect(page.locator("[data-sidecar-title]")).toHaveText("主图审核");
+  await page.keyboard.press("Escape");
+  await expect(page).not.toHaveURL(/selected=/);
 });
