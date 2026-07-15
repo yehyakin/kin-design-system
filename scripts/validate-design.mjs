@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import process from "node:process";
+import { parseCubicBezier, parseDuration, parseMotionTokens } from "./motion-tokens.mjs";
 
 const file = process.argv.slice(2).find((argument) => !argument.startsWith("--")) ?? "DESIGN.md";
 const asJson = process.argv.includes("--json");
@@ -52,16 +53,55 @@ if (!match) {
   if (!/^\d+\.\d+\.\d+$/.test(top.get("kin_version") ?? "")) {
     add("error", "kin-version", "kin_version must be a semantic version");
   }
+  if (!new Set(["development", "released"]).has(top.get("release_status"))) {
+    add("error", "release-status", "release_status must be development or released");
+  }
+  if (!/^\d+\.\d+\.\d+$/.test(top.get("latest_stable") ?? "")) {
+    add("error", "latest-stable", "latest_stable must be a semantic version");
+  }
 
-  const requiredGroups = ["colors", "typography", "rounded", "spacing", "components"];
+  const requiredGroups = ["colors", "typography", "rounded", "spacing", "motion", "components"];
   for (const required of requiredGroups) {
     if (!top.has(required)) add("error", "token-group", `missing token group: ${required}`);
   }
 
-  const minimums = { colors: 30, typography: 7, rounded: 5, spacing: 8 };
+  const minimums = { colors: 30, typography: 9, rounded: 5, spacing: 8, motion: 10 };
   for (const [name, minimum] of Object.entries(minimums)) {
     const count = groups.get(name)?.size ?? 0;
     if (count < minimum) add("error", "token-coverage", `${name} has ${count} top-level tokens; expected at least ${minimum}`);
+  }
+
+  const supportedProducts = match[1]
+    .match(/^supported_products:\s*\r?\n((?: {2}- [^\r\n]+(?:\r?\n|$))+)/m)?.[1]
+    ?.split(/\r?\n/)
+    .map((line) => line.match(/^ {2}- (.+)$/)?.[1])
+    .filter(Boolean) ?? [];
+  const canonicalProfiles = ["information-site", "intelligence-workspace", "ecommerce-operations", "engineering-canvas"];
+  if (supportedProducts.join("|") !== canonicalProfiles.join("|")) {
+    add("error", "product-profiles", `supported_products must use the canonical profiles in this order: ${canonicalProfiles.join(", ")}`);
+  }
+
+  const typography = groups.get("typography") ?? new Map();
+  if (!typography.has("micro")) add("error", "typography-micro", "typography.micro is required by the normative type scale");
+  for (const name of ["display", "page-title", "entity-title", "section-title", "body", "ui", "metadata", "micro"]) {
+    const family = source.match(new RegExp(`^  ${name}:\\r?\\n(?:    [^\\r\\n]+\\r?\\n)*?    fontFamily:\\s+([^\\r\\n]+)`, "m"))?.[1] ?? "";
+    for (const requiredFamily of ["PingFang SC", "Hiragino Sans GB", "Microsoft YaHei"]) {
+      if (!family.includes(requiredFamily)) add("error", "typography-cjk", `typography.${name} must include ${requiredFamily}`);
+    }
+  }
+
+  const motion = parseMotionTokens(source);
+  const expectedDurations = ["duration-instant", "duration-press", "duration-fast", "duration-normal", "duration-panel", "duration-drawer", "duration-number"];
+  const expectedEasings = ["ease-standard", "ease-enter", "ease-exit"];
+  for (const name of expectedDurations) {
+    if (!parseDuration(motion[name])) add("error", "motion-duration", `${name} must be a duration in ms or s`);
+  }
+  for (const name of expectedEasings) {
+    if (!parseCubicBezier(motion[name])) add("error", "motion-easing", `${name} must be a four-point cubic-bezier()`);
+  }
+  for (const [name, value] of Object.entries(motion)) {
+    const cssValue = source.match(new RegExp(`--${name}:\\s*([^;]+);`))?.[1]?.trim();
+    if (!cssValue || cssValue !== value) add("error", "motion-parity", `motion.${name} differs from the normative CSS --${name}`);
   }
 
   const knownPaths = new Set();

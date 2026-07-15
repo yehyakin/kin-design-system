@@ -1,10 +1,15 @@
+import { execFileSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 import process from "node:process";
+import { fileURLToPath } from "node:url";
 import { contractChecksum } from "./contract-checksum.mjs";
 
 const args = process.argv.slice(2);
 const profiles = new Set(["information-site", "intelligence-workspace", "ecommerce-operations", "engineering-canvas"]);
+const semverPattern = /^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$/;
+const fullCommitPattern = /^[a-f0-9]{40}$/i;
+const repositoryRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 let force = false;
 let help = false;
 let profile = "";
@@ -31,6 +36,7 @@ const target = path.resolve(targetArg);
 const packageJson = JSON.parse(fs.readFileSync(new URL("../package.json", import.meta.url), "utf8"));
 const version = packageJson.version;
 const designContract = fs.readFileSync(new URL("../DESIGN.md", import.meta.url));
+const designSource = designContract.toString("utf8");
 const designChecksum = contractChecksum(designContract);
 const configPath = path.join(target, "kin.config.json");
 const recordPath = path.join(target, "docs", "kin-adoption.md");
@@ -59,14 +65,96 @@ if (!fs.existsSync(target) || !fs.statSync(target).isDirectory()) {
   process.exit(2);
 }
 
+function frontmatterValue(source, key) {
+  const frontmatter = source.match(/^---\r?\n([\s\S]*?)\r?\n---/)?.[1] ?? "";
+  return frontmatter.match(new RegExp(`^${key}:\\s*["']?([^"'\\s]+)["']?\\s*$`, "m"))?.[1];
+}
+
+function compareSemver(left, right) {
+  const a = left.split(".").map(Number);
+  const b = right.split(".").map(Number);
+  for (let index = 0; index < 3; index += 1) {
+    if (a[index] !== b[index]) return a[index] - b[index];
+  }
+  return 0;
+}
+
+function abort(message) {
+  console.error(message);
+  process.exit(2);
+}
+
+function git(args, { trim = true } = {}) {
+  try {
+    const output = execFileSync("git", args, { cwd: repositoryRoot, encoding: "utf8", stdio: ["ignore", "pipe", "pipe"] });
+    return trim ? output.trim() : output;
+  } catch {
+    return null;
+  }
+}
+
+const designVersion = frontmatterValue(designSource, "kin_version");
+const releaseStatus = frontmatterValue(designSource, "release_status");
+const latestStable = frontmatterValue(designSource, "latest_stable");
+
+if (!semverPattern.test(version)) abort(`Cannot initialize adoption: package version ${version} is not SemVer.`);
+if (designVersion !== version) abort(`Cannot initialize adoption: DESIGN.md kin_version ${designVersion ?? "missing"} differs from package version ${version}.`);
+if (!new Set(["development", "released"]).has(releaseStatus)) {
+  abort("Cannot initialize adoption: DESIGN.md release_status must be development or released.");
+}
+if (!latestStable || !semverPattern.test(latestStable)) {
+  abort("Cannot initialize adoption: DESIGN.md latest_stable must be a SemVer value.");
+}
+if (releaseStatus === "released" && latestStable !== version) {
+  abort(`Cannot initialize adoption: released KIN ${version} must set latest_stable to ${version}.`);
+}
+if (releaseStatus === "development" && compareSemver(latestStable, version) > 0) {
+  abort(`Cannot initialize adoption: latest_stable ${latestStable} is newer than development kin_version ${version}.`);
+}
+if (!git(["rev-parse", "--verify", `v${latestStable}^{commit}`])) {
+  abort(`Cannot initialize adoption: latest_stable v${latestStable} is not available as a local Git tag.`);
+}
+
+let contractRevision;
+let contractSource;
+let lifecycleSummary;
+let locatorRequirement;
+
+if (releaseStatus === "released") {
+  contractRevision = `v${version}`;
+  const taggedCommit = git(["rev-parse", "--verify", `${contractRevision}^{commit}`]);
+  const taggedDesign = taggedCommit ? git(["show", `${contractRevision}:DESIGN.md`], { trim: false }) : null;
+  if (!taggedCommit || taggedDesign === null) {
+    abort(`Cannot initialize released KIN ${version}: Git tag ${contractRevision} is missing or does not contain DESIGN.md.`);
+  }
+  if (contractChecksum(taggedDesign) !== designChecksum) {
+    abort(`Cannot initialize released KIN ${version}: ${contractRevision} does not contain the current DESIGN.md contract.`);
+  }
+  contractSource = `https://github.com/yehyakin/kin-design-system/tree/${contractRevision}`;
+  lifecycleSummary = `stable release ${contractRevision}`;
+  locatorRequirement = `The ${contractRevision} tag contains this exact contract and is the stable adoption locator.`;
+} else {
+  contractRevision = git(["rev-parse", "HEAD"]);
+  if (!fullCommitPattern.test(contractRevision ?? "")) {
+    abort("Cannot initialize a development adoption: the current KIN checkout has no readable full HEAD commit SHA.");
+  }
+  const committedDesign = git(["show", `${contractRevision}:DESIGN.md`], { trim: false });
+  if (committedDesign === null || contractChecksum(committedDesign) !== designChecksum) {
+    abort("Cannot initialize a development adoption: working-tree DESIGN.md differs from the contract stored at HEAD. Commit DESIGN.md, then run the initializer again so the generated locator is immutable and truthful.");
+  }
+  contractSource = `https://github.com/yehyakin/kin-design-system/tree/${contractRevision}`;
+  lifecycleSummary = `development revision ${contractRevision} (latest stable v${latestStable})`;
+  locatorRequirement = "This development contract is pinned to the full commit above. Keep that immutable revision and checksum together; do not rewrite it as a release tag until that tag exists and contains the same contract.";
+}
+
 const config = {
   $schema: "https://raw.githubusercontent.com/yehyakin/kin-design-system/main/adoption/kin.config.schema.json",
   kinVersion: version,
   profile,
   contract: {
-    source: `https://github.com/yehyakin/kin-design-system/tree/v${version}`,
+    source: contractSource,
     local: "docs/KIN-DESIGN.md",
-    revision: `v${version}`,
+    revision: contractRevision,
     checksum: designChecksum,
   },
   tokens: { source: "src/styles/tokens.css", format: "css", generated: false },
@@ -89,7 +177,7 @@ const config = {
 
 const record = `# KIN adoption record
 
-This project targets KIN ${version}.
+This project targets KIN ${version}, ${lifecycleSummary}.
 
 ## Decisions to complete
 
@@ -106,15 +194,17 @@ This project targets KIN ${version}.
 - Representative production workflow: TODO
 - Visual review baseline/candidate artifacts: TODO
 - Documented exceptions: none
+- Contract lifecycle: ${releaseStatus}
+- Latest stable KIN release: v${latestStable}
 
 ## Source of truth
 
-- Contract: https://github.com/yehyakin/kin-design-system/tree/v${version}
-- Contract revision: v${version}
+- Contract: ${contractSource}
+- Contract revision: ${contractRevision}
 - Expected canonical DESIGN.md SHA-256: ${designChecksum}
 - Local pinned copy: docs/KIN-DESIGN.md
 
-Copy the complete reviewed DESIGN.md release into the local path before implementation. The expected checksum is calculated from the KIN checkout after removing an optional UTF-8 BOM and normalizing CRLF or CR line endings to LF; the checker applies the same canonicalization to the target copy. Keep project-specific exceptions in kin.config.json, not in the shared contract. Record mappings, checks, owners, and production observation in docs/kin-evidence.json without changing unperformed checks to passed. The release tag must exist before another project adopts this locator.
+Copy the complete reviewed DESIGN.md contract revision into the local path before implementation. The expected checksum is calculated from the KIN checkout after removing an optional UTF-8 BOM and normalizing CRLF or CR line endings to LF; the checker applies the same canonicalization to the target copy. Keep project-specific exceptions in kin.config.json, not in the shared contract. Record mappings, checks, owners, and production observation in docs/kin-evidence.json without changing unperformed checks to passed. ${locatorRequirement}
 
 Before claiming verified adoption, select one representative production workflow and record comparable baseline/candidate artifacts plus a human visual-signature review. A component gallery, design lab, static fixture, or header-only migration does not qualify.
 `;
@@ -287,4 +377,5 @@ writeIfAllowed(configPath, `${JSON.stringify(config, null, 2)}\n`);
 writeIfAllowed(recordPath, record);
 writeIfAllowed(briefPath, brief);
 writeIfAllowed(evidencePath, `${JSON.stringify(evidence, null, 2)}\n`);
+console.log(`Pinned KIN ${version} ${lifecycleSummary}.`);
 console.log("Resolve the implementation brief, route/profile map, delivery boundary, mappings, evidence, commands, and pinned local contract before implementation.");

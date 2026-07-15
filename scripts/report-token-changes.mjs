@@ -3,6 +3,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import process from "node:process";
+import { parseMotionTokens } from "./motion-tokens.mjs";
 
 const root = process.cwd();
 const base = process.argv.slice(2).find((argument) => !argument.startsWith("--")) ?? "HEAD";
@@ -23,6 +24,7 @@ function run(command, args, options = {}) {
 }
 
 const before = run("git", ["show", `${base}:DESIGN.md`]);
+const after = fs.readFileSync(path.join(root, "DESIGN.md"), "utf8");
 const temporaryDirectory = fs.mkdtempSync(path.join(os.tmpdir(), "kin-design-diff-"));
 const beforeFile = path.join(temporaryDirectory, "before.md");
 
@@ -32,9 +34,16 @@ try {
     "-y", "-p", `@google/design.md@${packageVersion}`, "designmd", "diff", beforeFile, "DESIGN.md",
   ]);
   const report = JSON.parse(raw);
+  const beforeMotion = parseMotionTokens(before);
+  const afterMotion = parseMotionTokens(after);
+  const motion = {
+    added: Object.keys(afterMotion).filter((name) => !(name in beforeMotion)),
+    removed: Object.keys(beforeMotion).filter((name) => !(name in afterMotion)),
+    modified: Object.keys(afterMotion).filter((name) => name in beforeMotion && afterMotion[name] !== beforeMotion[name]),
+  };
 
   if (asJson) {
-    console.log(JSON.stringify({ base, ...report }, null, 2));
+    console.log(JSON.stringify({ base, ...report, motion }, null, 2));
     process.exit(0);
   }
 
@@ -51,6 +60,16 @@ try {
       const name = typeof token === "string" ? token : token.path;
       console.log(`- Modified: ${name}`);
     }
+    console.log("");
+  }
+
+  const motionCount = motion.added.length + motion.removed.length + motion.modified.length;
+  changed += motionCount;
+  if (motionCount > 0) {
+    console.log("## motion");
+    for (const token of motion.added) console.log(`- Added: ${token}`);
+    for (const token of motion.removed) console.log(`- Removed: ${token}`);
+    for (const token of motion.modified) console.log(`- Modified: ${token}`);
     console.log("");
   }
 

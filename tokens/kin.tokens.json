@@ -929,7 +929,7 @@
     "display": {
       "$type": "typography",
       "$value": {
-        "fontFamily": "Inter, Geist, system-ui, sans-serif",
+        "fontFamily": "Inter, Geist, \"SF Pro Display\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", \"PingFang SC\", \"Hiragino Sans GB\", \"Microsoft YaHei\", system-ui, sans-serif",
         "fontSize": {
           "value": 32,
           "unit": "px"
@@ -945,7 +945,7 @@
     "page-title": {
       "$type": "typography",
       "$value": {
-        "fontFamily": "Inter, Geist, system-ui, sans-serif",
+        "fontFamily": "Inter, Geist, \"SF Pro Text\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", \"PingFang SC\", \"Hiragino Sans GB\", \"Microsoft YaHei\", system-ui, sans-serif",
         "fontSize": {
           "value": 20,
           "unit": "px"
@@ -961,7 +961,7 @@
     "entity-title": {
       "$type": "typography",
       "$value": {
-        "fontFamily": "Inter, Geist, system-ui, sans-serif",
+        "fontFamily": "Inter, Geist, \"SF Pro Text\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", \"PingFang SC\", \"Hiragino Sans GB\", \"Microsoft YaHei\", system-ui, sans-serif",
         "fontSize": {
           "value": 18,
           "unit": "px"
@@ -977,7 +977,7 @@
     "section-title": {
       "$type": "typography",
       "$value": {
-        "fontFamily": "Inter, Geist, system-ui, sans-serif",
+        "fontFamily": "Inter, Geist, \"SF Pro Text\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", \"PingFang SC\", \"Hiragino Sans GB\", \"Microsoft YaHei\", system-ui, sans-serif",
         "fontSize": {
           "value": 14,
           "unit": "px"
@@ -993,7 +993,7 @@
     "body": {
       "$type": "typography",
       "$value": {
-        "fontFamily": "Inter, Geist, system-ui, sans-serif",
+        "fontFamily": "Inter, Geist, \"SF Pro Text\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", \"PingFang SC\", \"Hiragino Sans GB\", \"Microsoft YaHei\", system-ui, sans-serif",
         "fontSize": {
           "value": 14,
           "unit": "px"
@@ -1009,7 +1009,7 @@
     "ui": {
       "$type": "typography",
       "$value": {
-        "fontFamily": "Inter, Geist, system-ui, sans-serif",
+        "fontFamily": "Inter, Geist, \"SF Pro Text\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", \"PingFang SC\", \"Hiragino Sans GB\", \"Microsoft YaHei\", system-ui, sans-serif",
         "fontSize": {
           "value": 13,
           "unit": "px"
@@ -1025,7 +1025,7 @@
     "metadata": {
       "$type": "typography",
       "$value": {
-        "fontFamily": "Inter, Geist, system-ui, sans-serif",
+        "fontFamily": "Inter, Geist, \"SF Pro Text\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", \"PingFang SC\", \"Hiragino Sans GB\", \"Microsoft YaHei\", system-ui, sans-serif",
         "fontSize": {
           "value": 12,
           "unit": "px"
@@ -1038,10 +1038,26 @@
         "lineHeight": 17
       }
     },
+    "micro": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "Inter, Geist, \"SF Pro Text\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", \"PingFang SC\", \"Hiragino Sans GB\", \"Microsoft YaHei\", system-ui, sans-serif",
+        "fontSize": {
+          "value": 11,
+          "unit": "px"
+        },
+        "fontWeight": 500,
+        "letterSpacing": {
+          "value": 0,
+          "unit": "em"
+        },
+        "lineHeight": 15
+      }
+    },
     "mono": {
       "$type": "typography",
       "$value": {
-        "fontFamily": "Geist Mono, JetBrains Mono, monospace",
+        "fontFamily": "\"Geist Mono\", \"JetBrains Mono\", \"SFMono-Regular\", Consolas, monospace",
         "fontSize": {
           "value": 12,
           "unit": "px"
@@ -1053,6 +1069,84 @@
         },
         "lineHeight": 18
       }
+    }
+  },
+  "motion": {
+    "duration-instant": {
+      "$type": "duration",
+      "$value": {
+        "value": 0,
+        "unit": "ms"
+      }
+    },
+    "duration-press": {
+      "$type": "duration",
+      "$value": {
+        "value": 90,
+        "unit": "ms"
+      }
+    },
+    "duration-fast": {
+      "$type": "duration",
+      "$value": {
+        "value": 140,
+        "unit": "ms"
+      }
+    },
+    "duration-normal": {
+      "$type": "duration",
+      "$value": {
+        "value": 180,
+        "unit": "ms"
+      }
+    },
+    "duration-panel": {
+      "$type": "duration",
+      "$value": {
+        "value": 240,
+        "unit": "ms"
+      }
+    },
+    "duration-drawer": {
+      "$type": "duration",
+      "$value": {
+        "value": 300,
+        "unit": "ms"
+      }
+    },
+    "duration-number": {
+      "$type": "duration",
+      "$value": {
+        "value": 400,
+        "unit": "ms"
+      }
+    },
+    "ease-standard": {
+      "$type": "cubicBezier",
+      "$value": [
+        0.2,
+        0,
+        0,
+        1
+      ]
+    },
+    "ease-enter": {
+      "$type": "cubicBezier",
+      "$value": [
+        0.16,
+        1,
+        0.3,
+        1
+      ]
+    },
+    "ease-exit": {
+      "$type": "cubicBezier",
+      "$value": [
+        0.23,
+        1,
+        0.32,
+        1
+      ]
     }
   }
 }

@@ -30,6 +30,7 @@ import {
   TextCursorInput,
   X,
 } from "lucide";
+import { lockModalScroll, unlockModalScroll } from "../shared/modal-scroll-lock.js";
 
 const contrastButton = document.querySelector("[data-contrast-toggle]");
 let coreSonnerModulePromise;
@@ -73,10 +74,18 @@ const iconSet = {
 };
 
 function renderIcons() {
-  createIcons({
-    icons: iconSet,
-    attrs: { "aria-hidden": "true", "stroke-width": 1.5 },
-  });
+  const roots = [
+    document.querySelector("#core-reference"),
+    document.querySelector(".reference-back.icon-action"),
+    ...document.querySelectorAll("dialog, [data-drawer-layer]"),
+  ].filter(Boolean);
+  for (const iconRoot of roots) {
+    createIcons({
+      root: iconRoot,
+      icons: iconSet,
+      attrs: { "aria-hidden": "true", "stroke-width": 1.5 },
+    });
+  }
 }
 
 function applyContrast(enabled, persist = true) {
@@ -352,6 +361,7 @@ const menuItems = [...sampleMenu.querySelectorAll('[role="menuitem"]')];
 const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
 const transientSurfaceCleanups = new WeakMap();
 const managedDialogCleanups = new WeakMap();
+const managedDialogScrollGuards = new WeakSet();
 
 function setTransientSurface(surface, open, { trigger, focusTarget, restoreFocus = false } = {}) {
   const cleanup = transientSurfaceCleanups.get(surface);
@@ -362,10 +372,10 @@ function setTransientSurface(surface, open, { trigger, focusTarget, restoreFocus
     surface.inert = false;
     surface.dataset.state = "opening";
     trigger?.setAttribute("aria-expanded", "true");
+    focusTarget?.focus();
     requestAnimationFrame(() => {
       if (surface.dataset.state !== "opening") return;
       surface.dataset.state = "open";
-      focusTarget?.focus();
     });
     return;
   }
@@ -401,12 +411,17 @@ function openManagedDialog(dialog, { trigger, focusTarget } = {}) {
     dialog.dataset.state = "closed";
     dialog.showModal();
   }
+  lockModalScroll(dialog);
+  if (!managedDialogScrollGuards.has(dialog)) {
+    dialog.addEventListener("close", () => unlockModalScroll(dialog));
+    managedDialogScrollGuards.add(dialog);
+  }
   dialog.inert = false;
   dialog.dataset.state = "opening";
+  focusTarget?.focus({ preventScroll: true });
   requestAnimationFrame(() => {
     if (dialog.dataset.state !== "opening") return;
     dialog.dataset.state = "open";
-    focusTarget?.focus();
   });
   dialog.dataset.triggerId = trigger?.id || "";
 }
@@ -427,6 +442,7 @@ function closeManagedDialog(dialog, { trigger, returnValue = "cancel", restoreFo
     if (dialog.dataset.state !== "closing") return;
     detach();
     dialog.close(returnValue);
+    unlockModalScroll(dialog);
     dialog.dataset.state = "closed";
     if (restoreFocus) trigger?.focus();
   };
@@ -565,6 +581,79 @@ for (const toggle of document.querySelectorAll("[data-truncation-toggle]")) {
 const authForm = document.querySelector("[data-auth-form]");
 const authStatus = authForm.querySelector("[data-auth-status]");
 
+function coreValidationMessage(input) {
+  if (input.validity.valueMissing) return input.type === "email" ? "请输入工作邮箱。" : "请输入密码。";
+  if (input.type === "email" && input.validity.typeMismatch) return "请输入有效的邮箱地址。";
+  return "请检查此字段。";
+}
+
+function coreFieldErrorFor(input) {
+  return document.getElementById(`${input.id}-error`);
+}
+
+function setCoreFieldError(input, message) {
+  const error = coreFieldErrorFor(input);
+  if (!error) return;
+  error.textContent = message;
+  error.hidden = false;
+  input.setAttribute("aria-invalid", "true");
+  const describedBy = new Set((input.getAttribute("aria-describedby") || "").split(/\s+/).filter(Boolean));
+  describedBy.add(error.id);
+  input.setAttribute("aria-describedby", [...describedBy].join(" "));
+}
+
+function clearCoreFieldError(input) {
+  const error = coreFieldErrorFor(input);
+  if (!error) return;
+  error.textContent = "";
+  error.hidden = true;
+  input.setAttribute("aria-invalid", "false");
+  const describedBy = (input.getAttribute("aria-describedby") || "").split(/\s+/).filter((id) => id && id !== error.id);
+  if (describedBy.length) input.setAttribute("aria-describedby", describedBy.join(" "));
+  else input.removeAttribute("aria-describedby");
+}
+
+function clearCoreValidationSummary(form, status) {
+  if (!status.dataset.validationSummary || form.querySelector('[aria-invalid="true"]')) return;
+  delete status.dataset.validationSummary;
+  status.textContent = "";
+  const originalRole = status.dataset.originalRole;
+  if (originalRole) status.setAttribute("role", originalRole);
+  else status.removeAttribute("role");
+  delete status.dataset.originalRole;
+}
+
+function validateCoreAuthForm(form, status) {
+  let valid = true;
+  for (const input of form.querySelectorAll("input[required]")) {
+    if (input.validity.valid) clearCoreFieldError(input);
+    else {
+      valid = false;
+      setCoreFieldError(input, coreValidationMessage(input));
+    }
+  }
+  if (valid) {
+    clearCoreValidationSummary(form, status);
+    return true;
+  }
+  status.dataset.originalRole = status.dataset.originalRole ?? status.getAttribute("role") ?? "";
+  status.dataset.validationSummary = "true";
+  status.setAttribute("role", "alert");
+  status.textContent = "请检查标出的字段后再继续。";
+  status.focus({ preventScroll: true });
+  return false;
+}
+
+function bindCoreAuthValidation(form, status) {
+  for (const input of form.querySelectorAll("input[required]")) {
+    input.addEventListener("input", () => {
+      if (input.validity.valid) clearCoreFieldError(input);
+      else if (input.getAttribute("aria-invalid") === "true") setCoreFieldError(input, coreValidationMessage(input));
+      clearCoreValidationSummary(form, status);
+    });
+  }
+}
+
 for (const passwordToggle of document.querySelectorAll("[data-password-toggle]")) {
   const passwordInput = passwordToggle.closest(".password-field")?.querySelector('input[type="password"], input[type="text"]');
   if (!passwordInput) continue;
@@ -580,10 +669,7 @@ for (const passwordToggle of document.querySelectorAll("[data-password-toggle]")
 
 authForm.addEventListener("submit", (event) => {
   event.preventDefault();
-  if (!authForm.checkValidity()) {
-    authForm.reportValidity();
-    return;
-  }
+  if (!validateCoreAuthForm(authForm, authStatus)) return;
   authStatus.textContent = "这是本地界面参考，未连接身份服务，也不会发送凭据。";
   authStatus.focus();
 });
@@ -593,6 +679,8 @@ const reauthOpen = document.querySelector("[data-reauth-open]");
 const reauthCancel = reauthDialog.querySelector("[data-reauth-cancel]");
 const reauthForm = reauthDialog.querySelector("[data-reauth-form]");
 const reauthStatus = reauthDialog.querySelector("[data-reauth-status]");
+bindCoreAuthValidation(authForm, authStatus);
+bindCoreAuthValidation(reauthForm, reauthStatus);
 
 reauthOpen.addEventListener("click", () => {
   reauthStatus.textContent = "";
@@ -601,10 +689,7 @@ reauthOpen.addEventListener("click", () => {
 reauthCancel.addEventListener("click", () => closeManagedDialog(reauthDialog, { trigger: reauthOpen }));
 reauthForm.addEventListener("submit", (event) => {
   event.preventDefault();
-  if (!reauthForm.checkValidity()) {
-    reauthForm.reportValidity();
-    return;
-  }
+  if (!validateCoreAuthForm(reauthForm, reauthStatus)) return;
   reauthStatus.textContent = "这是本地界面参考；连接真实身份服务后才能继续。";
   reauthStatus.focus();
 });
@@ -619,6 +704,7 @@ const authTaskForm = authTaskDialog.querySelector("[data-auth-dialog-form]");
 const authTaskCancel = authTaskDialog.querySelector("[data-auth-dialog-cancel]");
 const authTaskStatus = authTaskDialog.querySelector("[data-auth-dialog-status]");
 const authTaskEmail = authTaskForm.elements.namedItem("auth-dialog-email");
+bindCoreAuthValidation(authTaskForm, authTaskStatus);
 
 authTaskOpen.addEventListener("click", () => {
   authTaskStatus.textContent = "";
@@ -627,10 +713,7 @@ authTaskOpen.addEventListener("click", () => {
 authTaskCancel.addEventListener("click", () => closeManagedDialog(authTaskDialog, { trigger: authTaskOpen }));
 authTaskForm.addEventListener("submit", (event) => {
   event.preventDefault();
-  if (!authTaskForm.checkValidity()) {
-    authTaskForm.reportValidity();
-    return;
-  }
+  if (!validateCoreAuthForm(authTaskForm, authTaskStatus)) return;
   authTaskStatus.textContent = "这是本地界面参考；连接真实身份服务后才能恢复保存操作。";
   authTaskStatus.focus();
 });
@@ -703,6 +786,7 @@ motionDisclosure.addEventListener("click", () => {
   motionDetails.dataset.state = open ? "open" : "closed";
   motionDetails.setAttribute("aria-hidden", String(!open));
   motionDetails.inert = !open;
+  motionDetails.hidden = !open;
 });
 
 const dialog = document.querySelector("[data-confirm-dialog]");

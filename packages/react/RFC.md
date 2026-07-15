@@ -21,8 +21,9 @@ Pre-release support is best effort. Breaking changes before `1.0.0` MUST include
 ## 2. Scope and commitments
 
 - Framework: React 18.2 or React 19.
-- Rendering: ESM subpath exports. Server rendering is supported only for adapters covered by the package SSR smoke test; browser-owned behavior begins after hydration.
-- Styling: one optional CSS entry bound to KIN semantic Tokens. The package MUST NOT introduce a second theme system.
+- Rendering: ESM-only subpath exports. CommonJS is not supported. Server rendering is supported only for adapters covered by the package SSR and `hydrateRoot` compatibility checks; browser-owned behavior begins after hydration.
+- Runtime floor: Node.js 20.11 or newer for package tooling and claimed server rendering.
+- Styling: a shared base plus optional per-integration CSS entries bound to KIN semantic Tokens. The full aggregate exists for the Integration Lab only. The package MUST NOT introduce a second theme system.
 - Browsers: the same named modern-browser matrix used by KIN reference interfaces. Smoke coverage MUST NOT be reported as complete parity.
 - Accessibility: each adapter inherits the applicable KIN component contract and preserves upstream keyboard or assistive behavior unless a recorded KIN correction is required.
 - Localization: adapters accept product-owned labels. KIN MUST NOT ship embedded product copy as the only option.
@@ -56,6 +57,8 @@ Development-only export:
 | `@kin-design/react/dev/leva` | `leva` | Development tuning only; MUST NOT be loaded by a production entry |
 
 The package root exports status and shared types only. It MUST remain free of optional integration engines so consumers pay only for imported subpaths.
+
+Every integration engine is an exact optional peer dependency. A consuming product installs only the peers used by its selected subpaths. React and React DOM remain required peers. This isolates installation cost as well as JavaScript and CSS import cost; a missing selected peer is an installation error owned by the consuming product rather than a reason to install the complete catalog.
 
 ## 4. What is preserved and what KIN owns
 
@@ -96,7 +99,8 @@ KIN MUST NOT copy upstream source into this repository by default. A necessary u
 The package test surface MUST cover:
 
 - type checking and ESM export resolution;
-- server-render smoke for adapters that claim SSR-safe output;
+- server-render plus clean `hydrateRoot` checks for adapters that claim SSR-safe output;
+- React 18.2 and React 19 compatibility in isolated temporary consumers without rewriting the repository lockfile;
 - subpath tree-shaking and dependency isolation;
 - Sonner result, undo, promise update, dismissal, and motion evidence;
 - NumberFlow first-render suppression, genuine-value transition, theme stability, and Reduced Motion;
@@ -112,7 +116,7 @@ Automated tests do not prove screen-reader quality, touch physics, browser zoom,
 
 ## 7. Dependency, bundle, and security policy
 
-- Dependencies MUST use exact versions in the package manifest and lockfile.
+- Integration peers MUST use exact versions in the package manifest and lockfile. React and React DOM MAY use the reviewed supported-major range and MUST be exercised at named exact versions in CI.
 - Official package and license sources MUST be reviewed before adoption and each release upgrade.
 - The package root and every subpath MUST be independently bundle-inspected.
 - Leva MUST be absent from root, stable, and experimental production bundles unless `/dev/leva` is imported explicitly.
@@ -127,8 +131,8 @@ Adoption sequence:
 
 1. pin the KIN revision and package version;
 2. map the local component and its states to the KIN catalog;
-3. install only the required official dependency subpaths;
-4. import `@kin-design/react/styles.css` once after product Token definitions;
+3. install only the exact optional peers required by the selected KIN subpaths;
+4. import `@kin-design/react/styles/base.css` and the selected per-integration CSS after product Token definitions;
 5. replace one project adapter behind its existing feature flag or component boundary;
 6. compare real light, dark, narrow, keyboard, Reduced Motion, loading, error, and recovery states;
 7. record bundle and representative-workflow evidence;

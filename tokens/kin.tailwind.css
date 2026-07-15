@@ -77,14 +77,15 @@
   --color-contrast-light-text-secondary: #343840;
   --color-contrast-light-line-default: #6a707a;
   --color-contrast-light-focus-ring: #3946b8;
-  --font-display: "Inter, Geist, system-ui, sans-serif";
-  --font-page-title: "Inter, Geist, system-ui, sans-serif";
-  --font-entity-title: "Inter, Geist, system-ui, sans-serif";
-  --font-section-title: "Inter, Geist, system-ui, sans-serif";
-  --font-body: "Inter, Geist, system-ui, sans-serif";
-  --font-ui: "Inter, Geist, system-ui, sans-serif";
-  --font-metadata: "Inter, Geist, system-ui, sans-serif";
-  --font-mono: "Geist Mono, JetBrains Mono, monospace";
+  --font-display: Inter, Geist, "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", system-ui, sans-serif;
+  --font-page-title: Inter, Geist, "SF Pro Text", -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", system-ui, sans-serif;
+  --font-entity-title: Inter, Geist, "SF Pro Text", -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", system-ui, sans-serif;
+  --font-section-title: Inter, Geist, "SF Pro Text", -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", system-ui, sans-serif;
+  --font-body: Inter, Geist, "SF Pro Text", -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", system-ui, sans-serif;
+  --font-ui: Inter, Geist, "SF Pro Text", -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", system-ui, sans-serif;
+  --font-metadata: Inter, Geist, "SF Pro Text", -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", system-ui, sans-serif;
+  --font-micro: Inter, Geist, "SF Pro Text", -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", system-ui, sans-serif;
+  --font-mono: "Geist Mono", "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
   --text-display: 32px;
   --text-page-title: 20px;
   --text-entity-title: 18px;
@@ -92,6 +93,7 @@
   --text-body: 14px;
   --text-ui: 13px;
   --text-metadata: 12px;
+  --text-micro: 11px;
   --text-mono: 12px;
   --leading-display: 38px;
   --leading-page-title: 26px;
@@ -100,6 +102,7 @@
   --leading-body: 22px;
   --leading-ui: 18px;
   --leading-metadata: 17px;
+  --leading-micro: 15px;
   --leading-mono: 18px;
   --tracking-display: -0.02em;
   --tracking-page-title: -0.01em;
@@ -108,6 +111,7 @@
   --tracking-body: 0em;
   --tracking-ui: 0em;
   --tracking-metadata: 0em;
+  --tracking-micro: 0em;
   --tracking-mono: 0em;
   --font-weight-display: 600;
   --font-weight-page-title: 600;
@@ -116,6 +120,7 @@
   --font-weight-body: 400;
   --font-weight-ui: 500;
   --font-weight-metadata: 400;
+  --font-weight-micro: 500;
   --font-weight-mono: 450;
   --radius-xs: 3px;
   --radius-sm: 5px;
@@ -132,4 +137,17 @@
   --spacing-8: 32px;
   --spacing-10: 40px;
   --spacing-12: 48px;
+}
+
+:root {
+  --duration-instant: 0ms;
+  --duration-press: 90ms;
+  --duration-fast: 140ms;
+  --duration-normal: 180ms;
+  --duration-panel: 240ms;
+  --duration-drawer: 300ms;
+  --duration-number: 400ms;
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ease-enter: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-exit: cubic-bezier(0.23, 1, 0.32, 1);
 }

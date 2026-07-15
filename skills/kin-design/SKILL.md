@@ -14,9 +14,10 @@ Use KIN as a product contract, not as a visual theme preset.
 3. Read `components/catalog.md` and `components/terminology.md` when the task adds, selects, renames, audits, or claims completion of a component.
 4. Read `components/ai-assistance.md`, `review-and-approval.md`, `background-work.md`, or `charts-and-analysis.md` when AI output, evidence, approval, side effects, durable jobs, media review, or analytical charts are in scope.
 5. Read `principles/verification.md` before claiming accessibility, browser, motion, zoom, RTL, or component-completion evidence.
-6. Read the consuming project's `AGENTS.md`, `DESIGN.md`, `PRODUCT.md`, package manifest, global styles, token source, component primitives, and relevant route files when present.
-7. Preserve the user's explicit request, real product behavior, data model, accessibility, routes, analytics, and established brand assets.
-8. Read only the routed reference below. Do not load every reference.
+6. Read `integrations/catalog.md`, `packages/react/RFC.md`, and the matching integration contract before changing an official runtime adapter, package export, dependency boundary, or upstream behavior.
+7. Read the consuming project's `AGENTS.md`, `DESIGN.md`, `PRODUCT.md`, package manifest, global styles, token source, component primitives, and relevant route files when present.
+8. Preserve the user's explicit request, real product behavior, data model, accessibility, routes, analytics, and established brand assets.
+9. Read only the routed reference below. Do not load every reference.
 
 If the KIN contract is unavailable, say so and do not claim KIN compliance.
 
@@ -39,6 +40,7 @@ Ask one focused question only when two plausible answers would materially change
 - New page, application, component, or feature: read `references/build.md`.
 - Existing interface redesign: read `references/redesign.md`.
 - KIN adoption, migration, or evidence recording: read `references/adoption.md` before the applicable build or redesign workflow.
+- Official runtime package evaluation, adapter work, or migration to `@kin-design/react`: read `references/runtime-integrations.md` before the applicable build or redesign workflow.
 - Complete page, route family, application shell, or representative workflow: also read `references/composition.md`.
 - Compliance, accessibility, performance, or anti-slop audit: read `references/audit.md`.
 - Design critique without implementation: read `references/review.md`.
@@ -65,10 +67,11 @@ Do not silently change routes, navigation labels, data meaning, form fields, ana
 3. Reuse existing tokens and primitives before creating new ones.
 4. Plan information hierarchy and states before styling.
 5. For a page or migration, complete the KIN composition checkpoint in `references/composition.md`; when a local implementation brief exists, resolve it before building isolated component examples.
-6. Implement the smallest coherent change that completes a real user task.
-7. Verify realistic content, empty/error/loading/stale states, light/dark themes, target viewports, keyboard use, touch where relevant, and both normal and reduced motion. Label automated and manual evidence separately.
-8. Inspect comparable baseline and candidate screenshots whenever a runnable UI exists; a component lab is not production evidence.
-9. Report evidence, deviations, unresolved issues, and rollback.
+6. When an official runtime integration is in scope, preserve the upstream behavior engine, verify the KIN maturity boundary, and record package, bundle, SSR/hydration, accessibility, localization, and rollback evidence.
+7. Implement the smallest coherent change that completes a real user task.
+8. Verify realistic content, empty/error/loading/stale states, light/dark themes, target viewports, keyboard use, touch where relevant, and both normal and reduced motion. Label automated and manual evidence separately.
+9. Inspect comparable baseline and candidate screenshots whenever a runnable UI exists; a component lab is not production evidence.
+10. Report evidence, deviations, unresolved issues, and rollback.
 
 For consuming projects with `kin.config.json`, run the structural adoption check before implementation. During an audit, the optional KIN CLI may locate candidates, but every match must be confirmed in source context and rendered UI before it becomes a finding.
 

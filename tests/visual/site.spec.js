@@ -1,6 +1,10 @@
 import { expect, test } from "@playwright/test";
 
 test("showcase exposes the English contract and live foundations", async ({ page }) => {
+  const consoleWarnings = [];
+  page.on("console", (message) => {
+    if (["warning", "error"].includes(message.type())) consoleWarnings.push(message.text());
+  });
   await page.goto("/");
   await expect(page).toHaveTitle("KIN Design System");
   await expect(page.getByRole("heading", { level: 1 })).toContainText("Clear interfaces");
@@ -11,15 +15,18 @@ test("showcase exposes the English contract and live foundations", async ({ page
   await expect(page.getByRole("link", { name: /Motion Lab/ }).first()).toHaveAttribute("href", "examples/workspace-reference/motion.html");
   await expect(page.locator('.language-menu a[hreflang="zh-CN"]')).toHaveAttribute("lang", "zh-CN");
   await expect(page.locator('svg.lucide')).not.toHaveCount(0);
+  await expect(page.locator(".docs-nav svg.lucide-blocks")).toBeVisible();
   await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
   await expect(page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).resolves.toBe(true);
   await page.screenshot({ path: "test-results/playwright/site-dark-desktop.png", fullPage: true });
+  expect(consoleWarnings).toEqual([]);
 });
 
 test("showcase theme contrast and language preferences work", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("switch").click();
   await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
+  await expect(page.locator("html")).toHaveCSS("color-scheme", "light");
   await expect(page.evaluate(() => localStorage.getItem("kin-site-theme"))).resolves.toBe("light");
   await page.getByRole("button", { name: "Increase contrast" }).click();
   await expect(page.locator("html")).toHaveAttribute("data-contrast", "more");

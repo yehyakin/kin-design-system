@@ -81,6 +81,8 @@
 .core-field { position: relative; display: grid; align-content: start; gap: 6px; min-width: 0; color: var(--text-2); }
 .core-field > span { font-weight: 550; }
 .core-field input, .core-field textarea, .core-field select { width: 100%; min-height: 36px; padding: 7px 10px; border: 1px solid var(--line); border-radius: 5px; background: var(--surface-2); color: var(--text); font: inherit; }
+.core-field input[aria-invalid="true"] { border-color: var(--negative); outline: 2px solid color-mix(in srgb, var(--negative) 24%, transparent); outline-offset: 1px; }
+.core-field > .field-error { color: var(--negative); font-size: 11px; font-weight: 400; }
 .core-field textarea { resize: vertical; }
 .core-field small { color: var(--muted); }
 .combo-options { position: absolute; z-index: 4; top: calc(100% - 13px); right: 0; left: 0; padding: 5px; border: 1px solid var(--line-strong); border-radius: 7px; background: var(--surface-3); box-shadow: var(--shadow); }
@@ -191,10 +193,9 @@
 .stateful-action.is-complete { border-color: color-mix(in srgb, var(--positive) 54%, var(--line)); color: var(--positive); }
 .disclosure-trigger svg { transform-origin: center; }
 .disclosure-trigger[aria-expanded="true"] svg { transform: rotate(180deg); }
-.motion-disclosure { display: grid; grid-template-rows: 0fr; opacity: 0; }
-.motion-disclosure p { min-height: 0; margin-top: 0; overflow: hidden; }
-.motion-disclosure[data-state="open"] { grid-template-rows: 1fr; opacity: 1; }
-.motion-disclosure[data-state="open"] p { margin-top: 10px; }
+.motion-disclosure { display: block; }
+.motion-disclosure[hidden] { display: none; }
+.motion-disclosure p { margin-top: 10px; }
 .feedback-stack { display: grid; gap: 10px; }
 .banner-sample { display: flex; align-items: center; justify-content: space-between; gap: 18px; min-height: 44px; padding: 8px 12px; border: 1px solid var(--line); background: var(--surface-2); color: var(--muted); }
 .banner-sample strong { margin-right: 8px; color: var(--text-2); }
@@ -244,7 +245,6 @@
   .sample-menu[data-state="open"], .sample-popover[data-state="open"] { transition-duration: 140ms, 160ms; transition-timing-function: var(--ease-enter); }
   .tooltip-sample [role="tooltip"] { transition: opacity 125ms var(--ease-enter), transform 125ms var(--ease-enter); }
   .disclosure-trigger svg { transition: transform 180ms var(--ease); }
-  .motion-disclosure { transition: grid-template-rows 180ms var(--ease), opacity 140ms var(--ease); }
   .core-dialog { transition: opacity 150ms var(--ease-exit), transform 160ms var(--ease-exit); }
   .core-dialog[data-state="open"] { transition-duration: 180ms, 200ms; transition-timing-function: var(--ease-enter); }
   .core-dialog::backdrop { transition: background-color 150ms var(--ease-exit); }

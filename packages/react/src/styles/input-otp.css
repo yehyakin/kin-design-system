@@ -1,0 +1,92 @@
+.kin-otp {
+  display: grid;
+  gap: 8px;
+}
+
+.kin-otp__label {
+  color: var(--text-primary);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.kin-otp__description,
+.kin-otp__error {
+  margin: 0;
+  font-size: 12px;
+  line-height: 17px;
+}
+
+.kin-otp__description {
+  color: var(--text-muted);
+}
+
+.kin-otp__error {
+  color: var(--negative);
+}
+
+.kin-otp__input,
+.kin-otp__slots {
+  display: flex;
+  align-items: center;
+}
+
+.kin-otp__slots {
+  gap: 6px;
+}
+
+.kin-otp__slot {
+  position: relative;
+  display: grid;
+  width: 36px;
+  height: 40px;
+  place-items: center;
+  border: 1px solid var(--line-default);
+  border-radius: var(--radius-sm, 5px);
+  background: var(--surface-2);
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.kin-otp__slot[data-active] {
+  border-color: var(--accent);
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 1px;
+}
+
+.kin-otp__separator {
+  color: var(--text-muted);
+}
+
+.kin-otp__caret {
+  width: 1px;
+  height: 18px;
+  animation: kin-otp-caret 1s step-end infinite;
+  background: currentColor;
+}
+
+@keyframes kin-otp-caret {
+  50% { opacity: 0; }
+}
+
+@media (max-width: 480px) {
+  .kin-otp__slots {
+    gap: 4px;
+  }
+
+  .kin-otp__slot {
+    width: 34px;
+    height: 44px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kin-otp__caret {
+    animation: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .kin-otp__slot {
+    border-color: CanvasText;
+  }
+}

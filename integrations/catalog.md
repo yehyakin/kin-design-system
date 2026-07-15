@@ -12,7 +12,7 @@ KIN integrates the official package rather than copying or recreating its source
 
 An item is `runtime-integrated` only when all of these exist:
 
-1. an exact official dependency in the isolated React package;
+1. an exact official optional peer in the isolated React package, installed only by products that select that adapter;
 2. a KIN subpath API;
 3. a runnable example using that API;
 4. automated package and browser evidence;
@@ -41,6 +41,7 @@ The public Integration Lab is [`../examples/workspace-reference/integrations.htm
 - KIN MUST NOT vendor package source merely to make an adapter look self-contained.
 - KIN MUST NOT replace upstream physics or animation with a lookalike unless an accessibility or product defect is documented and tested.
 - KIN MUST NOT import every package through the root entry.
+- KIN MUST NOT install every integration engine eagerly; each runtime engine remains an exact optional peer selected by the consuming product.
 - Leva MUST NOT enter a production bundle.
 - Product backends, permissions, storage, OTP verification, realtime transport, and analytics remain outside the integration package.
 - A showcase fixture MUST NOT be counted as consuming-product evidence.

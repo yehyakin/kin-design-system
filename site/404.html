@@ -15,7 +15,8 @@
       const locale = explicitLocale === "zh" || explicitLocale === "en"
         ? explicitLocale
         : pathLocale || (savedLocale === "zh" ? "zh" : "en");
-      const preference = localStorage.getItem("kin-site-theme") || "system";
+      const savedPreference = localStorage.getItem("kin-site-theme");
+      const preference = ["light", "dark", "system"].includes(savedPreference) ? savedPreference : "system";
       const theme = preference === "system"
         ? (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")
         : preference;
@@ -39,7 +40,7 @@
   <header class="site-header">
     <a class="brand" data-404-home data-404-brand href="/kin-design-system/" aria-label="KIN Design System home">
       <span class="brand-mark" aria-hidden="true">KIN</span>
-      <span class="brand-copy"><strong>KIN</strong><small>Design System 2.0</small></span>
+      <span class="brand-copy"><strong>KIN</strong><small>Design System</small></span>
     </a>
     <div class="header-center" aria-hidden="true"></div>
     <div class="header-actions">

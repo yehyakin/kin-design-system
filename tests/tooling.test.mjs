@@ -8,19 +8,33 @@ import { contractChecksum } from "../scripts/contract-checksum.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
 const kinVersion = JSON.parse(fs.readFileSync(path.join(root, "package.json"), "utf8")).version;
+const designContract = fs.readFileSync(path.join(root, "DESIGN.md"), "utf8");
+const releaseStatus = designContract.match(/^release_status:\s*(development|released)\s*$/m)?.[1];
 
 function initAdoption(project, profile = "information-site") {
   execFileSync(process.execPath, [path.join(root, "scripts", "init-adoption.mjs"), project, "--profile", profile], { stdio: "pipe" });
 }
 
 test("Figma export is a create-only Variables REST payload", () => {
+  const dtcg = JSON.parse(fs.readFileSync(path.join(root, "tokens", "kin.tokens.json"), "utf8"));
+  const tailwind = fs.readFileSync(path.join(root, "tokens", "kin.tailwind.css"), "utf8");
   const payload = JSON.parse(fs.readFileSync(path.join(root, "tokens", "kin.figma.variables.json"), "utf8"));
-  assert.equal(payload.variableCollections.length, 3);
+  assert.equal(dtcg.typography.micro.$value.fontSize.value, 11);
+  assert.match(dtcg.typography.body.$value.fontFamily, /PingFang SC/);
+  assert.deepEqual(dtcg.motion["duration-fast"].$value, { value: 140, unit: "ms" });
+  assert.deepEqual(dtcg.motion["ease-standard"].$value, [0.2, 0, 0, 1]);
+  assert.match(tailwind, /--font-body: Inter, Geist, "SF Pro Text"/);
+  assert.match(tailwind, /--duration-fast: 140ms/);
+  assert.match(tailwind, /--ease-standard: cubic-bezier\(0\.2, 0, 0, 1\)/);
+  assert.equal(payload.variableCollections.length, 4);
   assert.ok(payload.variables.length > 40);
   assert.ok(payload.variableModeValues.length > payload.variables.length);
   assert.ok(payload.variableCollections.every((item) => item.action === "CREATE"));
   assert.ok(payload.variables.every((item) => item.action === "CREATE"));
   assert.ok(payload.variableModeValues.some((item) => item.modeId.includes("high_contrast")));
+  assert.ok(payload.variableCollections.some((item) => item.name === "KIN Motion"));
+  assert.ok(payload.variables.some((item) => item.codeSyntax?.WEB === "--duration-fast" && item.resolvedType === "FLOAT"));
+  assert.ok(payload.variables.some((item) => item.codeSyntax?.WEB === "--ease-standard" && item.resolvedType === "STRING"));
 
   const collectionIds = new Set(payload.variableCollections.map((item) => item.id));
   const modeIds = new Set(payload.variableModes.map((item) => item.id));
@@ -53,7 +67,13 @@ test("adoption initializer is non-destructive and checker accepts a completed re
   assert.equal(config.delivery.mode, "contract-first");
   assert.equal(config.delivery.figma, "variables-only");
   assert.equal(config.delivery.runtime, "project-owned");
-  assert.equal(config.contract.revision, `v${kinVersion}`);
+  if (releaseStatus === "released") {
+    assert.equal(config.contract.revision, `v${kinVersion}`);
+  } else {
+    assert.match(config.contract.revision, /^[a-f0-9]{40}$/);
+    assert.match(config.contract.source, new RegExp(`/${config.contract.revision}$`));
+    assert.match(fs.readFileSync(path.join(project, "docs", "kin-adoption.md"), "utf8"), /development revision/);
+  }
   assert.match(config.contract.checksum, /^[a-f0-9]{64}$/);
   assert.equal(config.scope.implementationBrief, "docs/kin-implementation-brief.md");
   assert.equal(config.scope.routeProfiles.length, 1);

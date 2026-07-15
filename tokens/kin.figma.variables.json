@@ -20,6 +20,13 @@
       "name": "KIN Typography",
       "initialModeId": "kin_kin_typography_collection_mode_default",
       "hiddenFromPublishing": false
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_motion_collection",
+      "name": "KIN Motion",
+      "initialModeId": "kin_kin_motion_collection_mode_default",
+      "hiddenFromPublishing": false
     }
   ],
   "variableModes": [
@@ -58,6 +65,12 @@
       "id": "kin_kin_typography_collection_mode_default",
       "name": "Default",
       "variableCollectionId": "kin_typography_collection"
+    },
+    {
+      "action": "UPDATE",
+      "id": "kin_kin_motion_collection_mode_default",
+      "name": "Default",
+      "variableCollectionId": "kin_motion_collection"
     }
   ],
   "variables": [
@@ -1161,6 +1174,63 @@
     },
     {
       "action": "CREATE",
+      "id": "kin_kin_typography_collection_variable_typography_micro_font_family",
+      "name": "Typography/micro/font family",
+      "resolvedType": "STRING",
+      "variableCollectionId": "kin_typography_collection",
+      "description": "",
+      "hiddenFromPublishing": false
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_typography_collection_variable_typography_micro_font_size",
+      "name": "Typography/micro/font size",
+      "resolvedType": "FLOAT",
+      "variableCollectionId": "kin_typography_collection",
+      "description": "",
+      "hiddenFromPublishing": false,
+      "scopes": [
+        "FONT_SIZE"
+      ]
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_typography_collection_variable_typography_micro_font_weight",
+      "name": "Typography/micro/font weight",
+      "resolvedType": "FLOAT",
+      "variableCollectionId": "kin_typography_collection",
+      "description": "",
+      "hiddenFromPublishing": false,
+      "scopes": [
+        "FONT_WEIGHT"
+      ]
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_typography_collection_variable_typography_micro_line_height",
+      "name": "Typography/micro/line height",
+      "resolvedType": "FLOAT",
+      "variableCollectionId": "kin_typography_collection",
+      "description": "",
+      "hiddenFromPublishing": false,
+      "scopes": [
+        "LINE_HEIGHT"
+      ]
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_typography_collection_variable_typography_micro_letter_spacing",
+      "name": "Typography/micro/letter spacing",
+      "resolvedType": "FLOAT",
+      "variableCollectionId": "kin_typography_collection",
+      "description": "",
+      "hiddenFromPublishing": false,
+      "scopes": [
+        "LETTER_SPACING"
+      ]
+    },
+    {
+      "action": "CREATE",
       "id": "kin_kin_typography_collection_variable_typography_mono_font_family",
       "name": "Typography/mono/font family",
       "resolvedType": "STRING",
@@ -1215,6 +1285,126 @@
       "scopes": [
         "LETTER_SPACING"
       ]
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_motion_collection_variable_motion_duration_instant",
+      "name": "Motion/duration instant",
+      "resolvedType": "FLOAT",
+      "variableCollectionId": "kin_motion_collection",
+      "description": "KIN motion duration in milliseconds.",
+      "hiddenFromPublishing": false,
+      "codeSyntax": {
+        "WEB": "--duration-instant"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_motion_collection_variable_motion_duration_press",
+      "name": "Motion/duration press",
+      "resolvedType": "FLOAT",
+      "variableCollectionId": "kin_motion_collection",
+      "description": "KIN motion duration in milliseconds.",
+      "hiddenFromPublishing": false,
+      "codeSyntax": {
+        "WEB": "--duration-press"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_motion_collection_variable_motion_duration_fast",
+      "name": "Motion/duration fast",
+      "resolvedType": "FLOAT",
+      "variableCollectionId": "kin_motion_collection",
+      "description": "KIN motion duration in milliseconds.",
+      "hiddenFromPublishing": false,
+      "codeSyntax": {
+        "WEB": "--duration-fast"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_motion_collection_variable_motion_duration_normal",
+      "name": "Motion/duration normal",
+      "resolvedType": "FLOAT",
+      "variableCollectionId": "kin_motion_collection",
+      "description": "KIN motion duration in milliseconds.",
+      "hiddenFromPublishing": false,
+      "codeSyntax": {
+        "WEB": "--duration-normal"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_motion_collection_variable_motion_duration_panel",
+      "name": "Motion/duration panel",
+      "resolvedType": "FLOAT",
+      "variableCollectionId": "kin_motion_collection",
+      "description": "KIN motion duration in milliseconds.",
+      "hiddenFromPublishing": false,
+      "codeSyntax": {
+        "WEB": "--duration-panel"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_motion_collection_variable_motion_duration_drawer",
+      "name": "Motion/duration drawer",
+      "resolvedType": "FLOAT",
+      "variableCollectionId": "kin_motion_collection",
+      "description": "KIN motion duration in milliseconds.",
+      "hiddenFromPublishing": false,
+      "codeSyntax": {
+        "WEB": "--duration-drawer"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_motion_collection_variable_motion_duration_number",
+      "name": "Motion/duration number",
+      "resolvedType": "FLOAT",
+      "variableCollectionId": "kin_motion_collection",
+      "description": "KIN motion duration in milliseconds.",
+      "hiddenFromPublishing": false,
+      "codeSyntax": {
+        "WEB": "--duration-number"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_motion_collection_variable_motion_ease_standard",
+      "name": "Motion/ease standard",
+      "resolvedType": "STRING",
+      "variableCollectionId": "kin_motion_collection",
+      "description": "KIN motion easing curve.",
+      "hiddenFromPublishing": false,
+      "codeSyntax": {
+        "WEB": "--ease-standard"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_motion_collection_variable_motion_ease_enter",
+      "name": "Motion/ease enter",
+      "resolvedType": "STRING",
+      "variableCollectionId": "kin_motion_collection",
+      "description": "KIN motion easing curve.",
+      "hiddenFromPublishing": false,
+      "codeSyntax": {
+        "WEB": "--ease-enter"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_motion_collection_variable_motion_ease_exit",
+      "name": "Motion/ease exit",
+      "resolvedType": "STRING",
+      "variableCollectionId": "kin_motion_collection",
+      "description": "KIN motion easing curve.",
+      "hiddenFromPublishing": false,
+      "codeSyntax": {
+        "WEB": "--ease-exit"
+      }
     }
   ],
   "variableModeValues": [
@@ -2536,7 +2726,7 @@
     {
       "variableId": "kin_kin_typography_collection_variable_typography_display_font_family",
       "modeId": "kin_kin_typography_collection_mode_default",
-      "value": "Inter, Geist, system-ui, sans-serif"
+      "value": "Inter, Geist, \"SF Pro Display\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", \"PingFang SC\", \"Hiragino Sans GB\", \"Microsoft YaHei\", system-ui, sans-serif"
     },
     {
       "variableId": "kin_kin_typography_collection_variable_typography_display_font_size",
@@ -2561,7 +2751,7 @@
     {
       "variableId": "kin_kin_typography_collection_variable_typography_page_title_font_family",
       "modeId": "kin_kin_typography_collection_mode_default",
-      "value": "Inter, Geist, system-ui, sans-serif"
+      "value": "Inter, Geist, \"SF Pro Text\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", \"PingFang SC\", \"Hiragino Sans GB\", \"Microsoft YaHei\", system-ui, sans-serif"
     },
     {
       "variableId": "kin_kin_typography_collection_variable_typography_page_title_font_size",
@@ -2586,7 +2776,7 @@
     {
       "variableId": "kin_kin_typography_collection_variable_typography_entity_title_font_family",
       "modeId": "kin_kin_typography_collection_mode_default",
-      "value": "Inter, Geist, system-ui, sans-serif"
+      "value": "Inter, Geist, \"SF Pro Text\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", \"PingFang SC\", \"Hiragino Sans GB\", \"Microsoft YaHei\", system-ui, sans-serif"
     },
     {
       "variableId": "kin_kin_typography_collection_variable_typography_entity_title_font_size",
@@ -2611,7 +2801,7 @@
     {
       "variableId": "kin_kin_typography_collection_variable_typography_section_title_font_family",
       "modeId": "kin_kin_typography_collection_mode_default",
-      "value": "Inter, Geist, system-ui, sans-serif"
+      "value": "Inter, Geist, \"SF Pro Text\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", \"PingFang SC\", \"Hiragino Sans GB\", \"Microsoft YaHei\", system-ui, sans-serif"
     },
     {
       "variableId": "kin_kin_typography_collection_variable_typography_section_title_font_size",
@@ -2636,7 +2826,7 @@
     {
       "variableId": "kin_kin_typography_collection_variable_typography_body_font_family",
       "modeId": "kin_kin_typography_collection_mode_default",
-      "value": "Inter, Geist, system-ui, sans-serif"
+      "value": "Inter, Geist, \"SF Pro Text\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", \"PingFang SC\", \"Hiragino Sans GB\", \"Microsoft YaHei\", system-ui, sans-serif"
     },
     {
       "variableId": "kin_kin_typography_collection_variable_typography_body_font_size",
@@ -2661,7 +2851,7 @@
     {
       "variableId": "kin_kin_typography_collection_variable_typography_ui_font_family",
       "modeId": "kin_kin_typography_collection_mode_default",
-      "value": "Inter, Geist, system-ui, sans-serif"
+      "value": "Inter, Geist, \"SF Pro Text\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", \"PingFang SC\", \"Hiragino Sans GB\", \"Microsoft YaHei\", system-ui, sans-serif"
     },
     {
       "variableId": "kin_kin_typography_collection_variable_typography_ui_font_size",
@@ -2686,7 +2876,7 @@
     {
       "variableId": "kin_kin_typography_collection_variable_typography_metadata_font_family",
       "modeId": "kin_kin_typography_collection_mode_default",
-      "value": "Inter, Geist, system-ui, sans-serif"
+      "value": "Inter, Geist, \"SF Pro Text\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", \"PingFang SC\", \"Hiragino Sans GB\", \"Microsoft YaHei\", system-ui, sans-serif"
     },
     {
       "variableId": "kin_kin_typography_collection_variable_typography_metadata_font_size",
@@ -2709,9 +2899,34 @@
       "value": 0
     },
     {
+      "variableId": "kin_kin_typography_collection_variable_typography_micro_font_family",
+      "modeId": "kin_kin_typography_collection_mode_default",
+      "value": "Inter, Geist, \"SF Pro Text\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", \"PingFang SC\", \"Hiragino Sans GB\", \"Microsoft YaHei\", system-ui, sans-serif"
+    },
+    {
+      "variableId": "kin_kin_typography_collection_variable_typography_micro_font_size",
+      "modeId": "kin_kin_typography_collection_mode_default",
+      "value": 11
+    },
+    {
+      "variableId": "kin_kin_typography_collection_variable_typography_micro_font_weight",
+      "modeId": "kin_kin_typography_collection_mode_default",
+      "value": 500
+    },
+    {
+      "variableId": "kin_kin_typography_collection_variable_typography_micro_line_height",
+      "modeId": "kin_kin_typography_collection_mode_default",
+      "value": 15
+    },
+    {
+      "variableId": "kin_kin_typography_collection_variable_typography_micro_letter_spacing",
+      "modeId": "kin_kin_typography_collection_mode_default",
+      "value": 0
+    },
+    {
       "variableId": "kin_kin_typography_collection_variable_typography_mono_font_family",
       "modeId": "kin_kin_typography_collection_mode_default",
-      "value": "Geist Mono, JetBrains Mono, monospace"
+      "value": "\"Geist Mono\", \"JetBrains Mono\", \"SFMono-Regular\", Consolas, monospace"
     },
     {
       "variableId": "kin_kin_typography_collection_variable_typography_mono_font_size",
@@ -2732,6 +2947,56 @@
       "variableId": "kin_kin_typography_collection_variable_typography_mono_letter_spacing",
       "modeId": "kin_kin_typography_collection_mode_default",
       "value": 0
+    },
+    {
+      "variableId": "kin_kin_motion_collection_variable_motion_duration_instant",
+      "modeId": "kin_kin_motion_collection_mode_default",
+      "value": 0
+    },
+    {
+      "variableId": "kin_kin_motion_collection_variable_motion_duration_press",
+      "modeId": "kin_kin_motion_collection_mode_default",
+      "value": 90
+    },
+    {
+      "variableId": "kin_kin_motion_collection_variable_motion_duration_fast",
+      "modeId": "kin_kin_motion_collection_mode_default",
+      "value": 140
+    },
+    {
+      "variableId": "kin_kin_motion_collection_variable_motion_duration_normal",
+      "modeId": "kin_kin_motion_collection_mode_default",
+      "value": 180
+    },
+    {
+      "variableId": "kin_kin_motion_collection_variable_motion_duration_panel",
+      "modeId": "kin_kin_motion_collection_mode_default",
+      "value": 240
+    },
+    {
+      "variableId": "kin_kin_motion_collection_variable_motion_duration_drawer",
+      "modeId": "kin_kin_motion_collection_mode_default",
+      "value": 300
+    },
+    {
+      "variableId": "kin_kin_motion_collection_variable_motion_duration_number",
+      "modeId": "kin_kin_motion_collection_mode_default",
+      "value": 400
+    },
+    {
+      "variableId": "kin_kin_motion_collection_variable_motion_ease_standard",
+      "modeId": "kin_kin_motion_collection_mode_default",
+      "value": "cubic-bezier(0.2, 0, 0, 1)"
+    },
+    {
+      "variableId": "kin_kin_motion_collection_variable_motion_ease_enter",
+      "modeId": "kin_kin_motion_collection_mode_default",
+      "value": "cubic-bezier(0.16, 1, 0.3, 1)"
+    },
+    {
+      "variableId": "kin_kin_motion_collection_variable_motion_ease_exit",
+      "modeId": "kin_kin_motion_collection_mode_default",
+      "value": "cubic-bezier(0.23, 1, 0.32, 1)"
     }
   ]
 }

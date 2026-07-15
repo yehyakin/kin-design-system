@@ -13,8 +13,30 @@ const defaultMobileOffset = {
 export interface KinToasterProps extends Omit<ToasterProps, "theme" | "dir" | "toastOptions"> {
   theme?: KinTheme;
   direction?: KinDirection;
-  locale?: "en" | "zh";
+  /** BCP 47 language tag used only for KIN's built-in fallback labels. */
+  locale?: string;
+  labels?: Partial<KinToasterLabels>;
   toastOptions?: ToasterProps["toastOptions"];
+}
+
+export interface KinToasterLabels {
+  notifications: string;
+  closeNotification: string;
+}
+
+const fallbackLabels: Record<"en" | "zh", KinToasterLabels> = {
+  en: {
+    notifications: "Notifications",
+    closeNotification: "Close notification",
+  },
+  zh: {
+    notifications: "通知",
+    closeNotification: "关闭通知",
+  },
+};
+
+function getFallbackLabels(locale: string): KinToasterLabels {
+  return locale.toLowerCase().startsWith("zh") ? fallbackLabels.zh : fallbackLabels.en;
 }
 
 export function KinToaster({
@@ -30,9 +52,12 @@ export function KinToaster({
   offset = 18,
   mobileOffset = defaultMobileOffset,
   richColors = false,
+  containerAriaLabel,
+  labels,
   toastOptions,
   ...props
 }: KinToasterProps): React.JSX.Element {
+  const defaults = getFallbackLabels(locale);
   return (
     <Toaster
       {...props}
@@ -47,11 +72,11 @@ export function KinToaster({
       offset={offset}
       mobileOffset={mobileOffset}
       richColors={richColors}
-      containerAriaLabel={locale === "zh" ? "通知" : "Notifications"}
+      containerAriaLabel={containerAriaLabel ?? labels?.notifications ?? defaults.notifications}
       toastOptions={{
         ...toastOptions,
         closeButtonAriaLabel:
-          toastOptions?.closeButtonAriaLabel ?? (locale === "zh" ? "关闭通知" : "Close notification"),
+          toastOptions?.closeButtonAriaLabel ?? labels?.closeNotification ?? defaults.closeNotification,
         classNames: {
           toast: "kin-toast",
           title: "kin-toast__title",

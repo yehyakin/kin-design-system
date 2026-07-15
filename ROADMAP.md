@@ -63,7 +63,7 @@ The Figma exporter deliberately does not manage credentials or update existing l
 ## Next
 
 1. Test the implementation brief, route/profile map, composition checkpoint, and visual-signature criteria against representative production workflows in real consuming products. Use comparable baseline and candidate screenshots to refine the contracts before expanding optional variants.
-2. Test the 64 stable components, including authentication and access, workspace structure, file transfer states, full-value access, AI review, durable work and accessible analysis contracts, inside those workflows rather than only in component references.
+2. Test the 65 stable components, while tracking the 6 candidates and 6 drafts separately, inside representative production workflows rather than only in component references. Coverage includes authentication and access, workspace structure, file transfer states, full-value access, AI review, durable work, and accessible analysis contracts.
 3. Test the stable access, onboarding, settings, recovery, Search and Results, and Help and Support page contracts in consuming products. Build remaining P1 references only after product evidence confirms their shared boundaries.
 4. Gather adoption evidence from real consuming products before expanding scanner rules or claiming that a mapping is visibly KIN.
 5. Add ID-aware Figma library synchronization only if an eligible team can test update and rollback behavior.

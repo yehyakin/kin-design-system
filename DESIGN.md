@@ -1,7 +1,9 @@
 ---
 version: alpha
 name: KIN Design System
-kin_version: 2.3.0
+kin_version: 3.0.0
+release_status: development
+latest_stable: 2.3.0
 status: normative
 language: zh-CN
 description: A calm, precise interface system for information-rich websites, commerce tools, and professional workspaces.
@@ -13,10 +15,10 @@ principles:
   - structure-felt-not-seen
   - dense-but-legible
 supported_products:
+  - information-site
   - intelligence-workspace
-  - ecommerce-workspace
-  - ai-operations
-  - engineering-workspace
+  - ecommerce-operations
+  - engineering-canvas
 colors:
   primary: "#5e6ad2"
   dark-canvas: "#08090a"
@@ -95,49 +97,55 @@ colors:
   contrast-light-focus-ring: "#3946b8"
 typography:
   display:
-    fontFamily: "Inter, Geist, system-ui, sans-serif"
+    fontFamily: 'Inter, Geist, "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", system-ui, sans-serif'
     fontSize: 32px
     fontWeight: 600
     lineHeight: 38px
     letterSpacing: -0.02em
   page-title:
-    fontFamily: "Inter, Geist, system-ui, sans-serif"
+    fontFamily: 'Inter, Geist, "SF Pro Text", -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", system-ui, sans-serif'
     fontSize: 20px
     fontWeight: 600
     lineHeight: 26px
     letterSpacing: -0.01em
   entity-title:
-    fontFamily: "Inter, Geist, system-ui, sans-serif"
+    fontFamily: 'Inter, Geist, "SF Pro Text", -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", system-ui, sans-serif'
     fontSize: 18px
     fontWeight: 600
     lineHeight: 24px
     letterSpacing: -0.01em
   section-title:
-    fontFamily: "Inter, Geist, system-ui, sans-serif"
+    fontFamily: 'Inter, Geist, "SF Pro Text", -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", system-ui, sans-serif'
     fontSize: 14px
     fontWeight: 600
     lineHeight: 20px
     letterSpacing: 0em
   body:
-    fontFamily: "Inter, Geist, system-ui, sans-serif"
+    fontFamily: 'Inter, Geist, "SF Pro Text", -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", system-ui, sans-serif'
     fontSize: 14px
     fontWeight: 400
     lineHeight: 22px
     letterSpacing: 0em
   ui:
-    fontFamily: "Inter, Geist, system-ui, sans-serif"
+    fontFamily: 'Inter, Geist, "SF Pro Text", -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", system-ui, sans-serif'
     fontSize: 13px
     fontWeight: 500
     lineHeight: 18px
     letterSpacing: 0em
   metadata:
-    fontFamily: "Inter, Geist, system-ui, sans-serif"
+    fontFamily: 'Inter, Geist, "SF Pro Text", -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", system-ui, sans-serif'
     fontSize: 12px
     fontWeight: 400
     lineHeight: 17px
     letterSpacing: 0em
+  micro:
+    fontFamily: 'Inter, Geist, "SF Pro Text", -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", system-ui, sans-serif'
+    fontSize: 11px
+    fontWeight: 500
+    lineHeight: 15px
+    letterSpacing: 0em
   mono:
-    fontFamily: "Geist Mono, JetBrains Mono, monospace"
+    fontFamily: '"Geist Mono", "JetBrains Mono", "SFMono-Regular", Consolas, monospace'
     fontSize: 12px
     fontWeight: 450
     lineHeight: 18px
@@ -160,6 +168,17 @@ spacing:
   8: 32px
   10: 40px
   12: 48px
+motion:
+  duration-instant: 0ms
+  duration-press: 90ms
+  duration-fast: 140ms
+  duration-normal: 180ms
+  duration-panel: 240ms
+  duration-drawer: 300ms
+  duration-number: 400ms
+  ease-standard: "cubic-bezier(0.2, 0, 0, 1)"
+  ease-enter: "cubic-bezier(0.16, 1, 0.3, 1)"
+  ease-exit: "cubic-bezier(0.23, 1, 0.32, 1)"
 components:
   app-shell-dark:
     backgroundColor: "{colors.dark-canvas}"
@@ -367,7 +386,7 @@ KIN 的设计人格是：**Quiet Intelligence — 安静的智能。**
 - `SHOULD`：默认遵循；偏离时必须说明理由。
 - `MAY`：可根据真实业务需要采用。
 
-Frontmatter 中的 `version: alpha` 表示兼容 DESIGN.md 社区格式；`kin_version` 表示 KIN 规范版本。Frontmatter Token 是机器可读值，正文解释其语义、边界与使用方式。两者发生差异时必须停止交付并修复，不得由 Agent 自行选择其中一份。
+Frontmatter 中的 `version: alpha` 表示兼容 DESIGN.md 社区格式；`kin_version` 表示当前 KIN 规范版本；`release_status` 区分开发修订与已发布合同；`latest_stable` 指向最近一个可由其他项目固定采用的稳定标签。Frontmatter Token 是机器可读值，正文解释其语义、边界与使用方式。机器字段、正文、Changelog、接入定位符或 Git 标签发生差异时必须停止交付并修复，不得由 Agent 自行选择其中一份。
 
 ---
 
@@ -1326,7 +1345,7 @@ AI 不默认常驻占据主工作区。优先使用上下文入口、侧面板�
 
 默认视图：高密度列表、Split view、对象档案、Activity、Inspector。
 
-### 13.2 Ecommerce Workspace
+### 13.2 Ecommerce Operations
 
 核心对象：商品、素材、渠道、活动、库存、订单、工作流、Agent run。
 
@@ -1339,7 +1358,7 @@ AI 不默认常驻占据主工作区。优先使用上下文入口、侧面板�
 
 工作台可共享同一 App Shell、主题、表格、Inspector、Activity 和 Command Layer，但不能复制代理情报字段或风险模型。
 
-### 13.3 Engineering / CAD Workspace
+### 13.3 Engineering Canvas
 
 核心对象：文件、模型、图层、构件、版本、仿真、评审。
 

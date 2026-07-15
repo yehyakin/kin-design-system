@@ -14,7 +14,7 @@ node scripts/init-adoption.mjs ../your-project --profile intelligence-workspace
 
 `--profile` is required. There is no universal default. Choose `information-site`, `intelligence-workspace`, `ecommerce-operations`, or `engineering-canvas` from the product's real primary task.
 
-The command creates three files only when they do not already exist:
+The command creates four files only when they do not already exist:
 
 - `kin.config.json` — machine-readable version, primary profile, route/profile scope, paths, exceptions, and verification commands.
 - `docs/kin-adoption.md` — the decisions a team must complete before implementation.

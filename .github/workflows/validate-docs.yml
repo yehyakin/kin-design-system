@@ -9,16 +9,23 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: validate-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   validate:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
       - name: Check out repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
 
       - name: Set up Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
           node-version: 24
           package-manager-cache: false
@@ -26,39 +33,105 @@ jobs:
       - name: Install validation dependencies
         run: npm ci
 
-      - name: Validate documentation
-        run: node scripts/validate-docs.mjs
-
-      - name: Validate design contract
-        run: node scripts/validate-design.mjs
-
-      - name: Validate component catalog
-        run: node scripts/validate-components.mjs
-
-      - name: Validate page catalog
-        run: node scripts/validate-pages.mjs
-
-      - name: Validate release consistency
-        run: node scripts/validate-release.mjs
-
-      - name: Check generated tokens
-        run: node scripts/export-tokens.mjs --check
-
-      - name: Check Figma Variables payload
-        run: node scripts/export-figma-variables.mjs --check
+      - name: Validate contracts, catalogs, integrations, release, and generated artifacts
+        run: npm run validate
 
       - name: Test design tooling
-        run: node --test tests/tooling.test.mjs
+        run: npm run test:tooling
+
+  runtime:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check the private React integration laboratory
+        run: npm run runtime:check
+
+  node-compatibility:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up minimum supported Node.js
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: 20.11.0
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Verify contracts and tooling on the minimum Node.js version
+        run: npm run validate && npm run test:tooling && npm run runtime:check
+
+  react-compatibility:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        react:
+          - 18.2.0
+          - 19.2.7
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+        with:
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build the React integration laboratory
+        run: npm run runtime:build
+
+      - name: Install the compatibility browser
+        run: npx playwright install --with-deps chromium
+
+      - name: Verify SSR and hydration with React ${{ matrix.react }}
+        run: KIN_REACT_VERSION=${{ matrix.react }} node scripts/test-react-compatibility.mjs
 
   reference:
+    needs:
+      - validate
+      - runtime
+      - node-compatibility
+      - react-compatibility
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
       - name: Check out repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+        with:
+          persist-credentials: false
 
       - name: Set up Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
           node-version: 24
           cache: npm
@@ -74,7 +147,7 @@ jobs:
 
       - name: Upload reference screenshots
         if: always()
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
         with:
           name: kin-reference-screenshots
           path: |

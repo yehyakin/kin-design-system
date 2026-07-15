@@ -1,0 +1,21 @@
+.kin-virtual-list {
+  overflow: hidden;
+  border-block: 1px solid var(--line-subtle);
+  background: var(--surface-1);
+}
+
+.kin-virtual-list__item {
+  min-height: 40px;
+  border-bottom: 1px solid var(--line-subtle);
+  background: var(--surface-1);
+}
+
+.kin-virtual-list__item[data-active] {
+  background: var(--surface-selected);
+}
+
+@media (forced-colors: active) {
+  .kin-virtual-list__item[data-active] {
+    outline: 2px solid Highlight;
+  }
+}

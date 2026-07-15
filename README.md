@@ -14,10 +14,12 @@
 </p>
 
 <p align="center">
-  <a href="./DESIGN.md"><img src="https://img.shields.io/badge/Design_Contract-v2.3.0-5E6AD2" alt="KIN Design Contract v2.3.0" /></a>
+  <a href="./DESIGN.md"><img src="https://img.shields.io/badge/Design_Contract-v3.0.0_development-5E6AD2" alt="KIN Design Contract v3.0.0 development" /></a>
   <a href="https://github.com/yehyakin/kin-design-system/actions/workflows/validate-docs.yml"><img src="https://github.com/yehyakin/kin-design-system/actions/workflows/validate-docs.yml/badge.svg" alt="Documentation validation" /></a>
   <a href="./LICENSE"><img src="https://img.shields.io/badge/License-MIT-232326" alt="MIT License" /></a>
 </p>
+
+The current contract is KIN 3.0.0 in development. For an immutable production adoption, use the [latest stable v2.3.0 release](https://github.com/yehyakin/kin-design-system/releases/tag/v2.3.0) until 3.0.0 is formally released.
 
 KIN is an open design system for interfaces where people need to read, compare, decide, or act. It can be used for a public information site, a content or knowledge product, a SaaS application, an internal tool, an ecommerce operation, a monitoring view, an AI-assisted workflow, or a specialized creative and engineering workspace.
 
@@ -130,7 +132,7 @@ Not every product needs a dense layout, a sidebar, an inspector, or a command me
 
 KIN's core repository is contract-first. It ships design and interaction contracts, generated Tokens, framework-free references, verification tooling, an Agent Skill, and adoption evidence formats.
 
-It does not currently ship a published Figma component library or a runtime component package. Figma support means Variables interoperability; production components remain owned by each consuming project. The approval gates for any future Figma Library or `@kin/react`-style package are defined in [`DELIVERY.md`](./DELIVERY.md).
+It does not currently ship a published Figma component library or a supported universal runtime package. Figma support means Variables interoperability; production components remain owned by each consuming project. The private pre-release `@kin-design/react` laboratory is an optional, pinned evaluation surface rather than a completed delivery claim. The approval gates for any future Figma Library or public runtime package are defined in [`DELIVERY.md`](./DELIVERY.md).
 
 ## Ways to use KIN
 
@@ -248,6 +250,13 @@ Theme switch, system preference, or language menu
 Accessibility, browser, motion, zoom, localization, or RTL evidence
   DESIGN.md
   principles/verification.md
+
+Evaluating or changing an official runtime integration
+  DESIGN.md
+  integrations/catalog.md
+  matching file in integrations/
+  packages/react/RFC.md
+  packages/react/ADOPTION.md
 ```
 
 [`AGENTS.md`](./AGENTS.md) contains repository-wide instructions for tools that support project instruction files.
@@ -369,6 +378,7 @@ Each adopting project is responsible for checking the current version, license, 
 | [`AGENTS.md`](./AGENTS.md) | Instructions for coding tools working in this repository |
 | [`REFERENCES.md`](./REFERENCES.md) | Source hierarchy, attribution, and third-party adoption |
 | [`principles/`](./principles/) | Interaction, visual review, hierarchy, density, and composition |
+| [`principles/visual-signature.md`](./principles/visual-signature.md) | Observable KIN visual signature, product-family differences, and review gate |
 | [`principles/motion-vocabulary.md`](./principles/motion-vocabulary.md) | Operational terms for purposeful, interruptible, origin-aware, gesture-driven, and reduced motion |
 | [`principles/verification.md`](./principles/verification.md) | Automated and manual evidence boundaries for motion, browsers, zoom, localization, RTL, Forced Colors, touch, and screen readers |
 | [`integrations/`](./integrations/) | Rules for optional UI libraries |
@@ -380,6 +390,7 @@ Each adopting project is responsible for checking the current version, license, 
 | [`scripts/validate-design.mjs`](./scripts/validate-design.mjs) | Token, reference, theme-parity, and contrast checks |
 | [`scripts/validate-components.mjs`](./scripts/validate-components.mjs) | Component terminology, maturity, path, and support-coverage checks |
 | [`scripts/validate-pages.mjs`](./scripts/validate-pages.mjs) | Page-family maturity, evidence-path, gap, and support-coverage checks |
+| [`scripts/validate-integrations.mjs`](./scripts/validate-integrations.mjs) | Official runtime package, adapter, evidence, and upstream-preservation checks |
 | [`scripts/report-token-changes.mjs`](./scripts/report-token-changes.mjs) | Machine-readable Token changes against a Git reference |
 | [`tests/visual/`](./tests/visual/) | Chromium regression, normal-motion, cross-browser smoke, responsive, focus, RTL, reflow-proxy, and Forced Colors checks |
 | [`ROADMAP.md`](./ROADMAP.md) | Planned examples, patterns, exports, and tooling |
@@ -395,7 +406,7 @@ Translations are maintained as complete documents. A language should not be adde
 
 ## Status and roadmap
 
-The 2.2 release completes the non-conditional component baseline while preserving design-tool interoperability, adoption evidence, and verification boundaries. KIN remains contract-first: reference interfaces are executable evidence, while production components remain owned by each consuming project.
+The current registry contains 65 stable, 6 candidate, and 6 draft components. Ten page families are stable, five remain candidates, and one is conditional and draft. KIN remains contract-first: reference interfaces and the private React laboratory provide executable evidence, while production adoption still requires a real workflow, project-owned decisions, and recorded verification.
 
 Planned work now depends on evidence from real adoptions rather than adding more universal rules. See [`ROADMAP.md`](./ROADMAP.md) for the current plan and non-goals.
 
@@ -410,9 +421,13 @@ node scripts/validate-docs.mjs
 node scripts/validate-design.mjs
 node scripts/validate-components.mjs
 node scripts/validate-pages.mjs
+node scripts/validate-integrations.mjs
+node scripts/validate-release.mjs
 node scripts/export-tokens.mjs --check
 node scripts/export-figma-variables.mjs --check
 npm run test:tooling
+npm run runtime:check
+npm run site:check
 npm run test:reference
 ```
 

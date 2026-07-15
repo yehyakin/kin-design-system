@@ -55,6 +55,10 @@ function resolveTheme(preference) {
   return preference === "system" ? (colorScheme.matches ? "dark" : "light") : preference;
 }
 
+function normalizeThemePreference(preference) {
+  return ["light", "dark", "system"].includes(preference) ? preference : "system";
+}
+
 function updateThemeSwitch(resolved, preference) {
   if (!themeSwitch) return;
   const dark = resolved === "dark";
@@ -66,12 +70,14 @@ function updateThemeSwitch(resolved, preference) {
 }
 
 function applyTheme(preference, persist = true) {
-  const resolved = resolveTheme(preference);
-  root.dataset.themePreference = preference;
+  const normalized = normalizeThemePreference(preference);
+  const resolved = resolveTheme(normalized);
+  root.dataset.themePreference = normalized;
   root.dataset.theme = resolved;
+  root.style.colorScheme = resolved;
   if (themeColor) themeColor.content = resolved === "dark" ? "#08090a" : "#f6f7f8";
-  updateThemeSwitch(resolved, preference);
-  if (persist) localStorage.setItem("kin-site-theme", preference);
+  updateThemeSwitch(resolved, normalized);
+  if (persist) localStorage.setItem("kin-site-theme", normalized);
   if (sonnerModulePromise) sonnerModulePromise.then((module) => module.updateToasterTheme(resolved, locale));
 }
 
@@ -128,11 +134,11 @@ function setLanguageMenu(open, moveFocus = true) {
     languageMenu.hidden = false;
     languageMenu.inert = false;
     languageMenu.dataset.state = "opening";
+    if (moveFocus) (languageMenu.querySelector('[aria-current="page"]') ?? languageMenu.querySelector('[role="menuitem"]'))?.focus();
     languageOpenFrame = requestAnimationFrame(() => {
       languageOpenFrame = undefined;
       if (languageMenu.dataset.state !== "opening") return;
       languageMenu.dataset.state = "open";
-      if (moveFocus) (languageMenu.querySelector('[aria-current="page"]') ?? languageMenu.querySelector('[role="menuitem"]'))?.focus();
     });
     return;
   }
@@ -211,11 +217,11 @@ function openCommand(invocation = "pointer") {
   commandDialog.dataset.state = "opening";
   commandSearch.value = "";
   filterCommands("");
+  commandSearch?.focus({ preventScroll: true });
   commandOpenFrame = requestAnimationFrame(() => {
     commandOpenFrame = undefined;
     if (commandDialog.dataset.state !== "opening") return;
     commandDialog.dataset.state = "open";
-    commandSearch?.focus();
   });
 }
 

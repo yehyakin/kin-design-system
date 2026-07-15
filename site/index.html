@@ -21,11 +21,19 @@
   <link rel="stylesheet" href="assets/site.css">
   <script>
     (() => {
-      const preference = localStorage.getItem("kin-site-theme") || "system";
+      let storedTheme;
+      let storedContrast;
+      try {
+        storedTheme = localStorage.getItem("kin-site-theme");
+        storedContrast = localStorage.getItem("kin-site-contrast");
+      } catch {}
+      const preference = ["light", "dark", "system"].includes(storedTheme) ? storedTheme : "system";
       const theme = preference === "system" ? (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light") : preference;
       document.documentElement.dataset.themePreference = preference;
       document.documentElement.dataset.theme = theme;
-      document.documentElement.dataset.contrast = localStorage.getItem("kin-site-contrast") === "more" ? "more" : "normal";
+      document.documentElement.dataset.contrast = storedContrast === "more" ? "more" : "normal";
+      document.documentElement.style.colorScheme = theme;
+      document.querySelector('meta[name="theme-color"]').content = theme === "dark" ? "#08090a" : "#f6f7f8";
     })();
   </script>
   <title>KIN Design System</title>
@@ -35,7 +43,7 @@
   <header class="site-header">
     <a class="brand" href="#overview" aria-label="KIN Design System home">
       <span class="brand-mark" aria-hidden="true">KIN</span>
-      <span class="brand-copy"><strong>KIN</strong><small>Design System 2.0</small></span>
+      <span class="brand-copy"><strong>KIN</strong><small>Design System</small></span>
     </a>
     <div class="header-center">
       <button class="command-trigger" type="button" data-command-trigger aria-haspopup="dialog">
@@ -67,7 +75,7 @@
       <div class="nav-group">
         <h2>System</h2>
         <a href="#foundations"><i data-lucide="palette"></i>Foundations</a>
-        <a href="#components"><i data-lucide="boxes"></i>Components</a>
+        <a href="#components"><i data-lucide="blocks"></i>Components</a>
         <a href="#patterns"><i data-lucide="panels-top-left"></i>Product patterns <span class="nav-count">4</span></a>
         <a href="#ai-contract"><i data-lucide="bot"></i>AI behavior</a>
       </div>
@@ -76,24 +84,24 @@
         <a href="#agents"><i data-lucide="terminal"></i>Coding tools</a>
         <a href="#resources"><i data-lucide="folder-down"></i>Resources</a>
       </div>
-      <p class="nav-footer">Open source · MIT<br>Contract version 2.3.0</p>
+      <p class="nav-footer">Open source · MIT<br>Contract 3.0.0 · development</p>
     </nav>
 
     <main class="docs-main" id="main">
       <div class="content">
         <section id="overview" aria-labelledby="overview-title">
-          <p class="eyebrow">KIN DESIGN SYSTEM / 2.3.0</p>
+          <p class="eyebrow">KIN DESIGN SYSTEM / 3.0.0 DEVELOPMENT</p>
           <h1 id="overview-title">Clear interfaces for work that needs attention.</h1>
           <p class="lead">KIN is an open design system for websites and applications where people read, compare, decide, or act. It provides shared rules for structure, themes, interaction, accessibility, data, and AI-assisted work.</p>
           <div class="intro-actions">
-            <a class="button primary" href="https://github.com/yehyakin/kin-design-system/blob/v2.3.0/DESIGN.md">Read the design contract</a>
+            <a class="button primary" href="https://github.com/yehyakin/kin-design-system/blob/main/DESIGN.md">Read the development contract</a>
             <a class="button" href="#patterns">Explore product patterns</a>
             <a class="button" href="examples/workspace-reference/">Open reference interface</a>
           </div>
           <dl class="intro-meta">
             <div><dt>License</dt><dd>MIT</dd></div>
             <div><dt>Themes</dt><dd>Light · Dark · System</dd></div>
-            <div><dt>Accessibility</dt><dd>WCAG AA baseline</dd></div>
+            <div><dt>Accessibility</dt><dd>AA contrast and state targets</dd></div>
             <div><dt>Outputs</dt><dd>DTCG · Tailwind · Figma Variables</dd></div>
           </dl>
         </section>
@@ -187,7 +195,7 @@
               <div class="data-row" role="row"><strong>Archived decision</strong><span class="status">Stale</span><span>Unavailable</span><span>12 Jun</span></div>
             </div>
             <div class="metric-demo">
-              <div><span>Contract</span><strong>2.3.0</strong></div><div><span>Theme modes</span><strong>4</strong></div><div><span>Product patterns</span><strong>4</strong></div><div><span>Last reviewed</span><strong>14 Jul 2026</strong></div>
+              <div><span>Contract</span><strong>3.0.0 dev</strong></div><div><span>Theme modes</span><strong>4</strong></div><div><span>Product patterns</span><strong>4</strong></div><div><span>Last reviewed</span><strong>16 Jul 2026</strong></div>
             </div>
             <div class="notification-demo"><div><strong>Action feedback</strong><span>Sonner loads only when an action needs temporary feedback.</span></div><button type="button" data-toast-title="Reference exported" data-toast-description="The generated file is ready for review." data-toast-action="View" data-toast-undo="Export opened"><i data-lucide="bell"></i>Show notification</button></div>
           </div>
@@ -246,14 +254,14 @@ keyboard, accessibility, real APIs, and human control. If kin.config.json exists
 read its implementation brief and route/profile map. Report the KIN composition
 checkpoint before coding; do not implement a draft or unresolved workflow.</code></div>
           <p class="inline-status" id="copy-status" role="status" aria-live="polite"></p>
-          <div class="intro-actions"><a class="button primary" href="https://github.com/yehyakin/kin-design-system/tree/v2.3.0/skills/kin-design">Open the Agent Skill</a><a class="button" href="https://github.com/yehyakin/kin-design-system/tree/v2.3.0/adoption">Read adoption guide</a></div>
+          <div class="intro-actions"><a class="button primary" href="https://github.com/yehyakin/kin-design-system/tree/main/skills/kin-design">Open the Agent Skill</a><a class="button" href="https://github.com/yehyakin/kin-design-system/tree/main/adoption">Read adoption guide</a></div>
         </section>
 
         <hr class="section-rule">
         <section class="content-section" id="resources" aria-labelledby="resources-title">
           <div class="section-heading"><h2 id="resources-title">Use the source of truth</h2><p>Normative documentation and generated files are versioned together and checked in CI.</p></div>
           <div class="resource-list">
-            <a class="resource-link" href="https://github.com/yehyakin/kin-design-system/blob/v2.3.0/DESIGN.md"><strong>DESIGN.md</strong><span>Normative principles, Tokens, behavior, accessibility, and delivery contract.</span><b>Read</b></a>
+            <a class="resource-link" href="https://github.com/yehyakin/kin-design-system/blob/main/DESIGN.md"><strong>DESIGN.md</strong><span>Current development principles, Tokens, behavior, accessibility, and delivery contract.</span><b>Read</b></a>
             <a class="resource-link" href="https://github.com/yehyakin/kin-design-system/blob/main/DELIVERY.md"><strong>Delivery model</strong><span>Contract-first core, Figma/runtime boundaries, future package gates, and adoption evidence stages.</span><b>Read</b></a>
             <a class="resource-link" href="https://github.com/yehyakin/kin-design-system/blob/main/adoption/implementation-brief.md"><strong>Implementation brief</strong><span>Project-level route profiles, composition decisions, representative workflow, states, evidence, and readiness gate.</span><b>Read</b></a>
             <a class="resource-link" href="tokens/kin.tokens.json"><strong>DTCG Tokens</strong><span>Machine-readable theme, typography, spacing, radius, and component primitives.</span><b>Download</b></a>
@@ -268,7 +276,7 @@ checkpoint before coding; do not implement a draft or unresolved workflow.</code
             <a class="resource-link" href="https://github.com/yehyakin/kin-design-system/blob/main/components/micro-interactions.md"><strong>Micro-interactions</strong><span>Paired states, committed results, progress, disclosures, and reduced-motion behavior.</span><b>Read</b></a>
             <a class="resource-link" href="https://github.com/yehyakin/kin-design-system/blob/main/components/terminology.md"><strong>Component terminology</strong><span>Canonical names and practical distinctions between related interface patterns.</span><b>Read</b></a>
             <a class="resource-link" href="https://github.com/yehyakin/kin-design-system/blob/main/components/catalog.md"><strong>Component catalog</strong><span>Maturity, coverage, known gaps, and the shared Definition of Complete.</span><b>Read</b></a>
-            <a class="resource-link" href="https://github.com/yehyakin/kin-design-system/releases/tag/v2.3.0"><strong>Release 2.3.0</strong><span>Versioned release notes and immutable source tag.</span><b>View</b></a>
+            <a class="resource-link" href="https://github.com/yehyakin/kin-design-system/releases/tag/v2.3.0"><strong>Latest stable v2.3.0</strong><span>Versioned release notes and immutable source tag.</span><b>View</b></a>
           </div>
         </section>
 
@@ -285,7 +293,7 @@ checkpoint before coding; do not implement a draft or unresolved workflow.</code
     <aside class="section-rail" aria-label="On this page">
       <h2>On this page</h2>
       <a href="#overview">Overview</a><a href="#principles">Principles</a><a href="#foundations">Foundations</a><a href="#components">Components</a><a href="#patterns">Patterns</a><a href="#ai-contract">AI behavior</a><a href="#agents">Coding tools</a><a href="#resources">Resources</a><a href="#flows">Page flows</a>
-      <p class="release-note">KIN 2.3.0<br>Released 14 July 2026<br><br>Reference values are live and theme-aware.</p>
+      <p class="release-note">KIN 3.0.0 development<br>Latest stable v2.3.0<br><br>Reference values are live and theme-aware.</p>
     </aside>
   </div>
 
@@ -300,7 +308,7 @@ checkpoint before coding; do not implement a draft or unresolved workflow.</code
       <a class="command-item" data-command-item href="#ai-contract">AI behavior <span>Section</span></a>
       <a class="command-item" data-command-item href="#flows">Page flows <span>Section</span></a>
       <div class="command-group-label">Resources</div>
-      <a class="command-item" data-command-item href="https://github.com/yehyakin/kin-design-system/blob/v2.3.0/DESIGN.md">Design contract <span>GitHub</span></a>
+      <a class="command-item" data-command-item href="https://github.com/yehyakin/kin-design-system/blob/main/DESIGN.md">Design contract <span>GitHub</span></a>
       <a class="command-item" data-command-item href="https://github.com/yehyakin/kin-design-system/blob/main/DELIVERY.md">Delivery model <span>GitHub</span></a>
       <a class="command-item" data-command-item href="examples/workspace-reference/">Workspace reference <span>Demo</span></a>
       <a class="command-item" data-command-item href="tokens/kin.tokens.json">DTCG Tokens <span>JSON</span></a>

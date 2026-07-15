@@ -165,6 +165,33 @@ function generate() {
     });
   }
 
+  const motionCollection = tempId("motion", "collection");
+  const [motionModeId] = createCollection(payload, motionCollection, "KIN Motion", ["Default"]);
+  for (const [name, token] of Object.entries(tokens.motion ?? {})) {
+    const value = tokenValue(token);
+    if (name.startsWith("duration-")) {
+      const milliseconds = value.unit === "s" ? value.value * 1000 : value.value;
+      createVariable(payload, motionCollection, `Motion/${name.replaceAll("-", " ")}`, "FLOAT", [[motionModeId, milliseconds]], {
+        codeSyntax: { WEB: `--${name}` },
+        description: "KIN motion duration in milliseconds.",
+      });
+      continue;
+    }
+    if (name.startsWith("ease-")) {
+      createVariable(
+        payload,
+        motionCollection,
+        `Motion/${name.replaceAll("-", " ")}`,
+        "STRING",
+        [[motionModeId, `cubic-bezier(${value.join(", ")})`]],
+        {
+          codeSyntax: { WEB: `--${name}` },
+          description: "KIN motion easing curve.",
+        },
+      );
+    }
+  }
+
   return `${JSON.stringify(payload, null, 2)}\n`;
 }
 

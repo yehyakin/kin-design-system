@@ -11,6 +11,7 @@
     "name": "@kin-design/react",
     "version": "0.1.0",
     "status": "private-pre-release",
+    "dependency_model": "exact-optional-peers",
     "path": "packages/react",
     "rfc": "packages/react/RFC.md",
     "adoption": "packages/react/ADOPTION.md",
@@ -18,8 +19,8 @@
     "changelog": "packages/react/CHANGELOG.md"
   },
   "status_definitions": {
-    "runtime-integrated": "The official package is installed, exported through a KIN adapter, exercised in the runnable Integration Lab, and covered by repository checks.",
-    "development-integrated": "The official package is installed and adapted behind a development-only export boundary.",
+    "runtime-integrated": "The official package is pinned as an exact optional peer, exported through a KIN adapter, exercised in the runnable Integration Lab, and covered by repository checks.",
+    "development-integrated": "The official package is pinned as an exact optional peer and adapted behind a development-only export boundary.",
     "visual-integrated": "The official package is used directly as a visual primitive without a KIN behavior wrapper."
   },
   "integrations": [

@@ -66,8 +66,8 @@ The machine-readable source is [`terminology.json`](./terminology.json). Compone
 |---|---|---|
 | Toast | A brief non-blocking result message that does not require immediate acknowledgement | Inline Alert, Dialog, progress region |
 | Inline Alert | Persistent contextual feedback placed beside the affected content | Toast, validation message for one field |
-| Spinner | An indeterminate busy indicator when completion cannot be measured | Progress Bar, Skeleton |
-| Progress Bar | A determinate or stage-based representation of work completion | Spinner, Level Indicator showing a static value |
+| Spinner | An indeterminate busy indicator when completion cannot be measured | Progress Indicator, Skeleton |
+| Progress Indicator | A determinate or meaningfully staged representation of work completion | Spinner, Level Indicator showing a static value |
 | Skeleton | A temporary layout placeholder for predictable content geometry | Spinner for an isolated action, empty state |
 | Empty State | A stable absence of content with cause and next action where applicable | Loading Skeleton, error state |
 

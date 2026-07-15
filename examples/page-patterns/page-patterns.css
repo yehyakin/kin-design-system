@@ -296,6 +296,12 @@
   outline-offset: 1px;
 }
 
+.flow-field input[aria-invalid="true"] {
+  border-color: var(--negative);
+  outline: 2px solid color-mix(in srgb, var(--negative) 24%, transparent);
+  outline-offset: 1px;
+}
+
 .field-help,
 .form-note,
 .flow-meta {
@@ -2161,10 +2167,15 @@
   .system-nav button,
   .support-nav button,
   .support-article > button,
-  .ticket-row {
+  .ticket-row,
+  .preference-menu button {
     min-width: 44px;
     min-height: 44px;
   }
+
+  /* The closing menu scales to .985 while inert. Keep its visual box at the
+     44px touch baseline throughout the exit phase as well as while open. */
+  .preference-menu button { min-height: 45px; }
 
   .flow-brand span {
     max-width: 156px;

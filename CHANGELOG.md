@@ -6,6 +6,19 @@ The project follows semantic versioning for normative design documentation.
 
 ## Unreleased
 
+### Contract lifecycle and repository integrity
+
+- Advanced the working contract to KIN 3.0.0 development while preserving v2.3.0 as the latest immutable stable release; development adoption examples now pin a full commit whose DESIGN checksum is verified against Git history.
+- Added machine-validated `release_status` and `latest_stable` fields, honest development badges and site copy, released/development Changelog rules, and tag-content verification that prevents a version label from pointing at a different contract.
+- Gated GitHub Pages deployment on the complete validation workflow, pinned third-party Actions to exact commits, added CodeQL, dependency review, registry signature checks, Dependabot and a private-reporting security policy, and added React 18/19 SSR-to-hydration CI coverage.
+
+### Contract and generated-artifact consistency
+
+- Aligned every product-profile entry point on `information-site`, `intelligence-workspace`, `ecommerce-operations`, and `engineering-canvas`, and routed the external KIN Skill through the runtime integration catalog and private-package ownership contract when official adapters are in scope.
+- Added the normative `micro` type style and complete Chinese-capable font stacks to machine-readable typography, then promoted the documented duration and easing values into generated DTCG, Tailwind-compatible CSS, and Figma Variables interoperability output.
+- Corrected the registry summary to 65 stable, 6 candidate, and 6 draft components; standardized `Progress Indicator` as the canonical term; and removed stale release wording from the bilingual README and roadmap.
+- Expanded repository validation instructions to include integration, runtime-package, and built-site checks, and corrected the four-file adoption initializer description.
+
 ### Reference-control and overlay completion
 
 - Completed the authentication references with an in-context Authentication Dialog, honest unavailable-provider messaging, deterministic full-page failure and recovery fixtures, stable password icons, and reversible Dialog motion with focus restoration.

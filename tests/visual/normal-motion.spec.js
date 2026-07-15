@@ -29,6 +29,8 @@ test("normal motion preserves spatial direction for Inspector and Drawer", async
   await page.goto("/examples/workspace-reference/");
 
   const inspector = page.locator(".inspector");
+  const shellTransitionProperty = await page.locator(".app-shell").evaluate((element) => getComputedStyle(element).transitionProperty);
+  expect(shellTransitionProperty.split(",").map((value) => value.trim())).not.toContain("grid-template-columns");
   const inspectorDuration = await inspector.evaluate((element) => getComputedStyle(element).transitionDuration);
   expect(inspectorDuration.split(",").some((duration) => duration.trim() !== "0s")).toBe(true);
   await expect(inspector).toBeHidden();
@@ -58,6 +60,8 @@ test("normal motion core controls expose visible state transitions", async ({ pa
   await expect(chevron.evaluate((element) => getComputedStyle(element).transitionDuration)).resolves.not.toBe("0s");
   await disclosure.click();
   await expect(disclosure).toHaveAttribute("aria-expanded", "true");
+  const detailsTransitionProperty = await page.locator("#motion-details").evaluate((element) => getComputedStyle(element).transitionProperty);
+  expect(detailsTransitionProperty.split(",").map((value) => value.trim())).not.toContain("grid-template-rows");
 
   const asyncButton = page.locator("[data-motion-save]");
   await asyncButton.click();
@@ -221,7 +225,9 @@ test("normal motion streaming can be stopped without losing input", async ({ pag
 
   const caret = page.locator(".stream-caret");
   await expect(caret).toBeVisible();
-  await expect(caret.evaluate((element) => getComputedStyle(element).animationName)).resolves.toBe("caret-pulse");
+  await expect
+    .poll(() => caret.evaluate((element) => getComputedStyle(element).animationName))
+    .toBe("caret-pulse");
   await page.getByRole("button", { name: "停止" }).click();
 
   await expect(caret).toHaveCount(0);

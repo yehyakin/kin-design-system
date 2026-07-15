@@ -33,13 +33,16 @@ The consuming project MUST record the KIN revision, package version, tarball che
 
 ## Token and CSS boundary
 
-Define KIN semantic Tokens through the project's existing theme system, then import the adapter CSS once:
+Define KIN semantic Tokens through the project's existing theme system, then import the shared base and only the adapter CSS used by the workflow:
 
 ```tsx
-import "@kin-design/react/styles.css";
+import "@kin-design/react/styles/base.css";
+import "@kin-design/react/styles/sonner.css";
 ```
 
-The stylesheet consumes semantic variables including `--surface-*`, `--text-*`, `--line-*`, `--accent`, `--focus-ring`, `--radius-*`, and `--shadow-overlay`. The project MUST map those names to its reviewed Token source; the package MUST NOT become a second theme provider.
+The stylesheets consume semantic variables including `--surface-*`, `--text-*`, `--line-*`, `--accent`, `--focus-ring`, `--radius-*`, and `--shadow-overlay`. The project MUST map those names to its reviewed Token source; the package MUST NOT become a second theme provider.
+
+`@kin-design/react/styles.css` is the full Integration Lab aggregate. It imports every integration stylesheet and requires all corresponding optional peers. Product code SHOULD NOT use it when evaluating one or two subpaths.
 
 ## Import only required capabilities
 
@@ -55,6 +58,8 @@ The stylesheet consumes semantic variables including `--surface-*`, `--text-*`, 
 | development tuning | `@kin-design/react/dev/leva` |
 
 `/experimental/*` describes KIN contract maturity, not upstream quality. `/dev/leva` MUST NOT be imported from a production entry.
+
+Every official engine is an exact optional peer. Installing the KIN tarball does not install the complete catalog. The product MUST install only the exact peers required by its selected imports and record those dependency deltas.
 
 ## Migration sequence
 
@@ -73,7 +78,15 @@ The stylesheet consumes semantic variables including `--surface-*`, `--text-*`, 
 - light, dark, higher contrast, mobile, keyboard, touch, and Reduced Motion;
 - screen-reader and real zoom checks required by [`../../principles/verification.md`](../../principles/verification.md);
 - bundle delta per imported subpath;
+- raw, gzip, and CSS delta for every imported subpath;
 - no Leva code in production output;
 - rollback without backend, schema, or public API changes.
+
+The repository compatibility script creates a temporary consumer, so React 18 and React 19 checks do not rewrite the project lockfile:
+
+```bash
+KIN_REACT_VERSION=18.2.0 node scripts/test-react-compatibility.mjs
+KIN_REACT_VERSION=19.2.7 node scripts/test-react-compatibility.mjs
+```
 
 The package test and Integration Lab demonstrate adapter behavior. They do not prove that a consuming product's workflow, backend, content, or accessibility is complete.

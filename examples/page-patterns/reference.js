@@ -50,6 +50,7 @@ import {
   Users,
   X,
 } from "lucide";
+import { lockModalScroll, unlockModalScroll } from "../shared/modal-scroll-lock.js";
 
 const root = document.documentElement;
 const media = matchMedia("(prefers-color-scheme: dark)");
@@ -254,8 +255,85 @@ function setupAccessPage() {
   const reauthCancel = document.querySelector("[data-reauth-cancel]");
   const reauthForm = document.querySelector("[data-reauth-form]");
   const reauthStatus = document.querySelector("[data-reauth-status]");
+  const validationContexts = [
+    [signInForm, signInStatus],
+    [recoveryForm, recoveryStatus],
+    [reauthForm, reauthStatus],
+  ].filter(([form, status]) => form && status);
   let reauthCloseTimer = 0;
   let reauthTransitionListener = null;
+
+  function validationMessage(input) {
+    if (input.validity.valueMissing) return text(input.type === "email" ? "access.emailRequired" : "access.passwordRequired");
+    if (input.type === "email" && input.validity.typeMismatch) return text("access.emailInvalid");
+    return text("access.formInvalid");
+  }
+
+  function fieldErrorFor(input) {
+    return document.getElementById(`${input.id}-error`);
+  }
+
+  function setFieldError(input, message) {
+    const error = fieldErrorFor(input);
+    if (!error) return;
+    error.textContent = message;
+    error.hidden = false;
+    input.setAttribute("aria-invalid", "true");
+    const describedBy = new Set((input.getAttribute("aria-describedby") || "").split(/\s+/).filter(Boolean));
+    describedBy.add(error.id);
+    input.setAttribute("aria-describedby", [...describedBy].join(" "));
+  }
+
+  function clearFieldError(input) {
+    const error = fieldErrorFor(input);
+    if (!error) return;
+    error.hidden = true;
+    error.textContent = "";
+    input.setAttribute("aria-invalid", "false");
+    const describedBy = (input.getAttribute("aria-describedby") || "").split(/\s+/).filter((id) => id && id !== error.id);
+    if (describedBy.length) input.setAttribute("aria-describedby", describedBy.join(" "));
+    else input.removeAttribute("aria-describedby");
+  }
+
+  function clearValidationSummary(form, summary) {
+    if (!summary.dataset.validationSummary || form.querySelector('[aria-invalid="true"]')) return;
+    delete summary.dataset.validationSummary;
+    summary.className = "form-status";
+    summary.removeAttribute("role");
+    summary.textContent = "";
+  }
+
+  function validateAuthForm(form, summary, moveFocus = true) {
+    const fields = [...form.querySelectorAll("input[required]")];
+    let valid = true;
+    for (const input of fields) {
+      if (input.validity.valid) clearFieldError(input);
+      else {
+        valid = false;
+        setFieldError(input, validationMessage(input));
+      }
+    }
+    if (valid) {
+      clearValidationSummary(form, summary);
+      return true;
+    }
+    summary.dataset.validationSummary = "true";
+    summary.className = "form-error";
+    summary.setAttribute("role", "alert");
+    summary.textContent = text("access.formInvalid");
+    if (moveFocus) summary.focus({ preventScroll: true });
+    return false;
+  }
+
+  for (const [form, summary] of validationContexts) {
+    for (const input of form.querySelectorAll("input[required]")) {
+      input.addEventListener("input", () => {
+        if (input.validity.valid) clearFieldError(input);
+        else if (input.getAttribute("aria-invalid") === "true") setFieldError(input, validationMessage(input));
+        clearValidationSummary(form, summary);
+      });
+    }
+  }
 
   function cancelReauthCloseCleanup() {
     clearTimeout(reauthCloseTimer);
@@ -269,6 +347,7 @@ function setupAccessPage() {
     cancelReauthCloseCleanup();
     reauthDialog.dataset.state = "closed";
     reauthDialog.close();
+    unlockModalScroll(reauthDialog);
     reauthDialog.inert = true;
     reauthDialog.setAttribute("aria-hidden", "true");
   }
@@ -282,6 +361,7 @@ function setupAccessPage() {
     if (!reauthDialog.open) {
       reauthDialog.dataset.state = "opening";
       reauthDialog.showModal();
+      lockModalScroll(reauthDialog);
       reauthDialog.getBoundingClientRect();
     } else if (!reversing) {
       return;
@@ -337,6 +417,7 @@ function setupAccessPage() {
 
   signInForm?.addEventListener("submit", (event) => {
     event.preventDefault();
+    if (!validateAuthForm(signInForm, signInStatus)) return;
     const submit = signInForm.querySelector('button[type="submit"]');
     submit.disabled = true;
     submit.setAttribute("aria-busy", "true");
@@ -353,6 +434,7 @@ function setupAccessPage() {
 
   recoveryForm?.addEventListener("submit", (event) => {
     event.preventDefault();
+    if (!validateAuthForm(recoveryForm, recoveryStatus)) return;
     recoveryStatus.className = "form-status success";
     recoveryStatus.textContent = text("access.recoveryResult");
     recoveryStatus.focus();
@@ -362,6 +444,7 @@ function setupAccessPage() {
   reauthCancel?.addEventListener("click", closeReauth);
   reauthForm?.addEventListener("submit", (event) => {
     event.preventDefault();
+    if (!validateAuthForm(reauthForm, reauthStatus)) return;
     reauthStatus.className = "form-error";
     reauthStatus.textContent = text("access.referenceError");
     reauthStatus.focus();
@@ -372,10 +455,17 @@ function setupAccessPage() {
   });
   reauthDialog?.addEventListener("close", () => {
     cancelReauthCloseCleanup();
+    unlockModalScroll(reauthDialog);
     reauthDialog.dataset.state = "closed";
     reauthDialog.inert = true;
     reauthDialog.setAttribute("aria-hidden", "true");
     reauthOpen?.focus();
+  });
+  document.addEventListener("kin:localechange", () => {
+    for (const [form, summary] of validationContexts) {
+      for (const input of form.querySelectorAll('input[aria-invalid="true"]')) setFieldError(input, validationMessage(input));
+      if (summary.dataset.validationSummary) summary.textContent = text("access.formInvalid");
+    }
   });
 }
 
@@ -1096,7 +1186,7 @@ function setupSchedulingPage() {
     collapse?.setAttribute("aria-label", text(collapsed ? "schedule.expand" : "schedule.collapse"));
     if (collapse) {
       collapse.innerHTML = `<i data-lucide="${collapsed ? "panel-left-open" : "panel-left-close"}" aria-hidden="true"></i>`;
-      createIcons({ icons: { PanelLeftClose, PanelLeftOpen } });
+      createIcons({ root: collapse, icons: { PanelLeftClose, PanelLeftOpen } });
     }
   }
 

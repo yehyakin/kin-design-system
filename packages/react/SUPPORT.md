@@ -13,6 +13,8 @@ The package is maintained as an isolated KIN delivery surface. It is not yet a s
 
 ## Supported environment
 
+- ESM-only package exports; CommonJS `require()` is not supported.
+- Node.js 20.11 or newer for package tooling and claimed server rendering.
 - React 18.2 or React 19.
 - Modern browsers covered by the repository Playwright matrix.
 - Server rendering only where the exported adapter can render without a browser-owned API.
@@ -24,6 +26,7 @@ The package is maintained as an isolated KIN delivery surface. It is not yet a s
 - Production adoption MUST pin an exact KIN revision and package version.
 - Leva is an optional peer and MUST remain behind a development-only import boundary.
 - A package build does not prove that a consuming workflow is visibly KIN or verified.
+- React compatibility is verified at named exact versions through isolated temporary consumers. A semver peer range alone is not compatibility evidence.
 
 ## Promotion gate
 

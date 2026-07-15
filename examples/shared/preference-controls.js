@@ -61,10 +61,10 @@ function setMenu(control, open, { restoreFocus = false } = {}) {
     menu.inert = false;
     menu.dataset.state = "opening";
     trigger.setAttribute("aria-expanded", "true");
+    menu.querySelector('[aria-checked="true"]')?.focus();
     requestAnimationFrame(() => {
       if (menu.dataset.state !== "opening") return;
       menu.dataset.state = "open";
-      menu.querySelector('[aria-checked="true"]')?.focus();
     });
     return;
   }

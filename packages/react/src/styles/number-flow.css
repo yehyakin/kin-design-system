@@ -1,0 +1,26 @@
+.kin-animated-metric {
+  display: inline-grid;
+  min-width: 0;
+  gap: 4px;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.kin-animated-metric__label {
+  overflow: hidden;
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 17px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.kin-animated-metric number-flow-react {
+  color: inherit;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1;
+  --number-flow-mask-height: 0.18em;
+  --number-flow-mask-width: 0.35em;
+}

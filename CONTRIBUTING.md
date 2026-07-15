@@ -60,19 +60,49 @@ node scripts/validate-docs.mjs
 node scripts/validate-design.mjs
 node scripts/validate-components.mjs
 node scripts/validate-pages.mjs
+node scripts/validate-integrations.mjs
 node scripts/validate-release.mjs
 node scripts/export-tokens.mjs --check
 node scripts/export-figma-variables.mjs --check
 npm run test:tooling
+npm run runtime:check
+npm run site:check
 ```
 
-The validators check document structure, local links, component and page-catalog maturity, evidence paths, terminology references, required machine-readable Token groups, Token references, theme parity and baseline text contrast. Visual and product judgment still require human review.
+The validators check document structure, local links, component, page, and integration-catalog maturity, evidence paths, terminology references, required machine-readable Token groups, Token references, theme parity, baseline text contrast, the private runtime package, and the built showcase. Visual and product judgment still require human review.
 
 For Token changes, include the output of `node scripts/report-token-changes.mjs <base-ref>`. For component-state, page-flow or reference-interface changes, run `npm run test:reference` and review the generated screenshots before opening the pull request.
 
 Accessibility and browser claims MUST follow [`principles/verification.md`](./principles/verification.md). Automated reflow, RTL, Forced Colors and cross-browser smoke checks do not replace a recorded real browser-zoom or screen-reader review when the release claims those behaviors.
 
 Proposals that change contract-first delivery, Figma interoperability, runtime packaging, or evidence stages MUST follow [`DELIVERY.md`](./DELIVERY.md) and identify separate ownership, versioning, migration, and rollback.
+
+## Contract lifecycle
+
+`DESIGN.md` frontmatter is the machine-readable source for the contract lifecycle:
+
+- `kin_version` is the version currently being developed or released.
+- `release_status` MUST be `development` or `released`.
+- `latest_stable` MUST be a SemVer release that is not newer than `kin_version`.
+
+While `release_status: development`:
+
+- user-visible changes MUST remain under `## Unreleased` in `CHANGELOG.md`;
+- the adoption example MUST pin a full 40-character commit SHA whose `DESIGN.md` checksum matches the working contract;
+- the source and translated README badges MUST say `v<kin_version> development`, using `Design_Contract-v<kin_version>_development-…` in the Shields URL and the same wording in alt text;
+- an Agent MUST commit `DESIGN.md` before running `scripts/init-adoption.mjs`; the initializer MUST stop when the working contract differs from `HEAD`;
+- the site MUST NOT link to a `v<kin_version>` tag or release that does not exist;
+- generated adoption records MUST identify the revision as development and name `latest_stable` separately.
+
+When `release_status: released`:
+
+- `latest_stable` MUST equal `kin_version`;
+- the source and translated README badges MUST use the released `v<kin_version>` wording without a development qualifier;
+- the adoption example MUST use the `v<kin_version>` tag;
+- that Git tag MUST contain a `DESIGN.md` whose canonical checksum matches the working contract;
+- `CHANGELOG.md` MUST contain the matching version section.
+
+Prepare a release as one immutable commit: update lifecycle fields, move the completed notes from `Unreleased` to the version heading, update the adoption locator, create the annotated tag on that commit, and then run the full validation matrix. If validation fails, delete the unpublished local tag, correct the release commit, and repeat. Do not publish a tag or GitHub Release until the checks and human review are complete.
 
 ## Versioning
 

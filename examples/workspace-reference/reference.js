@@ -13,6 +13,7 @@ import {
   Link,
   LoaderCircle,
   Moon,
+  Palette,
   PanelRight,
   Pause,
   RefreshCw,
@@ -67,10 +68,10 @@ function setTransientSurface(surface, open, { trigger, focusTarget, restoreFocus
     surface.inert = false;
     surface.dataset.state = "opening";
     trigger.setAttribute("aria-expanded", "true");
+    focusTarget?.focus();
     requestAnimationFrame(() => {
       if (surface.dataset.state !== "opening") return;
       surface.dataset.state = "open";
-      focusTarget?.focus();
     });
     return;
   }
@@ -345,7 +346,17 @@ addEventListener("storage", (event) => {
 });
 
 function inspectorIsOpen() {
-  return appShell.classList.contains("inspector-open");
+  return appShell.classList.contains("inspector-open") || appShell.classList.contains("inspector-closing");
+}
+
+let inspectorCloseTimer;
+
+function finishInspectorClose() {
+  if (!appShell.classList.contains("inspector-closing")) return;
+  window.clearTimeout(inspectorCloseTimer);
+  inspectorCloseTimer = undefined;
+  appShell.classList.remove("inspector-closing");
+  appShell.classList.add("inspector-closed");
 }
 
 function syncInspectorMode() {
@@ -359,20 +370,51 @@ function syncInspectorMode() {
 }
 
 function setInspector(open, moveFocus = true) {
+  window.clearTimeout(inspectorCloseTimer);
+  inspectorCloseTimer = undefined;
   const modal = overlayLayout.matches && open;
-  appShell.classList.toggle("inspector-closed", !open);
-  appShell.classList.toggle("inspector-open", open);
+  if (open) {
+    appShell.classList.remove("inspector-closing", "inspector-closed");
+    appShell.classList.add("inspector-open");
+  } else {
+    appShell.classList.remove("inspector-open");
+    appShell.classList.add("inspector-closing");
+    if (reducedMotion.matches) finishInspectorClose();
+    else inspectorCloseTimer = window.setTimeout(finishInspectorClose, 190);
+  }
   inspectorOpen.setAttribute("aria-expanded", String(open));
   inspector.setAttribute("aria-hidden", String(!open));
-  inspector.inert = !open;
-  sidebar.inert = modal;
-  workspace.inert = modal;
+  if (open) {
+    inspector.inert = false;
+    sidebar.inert = modal;
+    workspace.inert = modal;
+  } else {
+    sidebar.inert = false;
+    workspace.inert = false;
+  }
   document.body.classList.toggle("inspector-modal-open", modal);
   syncInspectorMode();
   if (moveFocus) {
-    if (open) inspectorClose.focus();
-    else inspectorOpen.focus();
+    const target = open ? inspectorClose : inspectorOpen;
+    target.focus({ preventScroll: true });
+    // Chromium may clear focus after the clicked control's ancestor becomes
+    // inert. Reassert only when that deferred inert update displaced focus.
+    queueMicrotask(() => {
+      if (document.activeElement !== target) target.focus({ preventScroll: true });
+    });
+    // In Chromium the inert propagation can also land during rendering. Keep
+    // the synchronous transfer above, then repair that browser-specific loss
+    // once without delaying the Inspector's visible response.
+    requestAnimationFrame(() => {
+      const requestIsCurrent = open
+        ? appShell.classList.contains("inspector-open")
+        : !appShell.classList.contains("inspector-open");
+      if (requestIsCurrent && document.activeElement !== target) {
+        target.focus({ preventScroll: true });
+      }
+    });
   }
+  if (!open) inspector.inert = true;
 }
 
 inspectorOpen.addEventListener("click", () => setInspector(true));
@@ -499,6 +541,7 @@ createIcons({
     Link,
     LoaderCircle,
     Moon,
+    Palette,
     PanelRight,
     RefreshCw,
     Pause,

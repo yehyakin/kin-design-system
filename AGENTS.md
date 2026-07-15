@@ -36,10 +36,13 @@ node scripts/validate-docs.mjs
 node scripts/validate-design.mjs
 node scripts/validate-components.mjs
 node scripts/validate-pages.mjs
+node scripts/validate-integrations.mjs
 node scripts/validate-release.mjs
 node scripts/export-tokens.mjs --check
 node scripts/export-figma-variables.mjs --check
 npm run test:tooling
+npm run runtime:check
+npm run site:check
 ```
 
 When a change affects tokens, run `node scripts/report-token-changes.mjs HEAD`. When it affects component states or reference interfaces, also run `npm run test:reference` and inspect the generated screenshots.

@@ -157,7 +157,7 @@ a { color: inherit; text-decoration: none; }
 }
 
 .app-shell.inspector-closed { grid-template-columns: var(--sidebar-width) minmax(0, 1fr) minmax(0, 0px); }
-.app-shell.inspector-closed .inspector {
+.app-shell:is(.inspector-closing, .inspector-closed) .inspector {
   visibility: hidden;
   opacity: 0;
   pointer-events: none;
@@ -294,6 +294,8 @@ kbd { margin-left: 8px; color: var(--disabled); font-family: inherit; font-size:
 .theme-switch[aria-checked="true"] .theme-switch-track span { background: var(--accent); transform: translateX(10px); }
 .theme-menu-trigger { width: 26px; min-width: 26px; padding: 0 !important; }
 .theme-menu-trigger svg { width: 13px; height: 13px; }
+.theme-menu-appearance-icon { display: none; }
+.theme-menu-chevron { display: block; }
 .theme-menu { width: 160px; }
 
 .view-bar {
@@ -443,6 +445,8 @@ h1 { margin: 0; font-size: 22px; line-height: 1.25; letter-spacing: -0.015em; }
   }
   .app-shell.inspector-open .inspector-scrim { visibility: visible; opacity: 1; pointer-events: auto; }
   .app-shell.inspector-open .inspector { visibility: visible; opacity: 1; pointer-events: auto; transform: translateX(0); }
+  .app-shell.inspector-closing .inspector-scrim { visibility: visible; opacity: 0; pointer-events: none; }
+  .app-shell.inspector-closing .inspector { visibility: visible; opacity: 0; pointer-events: none; transform: translateX(100%); }
   .entity-content { padding-inline: 32px; }
 }
 
@@ -464,6 +468,8 @@ h1 { margin: 0; font-size: 22px; line-height: 1.25; letter-spacing: -0.015em; }
      forcing the location bar past the mobile viewport. */
   .workspace-actions .theme-switch { display: none; }
   .workspace-actions .theme-control { gap: 0; }
+  .workspace-actions .theme-menu-appearance-icon { display: block; }
+  .workspace-actions .theme-menu-chevron { display: none; }
   .view-bar { top: var(--topbar-height); height: 44px; gap: 0; overflow-x: auto; padding-inline: 8px; }
   .view-bar a { min-width: 44px; min-height: 44px; padding-inline: 8px; }
   .entity-content { padding: 26px 16px 52px; }
@@ -495,6 +501,7 @@ h1 { margin: 0; font-size: 22px; line-height: 1.25; letter-spacing: -0.015em; }
     transform: translateY(100%);
   }
   .app-shell.inspector-open .inspector { transform: translateY(0); }
+  .app-shell.inspector-closing .inspector { transform: translateY(100%); }
   .app-shell.inspector-open .icon-button { width: 44px; height: 44px; }
 }
 
@@ -502,11 +509,10 @@ h1 { margin: 0; font-size: 22px; line-height: 1.25; letter-spacing: -0.015em; }
   button, a, .skip-link, .theme-switch-track span, .motion-button::after { transition: background-color 140ms var(--ease), border-color 140ms var(--ease), color 140ms var(--ease), opacity 140ms var(--ease), translate 180ms var(--ease), transform 180ms var(--ease); }
   .language-menu, .location-overflow-menu { transition: opacity 140ms var(--ease), transform 160ms var(--ease); }
   .motion-button.is-loading::after { transition-duration: 650ms; }
-  .app-shell { transition: grid-template-columns 240ms var(--ease); }
   .inspector {
     transition: transform 240ms var(--ease-enter), opacity 180ms var(--ease), visibility 0s linear;
   }
-  .app-shell.inspector-closed .inspector {
+  .app-shell:is(.inspector-closing, .inspector-closed) .inspector {
     transition: transform 180ms var(--ease-exit), opacity 140ms var(--ease-exit), visibility 0s linear 180ms;
   }
   .inspector-scrim { transition: opacity 180ms var(--ease), visibility 0s linear 180ms; }
@@ -517,9 +523,8 @@ h1 { margin: 0; font-size: 22px; line-height: 1.25; letter-spacing: -0.015em; }
   [data-sonner-toast] { transition: none !important; }
   .motion-button, .motion-button::after { transition: none !important; }
   .motion-button.is-loading .button-icon-loading, .motion-button.is-success .button-icon-success { animation: none; }
-  .app-shell { transition: none; }
   .inspector { transform: none !important; transition: opacity 80ms linear, visibility 0s linear; }
-  .app-shell.inspector-closed .inspector { transition: opacity 80ms linear, visibility 0s linear 80ms; }
+  .app-shell:is(.inspector-closing, .inspector-closed) .inspector { transition: opacity 80ms linear, visibility 0s linear 80ms; }
   .inspector-scrim { transition: opacity 80ms linear, visibility 0s linear 80ms; }
   .app-shell.inspector-open .inspector-scrim { transition: opacity 80ms linear, visibility 0s linear; }
   .language-menu, .location-overflow-menu { transition: opacity 80ms linear; transform: none; }

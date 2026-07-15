@@ -124,7 +124,7 @@ See [`tools/brand-motion.md`](./tools/brand-motion.md) and [`tools/long-task-loa
 
 The reviewed Playwright dependency is recorded in `package-lock.json` and does not ship to consuming products. CI installs Chromium only in the reference-interface job.
 
-KIN 2.1 locks `@google/design.md` 0.3.0 and `@playwright/test` 1.61.1 as development-only dependencies. Both are published under Apache-2.0; their transitive dependency integrity is recorded in `package-lock.json` and reviewed with `npm audit` before release.
+The current repository locks `@google/design.md` 0.3.0 and `@playwright/test` 1.61.1 as development-only dependencies. Both are published under Apache-2.0; their transitive dependency integrity is recorded in `package-lock.json` and reviewed with `npm audit` before release.
 
 ## Adoption record
 

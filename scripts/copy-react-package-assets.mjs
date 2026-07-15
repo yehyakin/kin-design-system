@@ -6,9 +6,13 @@ const root = process.cwd().endsWith(path.join("packages", "react"))
   ? path.resolve(process.cwd(), "../..")
   : process.cwd();
 const packageRoot = path.join(root, "packages", "react");
-const source = path.join(packageRoot, "src", "styles.css");
-const destination = path.join(packageRoot, "dist", "styles.css");
+const sourceRoot = path.join(packageRoot, "src");
+const destinationRoot = path.join(packageRoot, "dist");
+const assets = ["styles.css", "styles"];
 
-fs.mkdirSync(path.dirname(destination), { recursive: true });
-fs.copyFileSync(source, destination);
-console.log(`Copied ${path.relative(root, source)} to ${path.relative(root, destination)}.`);
+for (const asset of assets) {
+  const source = path.join(sourceRoot, asset);
+  const destination = path.join(destinationRoot, asset);
+  fs.cpSync(source, destination, { recursive: true });
+  console.log(`Copied ${path.relative(root, source)} to ${path.relative(root, destination)}.`);
+}

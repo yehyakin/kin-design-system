@@ -6,7 +6,9 @@ test.beforeEach(async ({ page }) => {
   const errors = [];
   browserErrors.set(page, errors);
   page.on("console", (message) => {
-    if (message.type() === "error") errors.push(`console: ${message.text()}`);
+    if (message.type() === "error" || (message.type() === "warning" && /lucide|icon|createicons/i.test(message.text()))) {
+      errors.push(`console: ${message.text()}`);
+    }
   });
   page.on("pageerror", (error) => errors.push(`pageerror: ${error.message}`));
 });
@@ -39,10 +41,14 @@ async function assertMinimumTouchTargets(page, selector) {
     })
     .map((element) => {
       const bounds = element.getBoundingClientRect();
-      return { height: bounds.height, width: bounds.width };
+      return {
+        height: bounds.height,
+        label: element.getAttribute("aria-label") || element.textContent?.trim().replace(/\s+/g, " ").slice(0, 80) || element.tagName,
+        width: bounds.width,
+      };
     }));
   expect(targets.length).toBeGreaterThan(0);
-  expect(targets.every(({ height, width }) => height >= 44 && width >= 44)).toBe(true);
+  expect(targets.filter(({ height, width }) => height < 44 || width < 44)).toEqual([]);
 }
 
 async function capture(page, testInfo, name) {
@@ -157,13 +163,27 @@ test("access flow covers sign-in, recovery, and contextual reauthentication", as
   await page.locator('[data-theme-option="dark"]').click();
   await expect(page.locator("html")).toHaveAttribute("data-theme-preference", "dark");
 
+  await page.locator("#sign-in-email").fill("");
+  await password.fill("");
+  await page.locator("[data-sign-in-form]").getByRole("button", { name: "继续" }).click();
+  await expect(page.locator("#sign-in-email")).toHaveAttribute("aria-invalid", "true");
+  await expect(page.locator("#sign-in-email-error")).toBeVisible();
+  await expect(password).toHaveAttribute("aria-describedby", /sign-in-password-error/);
+  await expect(page.locator("[data-sign-in-status]")).toBeFocused();
+  await page.locator("#sign-in-email").fill("not-an-email");
+  await expect(page.locator("#sign-in-email-error")).toContainText("有效的邮箱地址");
   await page.locator("#sign-in-email").fill("operator@example.com");
   await password.fill("reference-only");
+  await expect(page.locator("#sign-in-email-error")).toBeHidden();
   await page.locator("[data-sign-in-form]").getByRole("button", { name: "继续" }).click();
   await expect(page.locator("[data-sign-in-status]")).toContainText("未连接身份服务");
 
   await page.locator("[data-recovery-open]").click();
   await expect(page.locator("[data-recovery-view]")).toBeVisible();
+  await page.locator("[data-recovery-form]").getByRole("button", { name: "发送恢复说明" }).click();
+  await expect(page.locator("#recovery-email")).toHaveAttribute("aria-invalid", "true");
+  await expect(page.locator("#recovery-email-error")).toBeVisible();
+  await expect(page.locator("[data-recovery-status]")).toBeFocused();
   await page.locator("#recovery-email").fill("operator@example.com");
   await page.locator("[data-recovery-form]").getByRole("button", { name: "发送恢复说明" }).click();
   await expect(page.locator("[data-recovery-status]")).toContainText("如果该账号存在");
@@ -171,16 +191,23 @@ test("access flow covers sign-in, recovery, and contextual reauthentication", as
 
   const reauthOpen = page.locator("[data-reauth-open]");
   const reauthDialog = page.locator("[data-reauth-dialog]");
+  const accessScroll = await page.evaluate(() => scrollY);
   await reauthOpen.click();
+  await expect(page.locator("body")).toHaveCSS("position", "fixed");
   await expect(reauthDialog).toBeVisible();
   await expect(reauthDialog).toHaveAttribute("data-state", "open");
   await expect(page.locator("#reauth-password")).toBeFocused();
+  await reauthDialog.getByRole("button", { name: "验证并继续" }).click();
+  await expect(page.locator("#reauth-password")).toHaveAttribute("aria-invalid", "true");
+  await expect(page.locator("#reauth-password-error")).toBeVisible();
+  await expect(page.locator("[data-reauth-status]")).toBeFocused();
   await page.locator("[data-reauth-cancel]").click();
   await expect(reauthDialog).toHaveAttribute("data-state", "closing");
   await expect(reauthDialog).toHaveAttribute("inert", "");
   await expect(reauthDialog).toHaveAttribute("aria-hidden", "true");
   await expect(reauthDialog).toBeHidden();
   await expect(reauthOpen).toBeFocused();
+  await expect.poll(() => page.evaluate(() => scrollY)).toBe(accessScroll);
 
   await reauthOpen.click();
   await page.locator("[data-reauth-cancel]").click();

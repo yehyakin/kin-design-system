@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
   "catalog_version": "1.4.0",
-  "reviewed_on": "2026-07-14",
+  "reviewed_on": "2026-07-16",
   "status_definitions": {
     "stable": "Normative contract, runnable reference, applicable automated acceptance checks, and named manual checks exist.",
     "candidate": "The page job and contract exist, but one or more completion dimensions remain open.",

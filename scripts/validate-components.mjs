@@ -13,6 +13,8 @@ function option(name, fallback) {
 
 const catalogFile = path.resolve(root, option("--catalog", "components/catalog.json"));
 const terminologyFile = path.resolve(root, option("--terminology", "components/terminology.json"));
+const catalogMarkdownFile = path.resolve(root, "components/catalog.md");
+const terminologyMarkdownFile = path.resolve(root, "components/terminology.md");
 const findings = [];
 
 function add(file, field, message) {
@@ -93,6 +95,19 @@ if (catalog) {
       if (component.status === "deprecated" && !component.replacement_id) add(catalogFile, `${base}.replacement_id`, "deprecated components require a replacement_id");
     }
   }
+
+  if (catalogFile === path.resolve(root, "components/catalog.json") && fs.existsSync(catalogMarkdownFile)) {
+    const markdown = fs.readFileSync(catalogMarkdownFile, "utf8");
+    const declared = markdown.match(/contains (\d+) stable, (\d+) candidate, and (\d+) draft components/);
+    const counts = catalog.components.reduce((result, component) => {
+      result[component.status] = (result[component.status] ?? 0) + 1;
+      return result;
+    }, {});
+    if (!declared) add(catalogMarkdownFile, "summary", "must declare stable, candidate, and draft totals");
+    else if (Number(declared[1]) !== (counts.stable ?? 0) || Number(declared[2]) !== (counts.candidate ?? 0) || Number(declared[3]) !== (counts.draft ?? 0)) {
+      add(catalogMarkdownFile, "summary", `declared totals differ from catalog.json (${counts.stable ?? 0} stable, ${counts.candidate ?? 0} candidate, ${counts.draft ?? 0} draft)`);
+    }
+  }
 }
 
 const terminologyNames = new Set();
@@ -115,6 +130,15 @@ if (terminology) {
         if (!isStringArray(entry[field])) add(terminologyFile, `${base}.${field}`, "must be an array of strings");
       }
       if (entry.not_synonyms?.includes(entry.canonical_name)) add(terminologyFile, `${base}.not_synonyms`, "must not contain its own canonical name");
+    }
+  }
+
+  if (terminologyFile === path.resolve(root, "components/terminology.json") && fs.existsSync(terminologyMarkdownFile)) {
+    const markdown = fs.readFileSync(terminologyMarkdownFile, "utf8");
+    for (const entry of terminology.entries ?? []) {
+      if (!markdown.includes(`| ${entry.canonical_name} |`)) {
+        add(terminologyMarkdownFile, entry.canonical_name, "canonical machine term is missing from the human-readable table");
+      }
     }
   }
 }

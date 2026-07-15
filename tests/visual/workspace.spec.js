@@ -6,7 +6,9 @@ test.beforeEach(async ({ page }) => {
   const errors = [];
   browserErrors.set(page, errors);
   page.on("console", (message) => {
-    if (message.type() === "error") errors.push(`console: ${message.text()}`);
+    if (message.type() === "error" || (message.type() === "warning" && /lucide|icon|createicons/i.test(message.text()))) {
+      errors.push(`console: ${message.text()}`);
+    }
   });
   page.on("pageerror", (error) => errors.push(`pageerror: ${error.message}`));
 });
@@ -60,6 +62,18 @@ for (const theme of ["dark", "light"]) {
     await expect(page.getByRole("heading", { name: "Alpha Network", level: 1 })).toBeVisible();
     await expect(page.locator(".inspector")).toBeVisible();
     expect(await page.locator("svg.lucide").count()).toBeGreaterThan(8);
+    if (theme === "dark") {
+      await expect(page.locator(".theme-control")).toHaveScreenshot("workspace-theme-control-dark.png", {
+        animations: "disabled",
+        maxDiffPixelRatio: 0.03,
+      });
+      const inspector = page.locator(".inspector");
+      await expect(inspector).toHaveScreenshot("workspace-inspector-open-dark.png", {
+        animations: "disabled",
+        mask: [inspector.locator("h2, p, dt, dd")],
+        maxDiffPixelRatio: 0.05,
+      });
+    }
     await assertNoHorizontalOverflow(page);
     await capture(page, testInfo, `workspace-${theme}-desktop.png`);
   });
@@ -243,6 +257,8 @@ test("workspace mobile and inspector behavior", async ({ page }, testInfo) => {
   await expect(page.locator(".inspector")).toBeHidden();
   await expect(page.locator(".location-identity strong")).toHaveText("Alpha Network");
   await expect(page.locator(".location-identity strong")).toBeVisible();
+  await expect(page.locator("[data-theme-menu-trigger] svg.lucide-palette")).toBeVisible();
+  await expect(page.locator("[data-theme-menu-trigger]")).toHaveAccessibleName(/外观|appearance/i);
   await assertMinimumTouchTargets(page, ".workspace-actions > button, .workspace-actions > .language-control > button, .workspace-actions > .location-overflow > button, .view-bar a, .entity-actions button, .text-button");
   await assertNoHorizontalOverflow(page);
   await capture(page, testInfo, "workspace-dark-mobile.png");
@@ -327,6 +343,16 @@ test("core authentication reference preserves context and never submits credenti
   await expect(password).toHaveAttribute("type", "text");
   await expect(page.getByRole("button", { name: "隐藏密码" })).toBeVisible();
 
+  await page.locator("#core-auth-email").fill("");
+  await page.locator("#core-auth-password").fill("");
+  await page.getByRole("button", { name: "登录", exact: true }).click();
+  await expect(page.locator("#core-auth-email")).toHaveAttribute("aria-invalid", "true");
+  await expect(page.locator("#core-auth-email-error")).toBeVisible();
+  await expect(page.locator("#core-auth-password")).toHaveAttribute("aria-describedby", /core-auth-password-error/);
+  await expect(page.locator("[data-auth-status]")).toBeFocused();
+  await page.locator("#core-auth-email").fill("reviewer@example.com");
+  await page.locator("#core-auth-password").fill("reference-only");
+  await expect(page.locator("#core-auth-email-error")).toBeHidden();
   await page.getByRole("button", { name: "登录", exact: true }).click();
   await expect(page.getByText(/未连接身份服务/)).toBeFocused();
 
@@ -339,6 +365,17 @@ test("core authentication reference preserves context and never submits credenti
   await authDialog.getByRole("button", { name: "显示密码" }).click();
   await expect(authDialogPassword).toHaveAttribute("type", "text");
   await expect(authDialog.getByRole("button", { name: "使用组织 SSO" })).toBeDisabled();
+  await authDialog.getByLabel("工作邮箱").fill("");
+  await authDialogPassword.fill("");
+  await authDialog.getByRole("button", { name: "继续保存" }).click();
+  await expect(authDialog.getByLabel("工作邮箱")).toHaveAttribute("aria-invalid", "true");
+  await expect(authDialog.locator("#auth-dialog-email-error")).toBeVisible();
+  await expect(authDialog.locator("[data-auth-dialog-status]")).toBeFocused();
+  await expect(authDialog).toHaveScreenshot("core-auth-dialog-invalid-light.png", {
+    animations: "disabled",
+    mask: [authDialog.locator("h2, p, label, button")],
+    maxDiffPixelRatio: 0.05,
+  });
   await authDialog.screenshot({ path: testInfo.outputPath("authentication-dialog-light.png") });
   await authDialog.getByRole("button", { name: "取消" }).click();
   await expect(authDialog).toBeHidden();
@@ -349,6 +386,10 @@ test("core authentication reference preserves context and never submits credenti
   const reauth = page.getByRole("dialog", { name: "重新验证身份" });
   await expect(reauth).toBeVisible();
   await expect(reauth.getByLabel("密码")).toBeFocused();
+  await reauth.getByRole("button", { name: "验证" }).click();
+  await expect(reauth.getByLabel("密码")).toHaveAttribute("aria-invalid", "true");
+  await expect(reauth.locator("#core-reauth-password-error")).toBeVisible();
+  await expect(reauth.locator("[data-reauth-status]")).toBeFocused();
   await reauth.getByRole("button", { name: "取消" }).click();
   await expect(reauth).toBeHidden();
   await expect(reauthOpen).toBeFocused();
@@ -600,11 +641,14 @@ test("core overlays restore focus and contain modal tasks", async ({ page }, tes
   await page.goto("/examples/workspace-reference/core-components.html#overlays");
 
   const dialogOpen = page.getByRole("button", { name: "打开确认 Dialog" });
+  const initialScroll = await page.evaluate(() => scrollY);
   await dialogOpen.click();
+  await expect(page.locator("body")).toHaveCSS("position", "fixed");
   await expect(page.getByRole("dialog", { name: "停用价格异常规则？" })).toBeVisible();
   await expect(page.getByRole("button", { name: "取消" })).toBeFocused();
   await page.keyboard.press("Escape");
   await expect(dialogOpen).toBeFocused();
+  await expect.poll(() => page.evaluate(() => scrollY)).toBe(initialScroll);
 
   const drawerOpen = page.getByRole("button", { name: "打开属性 Drawer" });
   await drawerOpen.click();

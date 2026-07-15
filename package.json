@@ -1,6 +1,6 @@
 {
   "name": "kin-design-system",
-  "version": "2.3.0",
+  "version": "3.0.0",
   "description": "Design contracts, tokens, reference interfaces, and review tooling for information-rich products.",
   "private": true,
   "license": "MIT",
@@ -33,6 +33,7 @@
     "test:reference:update": "playwright test --update-snapshots",
     "runtime:build": "npm run build --workspace @kin-design/react",
     "runtime:check": "npm run check --workspace @kin-design/react",
+    "runtime:compat": "node scripts/test-react-compatibility.mjs",
     "test:tooling": "node --test tests/tooling.test.mjs",
     "audit": "node scripts/audit-project.mjs"
   },

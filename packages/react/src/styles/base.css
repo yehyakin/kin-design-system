@@ -1,0 +1,4 @@
+:where(.kin-toast, .kin-command, .kin-animated-metric, .kin-virtual-list, .kin-sortable, .kin-otp, .kin-live-chart) {
+  box-sizing: border-box;
+  font-family: var(--font-ui, Inter, Geist, system-ui, sans-serif);
+}

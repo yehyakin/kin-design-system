@@ -46,7 +46,7 @@ Verification evidence MUST follow [`principles/verification.md`](../principles/v
 
 ## Current stable components
 
-The catalog currently contains 64 stable components. The machine-readable registry remains the source of truth for each component's exact paths and support fields.
+The catalog currently contains 65 stable, 6 candidate, and 6 draft components. The machine-readable registry remains the source of truth for each component's exact paths and support fields.
 
 | Contract group | Stable components | Primary reference |
 |---|---|---|

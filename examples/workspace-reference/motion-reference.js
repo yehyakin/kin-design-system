@@ -118,10 +118,10 @@ function setTransientSurface(surface, open, { trigger, focusTarget, restoreFocus
     surface.inert = false;
     surface.dataset.state = "opening";
     trigger?.setAttribute("aria-expanded", "true");
+    focusTarget?.focus();
     requestAnimationFrame(() => {
       if (surface.dataset.state !== "opening") return;
       surface.dataset.state = "open";
-      focusTarget?.focus();
     });
     return;
   }
@@ -413,6 +413,7 @@ disclosure.addEventListener("click", () => {
   details.dataset.state = open ? "open" : "closed";
   details.setAttribute("aria-hidden", String(!open));
   details.inert = !open;
+  details.hidden = !open;
 });
 
 const gestureStage = document.querySelector("[data-gesture-stage]");

@@ -27,7 +27,9 @@ for (const [field, expected] of Object.entries(expectedPolicy)) {
 
 if (catalog.runtime_package.name !== runtimePackage.name) failures.push("runtime package name does not match integrations/catalog.json");
 if (catalog.runtime_package.version !== runtimePackage.version) failures.push("runtime package version does not match integrations/catalog.json");
+if (catalog.runtime_package.dependency_model !== "exact-optional-peers") failures.push("runtime dependency model must be exact-optional-peers");
 if (!runtimePackage.private) failures.push("pre-release runtime package must remain private");
+if (Object.keys(runtimePackage.dependencies ?? {}).length > 0) failures.push("runtime package must not eagerly install integration engines");
 for (const field of ["rfc", "adoption", "support", "changelog"]) {
   if (!exists(catalog.runtime_package[field])) failures.push(`runtime ${field} is missing: ${catalog.runtime_package[field]}`);
 }
@@ -53,8 +55,9 @@ for (const item of catalog.integrations) {
   if (rootVersion !== item.version) failures.push(`${item.id}: root devDependency must pin ${item.package}@${item.version}`);
 
   if (item.status === "runtime-integrated") {
-    const runtimeVersion = runtimePackage.dependencies?.[item.package];
-    if (runtimeVersion !== item.version) failures.push(`${item.id}: runtime dependency must pin ${item.package}@${item.version}`);
+    const runtimeVersion = runtimePackage.peerDependencies?.[item.package];
+    if (runtimeVersion !== item.version) failures.push(`${item.id}: optional runtime peer must pin ${item.package}@${item.version}`);
+    if (!runtimePackage.peerDependenciesMeta?.[item.package]?.optional) failures.push(`${item.id}: runtime peer must be optional`);
     if (!item.export_path || !runtimePackage.exports?.[item.export_path]) failures.push(`${item.id}: package export is missing ${item.export_path}`);
   }
 
@@ -71,7 +74,8 @@ for (const item of catalog.integrations) {
   }
 
   for (const [relatedPackage, version] of Object.entries(item.related_packages ?? {})) {
-    if (runtimePackage.dependencies?.[relatedPackage] !== version) failures.push(`${item.id}: runtime dependency must pin ${relatedPackage}@${version}`);
+    if (runtimePackage.peerDependencies?.[relatedPackage] !== version) failures.push(`${item.id}: optional runtime peer must pin ${relatedPackage}@${version}`);
+    if (!runtimePackage.peerDependenciesMeta?.[relatedPackage]?.optional) failures.push(`${item.id}: related runtime peer ${relatedPackage} must be optional`);
     if (rootPackage.devDependencies?.[relatedPackage] !== version) failures.push(`${item.id}: root devDependency must pin ${relatedPackage}@${version}`);
   }
 

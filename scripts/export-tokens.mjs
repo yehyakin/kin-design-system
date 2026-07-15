@@ -2,11 +2,14 @@ import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 import process from "node:process";
+import { motionToCss, motionToDtcg, parseMotionTokens } from "./motion-tokens.mjs";
 
 const root = process.cwd();
 const outputDirectory = path.join(root, "tokens");
 const checkOnly = process.argv.includes("--check");
 const designMdCli = path.join(root, "node_modules", "@google", "design.md", "dist", "index.js");
+const designSource = fs.readFileSync(path.join(root, "DESIGN.md"), "utf8");
+const motionTokens = parseMotionTokens(designSource);
 
 const targets = [
   {
@@ -40,7 +43,20 @@ function generate(format) {
   if (result.status !== 0) {
     throw new Error(result.stderr || `designmd export failed for ${format} with exit code ${result.status}`);
   }
-  return result.stdout.replace(/\r\n/g, "\n").trimEnd() + "\n";
+  const generated = result.stdout.replace(/\r\n/g, "\n").trimEnd() + "\n";
+  if (format === "css-tailwind") {
+    const validFontStacks = generated.replace(
+      /(--font-[\w-]+:\s*)"((?:\\.|[^"])*)";/g,
+      (_, prefix, value) => `${prefix}${value.replaceAll('\\"', '"').replaceAll("\\\\", "\\")};`,
+    );
+    return `${validFontStacks.trimEnd()}\n\n${motionToCss(motionTokens)}`;
+  }
+  if (format === "dtcg") {
+    const payload = JSON.parse(generated);
+    payload.motion = motionToDtcg(motionTokens);
+    return `${JSON.stringify(payload, null, 2)}\n`;
+  }
+  return generated;
 }
 
 fs.mkdirSync(outputDirectory, { recursive: true });
