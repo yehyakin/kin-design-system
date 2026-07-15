@@ -163,16 +163,19 @@ test("Motion Lab separates high-frequency keyboard invocation from occasional po
 });
 
 test("Motion Lab Tooltips delay the first pointer and make the sequence immediate", async ({ page }) => {
+  await page.clock.install();
   await page.goto("/examples/workspace-reference/motion.html");
+  await page.clock.pauseAt(new Date("2030-01-01T00:00:00Z"));
   const triggers = page.locator("[data-lab-tooltip-trigger]");
   const firstTooltip = page.locator("#tooltip-copy");
   const secondTooltip = page.locator("#tooltip-info");
   const thirdTooltip = page.locator("#tooltip-archive");
 
   await triggers.nth(0).hover();
-  await page.waitForTimeout(250);
-  expect(await firstTooltip.isHidden()).toBe(true);
-  await expect(firstTooltip).toBeVisible({ timeout: 700 });
+  await page.clock.fastForward(250);
+  await expect(firstTooltip).toBeHidden();
+  await page.clock.fastForward(250);
+  await expect(firstTooltip).toBeVisible();
 
   await triggers.nth(1).hover();
   await expect(secondTooltip).toBeVisible();
