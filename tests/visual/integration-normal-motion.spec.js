@@ -21,11 +21,14 @@ test("Sonner preserves its official toast transition", async ({ page }) => {
 });
 
 test("preference menus retain their exit frame and support rapid reversal", async ({ page }) => {
+  await page.clock.install();
+  await page.goto("/examples/workspace-reference/integrations.html");
   const trigger = page.locator('[data-integration-action="language"]');
   const menu = page.locator(".integration-preference-menu").first();
 
   await trigger.click();
   await expect(menu).toHaveAttribute("data-state", "open");
+  await page.clock.pauseAt(new Date("2030-01-01T00:00:00Z"));
   const duration = await menu.evaluate((element) => getComputedStyle(element).transitionDuration);
   expect(duration.split(",").some((value) => value.trim() !== "0s")).toBe(true);
 
@@ -35,10 +38,12 @@ test("preference menus retain their exit frame and support rapid reversal", asyn
   await expect(menu).toBeVisible();
 
   await trigger.click();
+  await page.clock.runFor(20);
   await expect(menu).toHaveAttribute("data-state", "open");
   await expect(menu).toBeVisible();
 
   await page.keyboard.press("Escape");
+  await page.clock.runFor(180);
   await expect(menu).toHaveAttribute("data-state", "closed");
   await expect(menu).toBeHidden();
   await expect(trigger).toBeFocused();
@@ -68,26 +73,31 @@ test("main showcase gates the theme thumb transition until the first theme is re
 });
 
 test("main showcase menus and command surface keep a reversible exit phase", async ({ page }) => {
+  await page.clock.install();
   await page.goto("/");
   const languageTrigger = page.getByRole("button", { name: "Choose language" });
   const languageMenu = page.locator("[data-language-menu]");
 
   await languageTrigger.click();
   await expect(languageMenu).toHaveAttribute("data-state", "open");
+  await page.clock.pauseAt(new Date("2030-01-01T00:00:00Z"));
   const menuDuration = await languageMenu.evaluate((element) => getComputedStyle(element).transitionDuration);
   expect(menuDuration.split(",").some((value) => value.trim() !== "0s")).toBe(true);
   await page.keyboard.press("Escape");
   await expect(languageMenu).toHaveAttribute("data-state", "closing");
   await expect(languageMenu).toBeVisible();
   await languageTrigger.click();
+  await page.clock.runFor(20);
   await expect(languageMenu).toHaveAttribute("data-state", "open");
   await page.keyboard.press("Escape");
+  await page.clock.runFor(180);
   await expect(languageMenu).toHaveAttribute("data-state", "closed");
   await expect(languageMenu).toBeHidden();
 
   const commandTrigger = page.getByRole("button", { name: /Search sections/ });
   const command = page.locator("[data-command-dialog]");
   await commandTrigger.click();
+  await page.clock.runFor(20);
   await expect(command).toHaveAttribute("data-state", "open");
   const commandDuration = await command.evaluate((element) => getComputedStyle(element).transitionDuration);
   expect(commandDuration.split(",").some((value) => value.trim() !== "0s")).toBe(true);
@@ -98,6 +108,7 @@ test("main showcase menus and command surface keep a reversible exit phase", asy
     display: getComputedStyle(element).display,
   }));
   expect(closingCommand).toEqual({ state: "closing", open: true, display: "block" });
+  await page.clock.runFor(210);
   await expect(command).toHaveAttribute("data-state", "closed");
   await expect(command).toBeHidden();
   await expect(commandTrigger).toBeFocused();

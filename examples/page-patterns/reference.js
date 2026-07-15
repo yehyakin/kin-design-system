@@ -454,6 +454,10 @@ function setupAccessPage() {
     closeReauth();
   });
   reauthDialog?.addEventListener("close", () => {
+    // A native `close` event is queued after `dialog.close()`. If the dialog
+    // has already been reopened, that event belongs to the previous close
+    // cycle and must not overwrite the latest open intent.
+    if (reauthDialog.open) return;
     cancelReauthCloseCleanup();
     unlockModalScroll(reauthDialog);
     reauthDialog.dataset.state = "closed";

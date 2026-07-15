@@ -215,6 +215,8 @@ test("access flow covers sign-in, recovery, and contextual reauthentication", as
   await reauthOpen.evaluate((element) => element.click());
   await expect(reauthDialog).toHaveAttribute("data-state", "open");
   await expect(reauthDialog).not.toHaveAttribute("inert", "");
+  await expect(page.locator("body")).toHaveCSS("position", "fixed");
+  await expect(page.locator("#reauth-password")).toBeFocused();
   await page.waitForTimeout(300);
   await expect(reauthDialog).toBeVisible();
   await expect(reauthDialog).toHaveAttribute("data-state", "open");
