@@ -32,13 +32,15 @@ import {
 } from "lucide";
 import { lockModalScroll, unlockModalScroll } from "../shared/modal-scroll-lock.js";
 
+const coreUrl = new URL(window.location.href);
+const coreLocale = coreUrl.searchParams.get("lang") === "en" ? "en" : "zh";
 const contrastButton = document.querySelector("[data-contrast-toggle]");
 let coreSonnerModulePromise;
 
 window.addEventListener("kin:themechange", (event) => {
   const resolved = event.detail?.resolved;
   if (!coreSonnerModulePromise || !["light", "dark"].includes(resolved)) return;
-  coreSonnerModulePromise.then((module) => module.updateToasterTheme(resolved, "zh"));
+  coreSonnerModulePromise.then((module) => module.updateToasterTheme(resolved, coreLocale));
 });
 
 const iconSet = {
@@ -582,9 +584,10 @@ const authForm = document.querySelector("[data-auth-form]");
 const authStatus = authForm.querySelector("[data-auth-status]");
 
 function coreValidationMessage(input) {
-  if (input.validity.valueMissing) return input.type === "email" ? "请输入工作邮箱。" : "请输入密码。";
-  if (input.type === "email" && input.validity.typeMismatch) return "请输入有效的邮箱地址。";
-  return "请检查此字段。";
+  const english = Boolean(input.closest('[lang="en"]'));
+  if (input.validity.valueMissing) return input.type === "email" ? (english ? "Enter your work email." : "请输入工作邮箱。") : (english ? "Enter your password." : "请输入密码。");
+  if (input.type === "email" && input.validity.typeMismatch) return english ? "Enter a valid email address." : "请输入有效的邮箱地址。";
+  return english ? "Check this field." : "请检查此字段。";
 }
 
 function coreFieldErrorFor(input) {
@@ -639,7 +642,7 @@ function validateCoreAuthForm(form, status) {
   status.dataset.originalRole = status.dataset.originalRole ?? status.getAttribute("role") ?? "";
   status.dataset.validationSummary = "true";
   status.setAttribute("role", "alert");
-  status.textContent = "请检查标出的字段后再继续。";
+  status.textContent = form.closest('[lang="en"]') ? "Check the highlighted fields before continuing." : "请检查标出的字段后再继续。";
   status.focus({ preventScroll: true });
   return false;
 }
@@ -661,7 +664,8 @@ for (const passwordToggle of document.querySelectorAll("[data-password-toggle]")
     const revealing = passwordInput.type === "password";
     passwordInput.type = revealing ? "text" : "password";
     passwordToggle.setAttribute("aria-pressed", String(revealing));
-    passwordToggle.setAttribute("aria-label", revealing ? "隐藏密码" : "显示密码");
+    const english = Boolean(passwordToggle.closest('[lang="en"]'));
+    passwordToggle.setAttribute("aria-label", revealing ? (english ? "Hide password" : "隐藏密码") : (english ? "Show password" : "显示密码"));
     passwordToggle.dataset.controlState = revealing ? "active" : "default";
     passwordInput.focus();
   });
@@ -670,7 +674,9 @@ for (const passwordToggle of document.querySelectorAll("[data-password-toggle]")
 authForm.addEventListener("submit", (event) => {
   event.preventDefault();
   if (!validateCoreAuthForm(authForm, authStatus)) return;
-  authStatus.textContent = "这是本地界面参考，未连接身份服务，也不会发送凭据。";
+  authStatus.textContent = authForm.closest('[lang="en"]')
+    ? "This local interface reference is not connected to an identity service and sends no credentials."
+    : "这是本地界面参考，未连接身份服务，也不会发送凭据。";
   authStatus.focus();
 });
 
@@ -690,7 +696,9 @@ reauthCancel.addEventListener("click", () => closeManagedDialog(reauthDialog, { 
 reauthForm.addEventListener("submit", (event) => {
   event.preventDefault();
   if (!validateCoreAuthForm(reauthForm, reauthStatus)) return;
-  reauthStatus.textContent = "这是本地界面参考；连接真实身份服务后才能继续。";
+  reauthStatus.textContent = reauthForm.closest('[lang="en"]')
+    ? "This is a local interface reference. Connect a real identity service before continuing."
+    : "这是本地界面参考；连接真实身份服务后才能继续。";
   reauthStatus.focus();
 });
 reauthDialog.addEventListener("cancel", (event) => {
@@ -714,13 +722,111 @@ authTaskCancel.addEventListener("click", () => closeManagedDialog(authTaskDialog
 authTaskForm.addEventListener("submit", (event) => {
   event.preventDefault();
   if (!validateCoreAuthForm(authTaskForm, authTaskStatus)) return;
-  authTaskStatus.textContent = "这是本地界面参考；连接真实身份服务后才能恢复保存操作。";
+  authTaskStatus.textContent = authTaskForm.closest('[lang="en"]')
+    ? "This is a local interface reference. Connect a real identity service before resuming the save action."
+    : "这是本地界面参考；连接真实身份服务后才能恢复保存操作。";
   authTaskStatus.focus();
 });
 authTaskDialog.addEventListener("cancel", (event) => {
   event.preventDefault();
   closeManagedDialog(authTaskDialog, { trigger: authTaskOpen });
 });
+
+function localizeAuthenticationReference() {
+  if (coreLocale !== "en") return;
+
+  const authSection = document.querySelector("#authentication");
+  authSection.lang = "en";
+  authTaskDialog.lang = "en";
+  reauthDialog.lang = "en";
+
+  authSection.querySelector(".reference-section-heading h2").textContent = "Sign-in and authentication";
+  authSection.querySelector(".reference-section-heading div > p").textContent = "Full-page sign-in, in-page re-authentication, and one-time passwords belong to one access system but serve different tasks.";
+  authSection.querySelector(".reference-section-heading > span").textContent = "Authentication + access";
+
+  const authDemoHeading = authForm.querySelector(".auth-demo-heading div");
+  authDemoHeading.querySelector("h3").textContent = "Sign in to the workspace";
+  authDemoHeading.querySelector("p").textContent = "Continue with the adopting product's identity service.";
+  const authFieldLabels = authForm.querySelectorAll(".core-field > span:first-child");
+  authFieldLabels[0].textContent = "Work email";
+  authFieldLabels[1].textContent = "Password";
+  authForm.querySelector(".check-row span").textContent = "Keep me signed in on this device";
+  authForm.querySelector('.auth-demo-actions button[type="submit"] span').textContent = "Sign in";
+  const fullAccessLink = authForm.querySelector(".auth-demo-actions a");
+  fullAccessLink.textContent = "Open the full access flow";
+  fullAccessLink.href = "../page-patterns/access.html?lang=en";
+  authForm.querySelector(".fixture-note").textContent = "Local interaction reference: no credentials are sent, stored, or verified.";
+
+  const authPatternHeading = authSection.querySelector(".auth-pattern-heading div");
+  authPatternHeading.querySelector("h3").textContent = "Choose the entry point by task";
+  authPatternHeading.querySelector("p").textContent = "Do not place a full sign-in page inside every workflow.";
+  const authPatternRows = authSection.querySelectorAll(".auth-pattern-row");
+  const patternCopy = [
+    ["Full sign-in", "A standalone page for sign-in, recovery, SSO, and session errors.", "View page"],
+    ["Authentication dialog", "Preserve the current draft after authentication expires, then resume only the save action the user requested.", "Open authentication dialog"],
+    ["In-page re-authentication", "Preserve the current task and context before a sensitive action.", "Open example"],
+    ["One-time password", "Use only when a real authentication backend requires it; do not simulate a countdown.", "View boundary"],
+  ];
+  authPatternRows.forEach((row, index) => {
+    const [label, description, action] = patternCopy[index];
+    row.children[0].textContent = label;
+    row.children[1].textContent = description;
+    const actionNode = row.children[2];
+    const actionLabel = actionNode.querySelector("span");
+    if (actionLabel) actionLabel.textContent = action;
+    else actionNode.textContent = action;
+    if (actionNode.matches("a")) actionNode.href = "../page-patterns/access.html?lang=en";
+  });
+
+  authTaskDialog.querySelector("header p").textContent = "Continue the current task";
+  authTaskDialog.querySelector("header h2").textContent = "Sign in to save the filter view";
+  authTaskForm.querySelector(":scope > p").textContent = "Current filters, column order, and the unsaved note remain unchanged. Success resumes only “Save filter view”.";
+  const authTaskLabels = authTaskForm.querySelectorAll(".core-field > span:first-child");
+  authTaskLabels[0].textContent = "Work email";
+  authTaskLabels[1].textContent = "Password";
+  authTaskForm.querySelector("[data-password-toggle]").setAttribute("aria-label", "Show password");
+  authTaskForm.querySelector(".unavailable-provider span").textContent = "Use organization SSO";
+  authTaskForm.querySelector("#auth-dialog-sso-reason").textContent = "No organization identity provider is configured in this local reference.";
+  authTaskCancel.textContent = "Cancel";
+  authTaskForm.querySelector('.dialog-actions button[type="submit"]').textContent = "Continue saving";
+
+  reauthDialog.querySelector("header p").textContent = "Sensitive action";
+  reauthDialog.querySelector("header h2").textContent = "Verify your identity again";
+  reauthForm.querySelector(":scope > p").textContent = "The current page remains unchanged. Connect a real identity service before allowing the sensitive action to continue.";
+  reauthForm.querySelector(".core-field > span:first-child").textContent = "Password";
+  reauthForm.querySelector(".fixture-note").textContent = "Local interaction reference: input is neither sent nor recorded.";
+  reauthCancel.textContent = "Cancel";
+  reauthForm.querySelector('.dialog-actions button[type="submit"]').textContent = "Verify";
+
+  for (const toggle of document.querySelectorAll('#authentication [data-password-toggle], [data-auth-dialog] [data-password-toggle]')) {
+    toggle.setAttribute("aria-label", "Show password");
+  }
+}
+
+localizeAuthenticationReference();
+
+function clearRequestedAuthenticationDialog() {
+  const url = new URL(window.location.href);
+  if (!url.searchParams.has("dialog")) return;
+  url.searchParams.delete("dialog");
+  window.history.replaceState(null, "", `${url.pathname}${url.search}${url.hash}`);
+}
+
+authTaskDialog.addEventListener("close", clearRequestedAuthenticationDialog);
+reauthDialog.addEventListener("close", clearRequestedAuthenticationDialog);
+
+const requestedAuthenticationDialog = coreUrl.searchParams.get("dialog");
+if (requestedAuthenticationDialog === "authentication") {
+  requestAnimationFrame(() => {
+    authTaskStatus.textContent = "";
+    openManagedDialog(authTaskDialog, { trigger: authTaskOpen, focusTarget: authTaskEmail });
+  });
+} else if (requestedAuthenticationDialog === "reauthentication") {
+  requestAnimationFrame(() => {
+    reauthStatus.textContent = "";
+    openManagedDialog(reauthDialog, { trigger: reauthOpen, focusTarget: reauthForm.elements.namedItem("reauth-password") });
+  });
+}
 
 async function getCoreSonner() {
   coreSonnerModulePromise ??= import("../../site/assets/sonner-island.js");
@@ -753,7 +859,7 @@ motionSave.addEventListener("click", () => {
       title: "视图已保存",
       description: "筛选条件和列顺序已更新。",
       theme: document.documentElement.dataset.theme,
-      locale: "zh",
+      locale: coreLocale,
       tone: "success",
     });
     window.setTimeout(() => {
@@ -772,7 +878,7 @@ document.querySelector("[data-motion-toast]").addEventListener("click", async ()
     successTitle: "导出任务已创建",
     description: "完成后可在下载中心查看。",
     theme: document.documentElement.dataset.theme,
-    locale: "zh",
+    locale: coreLocale,
     duration: 850,
   });
 });

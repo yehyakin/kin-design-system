@@ -396,6 +396,35 @@ test("core authentication reference preserves context and never submits credenti
   await page.locator("#authentication").screenshot({ path: testInfo.outputPath("core-authentication-light.png") });
 });
 
+test("authentication dialogs can be opened from direct showcase links", async ({ page }) => {
+  await seedPreferences(page, "light");
+  await page.goto("/examples/workspace-reference/core-components.html?dialog=authentication#authentication");
+
+  const authDialog = page.getByRole("dialog", { name: "登录后保存筛选视图" });
+  const authDialogOpen = page.getByRole("button", { name: "打开登录弹窗" });
+  await expect(authDialog).toBeVisible();
+  await expect(authDialog.getByLabel("工作邮箱")).toBeFocused();
+  await authDialog.getByRole("button", { name: "取消" }).click();
+  await expect(authDialog).toBeHidden();
+  await expect(authDialogOpen).toBeFocused();
+  await expect(page).not.toHaveURL(/dialog=/);
+
+  await page.goto("/examples/workspace-reference/core-components.html?dialog=reauthentication#authentication");
+  const reauthDialog = page.getByRole("dialog", { name: "重新验证身份" });
+  const reauthOpen = page.getByRole("button", { name: "打开示例" });
+  await expect(reauthDialog).toBeVisible();
+  await expect(reauthDialog.getByLabel("密码")).toBeFocused();
+  await reauthDialog.getByRole("button", { name: "取消" }).click();
+  await expect(reauthDialog).toBeHidden();
+  await expect(reauthOpen).toBeFocused();
+  await expect(page).not.toHaveURL(/dialog=/);
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/examples/workspace-reference/core-components.html?dialog=authentication#authentication");
+  await expect(page.getByRole("dialog", { name: "登录后保存筛选视图" })).toBeVisible();
+  await expect(page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).resolves.toBe(true);
+});
+
 test("core form retains input and commits combobox value", async ({ page }) => {
   await seedPreferences(page, "light");
   await page.goto("/examples/workspace-reference/core-components.html#forms");

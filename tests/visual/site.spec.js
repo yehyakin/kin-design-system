@@ -11,7 +11,9 @@ test("showcase exposes the English contract and live foundations", async ({ page
   await expect(page.getByRole("heading", { name: "Foundations" })).toBeVisible();
   await expect(page.getByRole("link", { name: /Delivery model/ })).toBeVisible();
   await expect(page.getByRole("link", { name: "Search and results" })).toHaveAttribute("href", "examples/page-patterns/search.html");
-  await expect(page.getByRole("link", { name: /Authentication and access/ })).toHaveAttribute("href", "examples/workspace-reference/core-components.html#authentication");
+  await expect(page.getByRole("link", { name: /Sign-in page/, exact: true }).first()).toHaveAttribute("href", "examples/page-patterns/access.html?lang=en");
+  await expect(page.getByRole("link", { name: /Authentication dialog/, exact: true }).first()).toHaveAttribute("href", "examples/workspace-reference/core-components.html?lang=en&dialog=authentication#authentication");
+  await expect(page.getByRole("link", { name: /Session re-authentication/, exact: true }).first()).toHaveAttribute("href", "examples/workspace-reference/core-components.html?lang=en&dialog=reauthentication#authentication");
   await expect(page.getByRole("link", { name: /Motion Lab/ }).first()).toHaveAttribute("href", "examples/workspace-reference/motion.html");
   await expect(page.locator('.language-menu a[hreflang="zh-CN"]')).toHaveAttribute("lang", "zh-CN");
   await expect(page.locator('svg.lucide')).not.toHaveCount(0);
@@ -37,9 +39,50 @@ test("showcase theme contrast and language preferences work", async ({ page }) =
   await expect(page.locator("html")).toHaveAttribute("data-contrast", "more");
   await expect(page.getByRole("heading", { level: 1 })).toContainText("清楚的界面");
   await expect(page.getByRole("link", { name: "搜索与结果" })).toHaveAttribute("href", "../examples/page-patterns/search.html");
-  await expect(page.getByRole("link", { name: /登录与访问/ })).toHaveAttribute("href", "../examples/workspace-reference/core-components.html#authentication");
+  await expect(page.getByRole("link", { name: /登录页面/, exact: true }).first()).toHaveAttribute("href", "../examples/page-patterns/access.html?lang=zh-CN");
+  await expect(page.getByRole("link", { name: /登录弹窗/, exact: true }).first()).toHaveAttribute("href", "../examples/workspace-reference/core-components.html?lang=zh-CN&dialog=authentication#authentication");
+  await expect(page.getByRole("link", { name: /会话重新验证/, exact: true }).first()).toHaveAttribute("href", "../examples/workspace-reference/core-components.html?lang=zh-CN&dialog=reauthentication#authentication");
   await expect(page.getByRole("link", { name: /动效实验室/ }).first()).toHaveAttribute("href", "../examples/workspace-reference/motion.html");
   await page.screenshot({ path: "test-results/playwright/site-light-zh.png", fullPage: true });
+});
+
+test("showcase command menu exposes authentication demos", async ({ page }) => {
+  await page.goto("/");
+  await page.keyboard.press("Control+K");
+  const command = page.getByRole("dialog", { name: "Search KIN" });
+  await expect(command).toBeVisible();
+  await command.getByRole("searchbox").fill("sign-in");
+  await expect(command.getByRole("link", { name: /Sign-in page/ })).toHaveAttribute("href", "examples/page-patterns/access.html?lang=en");
+  await command.getByRole("searchbox").fill("authentication dialog");
+  await expect(command.getByRole("link", { name: /Authentication dialog/ })).toHaveAttribute("href", "examples/workspace-reference/core-components.html?lang=en&dialog=authentication#authentication");
+});
+
+test("authentication destinations preserve the language of their entry point", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("link", { name: /Sign-in page/, exact: true }).first().click();
+  await expect(page.locator("html")).toHaveAttribute("lang", "en");
+  await expect(page.getByRole("heading", { name: "Sign in to the workspace" })).toBeVisible();
+  await page.getByRole("button", { name: "Change language" }).click();
+  await page.getByRole("menuitemradio", { name: "中文" }).click();
+  await expect(page.locator("html")).toHaveAttribute("lang", "zh-CN");
+  await expect(page).toHaveURL(/lang=zh-CN/);
+  await page.reload();
+  await expect(page.locator("html")).toHaveAttribute("lang", "zh-CN");
+  await expect(page.getByRole("heading", { name: "登录工作区" })).toBeVisible();
+
+  await page.goto("/");
+  await page.getByRole("link", { name: /Authentication dialog/, exact: true }).first().click();
+  const englishAuthDialog = page.getByRole("dialog", { name: "Sign in to save the filter view" });
+  await expect(englishAuthDialog).toBeVisible();
+  await expect(englishAuthDialog).toHaveAttribute("lang", "en");
+  await expect(englishAuthDialog.getByLabel("Work email")).toBeFocused();
+  await englishAuthDialog.getByRole("button", { name: "Cancel" }).click();
+
+  await page.goto("/zh/");
+  await page.getByRole("link", { name: /登录弹窗/, exact: true }).first().click();
+  const chineseAuthDialog = page.getByRole("dialog", { name: "登录后保存筛选视图" });
+  await expect(chineseAuthDialog).toBeVisible();
+  await expect(chineseAuthDialog.getByLabel("工作邮箱")).toBeFocused();
 });
 
 test("GitHub Pages 404 preserves theme and locale preferences", async ({ page }) => {
