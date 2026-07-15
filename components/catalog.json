@@ -78,7 +78,7 @@
       "product_families": ["all"],
       "support": { "themes": true, "responsive": true, "keyboard": true, "touch": true, "reduced_motion": true },
       "manual_checks": ["accessible-name review"],
-      "known_gaps": []
+      "known_gaps": ["visual regression coverage for the complete variant and state matrix"]
     },
     {
       "id": "icon-button",
@@ -91,7 +91,7 @@
       "product_families": ["all"],
       "support": { "themes": true, "responsive": true, "keyboard": true, "touch": true, "reduced_motion": true },
       "manual_checks": ["accessible name and tooltip"],
-      "known_gaps": []
+      "known_gaps": ["cross-platform optical sizing and Tooltip verification for every icon-only control"]
     },
     {
       "id": "link",
@@ -138,8 +138,8 @@
       "tier": "core",
       "status": "stable",
       "contract_paths": ["DESIGN.md", "components/core-states.md", "integrations/cmdk.md"],
-      "reference_paths": ["site/index.html", "examples/workspace-reference/states.html"],
-      "test_paths": ["tests/visual/site.spec.js", "tests/visual/workspace.spec.js"],
+      "reference_paths": ["site/index.html", "examples/workspace-reference/states.html", "examples/workspace-reference/integrations.html"],
+      "test_paths": ["tests/visual/site.spec.js", "tests/visual/workspace.spec.js", "tests/visual/integrations.spec.js"],
       "product_families": ["all"],
       "support": { "themes": true, "responsive": true, "keyboard": true, "touch": true, "reduced_motion": true },
       "manual_checks": ["screen-reader result announcements"],
@@ -151,8 +151,8 @@
       "tier": "core",
       "status": "stable",
       "contract_paths": ["DESIGN.md", "components/micro-interactions.md", "components/feedback-and-progress.md", "integrations/sonner.md"],
-      "reference_paths": ["site/index.html", "examples/workspace-reference/index.html", "examples/workspace-reference/motion.html"],
-      "test_paths": ["tests/visual/site.spec.js", "tests/visual/workspace.spec.js"],
+      "reference_paths": ["site/index.html", "examples/workspace-reference/index.html", "examples/workspace-reference/motion.html", "examples/workspace-reference/integrations.html"],
+      "test_paths": ["tests/visual/site.spec.js", "tests/visual/workspace.spec.js", "tests/visual/integrations.spec.js", "tests/visual/integration-normal-motion.spec.js"],
       "product_families": ["all"],
       "support": { "themes": true, "responsive": true, "keyboard": true, "touch": true, "reduced_motion": true },
       "manual_checks": ["live-region verbosity"],
@@ -164,8 +164,8 @@
       "tier": "core",
       "status": "stable",
       "contract_paths": ["components/preference-controls.md"],
-      "reference_paths": ["site/index.html", "examples/workspace-reference/index.html"],
-      "test_paths": ["tests/visual/site.spec.js", "tests/visual/workspace.spec.js"],
+      "reference_paths": ["site/index.html", "examples/workspace-reference/index.html", "examples/page-patterns/access.html", "examples/workspace-reference/integrations.html"],
+      "test_paths": ["tests/visual/site.spec.js", "tests/visual/workspace.spec.js", "tests/visual/page-patterns.spec.js", "tests/visual/integrations.spec.js", "tests/visual/integration-normal-motion.spec.js"],
       "product_families": ["all"],
       "support": { "themes": true, "responsive": true, "keyboard": true, "touch": true, "reduced_motion": true },
       "manual_checks": ["pre-hydration flash review"],
@@ -177,8 +177,8 @@
       "tier": "core",
       "status": "stable",
       "contract_paths": ["components/preference-controls.md"],
-      "reference_paths": ["site/index.html", "examples/workspace-reference/index.html"],
-      "test_paths": ["tests/visual/site.spec.js", "tests/visual/workspace.spec.js"],
+      "reference_paths": ["site/index.html", "examples/workspace-reference/index.html", "examples/page-patterns/access.html", "examples/workspace-reference/integrations.html"],
+      "test_paths": ["tests/visual/site.spec.js", "tests/visual/workspace.spec.js", "tests/visual/page-patterns.spec.js", "tests/visual/integrations.spec.js", "tests/visual/integration-normal-motion.spec.js"],
       "product_families": ["all"],
       "support": { "themes": true, "responsive": true, "keyboard": true, "touch": true, "reduced_motion": true },
       "manual_checks": ["translation quality", "long locale names", "RTL expansion"],
@@ -281,8 +281,8 @@
       "tier": "core",
       "status": "stable",
       "contract_paths": ["DESIGN.md", "components/micro-interactions.md", "components/overlays.md"],
-      "reference_paths": ["examples/workspace-reference/index.html", "examples/workspace-reference/core-components.html", "examples/workspace-reference/motion.html"],
-      "test_paths": ["tests/visual/workspace.spec.js", "tests/visual/normal-motion.spec.js", "tests/visual/accessibility-verification.spec.js"],
+      "reference_paths": ["examples/workspace-reference/index.html", "examples/workspace-reference/core-components.html", "examples/workspace-reference/motion.html", "examples/product-patterns/canvas.html"],
+      "test_paths": ["tests/visual/workspace.spec.js", "tests/visual/normal-motion.spec.js", "tests/visual/accessibility-verification.spec.js", "tests/visual/product-canvas-panel.spec.js", "tests/visual/product-canvas-panel-normal-motion.spec.js"],
       "product_families": ["all"],
       "support": { "themes": true, "responsive": true, "keyboard": true, "touch": true, "reduced_motion": true },
       "manual_checks": ["virtual-keyboard overlap", "safe areas"],
@@ -853,12 +853,12 @@
       "tier": "conditional",
       "status": "candidate",
       "contract_paths": ["integrations/dnd-kit.md", "components/micro-interactions.md"],
-      "reference_paths": [],
-      "test_paths": [],
+      "reference_paths": ["examples/workspace-reference/integrations.html"],
+      "test_paths": ["tests/visual/integrations.spec.js", "tests/visual/integration-normal-motion.spec.js"],
       "product_families": ["ecommerce", "engineering"],
       "support": { "themes": true, "responsive": false, "keyboard": true, "touch": true, "reduced_motion": true },
       "manual_checks": ["keyboard sorting", "screen-reader instructions"],
-      "known_gaps": ["runnable reference and automated rollback test"]
+      "known_gaps": ["consuming-product persistence and rollback evidence", "manual pointer, touch, and screen-reader verification"]
     },
     {
       "id": "otp",
@@ -866,12 +866,12 @@
       "tier": "conditional",
       "status": "candidate",
       "contract_paths": ["integrations/input-otp.md"],
-      "reference_paths": [],
-      "test_paths": [],
+      "reference_paths": ["examples/workspace-reference/integrations.html"],
+      "test_paths": ["tests/visual/integrations.spec.js"],
       "product_families": ["all"],
       "support": { "themes": true, "responsive": true, "keyboard": true, "touch": true, "reduced_motion": true },
       "manual_checks": ["real backend", "autofill", "paste", "screen reader"],
-      "known_gaps": ["no reference without a real verification flow"]
+      "known_gaps": ["real verification backend, expiry, resend, and rate-limit evidence", "manual platform autofill and screen-reader verification"]
     },
     {
       "id": "live-chart",
@@ -879,12 +879,12 @@
       "tier": "conditional",
       "status": "candidate",
       "contract_paths": ["integrations/liveline.md"],
-      "reference_paths": [],
-      "test_paths": [],
+      "reference_paths": ["examples/workspace-reference/integrations.html"],
+      "test_paths": ["tests/visual/integrations.spec.js", "tests/visual/integration-normal-motion.spec.js"],
       "product_families": ["intelligence", "ecommerce"],
       "support": { "themes": true, "responsive": false, "keyboard": false, "touch": false, "reduced_motion": true },
       "manual_checks": ["text fallback", "update frequency", "hidden-page behavior"],
-      "known_gaps": ["runnable reference and fallback tests"]
+      "known_gaps": ["real streaming, reconnect, and hidden-page evidence", "manual high-DPI and keyboard value-inspection verification"]
     },
     {
       "id": "number-transition",
@@ -892,12 +892,12 @@
       "tier": "conditional",
       "status": "candidate",
       "contract_paths": ["integrations/number-flow.md", "components/micro-interactions.md"],
-      "reference_paths": [],
-      "test_paths": [],
+      "reference_paths": ["examples/workspace-reference/integrations.html"],
+      "test_paths": ["tests/visual/integrations.spec.js", "tests/visual/integration-normal-motion.spec.js"],
       "product_families": ["intelligence", "ecommerce"],
       "support": { "themes": true, "responsive": true, "keyboard": false, "touch": false, "reduced_motion": true },
       "manual_checks": ["existing-value continuity", "screen-reader value"],
-      "known_gaps": ["runnable reference and theme non-replay test"]
+      "known_gaps": ["manual screen-reader value verification", "consuming-product continuity evidence"]
     },
     {
       "id": "authentication-shell",
@@ -910,7 +910,7 @@
       "product_families": ["all"],
       "support": { "themes": true, "responsive": true, "keyboard": true, "touch": true, "reduced_motion": true },
       "manual_checks": ["real identity-provider integration", "password-manager and autofill behavior", "200% zoom and screen-reader task order"],
-      "known_gaps": []
+      "known_gaps": ["production identity-provider, password-manager, 200% zoom, and screen-reader evidence"]
     },
     {
       "id": "sign-in-form",
@@ -923,7 +923,7 @@
       "product_families": ["all"],
       "support": { "themes": true, "responsive": true, "keyboard": true, "touch": true, "reduced_motion": true },
       "manual_checks": ["real authentication errors and throttling", "autofill, paste, and password-manager behavior", "screen-reader field and error relationships"],
-      "known_gaps": []
+      "known_gaps": ["production identity-provider, password-manager, 200% zoom, and screen-reader evidence"]
     },
     {
       "id": "account-recovery-form",
@@ -936,7 +936,20 @@
       "product_families": ["all"],
       "support": { "themes": true, "responsive": true, "keyboard": true, "touch": true, "reduced_motion": true },
       "manual_checks": ["real delivery and expiration lifecycle", "enumeration resistance and rate limiting", "screen-reader result announcement"],
-      "known_gaps": []
+      "known_gaps": ["real delivery, expiry, throttling, and enumeration evidence remains product-owned"]
+    },
+    {
+      "id": "authentication-dialog",
+      "canonical_name": "Authentication Dialog",
+      "tier": "core",
+      "status": "stable",
+      "contract_paths": ["components/authentication.md", "components/overlays.md", "pages/authentication-and-access.md"],
+      "reference_paths": ["examples/workspace-reference/core-components.html"],
+      "test_paths": ["tests/visual/workspace.spec.js", "tests/visual/normal-motion.spec.js", "tests/visual/accessibility-verification.spec.js"],
+      "product_families": ["all"],
+      "support": { "themes": true, "responsive": true, "keyboard": true, "touch": true, "reduced_motion": true },
+      "manual_checks": ["real identity-provider integration", "underlying draft preservation", "screen-reader modal behavior and mobile reflow"],
+      "known_gaps": ["production identity-provider and task-resume evidence"]
     },
     {
       "id": "session-reauthentication-dialog",
@@ -945,11 +958,11 @@
       "status": "stable",
       "contract_paths": ["components/authentication.md", "components/overlays.md", "pages/authentication-and-access.md"],
       "reference_paths": ["examples/page-patterns/access.html"],
-      "test_paths": ["tests/visual/page-patterns.spec.js"],
+      "test_paths": ["tests/visual/page-patterns.spec.js", "tests/visual/normal-motion.spec.js", "tests/visual/accessibility-verification.spec.js"],
       "product_families": ["all"],
       "support": { "themes": true, "responsive": true, "keyboard": true, "touch": true, "reduced_motion": true },
       "manual_checks": ["real recent-authentication policy", "underlying draft preservation", "modal screen-reader and mobile-sheet behavior"],
-      "known_gaps": []
+      "known_gaps": ["production recent-authentication policy and task-resume evidence"]
     },
     {
       "id": "verification-challenge",

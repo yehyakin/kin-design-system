@@ -9,7 +9,9 @@
       (()=>{const p=localStorage.getItem("kin-reference-theme")||"system";const t=p==="system"?(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light"):p;document.documentElement.dataset.theme=t;document.documentElement.dataset.themePreference=p;document.documentElement.dataset.contrast=localStorage.getItem("kin-reference-contrast")==="more"?"more":"normal"})();
     </script>
     <link rel="stylesheet" href="./patterns.css" />
+    <link rel="stylesheet" href="../shared/preference-controls.css" />
     <script src="./theme.js" defer></script>
+    <script type="module" src="../shared/preference-controls.js"></script>
   </head>
   <body>
     <div class="commerce-shell">
@@ -39,7 +41,7 @@
         <section><h3>销售状态</h3><dl><div><dt>内部状态</dt><dd>已启用</dd></div><div><dt>渠道发布</dt><dd>2 / 3</dd></div><div><dt>售价</dt><dd>CNY 1,299.00</dd></div><div><dt>可售库存</dt><dd>6</dd></div><div><dt>已预留</dt><dd>4</dd></div></dl></section>
         <section><h3>库存位置</h3><dl><div><dt>上海</dt><dd>4 可售</dd></div><div><dt>深圳</dt><dd>2 可售</dd></div><div><dt>在途</dt><dd>24 · 7 月 15 日</dd></div></dl></section>
         <section><h3>审批</h3><div class="approval"><strong>价格调整等待审批</strong><span>建议从 CNY 1,399.00 调整为 CNY 1,299.00；尚未发布到任何渠道。</span></div></section>
-        <section class="pattern-theme-actions"><div class="theme-control" role="group" aria-label="界面主题"><button type="button" data-theme-value="light">日间</button><button type="button" data-theme-value="dark">夜间</button><button type="button" data-theme-value="system">系统</button></div><button type="button" data-contrast-toggle aria-pressed="false">高对比</button></section>
+        <section class="pattern-theme-actions"><div class="kin-preference-controls" data-preference-controls><button type="button" class="kin-theme-switch" role="switch" data-theme-switch aria-checked="false" aria-label="切换为夜间模式"><span class="kin-theme-switch-icon"><i data-lucide="sun"></i></span><span class="kin-theme-switch-track" aria-hidden="true"><span class="kin-theme-switch-thumb"></span></span><span class="kin-theme-switch-icon"><i data-lucide="moon"></i></span></button><div class="kin-theme-menu-control"><button type="button" class="kin-theme-menu-trigger" data-theme-menu-trigger aria-haspopup="menu" aria-expanded="false" aria-label="外观选项"><i data-lucide="chevron-down"></i></button><div class="kin-theme-menu" data-theme-menu data-state="closed" role="menu" aria-label="外观选项" hidden><button type="button" role="menuitemradio" aria-checked="false" data-theme-preference="light"><i class="kin-theme-menu-item-icon" data-lucide="sun"></i><span>日间</span><i class="kin-theme-menu-check" data-lucide="check"></i></button><button type="button" role="menuitemradio" aria-checked="false" data-theme-preference="dark"><i class="kin-theme-menu-item-icon" data-lucide="moon"></i><span>夜间</span><i class="kin-theme-menu-check" data-lucide="check"></i></button><button type="button" role="menuitemradio" aria-checked="true" data-theme-preference="system"><i class="kin-theme-menu-item-icon" data-lucide="monitor"></i><span>跟随系统</span><i class="kin-theme-menu-check" data-lucide="check"></i></button></div></div></div><button type="button" data-contrast-toggle aria-pressed="false">高对比</button></section>
       </aside>
     </div>
   </body>

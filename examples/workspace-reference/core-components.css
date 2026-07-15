@@ -32,8 +32,27 @@
 [data-control-state="default"] .motion-icon-slot [data-icon-state="default"],
 [data-control-state="active"] .motion-icon-slot [data-icon-state="active"],
 [data-control-state="pending"] .motion-icon-slot [data-icon-state="pending"],
-[data-control-state="success"] .motion-icon-slot [data-icon-state="success"] { opacity: 1; transform: none; }
+[data-control-state="success"] .motion-icon-slot [data-icon-state="success"],
+[data-control-state="error"] .motion-icon-slot [data-icon-state="error"] { opacity: 1; transform: none; }
 .text-action { min-height: 32px; padding: 0; border: 0; background: transparent; color: var(--accent); }
+
+.button-contract { margin-top: 20px; border-top: 1px solid var(--line); }
+.button-contract-heading { display: flex; align-items: end; justify-content: space-between; gap: 24px; padding: 18px 0 12px; }
+.button-contract-heading h3 { margin: 0; color: var(--text-2); font-size: 13px; }
+.button-contract-heading p { max-width: 70ch; margin: 4px 0 0; color: var(--muted); font-size: 11px; line-height: 1.55; }
+.button-contract-heading > span { flex: none; color: var(--disabled); font-size: 10px; }
+.button-matrix { overflow-x: auto; border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
+.button-matrix-row { display: grid; grid-template-columns: 132px repeat(4, minmax(142px, 1fr)); min-width: 780px; }
+.button-matrix-row > * { display: flex; min-width: 0; min-height: 52px; align-items: center; padding: 8px 10px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.button-matrix-row > strong { color: var(--text-2); font-size: 11px; font-weight: 550; }
+.button-matrix-header > * { min-height: 34px; color: var(--muted); font-size: 10px; font-weight: 500; }
+.button-matrix button { min-height: 34px; padding-inline: 11px; white-space: nowrap; }
+.secondary-action { border-color: var(--line); background: var(--surface-2); color: var(--text-2); }
+.ghost-action { border-color: transparent; background: transparent; color: var(--text-2); }
+.ghost-action:hover { border-color: var(--line); background: var(--hover); }
+.matrix-note { color: var(--muted); font-size: 10px; line-height: 1.45; }
+.icon-button-example { display: inline-flex; align-items: center; gap: 7px; color: var(--muted); }
+.icon-button-example small { font-size: 10px; }
 
 .auth-reference-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(300px, 0.88fr); border: 1px solid var(--line); background: var(--surface-1); }
 .auth-demo-form { display: grid; gap: 14px; padding: 22px; border-right: 1px solid var(--line); }
@@ -55,7 +74,8 @@
 .auth-pattern-row > span { color: var(--text-2); font-weight: 550; }
 .auth-pattern-row p { margin: 0; color: var(--muted); font-size: 11px; line-height: 1.5; }
 .auth-pattern-row a { color: var(--accent); font-size: 11px; }
-.reauth-dialog .core-field { margin-top: 14px; }
+.reauth-dialog .core-field, .authentication-dialog .core-field { margin-top: 14px; }
+.authentication-dialog .unavailable-provider { width: 100%; justify-content: flex-start; margin-top: 14px; }
 
 .core-form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 24px; max-width: 860px; }
 .core-field { position: relative; display: grid; align-content: start; gap: 6px; min-width: 0; color: var(--text-2); }
@@ -110,9 +130,9 @@
 .menu-item-icon svg { width: 15px; height: 15px; }
 .sample-menu button:hover, .sample-menu button:focus-visible { background: var(--hover); }
 .tooltip-sample > button { width: 34px; height: 34px; padding: 0; border-radius: 50%; }
-.tooltip-sample [role="tooltip"] { position: absolute; z-index: 4; bottom: calc(100% + 7px); left: 50%; width: 220px; padding: 7px 9px; border: 1px solid var(--line-strong); border-radius: 5px; background: var(--surface-3); color: var(--text-2); font-size: 11px; opacity: 0; pointer-events: none; transform: translateX(-50%); }
-.tooltip-sample:hover [role="tooltip"], .tooltip-sample:focus-within [role="tooltip"] { opacity: 1; }
-.tooltip-sample.is-dismissed [role="tooltip"] { opacity: 0; }
+.tooltip-sample [role="tooltip"] { position: absolute; z-index: 4; bottom: calc(100% + 7px); left: 50%; width: 220px; padding: 7px 9px; border: 1px solid var(--line-strong); border-radius: 5px; background: var(--surface-3); color: var(--text-2); font-size: 11px; opacity: 0; pointer-events: none; transform: translateX(-50%) translateY(2px) scale(0.985); transform-origin: bottom center; }
+.tooltip-sample [role="tooltip"][data-state="open"] { opacity: 1; transform: translateX(-50%); }
+.tooltip-sample [role="tooltip"][data-instant="true"] { transition-duration: 0ms !important; }
 .pagination-sample { display: flex; gap: 5px; margin-top: 16px; }
 .pagination-sample a, .pagination-sample button { display: inline-grid; place-items: center; min-width: 34px; min-height: 34px; padding: 0 8px; border: 1px solid var(--line); border-radius: 5px; background: transparent; color: var(--text-2); text-decoration: none; }
 .pagination-sample [aria-current="page"] { border-color: var(--accent); background: var(--selected); color: var(--text); }
@@ -196,8 +216,11 @@
 .sample-popover { right: auto; left: 0; width: 260px; padding: 12px; }
 .sample-popover strong { color: var(--text-2); }
 .sample-popover p { color: var(--muted); }
-.core-dialog { width: min(460px, calc(100vw - 28px)); padding: 0; border: 1px solid var(--line-strong); border-radius: 10px; background: var(--surface-3); color: var(--text); box-shadow: var(--shadow); }
-.core-dialog::backdrop { background: rgb(0 0 0 / 0.48); }
+.core-dialog { width: min(460px, calc(100vw - 28px)); padding: 0; border: 1px solid var(--line-strong); border-radius: 10px; background: var(--surface-3); color: var(--text); box-shadow: var(--shadow); opacity: 0; transform: translateY(6px) scale(0.985); }
+.core-dialog.authentication-dialog { width: min(500px, calc(100vw - 28px)); }
+.core-dialog[data-state="open"] { opacity: 1; transform: none; }
+.core-dialog::backdrop { background: rgb(0 0 0 / 0); }
+.core-dialog[data-state="open"]::backdrop { background: rgb(0 0 0 / 0.48); }
 .core-dialog form { padding: 18px; }
 .core-dialog header p, .core-drawer header p { margin: 0 0 4px; color: var(--muted); font-size: 11px; }
 .core-dialog h2, .core-drawer h2 { margin: 0; font-size: 16px; }
@@ -217,20 +240,22 @@
   .core-reference-page button, .reference-back, .component-index a { transition: background-color 120ms var(--ease), border-color 120ms var(--ease), color 120ms var(--ease), transform 100ms var(--ease); }
   .core-reference-page button:active:not(:disabled) { transform: translateY(0.5px) scale(0.99); }
   .motion-icon-slot [data-icon-state] { transition: opacity 120ms var(--ease), transform 140ms var(--ease); }
-  .sample-menu, .sample-popover { transition: opacity 140ms var(--ease), transform 160ms var(--ease); }
+  .sample-menu, .sample-popover { transition: opacity 110ms var(--ease-exit), transform 120ms var(--ease-exit); }
+  .sample-menu[data-state="open"], .sample-popover[data-state="open"] { transition-duration: 140ms, 160ms; transition-timing-function: var(--ease-enter); }
+  .tooltip-sample [role="tooltip"] { transition: opacity 125ms var(--ease-enter), transform 125ms var(--ease-enter); }
   .disclosure-trigger svg { transition: transform 180ms var(--ease); }
   .motion-disclosure { transition: grid-template-rows 180ms var(--ease), opacity 140ms var(--ease); }
-  .core-dialog[open] { animation: core-dialog-enter 180ms var(--ease-enter); }
-  .core-dialog[open]::backdrop { animation: core-scrim-enter 160ms var(--ease); }
+  .core-dialog { transition: opacity 150ms var(--ease-exit), transform 160ms var(--ease-exit); }
+  .core-dialog[data-state="open"] { transition-duration: 180ms, 200ms; transition-timing-function: var(--ease-enter); }
+  .core-dialog::backdrop { transition: background-color 150ms var(--ease-exit); }
+  .core-dialog[data-state="open"]::backdrop { transition-duration: 180ms; transition-timing-function: var(--ease-enter); }
   .drawer-layer { transition: visibility 0s linear 220ms; }
   .drawer-layer[data-state="open"] { transition-delay: 0s; }
-  .drawer-scrim { transition: opacity 160ms var(--ease); }
-  .core-drawer { transition: transform 220ms var(--ease-exit), opacity 160ms var(--ease-exit); }
-  .drawer-layer[data-state="open"] .core-drawer { transition-timing-function: var(--ease-enter); }
+  .drawer-scrim { transition: opacity 140ms var(--ease-exit); }
+  .drawer-layer[data-state="open"] .drawer-scrim { transition-duration: 160ms; transition-timing-function: var(--ease-enter); }
+  .core-drawer { transition: transform 180ms var(--ease-exit), opacity 140ms var(--ease-exit); }
+  .drawer-layer[data-state="open"] .core-drawer { transition-duration: 220ms, 160ms; transition-timing-function: var(--ease-enter); }
 }
-
-@keyframes core-dialog-enter { from { opacity: 0; transform: translateY(6px) scale(0.985); } }
-@keyframes core-scrim-enter { from { opacity: 0; } }
 
 @media (max-width: 720px) {
   .core-reference-page .reference-header { flex-direction: column; }
@@ -245,6 +270,7 @@
   .auth-demo-actions { align-items: flex-start; flex-direction: column; }
   .auth-demo-actions button { min-height: 44px; }
   .component-sample { padding: 15px; }
+  .button-contract-heading { align-items: flex-start; flex-direction: column; gap: 6px; }
   .file-dropzone { align-items: flex-start; flex-direction: column; }
   .file-dropzone button, .file-upload-actions button { min-height: 44px; }
   .core-form-actions { align-items: flex-end; }
@@ -271,9 +297,11 @@
   .spinner-sample { animation: none; border-top-color: var(--line-strong); box-shadow: inset 0 0 0 3px var(--accent); }
   .stateful-action.is-pending [data-icon-state="pending"] { animation: none; }
   .motion-icon-slot [data-icon-state], .sample-menu, .sample-popover { transition: opacity 80ms linear; transform: none; }
+  .tooltip-sample [role="tooltip"] { transition: opacity 80ms linear; transform: translateX(-50%); }
   .disclosure-trigger svg { transition: none; }
   .motion-disclosure { transition: none; }
-  .core-dialog[open], .core-dialog[open]::backdrop { animation: none; }
+  .core-dialog { transform: none; transition: opacity 80ms linear; }
+  .core-dialog::backdrop { transition: background-color 80ms linear; }
   .drawer-layer { transition: visibility 0s linear 80ms; }
   .drawer-layer[data-state="open"] { transition-delay: 0s; }
   .drawer-scrim, .core-drawer { transition: opacity 80ms linear; }

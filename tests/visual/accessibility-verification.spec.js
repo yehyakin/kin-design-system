@@ -104,6 +104,15 @@ test("reduced motion removes spatial travel from Inspector and Drawer", async ({
   await page.locator("[data-drawer-open]").click();
   await expect(page.locator(".core-drawer").evaluate((element) => getComputedStyle(element).transform)).resolves.toBe("none");
   await expect(page.locator("[data-drawer-layer]")).toHaveAttribute("data-state", "open");
+  await page.keyboard.press("Escape");
+  await expect(page.locator("[data-drawer-layer]")).toHaveAttribute("data-state", "closed");
+
+  await page.goto("/examples/workspace-reference/core-components.html#authentication");
+  await page.getByRole("button", { name: "打开登录弹窗" }).click();
+  const authenticationDialog = page.getByRole("dialog", { name: "登录后保存筛选视图" });
+  await expect(authenticationDialog.evaluate((element) => getComputedStyle(element).transform)).resolves.toBe("none");
+  await authenticationDialog.getByRole("button", { name: "取消" }).click();
+  await expect(authenticationDialog).toBeHidden();
 });
 
 test("reduced motion keeps Motion Lab state and focus without directional travel", async ({ page }) => {
@@ -126,4 +135,18 @@ test("reduced motion keeps Motion Lab state and focus without directional travel
 
   await page.locator("[data-lab-drawer-open]").click();
   await expect(page.locator(".motion-drawer").evaluate((element) => getComputedStyle(element).transform)).resolves.toBe("none");
+  await page.keyboard.press("Escape");
+
+  const slow = page.locator("[data-lab-speed]");
+  await slow.click();
+  await expect(slow).toHaveAttribute("aria-pressed", "false");
+  await expect(page.locator("[data-motion-review-speed]")).toHaveText("减少动态优先");
+
+  const tooltipTrigger = page.locator("[data-lab-tooltip-trigger]").first();
+  await tooltipTrigger.focus();
+  await expect(page.locator("#tooltip-copy")).toBeVisible();
+  await expect(page.locator("#tooltip-copy")).toHaveAttribute("data-instant", "true");
+
+  await page.locator("[data-gesture-toggle]").click();
+  await expect(page.locator("[data-gesture-sheet]")).toHaveAttribute("data-state", "collapsed");
 });

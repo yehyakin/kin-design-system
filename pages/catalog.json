@@ -48,7 +48,7 @@
       "status": "stable",
       "contract_paths": ["patterns/engineering-canvas.md", "components/workspace-structure.md"],
       "reference_paths": ["examples/product-patterns/canvas.html"],
-      "test_paths": ["tests/visual/workspace.spec.js"],
+      "test_paths": ["tests/visual/workspace.spec.js", "tests/visual/product-canvas-panel.spec.js", "tests/visual/product-canvas-panel-normal-motion.spec.js"],
       "product_families": ["engineering"],
       "support": { "themes": true, "responsive": true, "keyboard": true, "touch": true, "reduced_motion": true, "localization": true },
       "manual_checks": ["precision pointer and touch input", "screen-reader object structure", "200% zoom fallback"],

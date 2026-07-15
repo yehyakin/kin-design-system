@@ -73,6 +73,11 @@ Use Tooltip for a short label or concise explanation of an existing control.
 - It MUST not contain required instructions, validation, links, or actions.
 - It MUST not be the only visible name for an unfamiliar control on touch-first layouts.
 - It SHOULD remain concise after localization and reposition to stay within the viewport.
+- Keyboard focus MUST reveal the Tooltip immediately; pointer delay MUST NOT be applied to the keyboard path.
+- The first intentional pointer hover in a Tooltip group SHOULD use a short delay to avoid accidental activation. Once a Tooltip is active, adjacent Tooltips in the same group MUST skip both delay and entrance motion while the group's sequence window remains active.
+- A Tooltip provider or group MUST own the first/subsequent sequence. Individual Tooltips MUST NOT create conflicting timers or replay entrance motion while the user scans a Toolbar.
+- The KIN reference uses a `500ms` first-pointer delay, a `600ms` sequence window, a `125ms` first entrance and an instant subsequent entrance. These are reference values, not third-party package defaults.
+- Escape MUST dismiss the current Tooltip until its trigger loses hover and focus. Dismissal MUST NOT move focus or change the underlying selection.
 
 ## Accordion and Disclosure
 
@@ -115,6 +120,7 @@ Use Pagination when a dataset is divided into stable pages and users need locati
 - Every location or view can be reached and identified with keyboard only.
 - Link, button, tab, menu item, and disclosure semantics match their actual results.
 - Closing a temporary menu or Tooltip restores or preserves focus correctly.
+- Toolbar Tooltip review distinguishes first pointer hover, subsequent pointer hover and keyboard focus timing.
 - Touch users can access every Context Menu action through another path.
 - Browser history, deep links, and responsive presentation preserve the declared navigation model.
 - Hidden disclosure content is absent from the focus order.

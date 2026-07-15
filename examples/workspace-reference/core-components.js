@@ -31,10 +31,14 @@ import {
   X,
 } from "lucide";
 
-const media = matchMedia("(prefers-color-scheme: dark)");
-const themeButtons = [...document.querySelectorAll("[data-theme-value]")];
 const contrastButton = document.querySelector("[data-contrast-toggle]");
 let coreSonnerModulePromise;
+
+window.addEventListener("kin:themechange", (event) => {
+  const resolved = event.detail?.resolved;
+  if (!coreSonnerModulePromise || !["light", "dark"].includes(resolved)) return;
+  coreSonnerModulePromise.then((module) => module.updateToasterTheme(resolved, "zh"));
+});
 
 const iconSet = {
   Activity,
@@ -75,29 +79,14 @@ function renderIcons() {
   });
 }
 
-function applyTheme(preference, persist = true) {
-  const theme = preference === "system" ? (media.matches ? "dark" : "light") : preference;
-  document.documentElement.dataset.theme = theme;
-  document.documentElement.dataset.themePreference = preference;
-  document.querySelector('meta[name="theme-color"]').content = theme === "dark" ? "#08090a" : "#f6f7f8";
-  for (const button of themeButtons) button.setAttribute("aria-pressed", String(button.dataset.themeValue === preference));
-  if (persist) localStorage.setItem("kin-reference-theme", preference);
-  if (coreSonnerModulePromise) coreSonnerModulePromise.then((module) => module.updateToasterTheme(theme, "zh"));
-}
-
 function applyContrast(enabled, persist = true) {
   document.documentElement.dataset.contrast = enabled ? "more" : "normal";
   contrastButton.setAttribute("aria-pressed", String(enabled));
   if (persist) localStorage.setItem("kin-reference-contrast", enabled ? "more" : "normal");
 }
 
-for (const button of themeButtons) button.addEventListener("click", () => applyTheme(button.dataset.themeValue));
 contrastButton.addEventListener("click", () => applyContrast(document.documentElement.dataset.contrast !== "more"));
-media.addEventListener("change", () => {
-  if (document.documentElement.dataset.themePreference === "system") applyTheme("system", false);
-});
 addEventListener("storage", (event) => {
-  if (event.key === "kin-reference-theme") applyTheme(event.newValue || "system", false);
   if (event.key === "kin-reference-contrast") applyContrast(event.newValue === "more", false);
 });
 
@@ -362,6 +351,7 @@ const sampleMenu = document.querySelector(".sample-menu");
 const menuItems = [...sampleMenu.querySelectorAll('[role="menuitem"]')];
 const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
 const transientSurfaceCleanups = new WeakMap();
+const managedDialogCleanups = new WeakMap();
 
 function setTransientSurface(surface, open, { trigger, focusTarget, restoreFocus = false } = {}) {
   const cleanup = transientSurfaceCleanups.get(surface);
@@ -405,6 +395,49 @@ function setTransientSurface(surface, open, { trigger, focusTarget, restoreFocus
   transientSurfaceCleanups.set(surface, detach);
 }
 
+function openManagedDialog(dialog, { trigger, focusTarget } = {}) {
+  managedDialogCleanups.get(dialog)?.();
+  if (!dialog.open) {
+    dialog.dataset.state = "closed";
+    dialog.showModal();
+  }
+  dialog.inert = false;
+  dialog.dataset.state = "opening";
+  requestAnimationFrame(() => {
+    if (dialog.dataset.state !== "opening") return;
+    dialog.dataset.state = "open";
+    focusTarget?.focus();
+  });
+  dialog.dataset.triggerId = trigger?.id || "";
+}
+
+function closeManagedDialog(dialog, { trigger, returnValue = "cancel", restoreFocus = true } = {}) {
+  if (!dialog.open) return;
+  managedDialogCleanups.get(dialog)?.();
+  dialog.inert = true;
+  dialog.dataset.state = "closing";
+
+  let timer;
+  const detach = () => {
+    window.clearTimeout(timer);
+    dialog.removeEventListener("transitionend", onTransitionEnd);
+    managedDialogCleanups.delete(dialog);
+  };
+  const finish = () => {
+    if (dialog.dataset.state !== "closing") return;
+    detach();
+    dialog.close(returnValue);
+    dialog.dataset.state = "closed";
+    if (restoreFocus) trigger?.focus();
+  };
+  const onTransitionEnd = (event) => {
+    if (event.target === dialog && (event.propertyName === "opacity" || event.propertyName === "transform")) finish();
+  };
+  dialog.addEventListener("transitionend", onTransitionEnd);
+  timer = window.setTimeout(finish, reducedMotion.matches ? 90 : 230);
+  managedDialogCleanups.set(dialog, detach);
+}
+
 function closeMenu(restore = true) {
   setTransientSurface(sampleMenu, false, { trigger: menuTrigger, restoreFocus: restore });
 }
@@ -445,10 +478,50 @@ for (const item of contextItems) item.addEventListener("click", () => setContext
 
 const tooltipSample = document.querySelector(".tooltip-sample");
 const tooltipTrigger = tooltipSample.querySelector("button");
-tooltipTrigger.addEventListener("keydown", (event) => {
-  if (event.key === "Escape") tooltipSample.classList.add("is-dismissed");
+const tooltipSurface = tooltipSample.querySelector('[role="tooltip"]');
+let tooltipOpenTimer;
+
+function openCoreTooltip(instant) {
+  window.clearTimeout(tooltipOpenTimer);
+  if (tooltipTrigger.dataset.tooltipDismissed === "true") return;
+  const open = () => {
+    tooltipSurface.hidden = false;
+    tooltipSurface.dataset.instant = String(instant || reducedMotion.matches);
+    tooltipSurface.dataset.state = instant || reducedMotion.matches ? "open" : "opening";
+    if (tooltipSurface.dataset.state === "opening") {
+      requestAnimationFrame(() => {
+        if (tooltipSurface.dataset.state === "opening") tooltipSurface.dataset.state = "open";
+      });
+    }
+  };
+  if (instant) open();
+  else tooltipOpenTimer = window.setTimeout(open, 500);
+}
+
+function closeCoreTooltip() {
+  window.clearTimeout(tooltipOpenTimer);
+  tooltipSurface.dataset.state = "closed";
+  tooltipSurface.hidden = true;
+}
+
+tooltipTrigger.addEventListener("pointerenter", () => openCoreTooltip(false));
+tooltipTrigger.addEventListener("pointerleave", () => {
+  if (document.activeElement === tooltipTrigger) return;
+  tooltipTrigger.dataset.tooltipDismissed = "false";
+  closeCoreTooltip();
 });
-tooltipTrigger.addEventListener("blur", () => tooltipSample.classList.remove("is-dismissed"));
+tooltipTrigger.addEventListener("focus", () => openCoreTooltip(true));
+tooltipTrigger.addEventListener("keydown", (event) => {
+  if (event.key !== "Escape") return;
+  event.preventDefault();
+  tooltipTrigger.dataset.tooltipDismissed = "true";
+  closeCoreTooltip();
+});
+tooltipTrigger.addEventListener("blur", () => {
+  if (tooltipTrigger.matches(":hover")) return;
+  tooltipTrigger.dataset.tooltipDismissed = "false";
+  closeCoreTooltip();
+});
 
 const tree = document.querySelector('[role="tree"]');
 const treeItems = [...tree.querySelectorAll('[role="treeitem"]')];
@@ -490,18 +563,20 @@ for (const toggle of document.querySelectorAll("[data-truncation-toggle]")) {
 }
 
 const authForm = document.querySelector("[data-auth-form]");
-const authPassword = authForm.querySelector("[data-auth-password]");
-const passwordToggle = authForm.querySelector("[data-password-toggle]");
 const authStatus = authForm.querySelector("[data-auth-status]");
 
-passwordToggle.addEventListener("click", () => {
-  const revealing = authPassword.type === "password";
-  authPassword.type = revealing ? "text" : "password";
-  passwordToggle.setAttribute("aria-pressed", String(revealing));
-  passwordToggle.setAttribute("aria-label", revealing ? "隐藏密码" : "显示密码");
-  passwordToggle.dataset.controlState = revealing ? "active" : "default";
-  authPassword.focus();
-});
+for (const passwordToggle of document.querySelectorAll("[data-password-toggle]")) {
+  const passwordInput = passwordToggle.closest(".password-field")?.querySelector('input[type="password"], input[type="text"]');
+  if (!passwordInput) continue;
+  passwordToggle.addEventListener("click", () => {
+    const revealing = passwordInput.type === "password";
+    passwordInput.type = revealing ? "text" : "password";
+    passwordToggle.setAttribute("aria-pressed", String(revealing));
+    passwordToggle.setAttribute("aria-label", revealing ? "隐藏密码" : "显示密码");
+    passwordToggle.dataset.controlState = revealing ? "active" : "default";
+    passwordInput.focus();
+  });
+}
 
 authForm.addEventListener("submit", (event) => {
   event.preventDefault();
@@ -521,10 +596,9 @@ const reauthStatus = reauthDialog.querySelector("[data-reauth-status]");
 
 reauthOpen.addEventListener("click", () => {
   reauthStatus.textContent = "";
-  reauthDialog.showModal();
-  reauthForm.elements.namedItem("reauth-password").focus();
+  openManagedDialog(reauthDialog, { trigger: reauthOpen, focusTarget: reauthForm.elements.namedItem("reauth-password") });
 });
-reauthCancel.addEventListener("click", () => reauthDialog.close("cancel"));
+reauthCancel.addEventListener("click", () => closeManagedDialog(reauthDialog, { trigger: reauthOpen }));
 reauthForm.addEventListener("submit", (event) => {
   event.preventDefault();
   if (!reauthForm.checkValidity()) {
@@ -534,7 +608,36 @@ reauthForm.addEventListener("submit", (event) => {
   reauthStatus.textContent = "这是本地界面参考；连接真实身份服务后才能继续。";
   reauthStatus.focus();
 });
-reauthDialog.addEventListener("close", () => reauthOpen.focus());
+reauthDialog.addEventListener("cancel", (event) => {
+  event.preventDefault();
+  closeManagedDialog(reauthDialog, { trigger: reauthOpen });
+});
+
+const authTaskDialog = document.querySelector("[data-auth-dialog]");
+const authTaskOpen = document.querySelector("[data-auth-dialog-open]");
+const authTaskForm = authTaskDialog.querySelector("[data-auth-dialog-form]");
+const authTaskCancel = authTaskDialog.querySelector("[data-auth-dialog-cancel]");
+const authTaskStatus = authTaskDialog.querySelector("[data-auth-dialog-status]");
+const authTaskEmail = authTaskForm.elements.namedItem("auth-dialog-email");
+
+authTaskOpen.addEventListener("click", () => {
+  authTaskStatus.textContent = "";
+  openManagedDialog(authTaskDialog, { trigger: authTaskOpen, focusTarget: authTaskEmail });
+});
+authTaskCancel.addEventListener("click", () => closeManagedDialog(authTaskDialog, { trigger: authTaskOpen }));
+authTaskForm.addEventListener("submit", (event) => {
+  event.preventDefault();
+  if (!authTaskForm.checkValidity()) {
+    authTaskForm.reportValidity();
+    return;
+  }
+  authTaskStatus.textContent = "这是本地界面参考；连接真实身份服务后才能恢复保存操作。";
+  authTaskStatus.focus();
+});
+authTaskDialog.addEventListener("cancel", (event) => {
+  event.preventDefault();
+  closeManagedDialog(authTaskDialog, { trigger: authTaskOpen });
+});
 
 async function getCoreSonner() {
   coreSonnerModulePromise ??= import("../../site/assets/sonner-island.js");
@@ -602,13 +705,19 @@ motionDisclosure.addEventListener("click", () => {
   motionDetails.inert = !open;
 });
 
-const dialog = document.querySelector(".core-dialog");
+const dialog = document.querySelector("[data-confirm-dialog]");
 const dialogOpen = document.querySelector("[data-dialog-open]");
+const dialogCancel = dialog.querySelector("[data-confirm-cancel]");
+const dialogCommit = dialog.querySelector("[data-confirm-commit]");
 dialogOpen.addEventListener("click", () => {
-  dialog.showModal();
-  dialog.querySelector('button[value="cancel"]').focus();
+  openManagedDialog(dialog, { trigger: dialogOpen, focusTarget: dialogCancel });
 });
-dialog.addEventListener("close", () => dialogOpen.focus());
+dialogCancel.addEventListener("click", () => closeManagedDialog(dialog, { trigger: dialogOpen }));
+dialogCommit.addEventListener("click", () => closeManagedDialog(dialog, { trigger: dialogOpen, returnValue: "confirm" }));
+dialog.addEventListener("cancel", (event) => {
+  event.preventDefault();
+  closeManagedDialog(dialog, { trigger: dialogOpen });
+});
 
 const drawerLayer = document.querySelector("[data-drawer-layer]");
 const drawer = drawerLayer.querySelector(".core-drawer");
@@ -662,6 +771,5 @@ popoverTrigger.addEventListener("click", () => setPopover(popover.hidden || popo
 popoverClose.addEventListener("click", () => setPopover(false, true));
 popover.addEventListener("keydown", (event) => { if (event.key === "Escape") setPopover(false, true); });
 
-applyTheme(document.documentElement.dataset.themePreference || "system", false);
 applyContrast(document.documentElement.dataset.contrast === "more", false);
 renderIcons();

@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="dark" data-contrast="normal">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#08090a" />
+    <title>KIN Integration Lab</title>
+    <script>
+      (() => {
+        const preference = localStorage.getItem("kin-reference-theme") || "system";
+        const resolved = preference === "system"
+          ? (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")
+          : preference;
+        document.documentElement.dataset.theme = resolved;
+        document.documentElement.dataset.themePreference = preference;
+        document.documentElement.dataset.contrast = localStorage.getItem("kin-reference-contrast") === "more" ? "more" : "normal";
+        document.documentElement.style.colorScheme = resolved;
+      })();
+    </script>
+    <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="./states.css" />
+    <link rel="stylesheet" href="./core-components.css" />
+    <link rel="stylesheet" href="../../assets/kin-react.css" />
+    <link rel="stylesheet" href="./integrations.css" />
+    <script type="module" src="./integration-reference.js"></script>
+  </head>
+  <body class="states-page core-reference-page integration-lab-page">
+    <a class="skip-link" href="#integration-app">跳到集成实验</a>
+    <div id="integration-app"></div>
+  </body>
+</html>

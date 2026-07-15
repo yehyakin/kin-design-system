@@ -6,6 +6,31 @@ The project follows semantic versioning for normative design documentation.
 
 ## Unreleased
 
+### Reference-control and overlay completion
+
+- Completed the authentication references with an in-context Authentication Dialog, honest unavailable-provider messaging, deterministic full-page failure and recovery fixtures, stable password icons, and reversible Dialog motion with focus restoration.
+- Added a complete Button and Icon Button reference matrix covering primary, secondary, ghost, destructive, busy, success, error, disabled, and accessible icon-only states.
+- Standardized the runnable preference controls around Lucide language icons and Sun–track–Moon theme switches while keeping light, dark, and system choices available without first-render animation; language menus and the showcase Command surface now retain reversible exit states with Reduced Motion crossfades.
+- Expanded the upstream Sonner reference with success, undo, loading-to-result, safe retry, six desktop placements, LTR/RTL behavior, and mobile safe-area handling without replacing Sonner's native stacking, swipe, or transition engine.
+- Replaced abrupt Product Canvas panel visibility changes with retained, reversible right-edge and bottom-sheet transitions, shared scrim behavior, inert closing states, focus containment, rapid-reversal cleanup, and Reduced Motion crossfades.
+
+### Frequency-aware motion and direct manipulation
+
+- Added a normative motion-frequency and invocation contract so keyboard-priority paths are immediately usable while occasional pointer paths retain only justified feedback.
+- Added KIN-owned motion terminology, responsive exit timing, grouped Tooltip sequencing, and a direct-manipulation contract covering intent thresholds, pointer capture, velocity projection, edge resistance, alternatives, and reduced motion.
+- Expanded the Motion Lab with keyboard/pointer comparison, first-delay and continuous Tooltip browsing, a contained gesture Sheet, 4× slow review, and automated normal/reduced-motion checks; strengthened manual review requirements for first frames, repetition, reversal, and physical-device feel.
+
+### Official runtime integrations
+
+- Added the private pre-release `@kin-design/react` integration laboratory with isolated subpath exports for Sonner, cmdk, React Virtuoso, NumberFlow, dnd kit, input-otp, Liveline, and development-only Leva.
+- Preserved official upstream animation, virtualization, drag, input, chart, notification, and control engines while adding KIN semantic APIs, Token styling, themes, accessibility boundaries, localization, bundle isolation, migration, and rollback contracts.
+- Added a bilingual Integration Lab, machine-readable integration registry, package/SSR/bundle checks, and browser evidence for result/undo feedback, number continuity, command focus return, real DOM windowing, keyboard sorting, OTP input metadata, chart fallbacks, normal motion, and Reduced Motion.
+- Preserved Liveline's native Reduced Motion path instead of mapping the preference to its separate paused-data state, so motion can reduce without hiding the chart's first useful frame.
+- Corrected the Liveline adapter and showcase to honor its Unix-seconds time contract and use identical formatters for Canvas and data-table output.
+- Added a normative, machine-validated upstream-preservation contract: official packages remain the runtime engines, mature motion and behavior are not reimplemented, and any override requires a recorded exception.
+- Consolidated the existing showcase Sonner island onto `KinToaster` and `kinToast`, removing a second configuration path while preserving its lazy-loading boundary and public fixture API.
+- Kept Number Transition, Drag and Drop, OTP, and Live Chart at `candidate`; runtime integration does not replace their remaining backend, manual accessibility, cross-input, recovery, or consuming-product evidence.
+
 ## 2.3.0 — 2026-07-14
 
 ### Scheduling workspace and contextual layout

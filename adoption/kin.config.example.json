@@ -6,7 +6,7 @@
     "source": "https://github.com/yehyakin/kin-design-system/tree/v2.3.0",
     "local": "docs/KIN-DESIGN.md",
     "revision": "v2.3.0",
-    "checksum": "cce89816242a32ff8545771616739dd32d4ab163990a4ba90c5adea54c0b994e"
+    "checksum": "a30c88723761b2446d9ddc37c23e68bfc4df06425fb5b9c9faa9576461015fd6"
   },
   "tokens": {
     "source": "src/styles/tokens.css",

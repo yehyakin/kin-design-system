@@ -20,6 +20,8 @@
     <link rel="stylesheet" href="./states.css" />
     <link rel="stylesheet" href="../../assets/sonner.css" />
     <link rel="stylesheet" href="./core-components.css" />
+    <link rel="stylesheet" href="../shared/preference-controls.css" />
+    <script type="module" src="../shared/preference-controls.js"></script>
     <script type="module" src="./core-components.js"></script>
   </head>
   <body class="states-page core-reference-page">
@@ -33,11 +35,7 @@
       <div class="reference-actions">
         <a class="reference-back icon-action" href="./motion.html"><i data-lucide="activity"></i><span>Motion Lab</span></a>
         <a class="reference-back" href="./states.html">状态基准</a>
-        <div class="theme-control" role="group" aria-label="界面主题">
-          <button type="button" data-theme-value="light">日间</button>
-          <button type="button" data-theme-value="dark">夜间</button>
-          <button type="button" data-theme-value="system">系统</button>
-        </div>
+        <div class="kin-preference-controls" data-preference-controls><button type="button" class="kin-theme-switch" role="switch" data-theme-switch aria-checked="false" aria-label="切换为夜间模式"><span class="kin-theme-switch-icon"><i data-lucide="sun"></i></span><span class="kin-theme-switch-track" aria-hidden="true"><span class="kin-theme-switch-thumb"></span></span><span class="kin-theme-switch-icon"><i data-lucide="moon"></i></span></button><div class="kin-theme-menu-control"><button type="button" class="kin-theme-menu-trigger" data-theme-menu-trigger aria-haspopup="menu" aria-expanded="false" aria-label="外观选项"><i data-lucide="chevron-down"></i></button><div class="kin-theme-menu" data-theme-menu data-state="closed" role="menu" aria-label="外观选项" hidden><button type="button" role="menuitemradio" aria-checked="false" data-theme-preference="light"><i class="kin-theme-menu-item-icon" data-lucide="sun"></i><span>日间</span><i class="kin-theme-menu-check" data-lucide="check"></i></button><button type="button" role="menuitemradio" aria-checked="false" data-theme-preference="dark"><i class="kin-theme-menu-item-icon" data-lucide="moon"></i><span>夜间</span><i class="kin-theme-menu-check" data-lucide="check"></i></button><button type="button" role="menuitemradio" aria-checked="true" data-theme-preference="system"><i class="kin-theme-menu-item-icon" data-lucide="monitor"></i><span>跟随系统</span><i class="kin-theme-menu-check" data-lucide="check"></i></button></div></div></div>
         <button type="button" data-contrast-toggle aria-pressed="false">高对比</button>
       </div>
     </header>
@@ -89,6 +87,55 @@
             </div>
           </article>
         </div>
+        <div class="button-contract" aria-labelledby="button-contract-title">
+          <div class="button-contract-heading">
+            <div>
+              <h3 id="button-contract-title">按钮变体与状态</h3>
+              <p>变体表达操作层级，状态表达当前进程。图标、标签和按钮宽度在状态变化时保持稳定。</p>
+            </div>
+            <span>Variant × state × icon</span>
+          </div>
+          <div class="button-matrix" role="table" aria-label="按钮变体与状态矩阵">
+            <div class="button-matrix-row button-matrix-header" role="row">
+              <span role="columnheader">变体</span><span role="columnheader">默认</span><span role="columnheader">带图标</span><span role="columnheader">状态</span><span role="columnheader">禁用</span>
+            </div>
+            <div class="button-matrix-row" role="row">
+              <strong role="rowheader">主要操作</strong>
+              <span role="cell"><button type="button" class="primary-action">保存更改</button></span>
+              <span role="cell"><button type="button" class="primary-action icon-action"><i data-lucide="save"></i><span>保存视图</span></button></span>
+              <span role="cell"><button type="button" class="primary-action icon-action stateful-action" data-control-state="pending" aria-busy="true" disabled><span class="motion-icon-slot" aria-hidden="true"><i data-lucide="save" data-icon-state="default"></i><i data-lucide="loader-circle" data-icon-state="pending"></i></span><span>正在保存</span></button></span>
+              <span role="cell"><button type="button" class="primary-action" disabled>保存更改</button></span>
+            </div>
+            <div class="button-matrix-row" role="row">
+              <strong role="rowheader">次要操作</strong>
+              <span role="cell"><button type="button" class="secondary-action">预览</button></span>
+              <span role="cell"><button type="button" class="secondary-action icon-action"><i data-lucide="external-link"></i><span>打开预览</span></button></span>
+              <span role="cell"><button type="button" class="secondary-action icon-action" data-control-state="success"><span class="motion-icon-slot" aria-hidden="true"><i data-lucide="check" data-icon-state="success"></i></span><span>已更新</span></button></span>
+              <span role="cell"><button type="button" class="secondary-action" disabled>预览</button></span>
+            </div>
+            <div class="button-matrix-row" role="row">
+              <strong role="rowheader">弱化操作</strong>
+              <span role="cell"><button type="button" class="ghost-action">更多操作</button></span>
+              <span role="cell"><button type="button" class="ghost-action icon-action"><i data-lucide="ellipsis"></i><span>更多操作</span></button></span>
+              <span role="cell"><span class="matrix-note">仅在当前上下文需要时显示</span></span>
+              <span role="cell"><button type="button" class="ghost-action" disabled>更多操作</button></span>
+            </div>
+            <div class="button-matrix-row" role="row">
+              <strong role="rowheader">破坏性操作</strong>
+              <span role="cell"><button type="button" class="destructive-action">移除记录</button></span>
+              <span role="cell"><button type="button" class="destructive-action icon-action"><i data-lucide="circle-alert"></i><span>停用规则</span></button></span>
+              <span role="cell"><button type="button" class="destructive-action icon-action" data-control-state="error"><span class="motion-icon-slot" aria-hidden="true"><i data-lucide="circle-alert" data-icon-state="error"></i></span><span>重试移除</span></button></span>
+              <span role="cell"><button type="button" class="destructive-action" disabled>移除记录</button></span>
+            </div>
+            <div class="button-matrix-row" role="row">
+              <strong role="rowheader">图标按钮</strong>
+              <span role="cell"><span class="icon-button-example"><button type="button" class="icon-only-control" aria-label="复制对象链接" title="复制对象链接"><i data-lucide="copy"></i></button><small>复制</small></span></span>
+              <span role="cell"><span class="icon-button-example"><button type="button" class="icon-only-control" aria-label="更多对象操作" title="更多对象操作"><i data-lucide="ellipsis"></i></button><small>更多</small></span></span>
+              <span role="cell"><span class="matrix-note">必须提供可访问名称和 Tooltip</span></span>
+              <span role="cell"><button type="button" class="icon-only-control" aria-label="关闭（不可用）" disabled><i data-lucide="x"></i></button></span>
+            </div>
+          </div>
+        </div>
       </section>
 
       <section id="authentication" aria-labelledby="authentication-title">
@@ -109,6 +156,7 @@
           <div class="auth-pattern-list" aria-labelledby="auth-patterns-title">
             <div class="auth-pattern-heading"><div><h3 id="auth-patterns-title">按任务选择入口</h3><p>不要把完整登录页塞进每个工作流。</p></div><i data-lucide="key-round" aria-hidden="true"></i></div>
             <div class="auth-pattern-row"><span>完整登录</span><p>独立页面；处理登录、恢复、SSO 与会话错误。</p><a href="../page-patterns/access.html">查看页面</a></div>
+            <div class="auth-pattern-row"><span>任务中登录弹窗</span><p>认证过期时保留当前草稿，并只恢复用户已经请求的保存操作。</p><button type="button" class="text-action" data-auth-dialog-open><i data-lucide="log-in"></i>打开登录弹窗</button></div>
             <div class="auth-pattern-row"><span>页面内重新验证</span><p>在敏感操作前保留当前任务和上下文。</p><button type="button" class="text-action" data-reauth-open><i data-lucide="lock-keyhole"></i>打开示例</button></div>
             <div class="auth-pattern-row"><span>一次性密码</span><p>仅当真实认证后端要求时使用；不提供伪造倒计时。</p><a href="../page-patterns/access.html">查看边界</a></div>
           </div>
@@ -195,7 +243,7 @@
           <details><summary>查看规则条件</summary><p>价格变化超过 12%，并且渠道状态不是维护中。</p></details>
           <div class="menu-sample"><button type="button" class="icon-action" aria-haspopup="menu" aria-expanded="false" data-menu-trigger><i data-lucide="ellipsis"></i><span>更多操作</span></button><div class="sample-menu" role="menu" data-state="closed" hidden><button type="button" role="menuitem"><span class="menu-item-icon"><i data-lucide="copy"></i></span><span>复制规则</span></button><button type="button" role="menuitem"><span class="menu-item-icon"><i data-lucide="history"></i></span><span>查看审计记录</span></button><button type="button" role="menuitem"><span class="menu-item-icon"><i data-lucide="circle-pause"></i></span><span>停用规则</span></button></div></div>
           <div class="menu-sample"><button type="button" class="icon-action" aria-haspopup="menu" aria-expanded="false" data-context-target><i data-lucide="sliders-horizontal"></i><span>当前对象操作</span></button><div class="sample-menu context-menu" role="menu" data-state="closed" hidden><button type="button" role="menuitem"><span class="menu-item-icon"><i data-lucide="external-link"></i></span><span>打开详情</span></button><button type="button" role="menuitem"><span class="menu-item-icon"><i data-lucide="link"></i></span><span>复制对象链接</span></button></div></div>
-          <span class="tooltip-sample"><button type="button" aria-describedby="rule-help">?</button><span id="rule-help" role="tooltip">规则只处理新进入队列的记录。</span></span>
+          <span class="tooltip-sample"><button type="button" aria-describedby="rule-help">?</button><span id="rule-help" role="tooltip" data-state="closed" hidden>规则只处理新进入队列的记录。</span></span>
         </div>
         <nav class="pagination-sample" aria-label="审核记录分页"><button type="button" disabled>上一页</button><a href="#navigation" aria-current="page">1</a><a href="#navigation">2</a><a href="#navigation">3</a><button type="button">下一页</button></nav>
       </section>
@@ -269,11 +317,24 @@
       </section>
     </main>
 
-    <dialog class="core-dialog" aria-labelledby="confirm-title">
-      <form method="dialog"><header><div><p>确认操作</p><h2 id="confirm-title">停用价格异常规则？</h2></div></header><p>新记录将不再进入人工复核。已有任务和审计记录会保留。</p><div class="dialog-actions"><button value="cancel">取消</button><button value="confirm" class="destructive-action">停用规则</button></div></form>
+    <dialog class="core-dialog" aria-labelledby="confirm-title" data-confirm-dialog data-state="closed">
+      <form><header><div><p>确认操作</p><h2 id="confirm-title">停用价格异常规则？</h2></div></header><p>新记录将不再进入人工复核。已有任务和审计记录会保留。</p><div class="dialog-actions"><button type="button" data-confirm-cancel>取消</button><button type="button" class="destructive-action" data-confirm-commit>停用规则</button></div></form>
     </dialog>
 
-    <dialog class="core-dialog reauth-dialog" aria-labelledby="reauth-title" data-reauth-dialog>
+    <dialog class="core-dialog authentication-dialog" aria-labelledby="auth-dialog-title" data-auth-dialog data-state="closed">
+      <form data-auth-dialog-form novalidate>
+        <header><div><p>继续当前任务</p><h2 id="auth-dialog-title">登录后保存筛选视图</h2></div></header>
+        <p>当前筛选、列顺序和未提交说明保持不变。成功后只继续“保存筛选视图”。</p>
+        <label class="core-field"><span>工作邮箱</span><input type="email" name="auth-dialog-email" value="reviewer@example.com" autocomplete="email" required /></label>
+        <label class="core-field"><span>密码</span><span class="password-field"><input type="password" name="auth-dialog-password" value="reference-only" autocomplete="current-password" required /><button type="button" class="icon-only-control" data-password-toggle data-control-state="default" aria-label="显示密码" aria-pressed="false"><span class="motion-icon-slot" aria-hidden="true"><i data-lucide="eye" data-icon-state="default"></i><i data-lucide="eye-off" data-icon-state="active"></i></span></button></span></label>
+        <button type="button" class="secondary-action icon-action unavailable-provider" disabled aria-describedby="auth-dialog-sso-reason"><i data-lucide="key-round"></i><span>使用组织 SSO</span></button>
+        <p id="auth-dialog-sso-reason" class="fixture-note">本地参考未配置组织身份提供方。</p>
+        <p class="auth-demo-status" role="alert" tabindex="-1" data-auth-dialog-status></p>
+        <div class="dialog-actions"><button type="button" data-auth-dialog-cancel>取消</button><button type="submit" class="primary-action">继续保存</button></div>
+      </form>
+    </dialog>
+
+    <dialog class="core-dialog reauth-dialog" aria-labelledby="reauth-title" data-reauth-dialog data-state="closed">
       <form data-reauth-form novalidate><header><div><p>敏感操作</p><h2 id="reauth-title">重新验证身份</h2></div></header><p>当前页面保持不变。连接真实身份服务后，再允许用户继续执行敏感操作。</p><label class="core-field"><span>密码</span><input type="password" name="reauth-password" autocomplete="current-password" required /></label><p class="fixture-note">本地交互参考：不会发送或记录输入。</p><p class="auth-demo-status" role="alert" tabindex="-1" data-reauth-status></p><div class="dialog-actions"><button type="button" data-reauth-cancel>取消</button><button type="submit" class="primary-action">验证</button></div></form>
     </dialog>
 

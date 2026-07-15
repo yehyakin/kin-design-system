@@ -49,14 +49,116 @@ async function capture(page, testInfo, name) {
   await page.screenshot({ path: testInfo.outputPath(name), fullPage: true });
 }
 
+for (const pattern of ["access", "onboarding", "settings", "system", "search", "support", "scheduling"]) {
+  test(`${pattern} exposes the complete theme and language preference contract`, async ({ page }) => {
+    await seedPreferences(page, "light");
+    await page.goto(`/examples/page-patterns/${pattern}.html`);
+
+    const languageTrigger = page.locator("[data-language-trigger]");
+    const languageMenu = page.locator("[data-language-menu]");
+    await expect(languageTrigger).toHaveAttribute("aria-haspopup", "menu");
+    await expect(languageTrigger.locator("svg.lucide-languages")).toBeVisible();
+    await languageTrigger.click();
+    await expect(languageMenu).toHaveAttribute("data-state", "open");
+    await expect(page.locator('[data-language-option="zh-CN"]')).toBeFocused();
+    await page.keyboard.press("ArrowDown");
+    await expect(page.locator('[data-language-option="en"]')).toBeFocused();
+    await page.keyboard.press("Escape");
+    await expect(languageTrigger).toBeFocused();
+    await expect(languageMenu).toBeHidden();
+
+    const themeSwitch = page.locator("[data-theme-switch]");
+    await expect(themeSwitch).toHaveAttribute("role", "switch");
+    await expect(themeSwitch).toHaveAttribute("aria-checked", "false");
+    await expect(themeSwitch.locator(".theme-switch-icon svg")).toHaveCount(2);
+    await expect(themeSwitch.locator(".theme-switch-track")).toBeVisible();
+
+    const themeMenuTrigger = page.locator("[data-theme-menu-trigger]");
+    const themeMenu = page.locator("[data-theme-menu]");
+    await expect(themeMenuTrigger).toHaveAttribute("aria-haspopup", "menu");
+    await themeMenuTrigger.click();
+    await expect(page.locator('[data-theme-option="light"]')).toBeFocused();
+    await page.keyboard.press("ArrowDown");
+    await expect(page.locator('[data-theme-option="dark"]')).toBeFocused();
+    await page.keyboard.press("Escape");
+    await expect(themeMenuTrigger).toBeFocused();
+    await expect(themeMenu).toBeHidden();
+
+    await themeMenuTrigger.click();
+    await page.keyboard.press("End");
+    await expect(page.locator('[data-theme-option="system"]')).toBeFocused();
+    await page.keyboard.press("Enter");
+    await expect(page.locator("html")).toHaveAttribute("data-theme-preference", "system");
+    await expect(page.locator('[data-theme-option="system"]')).toHaveAttribute("aria-checked", "true");
+    await expect(themeMenuTrigger).toBeFocused();
+  });
+}
+
 test("access flow covers sign-in, recovery, and contextual reauthentication", async ({ page }, testInfo) => {
   await seedPreferences(page, "dark");
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/examples/page-patterns/access.html");
 
   await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
+  const password = page.locator("#sign-in-password");
+  const passwordToggle = page.locator("[data-password-toggle]");
+  await expect(password).toHaveAttribute("type", "password");
+  await expect(passwordToggle.locator("svg")).toHaveCount(2);
+  await passwordToggle.click();
+  await expect(password).toHaveAttribute("type", "text");
+  await expect(passwordToggle).toHaveAttribute("aria-pressed", "true");
+  await expect(passwordToggle).toHaveAccessibleName("隐藏密码");
+  await expect(password).toBeFocused();
+  await passwordToggle.click();
+  await expect(password).toHaveAttribute("type", "password");
+
+  const provider = page.locator(".provider-action");
+  await expect(provider).toBeDisabled();
+  await expect(provider).toHaveAttribute("aria-describedby", "sso-unavailable");
+  await expect(page.locator("#sso-unavailable")).toContainText("未配置组织 SSO");
+
+  const fixtureSelect = page.locator("[data-auth-fixture-select]");
+  const fixtureStatus = page.locator("[data-auth-fixture-status]");
+  for (const [state, message] of [
+    ["throttled", "何时可以安全重试"],
+    ["locked", "管理员或恢复路径"],
+    ["provider-unavailable", "组织 SSO 暂不可用"],
+    ["offline", "保留输入"],
+    ["expired", "重新发起验证"],
+    ["verified", "未创建真实会话"],
+    ["session-expired", "保留当前工作"],
+  ]) {
+    await fixtureSelect.selectOption(state);
+    await expect(page.locator("[data-auth-fixture]")).toHaveAttribute("data-fixture-state", state);
+    await expect(fixtureStatus).toContainText(message);
+  }
+  await fixtureSelect.selectOption("idle");
+
+  const languageTrigger = page.locator("[data-language-trigger]");
+  await expect(languageTrigger).toHaveAttribute("aria-haspopup", "menu");
+  await languageTrigger.click();
+  await expect(page.locator("[data-language-menu]")).toHaveAttribute("data-state", "open");
+  await expect(page.locator('[data-language-option="zh-CN"]')).toBeFocused();
+  await page.keyboard.press("ArrowDown");
+  await expect(page.locator('[data-language-option="en"]')).toBeFocused();
+  await page.keyboard.press("Escape");
+  await expect(languageTrigger).toBeFocused();
+  await expect(page.locator("[data-language-menu]")).toBeHidden();
+
+  const themeSwitch = page.locator("[data-theme-switch]");
+  await expect(themeSwitch.locator(".theme-switch-icon svg")).toHaveCount(2);
+  await expect(themeSwitch.locator(".theme-switch-track")).toBeVisible();
+  const themeMenuTrigger = page.locator("[data-theme-menu-trigger]");
+  await expect(themeMenuTrigger).toHaveAttribute("aria-haspopup", "menu");
+  await themeMenuTrigger.click();
+  await page.locator('[data-theme-option="system"]').click();
+  await expect(page.locator("html")).toHaveAttribute("data-theme-preference", "system");
+  await themeMenuTrigger.click();
+  await page.locator('[data-theme-option="dark"]').click();
+  await expect(page.locator("html")).toHaveAttribute("data-theme-preference", "dark");
+
   await page.locator("#sign-in-email").fill("operator@example.com");
-  await page.locator("#sign-in-password").fill("reference-only");
+  await password.fill("reference-only");
   await page.locator("[data-sign-in-form]").getByRole("button", { name: "继续" }).click();
   await expect(page.locator("[data-sign-in-status]")).toContainText("未连接身份服务");
 
@@ -68,9 +170,29 @@ test("access flow covers sign-in, recovery, and contextual reauthentication", as
   await page.locator("[data-recovery-back]").click();
 
   const reauthOpen = page.locator("[data-reauth-open]");
+  const reauthDialog = page.locator("[data-reauth-dialog]");
   await reauthOpen.click();
-  await expect(page.locator("[data-reauth-dialog]")).toBeVisible();
+  await expect(reauthDialog).toBeVisible();
+  await expect(reauthDialog).toHaveAttribute("data-state", "open");
+  await expect(page.locator("#reauth-password")).toBeFocused();
   await page.locator("[data-reauth-cancel]").click();
+  await expect(reauthDialog).toHaveAttribute("data-state", "closing");
+  await expect(reauthDialog).toHaveAttribute("inert", "");
+  await expect(reauthDialog).toHaveAttribute("aria-hidden", "true");
+  await expect(reauthDialog).toBeHidden();
+  await expect(reauthOpen).toBeFocused();
+
+  await reauthOpen.click();
+  await page.locator("[data-reauth-cancel]").click();
+  await expect(reauthDialog).toHaveAttribute("data-state", "closing");
+  await reauthOpen.evaluate((element) => element.click());
+  await expect(reauthDialog).toHaveAttribute("data-state", "open");
+  await expect(reauthDialog).not.toHaveAttribute("inert", "");
+  await page.waitForTimeout(300);
+  await expect(reauthDialog).toBeVisible();
+  await expect(reauthDialog).toHaveAttribute("data-state", "open");
+  await page.locator("[data-reauth-cancel]").click();
+  await expect(reauthDialog).toBeHidden();
   await expect(reauthOpen).toBeFocused();
   await assertNoHorizontalOverflow(page);
   await capture(page, testInfo, "page-access-dark-desktop.png");

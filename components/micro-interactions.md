@@ -15,7 +15,8 @@ Before adding motion, a component specification MUST identify:
 5. equivalent pointer, keyboard, and touch behavior;
 6. the accessible name and announcement after the change;
 7. the reduced-motion treatment;
-8. failure, cancellation, and rollback behavior where applicable.
+8. failure, cancellation, and rollback behavior where applicable;
+9. expected frequency and whether the interaction is keyboard-priority, pointer-triggered or gesture-driven.
 
 If these facts cannot be stated, the component MUST change state without decorative motion.
 
@@ -32,6 +33,7 @@ Hover and focus are previews of interactivity. They MUST NOT represent a complet
 - Temporary success treatment SHOULD return to a stable resting state after the user has had enough time to perceive it, unless success becomes the new persistent state.
 - A component MUST remain interruptible when the user reverses or cancels its action.
 - Animation MUST NOT delay the underlying operation, focus movement, or availability of the next valid action.
+- Keyboard-priority and very high-frequency surfaces MUST default to instant availability. This rule does not remove Focus, Selection, Pressed, Busy or Committed Result feedback.
 
 ## Approved patterns
 
@@ -113,6 +115,21 @@ Requirements:
 - A rapid `open -> close -> open` or `close -> open -> close` sequence MUST end in the last requested state without a delayed timer hiding, disabling, or refocusing the reopened surface.
 - A closed disclosure MUST NOT retain focusable descendants.
 - Reduced motion MUST use an immediate state change or short opacity transition without spatial travel.
+
+### Gesture-driven continuation
+
+Use only when the user directly manipulates a surface, selection, resize boundary or ordered object.
+
+Requirements:
+
+- Gesture support MUST remain optional and MUST have an equivalent stable action when it commits navigation, dismissal or mutation.
+- A committed drag MUST use pointer capture, preserve grab offset and keep one active pointer identity.
+- Intent detection MUST avoid taking over scroll or click before the product can distinguish the gesture.
+- The settle behavior MUST start from the current rendered position and carry release velocity where momentum is part of the interaction.
+- Reversal, cancellation and another pointer MUST NOT produce jumps, duplicate mutations or stale cleanup.
+- Boundary over-drag SHOULD use progressive resistance. It MUST NOT imply that unavailable content exists beyond the boundary.
+- Reduced motion keeps direct tracking but removes bounce, parallax and unnecessary settle travel.
+- Gesture implementation and review MUST follow [`../principles/apple-interaction.md`](../principles/apple-interaction.md).
 
 ### Selection and preference change
 
@@ -197,6 +214,7 @@ Every implemented pattern MUST be checked against the applicable rows.
 | Pointer | Hover previews interactivity; click or press commits once |
 | Keyboard | Enter/Space and pattern-specific keys reach the same state |
 | Touch | No required information or result depends on hover |
+| Gesture | Capture, intent threshold, active pointer, velocity, boundaries and cancellation produce one continuous state |
 | Focus | Focus remains visible and distinct from selection or success |
 | Geometry | Labels, icons, and progress do not cause unintended layout shift |
 | Async success | Success appears only after a real resolved operation |

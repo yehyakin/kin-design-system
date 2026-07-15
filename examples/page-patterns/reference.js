@@ -55,6 +55,9 @@ const root = document.documentElement;
 const media = matchMedia("(prefers-color-scheme: dark)");
 const themeColor = document.querySelector('meta[name="theme-color"]');
 const themeSwitch = document.querySelector("[data-theme-switch]");
+const themeMenuTrigger = document.querySelector("[data-theme-menu-trigger]");
+const themeMenu = document.querySelector("[data-theme-menu]");
+const themeOptions = [...document.querySelectorAll("[data-theme-option]")];
 const languageTrigger = document.querySelector("[data-language-trigger]");
 const languageMenu = document.querySelector("[data-language-menu]");
 const languageOptions = [...document.querySelectorAll("[data-language-option]")];
@@ -72,6 +75,7 @@ function applyTheme(preference, persist = true) {
   themeColor?.setAttribute("content", resolved === "dark" ? "#08090a" : "#f6f7f8");
   themeSwitch?.setAttribute("aria-checked", String(resolved === "dark"));
   themeSwitch?.setAttribute("aria-label", text(resolved === "dark" ? "common.themeLight" : "common.themeDark"));
+  for (const option of themeOptions) option.setAttribute("aria-checked", String(option.dataset.themeOption === preference));
   if (persist) localStorage.setItem("kin-reference-theme", preference);
   for (const input of document.querySelectorAll('[name="appearance-theme"]')) input.checked = input.value === preference;
 }
@@ -100,41 +104,113 @@ function applyLocale(locale, persist = true) {
   document.dispatchEvent(new CustomEvent("kin:localechange", { detail: { locale } }));
 }
 
-function setLanguageMenu(open, restoreFocus = true) {
-  if (!languageMenu || !languageTrigger) return;
-  languageMenu.hidden = !open;
-  languageTrigger.setAttribute("aria-expanded", String(open));
-  if (open) {
-    const selected = languageOptions.find((option) => option.getAttribute("aria-checked") === "true");
-    (selected ?? languageOptions[0])?.focus();
-  } else if (restoreFocus) languageTrigger.focus();
+function createMenuController(menu, trigger, options) {
+  if (!menu || !trigger) return null;
+  let closeTimer = 0;
+  let transitionListener = null;
+
+  function cancelCloseCleanup() {
+    clearTimeout(closeTimer);
+    closeTimer = 0;
+    if (transitionListener) menu.removeEventListener("transitionend", transitionListener);
+    transitionListener = null;
+  }
+
+  function finishClose() {
+    if (menu.dataset.state !== "closing") return;
+    cancelCloseCleanup();
+    menu.dataset.state = "closed";
+    menu.hidden = true;
+    menu.inert = false;
+    menu.removeAttribute("aria-hidden");
+  }
+
+  function open() {
+    const reversing = menu.dataset.state === "closing";
+    cancelCloseCleanup();
+    menu.hidden = false;
+    menu.inert = false;
+    menu.removeAttribute("aria-hidden");
+    trigger.setAttribute("aria-expanded", "true");
+    if (!reversing) {
+      menu.dataset.state = "opening";
+      menu.getBoundingClientRect();
+    }
+    menu.dataset.state = "open";
+    const selected = options.find((option) => option.getAttribute("aria-checked") === "true");
+    (selected ?? options[0])?.focus();
+  }
+
+  function close(restoreFocus = true) {
+    if (menu.hidden || menu.dataset.state === "closed") return;
+    cancelCloseCleanup();
+    trigger.setAttribute("aria-expanded", "false");
+    menu.dataset.state = "closing";
+    menu.inert = true;
+    menu.setAttribute("aria-hidden", "true");
+    if (restoreFocus) trigger.focus();
+    transitionListener = (event) => {
+      if (event.target === menu && event.propertyName === "opacity") finishClose();
+    };
+    menu.addEventListener("transitionend", transitionListener);
+    closeTimer = setTimeout(finishClose, 240);
+  }
+
+  return {
+    close,
+    isOpen: () => !menu.hidden && menu.dataset.state !== "closing" && menu.dataset.state !== "closed",
+    open,
+    toggle: () => (!menu.hidden && menu.dataset.state !== "closing" ? close() : open()),
+  };
 }
 
-themeSwitch?.addEventListener("click", () => applyTheme(root.dataset.theme === "dark" ? "light" : "dark"));
-languageTrigger?.addEventListener("click", () => setLanguageMenu(languageMenu.hidden));
-for (const option of languageOptions) {
-  option.addEventListener("click", () => {
-    applyLocale(option.dataset.languageOption);
-    setLanguageMenu(false);
+const languageMenuController = createMenuController(languageMenu, languageTrigger, languageOptions);
+const themeMenuController = createMenuController(themeMenu, themeMenuTrigger, themeOptions);
+
+function bindMenuKeyboard(menu, options, controller) {
+  menu?.addEventListener("keydown", (event) => {
+    const index = options.indexOf(document.activeElement);
+    if (["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)) {
+      event.preventDefault();
+      const next = event.key === "Home"
+        ? 0
+        : event.key === "End"
+          ? options.length - 1
+          : (index + (event.key === "ArrowDown" ? 1 : -1) + options.length) % options.length;
+      options[next]?.focus();
+    }
+    if (event.key === "Escape") {
+      event.preventDefault();
+      controller?.close();
+    }
   });
 }
 
-languageMenu?.addEventListener("keydown", (event) => {
-  const index = languageOptions.indexOf(document.activeElement);
-  if (["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)) {
-    event.preventDefault();
-    const next = event.key === "Home"
-      ? 0
-      : event.key === "End"
-        ? languageOptions.length - 1
-        : (index + (event.key === "ArrowDown" ? 1 : -1) + languageOptions.length) % languageOptions.length;
-    languageOptions[next]?.focus();
-  }
-  if (event.key === "Escape") setLanguageMenu(false);
+themeSwitch?.addEventListener("click", () => {
+  themeMenuController?.close(false);
+  applyTheme(root.dataset.theme === "dark" ? "light" : "dark");
 });
+themeMenuTrigger?.addEventListener("click", () => themeMenuController?.toggle());
+for (const option of themeOptions) {
+  option.addEventListener("click", () => {
+    applyTheme(option.dataset.themeOption);
+    themeMenuController?.close();
+  });
+}
+languageTrigger?.addEventListener("click", () => languageMenuController?.toggle());
+for (const option of languageOptions) {
+  option.addEventListener("click", () => {
+    applyLocale(option.dataset.languageOption);
+    languageMenuController?.close();
+  });
+}
+
+bindMenuKeyboard(languageMenu, languageOptions, languageMenuController);
+bindMenuKeyboard(themeMenu, themeOptions, themeMenuController);
 
 document.addEventListener("click", (event) => {
-  if (languageMenu && !languageMenu.hidden && !event.target.closest(".language-control")) setLanguageMenu(false, false);
+  if (languageMenuController?.isOpen() && !event.target.closest(".language-control")) languageMenuController.close(false);
+  if (themeMenuController?.isOpen() && !event.target.closest(".theme-control")) themeMenuController.close(false);
 });
 
 media.addEventListener("change", () => {
@@ -170,11 +246,62 @@ function setupAccessPage() {
   const signInStatus = document.querySelector("[data-sign-in-status]");
   const recoveryForm = document.querySelector("[data-recovery-form]");
   const recoveryStatus = document.querySelector("[data-recovery-status]");
+  const authFixture = document.querySelector("[data-auth-fixture]");
+  const authFixtureSelect = document.querySelector("[data-auth-fixture-select]");
+  const authFixtureStatus = document.querySelector("[data-auth-fixture-status]");
   const reauthOpen = document.querySelector("[data-reauth-open]");
   const reauthDialog = document.querySelector("[data-reauth-dialog]");
   const reauthCancel = document.querySelector("[data-reauth-cancel]");
   const reauthForm = document.querySelector("[data-reauth-form]");
   const reauthStatus = document.querySelector("[data-reauth-status]");
+  let reauthCloseTimer = 0;
+  let reauthTransitionListener = null;
+
+  function cancelReauthCloseCleanup() {
+    clearTimeout(reauthCloseTimer);
+    reauthCloseTimer = 0;
+    if (reauthDialog && reauthTransitionListener) reauthDialog.removeEventListener("transitionend", reauthTransitionListener);
+    reauthTransitionListener = null;
+  }
+
+  function finishReauthClose() {
+    if (!reauthDialog || reauthDialog.dataset.state !== "closing") return;
+    cancelReauthCloseCleanup();
+    reauthDialog.dataset.state = "closed";
+    reauthDialog.close();
+    reauthDialog.inert = true;
+    reauthDialog.setAttribute("aria-hidden", "true");
+  }
+
+  function openReauth() {
+    if (!reauthDialog) return;
+    const reversing = reauthDialog.dataset.state === "closing";
+    cancelReauthCloseCleanup();
+    reauthDialog.inert = false;
+    reauthDialog.removeAttribute("aria-hidden");
+    if (!reauthDialog.open) {
+      reauthDialog.dataset.state = "opening";
+      reauthDialog.showModal();
+      reauthDialog.getBoundingClientRect();
+    } else if (!reversing) {
+      return;
+    }
+    reauthDialog.dataset.state = "open";
+    reauthDialog.querySelector("input")?.focus({ preventScroll: true });
+  }
+
+  function closeReauth() {
+    if (!reauthDialog?.open || reauthDialog.dataset.state === "closing") return;
+    cancelReauthCloseCleanup();
+    reauthDialog.dataset.state = "closing";
+    reauthDialog.inert = true;
+    reauthDialog.setAttribute("aria-hidden", "true");
+    reauthTransitionListener = (event) => {
+      if (event.target === reauthDialog && event.propertyName === "opacity") finishReauthClose();
+    };
+    reauthDialog.addEventListener("transitionend", reauthTransitionListener);
+    reauthCloseTimer = setTimeout(finishReauthClose, 260);
+  }
 
   function showRecovery(open) {
     if (!signInView || !recoveryView) return;
@@ -184,9 +311,29 @@ function setupAccessPage() {
     (open ? recoveryView : signInView).querySelector("h2")?.focus();
   }
 
+  function renderAuthFixture() {
+    if (!authFixture || !authFixtureSelect || !authFixtureStatus) return;
+    const state = authFixtureSelect.value || "idle";
+    const key = {
+      expired: "access.fixtureExpired",
+      idle: "access.fixtureIdle",
+      locked: "access.fixtureLocked",
+      offline: "access.fixtureOffline",
+      "provider-unavailable": "access.fixtureProviderUnavailable",
+      "session-expired": "access.fixtureSessionExpired",
+      throttled: "access.fixtureThrottled",
+      verified: "access.fixtureVerified",
+    }[state] ?? "access.fixtureIdle";
+    authFixture.dataset.fixtureState = state;
+    authFixtureStatus.textContent = text(key);
+  }
+
   recoveryOpen?.addEventListener("click", () => showRecovery(true));
   recoveryBack?.addEventListener("click", () => showRecovery(false));
   if (location.hash === "#recovery") showRecovery(true);
+  authFixtureSelect?.addEventListener("change", renderAuthFixture);
+  document.addEventListener("kin:localechange", renderAuthFixture);
+  renderAuthFixture();
 
   signInForm?.addEventListener("submit", (event) => {
     event.preventDefault();
@@ -211,15 +358,25 @@ function setupAccessPage() {
     recoveryStatus.focus();
   });
 
-  reauthOpen?.addEventListener("click", () => reauthDialog?.showModal());
-  reauthCancel?.addEventListener("click", () => reauthDialog?.close());
+  reauthOpen?.addEventListener("click", openReauth);
+  reauthCancel?.addEventListener("click", closeReauth);
   reauthForm?.addEventListener("submit", (event) => {
     event.preventDefault();
     reauthStatus.className = "form-error";
     reauthStatus.textContent = text("access.referenceError");
     reauthStatus.focus();
   });
-  reauthDialog?.addEventListener("close", () => reauthOpen?.focus());
+  reauthDialog?.addEventListener("cancel", (event) => {
+    event.preventDefault();
+    closeReauth();
+  });
+  reauthDialog?.addEventListener("close", () => {
+    cancelReauthCloseCleanup();
+    reauthDialog.dataset.state = "closed";
+    reauthDialog.inert = true;
+    reauthDialog.setAttribute("aria-hidden", "true");
+    reauthOpen?.focus();
+  });
 }
 
 function setupOnboardingPage() {
@@ -803,9 +960,53 @@ function setupSchedulingPage() {
   const empty = document.querySelector("[data-schedule-empty]");
   const events = [...document.querySelectorAll("[data-schedule-event]")];
   const overlayMedia = matchMedia("(max-width: 1100px)");
+  const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
   const baseMonday = new Date("2026-07-13T12:00:00");
   const sidebarStorageKey = "kin-reference-sidebar-collapsed-v1";
   let lastSidecarTrigger = sidecarTrigger;
+  let scrimCloseTimer = 0;
+  let scrimTransitionListener = null;
+
+  function cancelScrimClose() {
+    clearTimeout(scrimCloseTimer);
+    scrimCloseTimer = 0;
+    if (scrimTransitionListener) sidecarScrim.removeEventListener("transitionend", scrimTransitionListener);
+    scrimTransitionListener = null;
+  }
+
+  function finishScrimClose() {
+    if (sidecarScrim.dataset.state !== "closing") return;
+    cancelScrimClose();
+    sidecarScrim.dataset.state = "closed";
+    sidecarScrim.hidden = true;
+  }
+
+  function setSidecarScrim(open) {
+    cancelScrimClose();
+    if (open) {
+      sidecarScrim.hidden = false;
+      sidecarScrim.inert = false;
+      sidecarScrim.removeAttribute("aria-hidden");
+      sidecarScrim.dataset.state = "opening";
+      requestAnimationFrame(() => {
+        if (sidecarScrim.dataset.state === "opening") sidecarScrim.dataset.state = "open";
+      });
+      return;
+    }
+    if (sidecarScrim.hidden || sidecarScrim.dataset.state === "closed") {
+      sidecarScrim.dataset.state = "closed";
+      sidecarScrim.hidden = true;
+      return;
+    }
+    sidecarScrim.dataset.state = "closing";
+    sidecarScrim.inert = true;
+    sidecarScrim.setAttribute("aria-hidden", "true");
+    scrimTransitionListener = (event) => {
+      if (event.target === sidecarScrim && event.propertyName === "opacity") finishScrimClose();
+    };
+    sidecarScrim.addEventListener("transitionend", scrimTransitionListener);
+    scrimCloseTimer = window.setTimeout(finishScrimClose, reducedMotion.matches ? 90 : 220);
+  }
 
   function template(key, values = {}) {
     return Object.entries(values).reduce((value, [name, replacement]) => value.replaceAll(`{${name}}`, replacement), text(key));
@@ -905,7 +1106,7 @@ function setupSchedulingPage() {
     primary.inert = modal;
     sidebar.inert = modal;
     document.body.classList.toggle("schedule-modal-open", modal);
-    sidecarScrim.hidden = !modal;
+    setSidecarScrim(modal);
     if (modal) {
       sidecar.setAttribute("role", "dialog");
       sidecar.setAttribute("aria-modal", "true");
@@ -1225,5 +1426,7 @@ if (document.body.dataset.page === "support") setupSupportPage();
 if (document.body.dataset.page === "scheduling") setupSchedulingPage();
 
 addEventListener("keydown", (event) => {
-  if (event.key === "Escape" && languageMenu && !languageMenu.hidden) setLanguageMenu(false);
+  if (event.key !== "Escape") return;
+  if (languageMenuController?.isOpen()) languageMenuController.close();
+  if (themeMenuController?.isOpen()) themeMenuController.close();
 });

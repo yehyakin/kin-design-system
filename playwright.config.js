@@ -48,7 +48,7 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: "node scripts/build-site.mjs && node scripts/serve-site.mjs",
+    command: "npm run site:build && node scripts/serve-site.mjs",
     url: "http://127.0.0.1:4173/",
     reuseExistingServer: !process.env.CI,
     timeout: 30_000,

@@ -68,9 +68,23 @@ test("normal motion core controls expose visible state transitions", async ({ pa
   await expect(asyncButton).toHaveClass(/is-complete/, { timeout: 2_000 });
 });
 
+test("normal motion authentication dialogs retain an explicit exit phase", async ({ page }) => {
+  await page.goto("/examples/workspace-reference/core-components.html#authentication");
+  const trigger = page.getByRole("button", { name: "打开登录弹窗" });
+  await trigger.click();
+  const dialog = page.getByRole("dialog", { name: "登录后保存筛选视图" });
+  await expect(dialog).toHaveAttribute("data-state", "open");
+  const duration = await dialog.evaluate((element) => getComputedStyle(element).transitionDuration);
+  expect(duration.split(",").some((value) => value.trim() !== "0s")).toBe(true);
+  await dialog.getByRole("button", { name: "取消" }).click();
+  await expect(dialog).toHaveAttribute("data-state", "closing");
+  await expect(dialog).toBeHidden();
+  await expect(trigger).toBeFocused();
+});
+
 test("normal motion menus keep their exit phase and cancel stale cleanup on reopen", async ({ page }) => {
   await page.goto("/examples/workspace-reference/core-components.html#navigation");
-  const trigger = page.getByRole("button", { name: "更多操作" });
+  const trigger = page.locator("#navigation [data-menu-trigger]");
   const menu = page.locator(".sample-menu").first();
 
   await trigger.click();
@@ -122,6 +136,81 @@ test("normal motion Drawer rapid reversal ends in the latest requested state", a
   await expect(page.getByText("最后请求为打开；没有旧的关闭计时器覆盖当前状态。")).toBeVisible();
 });
 
+test("Motion Lab separates high-frequency keyboard invocation from occasional pointer motion", async ({ page }) => {
+  await page.goto("/examples/workspace-reference/motion.html");
+  const surface = page.locator("[data-frequency-surface]");
+  const search = page.locator("[data-frequency-search]");
+
+  await page.keyboard.press("Control+K");
+  await expect(surface).toBeVisible();
+  await expect(surface).toHaveAttribute("data-invocation", "keyboard");
+  await expect(surface).toHaveAttribute("data-state", "open");
+  await expect(search).toBeFocused();
+  await expect(surface.evaluate((element) => getComputedStyle(element).transitionDuration)).resolves.toBe("0s");
+
+  await page.keyboard.press("Escape");
+  await expect(surface).toBeHidden();
+  await page.locator("[data-frequency-pointer]").click();
+  await expect(surface).toBeVisible();
+  await expect(surface).toHaveAttribute("data-invocation", "pointer");
+  await expect(search).toBeFocused();
+  const pointerDuration = await surface.evaluate((element) => getComputedStyle(element).transitionDuration);
+  expect(pointerDuration.split(",").some((value) => value.trim() !== "0s")).toBe(true);
+});
+
+test("Motion Lab Tooltips delay the first pointer and make the sequence immediate", async ({ page }) => {
+  await page.goto("/examples/workspace-reference/motion.html");
+  const triggers = page.locator("[data-lab-tooltip-trigger]");
+  const firstTooltip = page.locator("#tooltip-copy");
+  const secondTooltip = page.locator("#tooltip-info");
+  const thirdTooltip = page.locator("#tooltip-archive");
+
+  await triggers.nth(0).hover();
+  await page.waitForTimeout(250);
+  expect(await firstTooltip.isHidden()).toBe(true);
+  await expect(firstTooltip).toBeVisible({ timeout: 700 });
+
+  await triggers.nth(1).hover();
+  await expect(secondTooltip).toBeVisible();
+  await expect(secondTooltip).toHaveAttribute("data-instant", "true");
+
+  await triggers.nth(2).focus();
+  await expect(thirdTooltip).toBeVisible();
+  await expect(thirdTooltip).toHaveAttribute("data-input", "keyboard");
+  await page.keyboard.press("Escape");
+  await expect(thirdTooltip).toBeHidden();
+  await triggers.nth(2).hover();
+  await expect(thirdTooltip).toBeHidden();
+  await page.mouse.move(0, 0);
+  await expect(thirdTooltip).toBeHidden();
+  await triggers.nth(0).focus();
+  await expect(firstTooltip).toBeVisible();
+});
+
+test("Motion Lab exposes slow review and deterministic gesture-settling evidence", async ({ page }) => {
+  await page.goto("/examples/workspace-reference/motion.html");
+  const slow = page.locator("[data-lab-speed]");
+  await slow.click();
+  await expect(slow).toHaveAttribute("aria-pressed", "true");
+  await expect(page.locator("body")).toHaveAttribute("data-review-speed", "slow");
+
+  const handle = page.locator("[data-gesture-handle]");
+  const sheet = page.locator("[data-gesture-sheet]");
+  await handle.scrollIntoViewIfNeeded();
+  const box = await handle.boundingBox();
+  expect(box).not.toBeNull();
+  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2 + 75, { steps: 5 });
+  await expect(handle).toHaveAttribute("data-captured", "true");
+  await page.mouse.up();
+  await expect(sheet).toHaveAttribute("data-state", "collapsed", { timeout: 4_000 });
+  await expect(page.getByRole("button", { name: "拖动或切换 Sheet" })).toHaveAttribute("aria-expanded", "false");
+
+  await page.locator("[data-gesture-toggle]").click();
+  await expect(sheet).toHaveAttribute("data-state", "expanded", { timeout: 4_000 });
+});
+
 test("normal motion streaming can be stopped without losing input", async ({ page }) => {
   await page.addInitScript(() => localStorage.setItem("kin-reference-theme", "light"));
   await page.goto("/examples/workspace-reference/advanced-components.html#ai-assistance");
@@ -150,16 +239,15 @@ test("normal motion coordinates Sidebar collapse and reversible Context Sidecar 
 
   const shell = page.locator("[data-schedule-shell]");
   const sidecar = page.locator("[data-schedule-sidecar]");
-  const shellDuration = await shell.evaluate((element) => getComputedStyle(element).transitionDuration);
+  const shellTransitionProperty = await shell.evaluate((element) => getComputedStyle(element).transitionProperty);
   const sidecarDuration = await sidecar.evaluate((element) => getComputedStyle(element).transitionDuration);
-  expect(shellDuration.split(",").some((value) => value.trim() !== "0s")).toBe(true);
+  expect(shellTransitionProperty.split(",").map((value) => value.trim())).not.toContain("grid-template-columns");
   expect(sidecarDuration.split(",").some((value) => value.trim() !== "0s")).toBe(true);
 
   const collapse = page.locator("[data-schedule-collapse]");
   await collapse.click();
   await collapse.click();
   await collapse.click();
-  await page.waitForTimeout(300);
   await expect(shell).toHaveAttribute("data-sidebar-collapsed", "true");
   await expect(collapse).toBeFocused();
 
@@ -171,5 +259,19 @@ test("normal motion coordinates Sidebar collapse and reversible Context Sidecar 
   await page.waitForTimeout(320);
   await expect(shell).toHaveAttribute("data-sidecar-open", "true");
   await expect(sidecar.evaluate((element) => getComputedStyle(element).transform)).resolves.toMatch(/matrix\(1, 0, 0, 1, 0, 0\)|none/);
+  await expect(sidecar).toBeVisible();
+
+  await page.setViewportSize({ width: 900, height: 760 });
+  const scrim = page.locator("[data-sidecar-scrim]");
+  await expect(scrim).toHaveAttribute("data-state", "open");
+  await expect(scrim).toHaveCSS("opacity", "1");
+
+  await page.locator("[data-sidecar-close]").click();
+  await expect(scrim).toHaveAttribute("data-state", "closing");
+  await page.locator("[data-sidecar-trigger]").evaluate((element) => element.click());
+  await expect(scrim).toHaveAttribute("data-state", /opening|open/);
+  await page.waitForTimeout(240);
+  await expect(scrim).toHaveAttribute("data-state", "open");
+  await expect(scrim).toHaveCSS("opacity", "1");
   await expect(sidecar).toBeVisible();
 });

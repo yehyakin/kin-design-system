@@ -18,7 +18,9 @@
     </script>
     <link rel="stylesheet" href="./styles.css" />
     <link rel="stylesheet" href="./states.css" />
+    <link rel="stylesheet" href="../shared/preference-controls.css" />
     <script src="./states.js" defer></script>
+    <script type="module" src="../shared/preference-controls.js"></script>
   </head>
   <body class="states-page">
     <a class="skip-link" href="#state-reference">跳到状态基准</a>
@@ -30,11 +32,7 @@
       </div>
       <div class="reference-actions">
         <button type="button" data-command-open>打开命令菜单 <kbd>⌘ K</kbd></button>
-        <div class="theme-control" role="group" aria-label="界面主题">
-          <button type="button" data-theme-value="light">日间</button>
-          <button type="button" data-theme-value="dark">夜间</button>
-          <button type="button" data-theme-value="system">系统</button>
-        </div>
+        <div class="kin-preference-controls" data-preference-controls><button type="button" class="kin-theme-switch" role="switch" data-theme-switch aria-checked="false" aria-label="切换为夜间模式"><span class="kin-theme-switch-icon"><i data-lucide="sun"></i></span><span class="kin-theme-switch-track" aria-hidden="true"><span class="kin-theme-switch-thumb"></span></span><span class="kin-theme-switch-icon"><i data-lucide="moon"></i></span></button><div class="kin-theme-menu-control"><button type="button" class="kin-theme-menu-trigger" data-theme-menu-trigger aria-haspopup="menu" aria-expanded="false" aria-label="外观选项"><i data-lucide="chevron-down"></i></button><div class="kin-theme-menu" data-theme-menu data-state="closed" role="menu" aria-label="外观选项" hidden><button type="button" role="menuitemradio" aria-checked="false" data-theme-preference="light"><i class="kin-theme-menu-item-icon" data-lucide="sun"></i><span>日间</span><i class="kin-theme-menu-check" data-lucide="check"></i></button><button type="button" role="menuitemradio" aria-checked="false" data-theme-preference="dark"><i class="kin-theme-menu-item-icon" data-lucide="moon"></i><span>夜间</span><i class="kin-theme-menu-check" data-lucide="check"></i></button><button type="button" role="menuitemradio" aria-checked="true" data-theme-preference="system"><i class="kin-theme-menu-item-icon" data-lucide="monitor"></i><span>跟随系统</span><i class="kin-theme-menu-check" data-lucide="check"></i></button></div></div></div>
         <button type="button" data-contrast-toggle aria-pressed="false">高对比</button>
       </div>
     </header>

@@ -2,7 +2,7 @@
 
 ## Decision
 
-Core candidate for compact feedback from user-initiated actions.
+Runtime-integrated adapter for the stable Toast contract. Use for compact feedback from user-initiated actions.
 
 ## Allowed
 
@@ -25,14 +25,16 @@ Core candidate for compact feedback from user-initiated actions.
 - Keep actions keyboard accessible and return focus appropriately.
 - Error messages state what failed and the available next step.
 - Verify stacking with Dialogs, Drawers and mobile safe areas.
+- Placement MUST be chosen for the product shell and known collision zones; it MUST NOT cover persistent navigation, task controls, virtual keyboards or mobile safe areas.
+- Reading direction and placement MUST be verified independently. RTL MUST NOT be inferred from a left or right placement alone.
 
-## Reference implementation
+## Runtime implementation
 
-The KIN showcase uses the official React Sonner package in an isolated, lazy-loaded island. React and Sonner are not part of the initial JavaScript bundle; they load after the first user action that requires temporary feedback. Theme changes update an already-mounted Toaster without producing a toast.
+[`@kin-design/react/sonner`](../packages/react/src/sonner.tsx) directly runs the official Sonner package. Sonner retains stacking, promise updates, dismissal, swipe, and transition behavior. KIN supplies the semantic `kinToast` operations, localized labels, a three-toast limit, Token styling, theme and direction mapping, four-edge mobile safe-area offsets, and recovery rules.
 
-The [workspace reference](../examples/workspace-reference/) demonstrates four approved patterns: reversible feedback, success, recoverable error, and a single loading toast updated in place when a task completes. These examples also verify bilingual labels, light and dark surfaces, mobile placement, and reduced motion.
+The [Integration Lab](../examples/workspace-reference/integrations.html#sonner) demonstrates success, undo, one Promise-backed loading toast updated in place, recoverable error with Retry, LTR and RTL, and all six Sonner placements: top-left, top-center, top-right, bottom-left, bottom-center, and bottom-right. The position selector is verification evidence, not a requirement that every product expose notification placement to users. The broader [workspace references](../examples/workspace-reference/) exercise compact feedback ownership, bilingual labels, and Reduced Motion.
 
-Consuming React products SHOULD mount one Toaster near the application root and call `toast()` from user-initiated operations. Non-React products SHOULD not add React only to copy this adapter; use a native-stack notification component that satisfies the same behavior contract instead.
+Consuming React products SHOULD mount one `KinToaster` near the application root and call `kinToast` only from user-initiated operations. Non-React products SHOULD not add React only to copy this adapter; use a native-stack notification component that satisfies the same behavior contract instead.
 
 ## Source
 

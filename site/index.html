@@ -46,7 +46,7 @@
       <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="docs-nav" aria-label="Open navigation"><i data-lucide="menu"></i></button>
       <div class="language-control" data-language-control>
         <button class="language-trigger" type="button" data-language-trigger aria-haspopup="menu" aria-expanded="false" aria-label="Choose language"><i data-lucide="languages"></i></button>
-        <div class="language-menu" data-language-menu role="menu" hidden>
+        <div class="language-menu" data-language-menu role="menu" data-state="closed" hidden>
           <a href="./" role="menuitem" lang="en" aria-current="page"><span>English</span><i data-lucide="check"></i></a>
           <a href="zh/" role="menuitem" lang="zh-CN" hreflang="zh-CN"><span>中文</span></a>
         </div>
@@ -167,7 +167,8 @@
           <nav class="component-directory" aria-label="Runnable component references">
             <a href="examples/workspace-reference/core-components.html#authentication"><span class="component-directory-icon"><i data-lucide="log-in"></i></span><span><strong>Authentication and access</strong><small>Sign-in form, password visibility, in-page reauthentication, and OTP boundaries.</small></span><b>Open</b></a>
             <a href="examples/workspace-reference/core-components.html#actions"><span class="component-directory-icon"><i data-lucide="list-checks"></i></span><span><strong>Controls and forms</strong><small>Actions, selection, fields, upload, navigation, data display, and states.</small></span><b>Open</b></a>
-            <a href="examples/workspace-reference/motion.html"><span class="component-directory-icon"><i data-lucide="circle-play"></i></span><span><strong>Motion Lab</strong><small>Stable icon slots, animated menus, async completion, Sonner tasks, disclosure, and reversible Drawer motion.</small></span><b>Open</b></a>
+            <a href="examples/workspace-reference/motion.html"><span class="component-directory-icon"><i data-lucide="circle-play"></i></span><span><strong>Motion Lab</strong><small>Frequency-aware invocation, Tooltip sequences, Sonner tasks, reversible Drawer motion, gesture physics, and slow review.</small></span><b>Open</b></a>
+            <a href="examples/workspace-reference/integrations.html"><span class="component-directory-icon"><i data-lucide="blocks"></i></span><span><strong>Runtime Integration Lab</strong><small>Official Sonner, NumberFlow, cmdk, Virtuoso, dnd kit, input-otp, and Liveline engines under KIN contracts.</small></span><b>Open</b></a>
             <a href="examples/workspace-reference/core-components.html#overlays"><span class="component-directory-icon"><i data-lucide="panel-right-open"></i></span><span><strong>Overlays and inspector</strong><small>Dialog, spatial Drawer, Popover, focus containment, and reduced motion.</small></span><b>Open</b></a>
             <a href="examples/workspace-reference/advanced-components.html"><span class="component-directory-icon"><i data-lucide="bot"></i></span><span><strong>AI and review workflows</strong><small>Evidence, approval, execution scope, media, persistent tasks, and charts.</small></span><b>Open</b></a>
           </nav>
@@ -260,7 +261,8 @@ checkpoint before coding; do not implement a draft or unresolved workflow.</code
             <a class="resource-link" href="tokens/kin.figma.variables.json"><strong>Figma Variables</strong><span>Create-only payload with light, dark, and high-contrast modes.</span><b>Download</b></a>
             <a class="resource-link" href="examples/workspace-reference/states.html"><strong>State reference</strong><span>Inputs, data rows, feedback, dialog, focus, and Command Menu behavior.</span><b>Open</b></a>
             <a class="resource-link" href="examples/workspace-reference/core-components.html"><strong>Core component reference</strong><span>Runnable actions, forms, navigation, data, feedback, progress, and overlay contracts.</span><b>Open</b></a>
-            <a class="resource-link" href="examples/workspace-reference/motion.html"><strong>Motion Lab</strong><span>Interruptible Button, Menu, Popover, Disclosure, Sonner, and responsive Drawer behavior.</span><b>Open</b></a>
+            <a class="resource-link" href="examples/workspace-reference/motion.html"><strong>Motion Lab</strong><span>Frequency and input paths, Tooltip sequences, interruptible surfaces, Sonner, gesture settling, slow review, and responsive Drawer behavior.</span><b>Open</b></a>
+            <a class="resource-link" href="examples/workspace-reference/integrations.html"><strong>Runtime Integration Lab</strong><span>Operate the private pre-release adapters and inspect their upstream/KIN ownership boundary.</span><b>Open</b></a>
             <a class="resource-link" href="examples/workspace-reference/advanced-components.html"><strong>AI and professional-workflow reference</strong><span>Deterministic Composer, evidence, review, scope, media, durable task, and accessible chart states.</span><b>Open</b></a>
             <a class="resource-link" href="https://github.com/yehyakin/kin-design-system/blob/main/principles/verification.md"><strong>Verification evidence</strong><span>Boundaries for automated checks, screenshots, browser smoke, zoom, RTL, Forced Colors, touch, and screen-reader review.</span><b>Read</b></a>
             <a class="resource-link" href="https://github.com/yehyakin/kin-design-system/blob/main/components/micro-interactions.md"><strong>Micro-interactions</strong><span>Paired states, committed results, progress, disclosures, and reduced-motion behavior.</span><b>Read</b></a>
@@ -287,7 +289,7 @@ checkpoint before coding; do not implement a draft or unresolved workflow.</code
     </aside>
   </div>
 
-  <dialog class="command-dialog" data-command-dialog aria-label="Search KIN">
+  <dialog class="command-dialog" data-command-dialog data-state="closed" aria-label="Search KIN">
     <div class="command-search"><input type="search" data-command-search placeholder="Search sections and resources" aria-label="Search commands"></div>
     <div class="command-list">
       <div class="command-group-label">Sections</div>

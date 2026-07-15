@@ -54,6 +54,8 @@ Under normal motion:
 - interactive transitions SHOULD use the KIN timing and easing rules;
 - animation MUST NOT delay input, hide a committed result, or manufacture progress;
 - continuous animation MUST have a task reason.
+- high-frequency and keyboard-priority paths MUST be exercised repeatedly; surface availability and focus MUST not wait for entrance motion;
+- rapid reversal MUST end in the latest requested state without stale timers, remounts or focus restoration from an older state.
 
 Under reduced motion:
 
@@ -63,6 +65,19 @@ Under reduced motion:
 - disabling animation MUST NOT disable the underlying action.
 
 Theme, language, resize, remount, and virtualized-row changes MUST NOT replay value or completion animation as if new work occurred.
+
+### Manual motion-craft review
+
+Automated state tests do not establish motion quality. A release that changes motion Tokens, temporary surfaces, coordinated state transitions or gestures SHOULD include a recorded manual review that covers:
+
+1. normal speed for perceived responsiveness and task interruption;
+2. `4×` slow mode or browser animation playback at approximately 10–25% for first-frame response, transform origin and coordinated property timing;
+3. frame-by-frame inspection when opacity, transform, color, clipping or multiple surfaces must land together;
+4. repeated invocation for high-frequency paths, including keyboard open/close and adjacent Tooltip scanning;
+5. `open → close → open` and inverse pressure tests;
+6. normal and reduced-motion outcomes with the same final state and focus behavior.
+
+Lab-only slow mode is review instrumentation. It MUST NOT become a production motion preference or Token.
 
 ## Zoom and reflow
 
@@ -143,6 +158,17 @@ Automated target-size checks MUST cover visible interactive controls at narrow v
 - bottom sheets and drawers respect safe areas;
 - hover-only information has a focus and touch path;
 - pointer precision is not required for sliders, charts, resize handles, or drag handles.
+
+Gesture-driven controls additionally require a physical-device review when a release claims their feel or momentum quality. Record:
+
+- device, operating system, browser and refresh-rate class where known;
+- pointer or touch input used;
+- grab-offset continuity, scroll arbitration and pointer capture;
+- slow drag, quick flick, reversal, cancellation and boundary over-drag;
+- velocity handoff, projected target and reduced-motion settle;
+- non-gesture Close, keyboard and recovery alternatives.
+
+Playwright MAY prove state, capture and cleanup. It MUST NOT be described as proof that gesture physics feel correct on hardware.
 
 ## Verification record
 

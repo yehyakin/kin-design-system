@@ -38,6 +38,14 @@ await build({
   chunkNames: "chunks/[name]-[hash]",
 });
 
+await build({
+  entryPoints: [path.join(root, "packages", "react", "src", "styles.css")],
+  outfile: path.join(output, "assets", "kin-react.css"),
+  bundle: true,
+  target: ["es2022"],
+  minify: true,
+});
+
 fs.rmSync(path.join(output, "assets", "sonner-island.js"), { force: true });
 
 await build({
@@ -45,8 +53,21 @@ await build({
     path.join(root, "examples", "workspace-reference", "reference.js"),
     path.join(root, "examples", "workspace-reference", "core-components.js"),
     path.join(root, "examples", "workspace-reference", "motion-reference.js"),
+    path.join(root, "examples", "workspace-reference", "integration-reference.jsx"),
   ],
   outdir: path.join(output, "examples", "workspace-reference"),
+  bundle: true,
+  splitting: true,
+  format: "esm",
+  target: ["es2022"],
+  minify: true,
+  entryNames: "[name]",
+  chunkNames: "chunks/[name]-[hash]",
+});
+
+await build({
+  entryPoints: [path.join(root, "examples", "shared", "preference-controls.js")],
+  outdir: path.join(output, "examples", "shared"),
   bundle: true,
   splitting: true,
   format: "esm",

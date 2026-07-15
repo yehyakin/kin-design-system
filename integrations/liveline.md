@@ -30,6 +30,14 @@ Conditional. Appropriate for small, continuously updating React charts when real
 - Reduced motion lowers interpolation or uses discrete refresh.
 - Test high-DPI, resize, empty, paused and reconnect states.
 
+## Runtime implementation
+
+[`@kin-design/react/experimental/liveline`](../packages/react/src/liveline.tsx) directly renders the official Liveline Canvas engine. Liveline retains plotting, interpolation and its own `prefers-reduced-motion` behavior. KIN applies a restrained single-series preset, disables decorative effects, derives theme color, exposes the active motion preference for evidence, and requires a text summary plus data-table fallback. A product MAY set `paused` for a real paused-data state; KIN MUST NOT misuse that state as a replacement for Liveline's native Reduced Motion path.
+
+`LivelinePoint.time` follows Liveline's Unix-seconds contract. Adapters and fixtures MUST NOT pass JavaScript millisecond timestamps. The KIN table fallback uses the same `formatTime` and `formatValue` callbacks as the Canvas so visual and non-visual readings remain consistent.
+
+The [Integration Lab](../examples/workspace-reference/integrations.html#liveline) verifies Canvas output, theme-aware styling, normal motion, native Reduced Motion handling and structured fallback. High-DPI, reconnect, keyboard data exploration and real streaming transport remain product evidence; the component remains `candidate`.
+
 ## Source
 
 [Liveline](https://github.com/benjitaylor/liveline)

@@ -125,6 +125,9 @@ Acceptance:
 
 - Global shortcuts do not trigger while the user is typing in an editable field.
 - Server-filtered results do not receive conflicting client filtering.
+- Keyboard invocation makes the surface and search input available immediately; it does not wait for transform, scale, opacity or a delayed mount.
+- A pointer path MAY use no more than `100ms` opacity feedback when it produces the same focus and result state.
+- Rapid close and reopen ends in the last requested state without stale timers hiding or refocusing the current surface.
 - Closing restores focus to the trigger or prior active element.
 
 ## Activity row

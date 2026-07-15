@@ -22,10 +22,14 @@
       <a class="flow-brand" href="../../"><strong>KIN</strong><span data-i18n="common.reference">页面流程参考</span></a>
       <div class="flow-preferences">
         <div class="language-control">
-          <button class="icon-control" type="button" data-language-trigger aria-expanded="false" aria-controls="language-menu" data-i18n-aria="common.language"><i data-lucide="languages" aria-hidden="true"></i></button>
-          <div class="language-menu" id="language-menu" data-language-menu role="menu" hidden><button type="button" role="menuitemradio" aria-checked="true" data-language-option="zh-CN">中文</button><button type="button" role="menuitemradio" aria-checked="false" data-language-option="en">English</button></div>
+          <button class="icon-control" type="button" data-language-trigger aria-haspopup="menu" aria-expanded="false" aria-controls="language-menu" data-i18n-aria="common.language"><i data-lucide="languages" aria-hidden="true"></i></button>
+          <div class="language-menu preference-menu" id="language-menu" data-language-menu role="menu" data-state="closed" hidden><button type="button" role="menuitemradio" aria-checked="true" data-language-option="zh-CN">中文</button><button type="button" role="menuitemradio" aria-checked="false" data-language-option="en">English</button></div>
         </div>
-        <button class="icon-control theme-switch" type="button" role="switch" aria-checked="false" data-theme-switch data-i18n-aria="common.themeDark"><i class="theme-sun" data-lucide="sun" aria-hidden="true"></i><i class="theme-moon" data-lucide="moon" aria-hidden="true"></i></button>
+        <div class="theme-control">
+          <button class="theme-switch canonical-theme-switch" type="button" role="switch" aria-checked="false" data-theme-switch data-i18n-aria="common.themeDark"><span class="theme-switch-icon"><i class="theme-sun" data-lucide="sun" aria-hidden="true"></i></span><span class="theme-switch-track" aria-hidden="true"><span></span></span><span class="theme-switch-icon"><i class="theme-moon" data-lucide="moon" aria-hidden="true"></i></span></button>
+          <button class="icon-control theme-menu-trigger" type="button" data-theme-menu-trigger aria-haspopup="menu" aria-expanded="false" aria-controls="theme-menu" data-i18n-aria="common.themeMenu"><i data-lucide="chevron-down" aria-hidden="true"></i></button>
+          <div class="theme-menu preference-menu" id="theme-menu" data-theme-menu role="menu" data-state="closed" hidden><button type="button" role="menuitemradio" aria-checked="false" data-theme-option="light" data-i18n="common.themeLightChoice">日间模式</button><button type="button" role="menuitemradio" aria-checked="false" data-theme-option="dark" data-i18n="common.themeDarkChoice">夜间模式</button><button type="button" role="menuitemradio" aria-checked="true" data-theme-option="system" data-i18n="common.themeSystemChoice">跟随系统</button></div>
+        </div>
       </div>
     </header>
 
@@ -64,6 +68,7 @@
     <script type="application/json" data-i18n-dictionary>
       {
         "zh-CN": {
+          "common.themeMenu":"选择外观","common.themeLightChoice":"日间模式","common.themeDarkChoice":"夜间模式","common.themeSystemChoice":"跟随系统",
           "common.direction":"ltr","common.reference":"页面流程参考","common.language":"切换语言","common.themeDark":"切换到夜间模式","common.themeLight":"切换到日间模式","meta.title":"KIN 系统状态参考","system.title":"系统与恢复","system.sessionNav":"会话失效","system.forbiddenNav":"权限不足","system.notFoundNav":"对象不存在","system.conflictNav":"内容冲突","system.offlineNav":"离线","system.rateLimitNav":"请求过多","system.serverNav":"服务错误","system.codeLabel":"状态代码","system.detailScope":"恢复范围","system.detailScopeValue":"当前对象与导航状态","system.detailTime":"记录时间","system.detailId":"参考 ID","system.referenceAction":"参考操作已记录；实际产品必须连接真实恢复路径。","system.referenceSecondary":"参考次要操作已记录；用户上下文保持不变。",
           "system.session.title":"会话已失效","system.session.body":"为了保护当前工作区，系统需要重新确认你的身份。","system.session.preservation":"当前页面位置和未提交的本地更改会保留。","system.session.primary":"重新登录","system.session.secondary":"返回只读视图","system.session.code":"401",
           "system.forbidden.title":"你没有执行此操作的权限","system.forbidden.body":"当前角色可以查看这条记录，但不能更改风险状态。","system.forbidden.preservation":"记录内容保持可见；系统不会丢弃你的导航上下文。","system.forbidden.primary":"请求权限","system.forbidden.secondary":"返回记录","system.forbidden.code":"403",
@@ -74,6 +79,7 @@
           "system.server.title":"服务暂时不可用","system.server.body":"系统没有完成当前请求。这个状态不代表你的操作已经提交。","system.server.preservation":"保留输入和任务上下文，重试时避免重复创建不可逆操作。","system.server.primary":"重试请求","system.server.secondary":"复制参考 ID","system.server.code":"5XX"
         },
         "en": {
+          "common.themeMenu":"Choose appearance","common.themeLightChoice":"Light","common.themeDarkChoice":"Dark","common.themeSystemChoice":"System",
           "common.direction":"ltr","common.reference":"Page flow reference","common.language":"Change language","common.themeDark":"Switch to dark theme","common.themeLight":"Switch to light theme","meta.title":"KIN system state reference","system.title":"System and recovery","system.sessionNav":"Session expired","system.forbiddenNav":"Permission denied","system.notFoundNav":"Record not found","system.conflictNav":"Content conflict","system.offlineNav":"Offline","system.rateLimitNav":"Too many requests","system.serverNav":"Service error","system.codeLabel":"Status code","system.detailScope":"Recovery scope","system.detailScopeValue":"Current record and navigation state","system.detailTime":"Recorded at","system.detailId":"Reference ID","system.referenceAction":"Reference action recorded; a real product must connect an actual recovery path.","system.referenceSecondary":"Reference secondary action recorded; user context remains unchanged.",
           "system.session.title":"Your session has expired","system.session.body":"The system needs to verify your identity again before restoring this workspace.","system.session.preservation":"The current page position and unsaved local changes remain available.","system.session.primary":"Sign in again","system.session.secondary":"Return in read-only mode","system.session.code":"401",
           "system.forbidden.title":"You do not have permission for this action","system.forbidden.body":"Your current role can view this record but cannot change its risk state.","system.forbidden.preservation":"The record remains visible and your navigation context is not discarded.","system.forbidden.primary":"Request access","system.forbidden.secondary":"Return to record","system.forbidden.code":"403",

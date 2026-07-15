@@ -91,6 +91,20 @@ List the interactions that prove the workflow, such as search, row selection, In
 
 List the realistic states that will be rendered. A state is not covered because a component documentation page contains an example of it.
 
+### Runtime integration decision
+
+When a workflow uses a documented third-party runtime, the brief MUST record:
+
+- the exact user problem and why the existing project component is insufficient;
+- whether the project keeps its existing official-package integration or evaluates a pinned `@kin-design/react` subpath;
+- the KIN component maturity, because `runtime-integrated` does not mean `stable`;
+- which upstream engine behavior, especially animation and direct manipulation, remains unchanged;
+- product-owned data, permissions, network, persistence, error, recovery, analytics, and localization work;
+- bundle, SSR/hydration, theme, keyboard, touch, Reduced Motion, and accessibility evidence;
+- the previous component boundary and tested rollback path.
+
+The brief MUST NOT install every integrated package or replace a working local adapter solely to make KIN adoption visible.
+
 ### Prohibited substitutions
 
 Record the page-level shortcuts that would make the implementation fail even if its Tokens are correct. At minimum, reject:
@@ -138,6 +152,7 @@ Persistent context:
 Surface and density strategy:
 Narrow-screen priority:
 Required states and interactions:
+Runtime integration decisions:
 Prohibited substitutions:
 Evidence and rollback:
 ```

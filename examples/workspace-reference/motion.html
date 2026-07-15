@@ -34,16 +34,44 @@
       <div class="reference-actions">
         <a class="reference-back icon-action" href="./core-components.html#motion"><i data-lucide="blocks"></i><span>核心组件</span></a>
         <a class="reference-back icon-action" href="./index.html"><i data-lucide="panel-left"></i><span>工作台</span></a>
-        <button type="button" class="icon-only-control" data-lab-theme aria-label="切换到日间模式">
-          <span class="motion-icon-slot" aria-hidden="true"><i data-lucide="moon" data-icon-state="dark"></i><i data-lucide="sun" data-icon-state="light"></i></span>
-        </button>
+        <button type="button" class="icon-action" data-lab-speed aria-pressed="false"><i data-lucide="timer"></i><span>4× 慢速</span></button>
+        <div class="theme-control motion-theme-control" data-lab-theme-control>
+          <button type="button" class="theme-switch" role="switch" data-lab-theme aria-checked="true" aria-label="切换到日间模式">
+            <span class="theme-switch-icon"><i data-lucide="sun" aria-hidden="true"></i></span>
+            <span class="theme-switch-track" aria-hidden="true"><span></span></span>
+            <span class="theme-switch-icon"><i data-lucide="moon" aria-hidden="true"></i></span>
+          </button>
+          <button type="button" class="icon-only-control theme-menu-trigger" data-lab-theme-menu-trigger aria-haspopup="menu" aria-expanded="false" aria-label="选择外观">
+            <i data-lucide="chevron-down" aria-hidden="true"></i>
+          </button>
+          <div class="language-menu theme-menu motion-theme-menu" data-lab-theme-menu role="menu" data-state="closed" hidden>
+            <button type="button" role="menuitemradio" aria-checked="false" data-lab-theme-preference="light"><span>日间模式</span><i data-lucide="check" aria-hidden="true"></i></button>
+            <button type="button" role="menuitemradio" aria-checked="false" data-lab-theme-preference="dark"><span>夜间模式</span><i data-lucide="check" aria-hidden="true"></i></button>
+            <button type="button" role="menuitemradio" aria-checked="true" data-lab-theme-preference="system"><span>跟随系统</span><i data-lucide="check" aria-hidden="true"></i></button>
+          </div>
+        </div>
       </div>
     </header>
 
     <main id="motion-lab" class="reference-main motion-lab" tabindex="-1">
       <section class="motion-lab-intro" aria-labelledby="motion-lab-title">
         <div><p class="motion-kicker">State before spectacle</p><h2 id="motion-lab-title">动效用来解释状态、结果与空间关系</h2><p>每个示例保留稳定几何、键盘路径和减弱动效替代。它们是行为证据，不是可直接复制的运行时组件包。</p></div>
-        <dl class="motion-preference"><div><dt>系统偏好</dt><dd data-motion-preference>正在读取</dd></div><div><dt>空间位移</dt><dd data-motion-travel>正在读取</dd></div></dl>
+        <dl class="motion-preference"><div><dt>系统偏好</dt><dd data-motion-preference>正在读取</dd></div><div><dt>空间位移</dt><dd data-motion-travel>正在读取</dd></div><div><dt>审查速度</dt><dd data-motion-review-speed>1× 正常</dd></div></dl>
+      </section>
+
+      <section aria-labelledby="frequency-motion-title">
+        <header class="reference-section-heading"><div><h2 id="frequency-motion-title">频率与调用方式</h2><p>高频键盘路径立即提供输入；偶尔使用的指针路径最多保留极短透明度反馈。两条路径共享同一状态与焦点结果。</p></div><span>Frequency and input</span></header>
+        <div class="frequency-demo">
+          <div class="frequency-actions">
+            <button type="button" class="icon-action" data-frequency-keyboard aria-controls="frequency-surface" aria-expanded="false"><i data-lucide="keyboard"></i><span>键盘优先</span><kbd>Ctrl K</kbd></button>
+            <button type="button" class="icon-action" data-frequency-pointer aria-controls="frequency-surface" aria-expanded="false"><i data-lucide="mouse-pointer-2"></i><span>偶尔指针</span></button>
+          </div>
+          <div id="frequency-surface" class="frequency-surface" data-frequency-surface data-state="closed" data-invocation="keyboard" role="dialog" aria-label="调用方式演示" hidden>
+            <label for="frequency-search">搜索对象或命令</label>
+            <div><i data-lucide="search"></i><input id="frequency-search" data-frequency-search type="search" autocomplete="off" placeholder="输入后无需等待入场动效"><button type="button" class="icon-only-control" data-frequency-close aria-label="关闭调用方式演示"><i data-lucide="x"></i></button></div>
+          </div>
+          <p class="frequency-status" data-frequency-status role="status">等待调用。键盘路径应在同一交互任务中聚焦搜索。</p>
+        </div>
       </section>
 
       <section aria-labelledby="control-motion-title">
@@ -70,6 +98,15 @@
           <button type="button" class="icon-action disclosure-trigger" aria-expanded="false" aria-controls="lab-details" data-lab-disclosure><i data-lucide="chevron-down"></i><span>展开影响说明</span></button>
         </div>
         <div id="lab-details" class="motion-disclosure lab-disclosure" data-state="closed" aria-hidden="true" inert><p>布局密度、列顺序和筛选条件会保存在当前视图；其他用户的视图不会变化。</p></div>
+        <div class="tooltip-sequence" data-tooltip-group aria-labelledby="tooltip-sequence-title">
+          <div><strong id="tooltip-sequence-title">Tooltip 连续浏览</strong><p>第一次指针停留会延迟；随后浏览相邻控件立即显示。键盘焦点始终即时。</p></div>
+          <div class="tooltip-toolbar" role="toolbar" aria-label="对象工具">
+            <span class="lab-tooltip-item"><button type="button" class="icon-only-control" aria-label="复制对象链接" aria-describedby="tooltip-copy" data-lab-tooltip-trigger><i data-lucide="copy"></i></button><span id="tooltip-copy" class="lab-tooltip" role="tooltip" data-state="closed" hidden>复制对象链接</span></span>
+            <span class="lab-tooltip-item"><button type="button" class="icon-only-control" aria-label="查看对象信息" aria-describedby="tooltip-info" data-lab-tooltip-trigger><i data-lucide="info"></i></button><span id="tooltip-info" class="lab-tooltip" role="tooltip" data-state="closed" hidden>查看对象信息</span></span>
+            <span class="lab-tooltip-item"><button type="button" class="icon-only-control" aria-label="归档当前对象" aria-describedby="tooltip-archive" data-lab-tooltip-trigger><i data-lucide="archive"></i></button><span id="tooltip-archive" class="lab-tooltip" role="tooltip" data-state="closed" hidden>归档当前对象</span></span>
+          </div>
+          <p class="tooltip-status" data-tooltip-status role="status">尚未显示 Tooltip。</p>
+        </div>
       </section>
 
       <section aria-labelledby="spatial-motion-title">
@@ -78,11 +115,22 @@
           <div class="drawer-stage-copy"><span>当前对象</span><strong>同步规则 / SYNC-024</strong><p>打开属性不会改变主工作区的滚动位置或当前选择。</p></div>
           <button type="button" class="primary-action icon-action" data-lab-drawer-open aria-controls="motion-drawer" aria-expanded="false"><i data-lucide="panel-right-open"></i><span>打开属性</span></button>
         </div>
+        <div class="gesture-reference" aria-labelledby="gesture-reference-title">
+          <div class="gesture-copy"><span>直接操控参考</span><strong id="gesture-reference-title">拖动 Sheet 手柄</strong><p>约 10px 后接管手势；松手时使用当前速度和投影选择落点。按钮仍是完整替代路径。</p></div>
+          <div class="gesture-stage" data-gesture-stage>
+            <div id="gesture-sheet" class="gesture-sheet" data-gesture-sheet data-state="expanded">
+              <button type="button" class="gesture-handle" data-gesture-handle aria-label="拖动或切换 Sheet" aria-controls="gesture-sheet" aria-expanded="true"><i data-lucide="grip-horizontal"></i></button>
+              <div><strong>检测任务属性</strong><p>指针离开手柄后仍保持捕获；越过边界会逐渐增加阻力。</p></div>
+              <button type="button" class="icon-action" data-gesture-toggle aria-controls="gesture-sheet" aria-expanded="true"><i data-lucide="move-vertical"></i><span>收起 Sheet</span></button>
+            </div>
+          </div>
+          <p class="gesture-status" data-gesture-status role="status">Sheet 已展开；等待拖动。</p>
+        </div>
       </section>
 
       <section aria-labelledby="motion-boundaries-title">
         <header class="reference-section-heading"><div><h2 id="motion-boundaries-title">边界</h2><p>动效完成不等于业务完成；Agent 仍需连接真实操作、错误与回滚。</p></div><span>Implementation boundary</span></header>
-        <div class="motion-boundary-list"><p><strong>允许：</strong>短按压反馈、状态图标交替、锚定浮层、空间一致的 Drawer、真实任务进度。</p><p><strong>禁止：</strong>Hover 伪装成功、默认弹跳、装饰性循环、全屏入场、用动画隐藏延迟或证据不足。</p></div>
+        <div class="motion-boundary-list"><p><strong>允许：</strong>短按压反馈、状态图标交替、锚定浮层、空间一致的 Drawer、真实任务进度、带替代路径的直接操控。</p><p><strong>禁止：</strong>Hover 伪装成功、默认弹跳、装饰性循环、全屏入场、用动画隐藏延迟或证据不足。</p></div>
       </section>
     </main>
 

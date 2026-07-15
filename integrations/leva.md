@@ -27,6 +27,12 @@ Development only. Leva may accelerate visual calibration but must never become t
 - SSR and hydration remain stable.
 - Tuning does not mutate real user preferences.
 
+## Runtime implementation
+
+[`@kin-design/react/dev/leva`](../packages/react/src/leva.tsx) directly renders the official Leva panel with a KIN development theme. The adapter lives behind a dedicated development-only export; package bundle tests verify that Leva is absent from root, stable and experimental production subpaths.
+
+The public [Integration Lab](../examples/workspace-reference/integrations.html#leva) documents this boundary but intentionally does not import Leva.
+
 ## Source
 
 [Leva](https://github.com/pmndrs/leva)

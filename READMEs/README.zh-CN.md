@@ -114,7 +114,7 @@ KIN 为常见问题提供一套共用答案：
 
 KIN 核心仓库采用 contract-first。它交付设计与交互合同、生成 Token、无框架参考页、验证工具、Agent Skill 和接入证据格式。
 
-KIN 目前不交付已发布的 Figma Component Library，也不交付运行时组件包。Figma 支持目前指 Variables 互操作；生产组件仍由每个接入项目拥有。未来 Figma Library 或 `@kin/react` 一类包需要满足的审批门禁见 [`DELIVERY.md`](../DELIVERY.md)。
+KIN 目前不交付已发布的 Figma Component Library，也不发布通用运行时组件包。Figma 支持目前指 Variables 互操作；生产组件仍由每个接入项目拥有。仓库内的私有预发布 `@kin-design/react` 是经过隔离的 React 集成实验室，不等于稳定发布或完成接入。未来 Figma Library 或公开运行时包需要满足的审批门禁见 [`DELIVERY.md`](../DELIVERY.md)。
 
 ## 使用 KIN 的方式
 
@@ -286,7 +286,9 @@ KIN 建议按照下面的顺序解决界面问题：
 
 ## 可选 UI 库
 
-组件接入文档会说明某个库什么时候有用、什么时候应该跳过。设计合同本身不要求安装这些包；展示站使用 Lucide 和延迟加载的 Sonner 交互岛作为经过测试的参考实现，接入项目仍应根据自己的技术栈和已有组件决定依赖。
+组件接入文档会说明某个库什么时候有用、什么时候应该跳过。设计合同本身不要求安装这些包。对于 React 产品，KIN 已建立私有预发布集成实验室，直接运行官方 Sonner、NumberFlow、cmdk、React Virtuoso、dnd kit、input-otp、Liveline 与 Leva 包；KIN 只适配语义、Token、主题、无障碍边界和产品规则，不重写成熟项目的动效或行为引擎。
+
+可以打开[运行时集成实验室](../examples/workspace-reference/integrations.html)直接操作真实适配。[`integrations/catalog.md`](../integrations/catalog.md) 记录运行时集成状态；[`components/catalog.md`](../components/catalog.md) 仍是 KIN 组件成熟度的唯一事实来源。上游包已集成不代表候选组件已经稳定，私有包也不是通用依赖或完成接入的证明。
 
 | 组件库 | 适合用途 | 不需要使用的情况 |
 |---|---|---|
@@ -336,6 +338,7 @@ KIN 建议按照下面的顺序解决界面问题：
 | [`examples/workspace-reference/`](../examples/workspace-reference/) | 无框架、支持明暗主题和响应式的视觉基准页 |
 | [`examples/workspace-reference/core-components.html`](../examples/workspace-reference/core-components.html) | 登录、控件、动效、反馈、数据与浮层的可运行参考页 |
 | [`examples/workspace-reference/motion.html`](../examples/workspace-reference/motion.html) | 稳定图标槽、菜单进退、Sonner 任务、响应式 Drawer、快速反向与减弱动效的 Motion Lab |
+| [`examples/workspace-reference/integrations.html`](../examples/workspace-reference/integrations.html) | 可操作的官方 Sonner、NumberFlow、cmdk、React Virtuoso、dnd kit、input-otp 与 Liveline 运行时，以及 Leva 开发边界 |
 | [`examples/workspace-reference/advanced-components.html`](../examples/workspace-reference/advanced-components.html) | AI、审核、持久任务、媒体与可访问图表的确定性本地参考页 |
 | [`patterns/`](../patterns/) | 信息、情报、电商和工程界面的产品合同 |
 | [`examples/product-patterns/`](../examples/product-patterns/) | 信息、电商和工程产品的差异化参考页 |
@@ -348,6 +351,9 @@ KIN 建议按照下面的顺序解决界面问题：
 | [`principles/`](../principles/) | 交互、视觉检查、层级、密度和构图 |
 | [`principles/verification.md`](../principles/verification.md) | 动效、浏览器、缩放、本地化、RTL、Forced Colors、触控和读屏验证中的自动与人工证据边界 |
 | [`integrations/`](../integrations/) | 可选 UI 库的使用规则 |
+| [`integrations/catalog.md`](../integrations/catalog.md) | 运行时集成登记与上游引擎/KIN 合同边界 |
+| [`packages/react/`](../packages/react/) | 私有预发布 React 适配、RFC、支持策略、测试与回滚边界 |
+| [`packages/react/ADOPTION.md`](../packages/react/ADOPTION.md) | 固定版本的本地包评估、Token 映射、子路径选择、产品验证与回滚 |
 | [`tools/`](../tools/) | 品牌动效和长任务加载器的边界 |
 | [`CONTRIBUTING.md`](../CONTRIBUTING.md) | 贡献和版本规则 |
 | [`scripts/validate-design.mjs`](../scripts/validate-design.mjs) | Token、引用、主题一致性和对比度检查 |

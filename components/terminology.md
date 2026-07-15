@@ -123,6 +123,7 @@ The machine-readable source is [`terminology.json`](./terminology.json). Compone
 | Authentication Shell | Full-page structure for one active sign-in, recovery, verification, registration, or invitation task and its destination context | App Shell, decorative split screen, Authentication Dialog |
 | Sign-in Form | Configured credential or provider entry with errors and a recovery path | Registration Form, Account Recovery Form, Verification Challenge |
 | Account Recovery Form | Non-enumerating request and result flow that starts product-owned account recovery | Sign-in Form, Password Change Form, Verification Challenge |
+| Authentication Dialog | Modal sign-in task that preserves a bounded workflow and resumes only the action that required authentication | Authentication Shell, Session Re-authentication Dialog, Confirmation Dialog |
 | Session Re-authentication Dialog | Modal identity check that preserves a bounded task and resumes only its protected action | Sign-in Page, Confirmation Dialog, Permission Dialog |
 | Verification Challenge | Time- and method-bound proof such as a link, passkey, device approval, code, or recovery factor | One-Time Password Input, Sign-in Form, Recovery Form |
 

@@ -328,6 +328,15 @@
       "do_not_use_when": "An authenticated user is changing credentials or a challenge is already in progress."
     },
     {
+      "canonical_name": "Authentication Dialog",
+      "catalog_id": "authentication-dialog",
+      "aliases": ["task-resume login dialog", "in-context sign-in dialog"],
+      "not_synonyms": ["Authentication Shell", "Session Re-authentication Dialog", "Confirmation Dialog"],
+      "plain_definition": "A modal sign-in task that preserves a bounded underlying workflow and resumes only the action that required authentication.",
+      "use_when": "A session has ended while a bounded draft or action remains visible and can be resumed without a full authentication route.",
+      "do_not_use_when": "The flow needs registration, recovery, provider administration, multiple routes, or only a recent-authentication check."
+    },
+    {
       "canonical_name": "Session Re-authentication Dialog",
       "catalog_id": "session-reauthentication-dialog",
       "aliases": ["step-up authentication dialog", "recent-auth dialog"],

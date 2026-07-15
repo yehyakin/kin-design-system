@@ -25,6 +25,10 @@ Third-party component defaults always have the lowest visual priority.
 | [Linear Triage Intelligence](https://linear.app/now/how-we-built-triage-intelligence) | distinguish AI suggestions from human data; show sources and progress | fake reasoning traces or simulated AI |
 | [Linear brand guidelines](https://linear.app/brand) | restraint and monochrome brand handling | Linear logo, wordmark, icon or implied affiliation |
 | [Apple Design Skill](https://github.com/emilkowalski/skills/tree/main/skills/apple-design) | direct feedback, continuity, interruption, reduced motion | Apple branding or platform mimicry |
+| [Design Engineering Skill](https://github.com/emilkowalski/skills/tree/main/skills/emil-design-eng) | frequency-aware motion decisions, origin, interruption and inspectable component craft | universal styling, blanket press scale, copied prose or disputed framework-performance claims |
+| [Improve Animations Skill](https://github.com/emilkowalski/skills/tree/main/skills/improve-animations) | reconnaissance, evidence-led motion audit and self-contained implementation plans | replacing KIN governance, modifying source during audit or treating external values as unquestionable |
+| [Review Animations Skill](https://github.com/emilkowalski/skills/tree/main/skills/review-animations) | independent motion-quality gate and exact before/after findings | reviewing non-motion behavior or overriding documented KIN exceptions |
+| [Animation Vocabulary](https://github.com/emilkowalski/skills/tree/main/skills/animation-vocabulary) | identify precise motion terms for communication | copied glossary text, decorative technique lists or automatic permission to animate |
 | [Kill AI Slop](https://github.com/yetone/kill-ai-slop/blob/main/skill/SKILL.md) | audit workflow and machine-default visual taxonomy | automatic mass editing or scanner-as-truth |
 | [Kill AI Slop website](https://killaislop.com/) | human-readable companion reference | duplicate normative rules |
 | [Taste Skill](https://github.com/Leonxlnx/taste-skill) | density, hierarchy and visual-review prompts | arbitrary style parameters overriding KIN |
@@ -87,14 +91,14 @@ These projects were reviewed for page taxonomy, workflow boundaries and state co
 
 | Candidate | Adoption tier | KIN document |
 |---|---|---|
-| [NumberFlow](https://github.com/barvian/number-flow) | conditional | [`integrations/number-flow.md`](./integrations/number-flow.md) |
-| [input-otp](https://github.com/guilhermerodz/input-otp) | conditional | [`integrations/input-otp.md`](./integrations/input-otp.md) |
-| [Liveline](https://github.com/benjitaylor/liveline) | conditional | [`integrations/liveline.md`](./integrations/liveline.md) |
-| [Leva](https://github.com/pmndrs/leva) | development only | [`integrations/leva.md`](./integrations/leva.md) |
-| [cmdk](https://github.com/dip/cmdk) | core candidate | [`integrations/cmdk.md`](./integrations/cmdk.md) |
-| [React Virtuoso](https://github.com/petyosi/react-virtuoso) | core candidate at scale | [`integrations/virtuoso.md`](./integrations/virtuoso.md) |
-| [dnd kit](https://github.com/clauderic/dnd-kit) | conditional | [`integrations/dnd-kit.md`](./integrations/dnd-kit.md) |
-| [Sonner](https://github.com/emilkowalski/sonner) | core candidate | [`integrations/sonner.md`](./integrations/sonner.md) |
+| [NumberFlow](https://github.com/barvian/number-flow) | runtime-integrated; conditional KIN candidate | [`integrations/number-flow.md`](./integrations/number-flow.md) |
+| [input-otp](https://github.com/guilhermerodz/input-otp) | runtime-integrated; conditional KIN candidate | [`integrations/input-otp.md`](./integrations/input-otp.md) |
+| [Liveline](https://github.com/benjitaylor/liveline) | runtime-integrated; conditional KIN candidate | [`integrations/liveline.md`](./integrations/liveline.md) |
+| [Leva](https://github.com/pmndrs/leva) | development-integrated only | [`integrations/leva.md`](./integrations/leva.md) |
+| [cmdk](https://github.com/dip/cmdk) | runtime-integrated; stable Command Menu contract | [`integrations/cmdk.md`](./integrations/cmdk.md) |
+| [React Virtuoso](https://github.com/petyosi/react-virtuoso) | runtime-integrated implementation utility at scale | [`integrations/virtuoso.md`](./integrations/virtuoso.md) |
+| [dnd kit](https://github.com/clauderic/dnd-kit) | runtime-integrated; conditional KIN candidate | [`integrations/dnd-kit.md`](./integrations/dnd-kit.md) |
+| [Sonner](https://github.com/emilkowalski/sonner) | runtime-integrated; stable Toast contract | [`integrations/sonner.md`](./integrations/sonner.md) |
 | [Lucide](https://lucide.dev/) | core visual adapter | [`integrations/lucide.md`](./integrations/lucide.md) |
 
 Package names, maintainers, APIs, licenses and support status can change. Every consuming project MUST verify current official documentation and license terms at adoption time.

@@ -65,6 +65,76 @@ for (const theme of ["dark", "light"]) {
   });
 }
 
+test("workspace exposes keyboard-complete theme and language preferences", async ({ page }) => {
+  await seedPreferences(page, "light");
+  await page.goto("/examples/workspace-reference/");
+
+  const languageTrigger = page.locator("[data-language-trigger]");
+  const languageMenu = page.locator("[data-language-menu]");
+  await expect(languageTrigger).toHaveAttribute("aria-haspopup", "menu");
+  await expect(languageTrigger.locator("svg.lucide-languages")).toBeVisible();
+  await languageTrigger.click();
+  await expect(page.locator('[data-locale-value="zh"]')).toBeFocused();
+  await page.keyboard.press("ArrowDown");
+  await expect(page.locator('[data-locale-value="en"]')).toBeFocused();
+  await page.keyboard.press("Escape");
+  await expect(languageTrigger).toBeFocused();
+  await expect(languageMenu).toBeHidden();
+
+  const themeSwitch = page.locator("[data-theme-switch]");
+  await expect(themeSwitch).toHaveAttribute("role", "switch");
+  await expect(themeSwitch).toHaveAttribute("aria-checked", "false");
+  await expect(themeSwitch.locator(".theme-switch-icon svg")).toHaveCount(2);
+  await expect(themeSwitch.locator(".theme-switch-track")).toBeVisible();
+
+  const themeMenuTrigger = page.locator("[data-theme-menu-trigger]");
+  const themeMenu = page.locator("[data-theme-menu]");
+  await expect(themeMenuTrigger).toHaveAttribute("aria-haspopup", "menu");
+  await themeMenuTrigger.click();
+  await expect(page.locator('[data-theme-option="light"]')).toBeFocused();
+  await page.keyboard.press("ArrowDown");
+  await expect(page.locator('[data-theme-option="dark"]')).toBeFocused();
+  await page.keyboard.press("Escape");
+  await expect(themeMenuTrigger).toBeFocused();
+  await expect(themeMenu).toBeHidden();
+
+  await themeMenuTrigger.click();
+  await page.keyboard.press("End");
+  await page.keyboard.press("Enter");
+  await expect(page.locator("html")).toHaveAttribute("data-theme-preference", "system");
+  await expect(page.locator('[data-theme-option="system"]')).toHaveAttribute("aria-checked", "true");
+  await expect(themeMenuTrigger).toBeFocused();
+});
+
+test("Motion Lab uses the canonical switch and supports the system theme path", async ({ page }) => {
+  await seedPreferences(page, "light");
+  await page.goto("/examples/workspace-reference/motion.html");
+
+  const themeSwitch = page.locator("[data-lab-theme]");
+  await expect(themeSwitch).toHaveAttribute("role", "switch");
+  await expect(themeSwitch).toHaveAttribute("aria-checked", "false");
+  await expect(themeSwitch.locator(".theme-switch-icon svg")).toHaveCount(2);
+  await expect(themeSwitch.locator(".theme-switch-track")).toBeVisible();
+
+  const trigger = page.locator("[data-lab-theme-menu-trigger]");
+  const menu = page.locator("[data-lab-theme-menu]");
+  await expect(trigger).toHaveAttribute("aria-haspopup", "menu");
+  await trigger.click();
+  await expect(page.locator('[data-lab-theme-preference="light"]')).toBeFocused();
+  await page.keyboard.press("ArrowDown");
+  await expect(page.locator('[data-lab-theme-preference="dark"]')).toBeFocused();
+  await page.keyboard.press("Escape");
+  await expect(trigger).toBeFocused();
+  await expect(menu).toBeHidden();
+
+  await trigger.click();
+  await page.keyboard.press("End");
+  await page.keyboard.press("Enter");
+  await expect(page.locator("html")).toHaveAttribute("data-theme-preference", "system");
+  await expect(page.locator('[data-lab-theme-preference="system"]')).toHaveAttribute("aria-checked", "true");
+  await expect(trigger).toBeFocused();
+});
+
 test("workspace high contrast", async ({ page }, testInfo) => {
   await seedPreferences(page, "dark", "more");
   await page.setViewportSize({ width: 1440, height: 900 });
@@ -235,6 +305,12 @@ test("core actions preserve distinct selection semantics", async ({ page }) => {
   await expect(density.getByRole("button", { name: "标准" })).toHaveAttribute("aria-pressed", "true");
   await expect(density.getByRole("button", { name: "紧凑" })).toHaveAttribute("aria-pressed", "false");
   await expect(page.getByRole("radio", { name: "人工确认" })).toBeChecked();
+
+  const buttonMatrix = page.getByRole("table", { name: "按钮变体与状态矩阵" });
+  await expect(buttonMatrix.getByRole("rowheader", { name: "主要操作" })).toBeVisible();
+  await expect(buttonMatrix.getByRole("button", { name: "正在保存" })).toHaveAttribute("aria-busy", "true");
+  await expect(buttonMatrix.getByRole("button", { name: "复制对象链接" })).toHaveAttribute("title", "复制对象链接");
+  await expect(buttonMatrix.getByRole("button", { name: "移除记录" }).first()).toBeEnabled();
 });
 
 test("core authentication reference preserves context and never submits credentials", async ({ page }, testInfo) => {
@@ -254,12 +330,27 @@ test("core authentication reference preserves context and never submits credenti
   await page.getByRole("button", { name: "登录", exact: true }).click();
   await expect(page.getByText(/未连接身份服务/)).toBeFocused();
 
+  const authDialogOpen = page.getByRole("button", { name: "打开登录弹窗" });
+  await authDialogOpen.click();
+  const authDialog = page.getByRole("dialog", { name: "登录后保存筛选视图" });
+  await expect(authDialog).toBeVisible();
+  await expect(authDialog.getByLabel("工作邮箱")).toBeFocused();
+  const authDialogPassword = authDialog.getByLabel("密码", { exact: true });
+  await authDialog.getByRole("button", { name: "显示密码" }).click();
+  await expect(authDialogPassword).toHaveAttribute("type", "text");
+  await expect(authDialog.getByRole("button", { name: "使用组织 SSO" })).toBeDisabled();
+  await authDialog.screenshot({ path: testInfo.outputPath("authentication-dialog-light.png") });
+  await authDialog.getByRole("button", { name: "取消" }).click();
+  await expect(authDialog).toBeHidden();
+  await expect(authDialogOpen).toBeFocused();
+
   const reauthOpen = page.getByRole("button", { name: "打开示例" });
   await reauthOpen.click();
   const reauth = page.getByRole("dialog", { name: "重新验证身份" });
   await expect(reauth).toBeVisible();
   await expect(reauth.getByLabel("密码")).toBeFocused();
   await reauth.getByRole("button", { name: "取消" }).click();
+  await expect(reauth).toBeHidden();
   await expect(reauthOpen).toBeFocused();
   await page.locator("#authentication").screenshot({ path: testInfo.outputPath("core-authentication-light.png") });
 });
@@ -342,12 +433,14 @@ test("core navigation separates tabs menus disclosures and pagination", async ({
   await expect(page.getByRole("tab", { name: "历史" })).toHaveAttribute("aria-selected", "true");
   await expect(page.getByRole("tabpanel", { name: "历史" })).toBeVisible();
 
-  await page.getByRole("button", { name: "更多操作" }).click();
+  const navigation = page.locator("#navigation");
+  const menuTrigger = navigation.locator("[data-menu-trigger]");
+  await menuTrigger.click();
   await expect(page.getByRole("menuitem", { name: "复制规则" })).toBeFocused();
   await page.keyboard.press("ArrowDown");
   await expect(page.getByRole("menuitem", { name: "查看审计记录" })).toBeFocused();
   await page.keyboard.press("Escape");
-  await expect(page.getByRole("button", { name: "更多操作" })).toBeFocused();
+  await expect(menuTrigger).toBeFocused();
   const contextTarget = page.getByRole("button", { name: "当前对象操作" });
   await contextTarget.focus();
   await page.keyboard.press("Shift+F10");
@@ -356,10 +449,11 @@ test("core navigation separates tabs menus disclosures and pagination", async ({
   await expect(contextTarget).toBeFocused();
   await expect(page.getByRole("navigation", { name: "面包屑" })).toContainText("价格异常");
   const tooltipTrigger = page.getByRole("button", { name: "?" });
+  const tooltip = page.locator("#rule-help");
   await tooltipTrigger.focus();
-  await expect(page.getByRole("tooltip")).toHaveCSS("opacity", "1");
+  await expect(tooltip).toHaveCSS("opacity", "1");
   await page.keyboard.press("Escape");
-  await expect(page.getByRole("tooltip")).toHaveCSS("opacity", "0");
+  await expect(tooltip).toBeHidden();
   const disclosure = page.locator("details");
   await expect(disclosure).not.toHaveAttribute("open", "");
   await disclosure.locator("summary").click();
@@ -490,6 +584,7 @@ test("Motion Lab adapts Drawer to a touch-safe bottom Sheet", async ({ page }, t
   await page.locator("[data-lab-drawer-open]").click();
   const drawer = page.locator(".motion-drawer");
   await expect(drawer).toBeVisible();
+  await expect(page.locator("[data-lab-drawer-layer]")).toHaveAttribute("data-phase", "open");
   await expect(drawer).toHaveCSS("bottom", "0px");
   await assertMinimumTouchTargets(page, ".motion-drawer button");
   await page.locator("[data-lab-drawer-close]").click();
@@ -615,7 +710,7 @@ test("chart provides keyboard points and a semantic table fallback", async ({ pa
   await capture(page, testInfo, "advanced-components-light-desktop.png");
 
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.getByRole("button", { name: "夜间" }).click();
+  await page.locator("[data-theme-switch]").click();
   await page.getByRole("button", { name: "图表", exact: true }).click();
   await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
   await assertMinimumTouchTargets(page, ".reference-actions > button, .reference-back, .composer-actions button, .review-actions button, .media-actions button, .task-row button, .chart-toolbar button");

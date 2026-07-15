@@ -40,7 +40,7 @@ A component can be marked `stable` only when every applicable dimension is cover
 10. automated acceptance checks plus named manual checks where automation is insufficient;
 11. migration, rollback, and deprecation notes when behavior changes.
 
-`stable` does not mean a universal runtime package exists. KIN is contract-first; consuming projects implement or adapt components in their own framework.
+`stable` does not mean a universal runtime package exists. KIN is contract-first; consuming projects own production components. The private React integration laboratory provides optional adapters and evidence without changing component maturity or project ownership.
 
 Verification evidence MUST follow [`principles/verification.md`](../principles/verification.md). Automated checks, screenshot review, browser smoke, real zoom, and screen-reader review are different evidence classes and MUST NOT be reported as interchangeable.
 
@@ -53,7 +53,7 @@ The catalog currently contains 64 stable components. The machine-readable regist
 | Workspace foundation | App Shell, Sidebar, Inspector, Location Bar, Toolbar, Split View, Data Row, Activity Feed, Metric Strip | [`workspace-structure.md`](./workspace-structure.md), workspace reference, and product-pattern references |
 | Actions and selection | Button, Icon Button, Link, Checkbox, Radio Group, Switch, Segmented Control | [`actions-and-selection.md`](./actions-and-selection.md) and the core component reference |
 | Forms and entry | Text Input, Textarea, Form Field, Search Field, Select, Combobox, File Upload | [`forms-and-entry.md`](./forms-and-entry.md) and the core component reference |
-| Authentication and access | Authentication Shell, Sign-in Form, Account Recovery Form, Session Re-authentication Dialog | [`authentication.md`](./authentication.md) and the access reference |
+| Authentication and access | Authentication Shell, Sign-in Form, Account Recovery Form, Authentication Dialog, Session Re-authentication Dialog | [`authentication.md`](./authentication.md), the full-page access reference, and the core component reference |
 | Navigation and disclosure | Tabs, Breadcrumbs, Dropdown Menu, Context Menu, Overflow Menu, Tooltip, Accordion, Pagination | [`navigation-and-disclosure.md`](./navigation-and-disclosure.md) and the core component reference |
 | Data display | Data Table, Property List, Status Indicator, Empty State, Skeleton, Tree View, Avatar, Truncation | [`data-display.md`](./data-display.md) and the core component reference |
 | Feedback and progress | Inline Alert, Banner, Toast, Progress Indicator, Meter, Spinner | [`feedback-and-progress.md`](./feedback-and-progress.md), Sonner reference, and core component reference |
@@ -77,6 +77,8 @@ Current candidates have named completion or adoption gaps:
 See [`catalog.json`](./catalog.json) for exact contract, reference, test, and gap fields.
 
 Context Sidecar is a workspace candidate rather than a package integration. Its contract and deterministic scheduling reference cover wide-screen reflow, narrow-screen overlay adaptation, focus return, URL selection, and Reduced Motion. It remains candidate until one adopting product records production workflow and manual assistive-technology evidence.
+
+Drag and Drop, OTP, Live Chart, and Number Transition now have real official-package adapters, runnable Integration Lab examples, and automated evidence. They remain candidates because runtime availability does not close their named backend, manual accessibility, cross-input, recovery, or consuming-product gaps.
 
 ## Draft gaps
 

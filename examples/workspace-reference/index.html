@@ -81,11 +81,21 @@
               </div>
             </div>
 
-            <button type="button" class="theme-switch" role="switch" data-theme-switch aria-checked="false">
-              <span class="theme-switch-icon"><i data-lucide="sun"></i></span>
-              <span class="theme-switch-track" aria-hidden="true"><span></span></span>
-              <span class="theme-switch-icon"><i data-lucide="moon"></i></span>
-            </button>
+            <div class="theme-control" data-theme-control>
+              <button type="button" class="theme-switch" role="switch" data-theme-switch aria-checked="false">
+                <span class="theme-switch-icon"><i data-lucide="sun" aria-hidden="true"></i></span>
+                <span class="theme-switch-track" aria-hidden="true"><span></span></span>
+                <span class="theme-switch-icon"><i data-lucide="moon" aria-hidden="true"></i></span>
+              </button>
+              <button type="button" class="icon-button theme-menu-trigger" data-theme-menu-trigger aria-haspopup="menu" aria-expanded="false" data-i18n-aria="appearance">
+                <i data-lucide="chevron-down" aria-hidden="true"></i>
+              </button>
+              <div class="language-menu theme-menu" data-theme-menu role="menu" data-state="closed" hidden>
+                <button type="button" role="menuitemradio" aria-checked="false" data-theme-option="light"><span data-i18n="themeLight">日间模式</span><i data-lucide="check" aria-hidden="true"></i></button>
+                <button type="button" role="menuitemradio" aria-checked="false" data-theme-option="dark"><span data-i18n="themeDark">夜间模式</span><i data-lucide="check" aria-hidden="true"></i></button>
+                <button type="button" role="menuitemradio" aria-checked="true" data-theme-option="system"><span data-i18n="themeSystem">跟随系统</span><i data-lucide="check" aria-hidden="true"></i></button>
+              </div>
+            </div>
             <div class="location-overflow" data-location-overflow>
               <button type="button" class="icon-button" data-location-overflow-trigger aria-haspopup="menu" aria-expanded="false" data-i18n-aria="moreActions"><i data-lucide="ellipsis"></i></button>
               <div class="location-overflow-menu" data-location-overflow-menu role="menu" data-state="closed" hidden>

@@ -13,14 +13,40 @@
 .motion-control-strip article > span { display: block; margin-bottom: 14px; color: var(--muted); font-size: 11px; }
 .motion-control-strip article > p { margin: 12px 0 0; color: var(--muted); font-size: 11px; line-height: 1.55; }
 .motion-control-strip button { min-height: 36px; padding: 0 12px; }
-[data-lab-theme][data-control-state="dark"] .motion-icon-slot [data-icon-state="dark"],
-[data-lab-theme][data-control-state="light"] .motion-icon-slot [data-icon-state="light"] { opacity: 1; transform: none; }
+[data-lab-speed][aria-pressed="true"] { border-color: var(--accent); background: var(--selected); color: var(--text); }
+.motion-theme-control { position: relative; }
+.motion-theme-control > button { min-height: 32px; }
+.motion-theme-menu { width: 160px; }
 .motion-anchor-row { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 10px; }
 .motion-anchor-row > button, .motion-anchor-row .menu-sample > button, .motion-anchor-row .popover-anchor > button { min-height: 36px; padding: 0 11px; }
 .lab-menu { left: 0; right: auto; transform-origin: top left; }
 .lab-menu button kbd { margin-left: auto; color: var(--disabled); font: inherit; font-size: 10px; }
 .lab-disclosure { max-width: 640px; }
 .lab-disclosure p { padding-left: 1px; }
+.frequency-demo { position: relative; display: grid; gap: 12px; max-width: 720px; }
+.frequency-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.frequency-actions button { min-height: 36px; }
+.frequency-actions kbd { margin-left: 8px; color: var(--disabled); font: 10px/1 ui-monospace, monospace; }
+.frequency-surface { width: min(100%, 520px); padding: 10px; border: 1px solid var(--line-strong); border-radius: 8px; background: var(--surface-3); box-shadow: var(--shadow); }
+.frequency-surface > label { display: block; margin: 0 0 7px; color: var(--muted); font-size: 11px; }
+.frequency-surface > div { display: grid; grid-template-columns: 16px minmax(0, 1fr) 32px; align-items: center; gap: 8px; min-height: 38px; padding: 0 4px 0 10px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface-1); }
+.frequency-surface > div > svg { width: 14px; height: 14px; color: var(--muted); }
+.frequency-surface input { min-width: 0; height: 34px; padding: 0; border: 0; background: transparent; color: var(--text); font: inherit; }
+.frequency-surface input:focus { outline: 0; }
+.frequency-surface .icon-only-control { width: 32px; min-width: 32px; height: 32px; }
+.frequency-status, .tooltip-status, .gesture-status { margin: 0; color: var(--muted); font-size: 11px; line-height: 1.55; }
+.frequency-surface[data-invocation="pointer"][data-state="opening"] { opacity: 0; transform: translateY(-2px); }
+.frequency-surface[data-state="open"] { opacity: 1; transform: none; }
+.tooltip-sequence { display: grid; grid-template-columns: minmax(220px, 1fr) auto; align-items: center; gap: 16px 28px; max-width: 760px; margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--line); }
+.tooltip-sequence strong { color: var(--text-2); font-size: 12px; }
+.tooltip-sequence p { margin: 4px 0 0; color: var(--muted); font-size: 11px; line-height: 1.55; }
+.tooltip-toolbar { display: flex; align-items: center; gap: 4px; padding: 4px; border: 1px solid var(--line); border-radius: 7px; background: var(--surface-1); }
+.lab-tooltip-item { position: relative; display: inline-flex; }
+.lab-tooltip-item > button { width: 34px; min-width: 34px; height: 34px; }
+.lab-tooltip { position: absolute; z-index: 5; bottom: calc(100% + 7px); left: 50%; width: max-content; max-width: 200px; padding: 6px 8px; border: 1px solid var(--line-strong); border-radius: 5px; background: var(--surface-3); box-shadow: var(--shadow); color: var(--text-2); font-size: 11px; opacity: 0; pointer-events: none; transform: translateX(-50%) translateY(2px) scale(0.985); transform-origin: bottom center; }
+.lab-tooltip[data-state="open"] { opacity: 1; transform: translateX(-50%); }
+.lab-tooltip[data-instant="true"] { transition-duration: 0ms !important; }
+.tooltip-status { grid-column: 1 / -1; }
 .drawer-stage { display: flex; align-items: center; justify-content: space-between; gap: 24px; min-height: 122px; padding: 18px; border: 1px solid var(--line); background: var(--surface-1); }
 .drawer-stage-copy { display: grid; gap: 4px; }
 .drawer-stage-copy > span { color: var(--muted); font-size: 11px; }
@@ -28,6 +54,23 @@
 .drawer-stage-copy p { margin: 0; color: var(--muted); font-size: 12px; }
 .drawer-action-row { display: grid; gap: 9px; margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--line); }
 .drawer-action-row p { margin: 0; color: var(--muted); font-size: 11px; }
+.gesture-reference { display: grid; grid-template-columns: minmax(240px, 0.75fr) minmax(300px, 1.25fr); gap: 24px; margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--line); }
+.gesture-copy { display: grid; align-content: start; gap: 4px; }
+.gesture-copy > span { color: var(--muted); font-size: 11px; }
+.gesture-copy strong { color: var(--text); font-size: 14px; }
+.gesture-copy p { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.6; }
+.gesture-stage { position: relative; min-height: 250px; overflow: hidden; border: 1px solid var(--line); background: var(--canvas); }
+.gesture-stage::before { position: absolute; inset: 18px 18px auto; height: 76px; border: 1px solid var(--line); background: var(--surface-1); content: ""; }
+.gesture-sheet { position: absolute; right: 14px; bottom: 0; left: 14px; min-height: 176px; padding: 9px 14px 14px; border: 1px solid var(--line-strong); border-bottom: 0; border-radius: 11px 11px 0 0; background: var(--surface-2); box-shadow: var(--shadow); transform: translateY(0); }
+.gesture-sheet[data-state="dragging"], .gesture-sheet[data-state="settling"] { will-change: transform; }
+.gesture-handle { display: grid; width: 100%; min-height: 34px; margin: -4px 0 3px; place-items: center; border: 0; background: transparent; color: var(--muted); cursor: grab; touch-action: none; }
+.gesture-handle:active { cursor: grabbing; }
+.gesture-handle svg { width: 24px; height: 16px; }
+.gesture-sheet > div { padding: 6px 0 14px; }
+.gesture-sheet > div strong { color: var(--text-2); font-size: 12px; }
+.gesture-sheet > div p { margin: 4px 0 0; color: var(--muted); font-size: 11px; line-height: 1.5; }
+.gesture-sheet > .icon-action { min-height: 34px; }
+.gesture-status { grid-column: 1 / -1; }
 .motion-boundary-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border-top: 1px solid var(--line); }
 .motion-boundary-list p { margin: 0; padding: 14px 14px 14px 0; border-bottom: 1px solid var(--line); color: var(--muted); line-height: 1.6; }
 .motion-boundary-list p + p { padding-left: 14px; border-left: 1px solid var(--line); }
@@ -40,12 +83,33 @@
   .drawer-stage { align-items: flex-start; flex-direction: column; }
   .drawer-stage > button { width: 100%; min-height: 44px; }
   .motion-anchor-row > button, .motion-anchor-row .menu-sample > button, .motion-anchor-row .popover-anchor > button { min-height: 44px; }
+  .frequency-actions button { min-height: 44px; }
+  .tooltip-sequence, .gesture-reference { grid-template-columns: 1fr; }
+  .tooltip-toolbar { width: max-content; }
+  .lab-tooltip-item > button, .gesture-sheet > .icon-action { min-height: 44px; }
+  .motion-drawer button { min-width: 44px; min-height: 44px; }
 }
 
 @media (prefers-reduced-motion: no-preference) {
   .motion-lab-page .motion-icon-slot [data-icon-state] { transition: opacity 120ms var(--ease), transform 140ms var(--ease); }
+  .frequency-surface[data-invocation="pointer"] { transition: opacity 100ms var(--ease-enter), transform 100ms var(--ease-enter); }
+  .lab-tooltip { transition: opacity 125ms var(--ease-enter), transform 125ms var(--ease-enter); }
+  .motion-lab-page[data-review-speed="slow"] .motion-icon-slot [data-icon-state] { transition-duration: 480ms, 560ms; }
+  .motion-lab-page[data-review-speed="slow"] .sample-menu,
+  .motion-lab-page[data-review-speed="slow"] .sample-popover { transition-duration: 560ms, 640ms; }
+  .motion-lab-page[data-review-speed="slow"] .frequency-surface[data-invocation="pointer"] { transition-duration: 400ms; }
+  .motion-lab-page[data-review-speed="slow"] .lab-tooltip { transition-duration: 500ms; }
+  .motion-lab-page[data-review-speed="slow"] .core-drawer { transition-duration: 880ms, 640ms; }
+  .motion-lab-page[data-review-speed="slow"] .drawer-scrim { transition-duration: 640ms; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .motion-lab-page .motion-icon-slot [data-icon-state] { transition: opacity 80ms linear; transform: none; }
+  .frequency-surface, .lab-tooltip { transition: opacity 80ms linear; }
+  .frequency-surface { transform: none !important; }
+  .lab-tooltip, .lab-tooltip[data-state="open"] { transform: translateX(-50%); }
+}
+
+@media (max-width: 760px) {
+  .motion-theme-control > button { min-width: 44px; min-height: 44px; }
 }

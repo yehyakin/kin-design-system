@@ -21,7 +21,12 @@ const types = new Map([
 function resolveRequest(url) {
   try {
     const pathname = decodeURIComponent(new URL(url, `http://${host}:${port}`).pathname);
-    const candidate = path.resolve(root, `.${pathname}`);
+    const sitePath = pathname === "/kin-design-system"
+      ? "/"
+      : pathname.startsWith("/kin-design-system/")
+        ? pathname.slice("/kin-design-system".length)
+        : pathname;
+    const candidate = path.resolve(root, `.${sitePath}`);
     if (!candidate.startsWith(root + path.sep) && candidate !== root) return null;
     const file = fs.existsSync(candidate) && fs.statSync(candidate).isDirectory()
       ? path.join(candidate, "index.html")

@@ -35,6 +35,37 @@ test("showcase theme contrast and language preferences work", async ({ page }) =
   await page.screenshot({ path: "test-results/playwright/site-light-zh.png", fullPage: true });
 });
 
+test("GitHub Pages 404 preserves theme and locale preferences", async ({ page }) => {
+  await page.emulateMedia({ colorScheme: "light" });
+  await page.addInitScript(() => {
+    localStorage.setItem("kin-site-theme", "system");
+    localStorage.setItem("kin-site-locale", "en");
+  });
+
+  const response = await page.goto("/kin-design-system/missing-reference?lang=zh");
+  expect(response?.status()).toBe(404);
+  await expect(page.locator("html")).toHaveAttribute("lang", "zh-CN");
+  await expect(page.locator("html")).toHaveAttribute("data-theme-preference", "system");
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("当前设计合同中没有这个页面。");
+  await expect(page.getByRole("link", { name: "KIN 设计系统首页" })).toHaveAttribute("href", "/kin-design-system/zh/");
+
+  const themeSwitch = page.locator("[data-theme-switch]");
+  await expect(themeSwitch).toHaveAttribute("role", "switch");
+  await expect(themeSwitch).toHaveAttribute("aria-checked", "false");
+  await themeSwitch.click();
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
+  await expect(page.evaluate(() => localStorage.getItem("kin-site-theme"))).resolves.toBe("dark");
+
+  const languageTrigger = page.locator("[data-language-trigger]");
+  await expect(languageTrigger).toHaveAttribute("aria-haspopup", "menu");
+  await languageTrigger.click();
+  await expect(page.locator('[data-404-language="zh"]')).toBeFocused();
+  await page.keyboard.press("Escape");
+  await expect(languageTrigger).toBeFocused();
+  await expect(page.locator("[data-language-menu]")).toBeHidden();
+});
+
 test("Sonner loads on demand for user-initiated feedback", async ({ page }) => {
   await page.goto("/");
   await expect(page.evaluate(() => performance.getEntriesByType("resource").some((entry) => entry.name.includes("sonner-island")))).resolves.toBe(false);

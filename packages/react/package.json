@@ -1,0 +1,83 @@
+{
+  "name": "@kin-design/react",
+  "version": "0.1.0",
+  "description": "Optional React integrations that preserve third-party interaction engines while applying KIN product contracts and visual tokens.",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "sideEffects": [
+    "./dist/styles.css"
+  ],
+  "files": [
+    "dist",
+    "README.md",
+    "ADOPTION.md",
+    "RFC.md",
+    "CHANGELOG.md",
+    "SUPPORT.md"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./sonner": {
+      "types": "./dist/sonner.d.ts",
+      "import": "./dist/sonner.js"
+    },
+    "./experimental/number-flow": {
+      "types": "./dist/number-flow.d.ts",
+      "import": "./dist/number-flow.js"
+    },
+    "./cmdk": {
+      "types": "./dist/cmdk.d.ts",
+      "import": "./dist/cmdk.js"
+    },
+    "./virtuoso": {
+      "types": "./dist/virtuoso.d.ts",
+      "import": "./dist/virtuoso.js"
+    },
+    "./experimental/dnd-kit": {
+      "types": "./dist/dnd-kit.d.ts",
+      "import": "./dist/dnd-kit.js"
+    },
+    "./experimental/input-otp": {
+      "types": "./dist/input-otp.d.ts",
+      "import": "./dist/input-otp.js"
+    },
+    "./experimental/liveline": {
+      "types": "./dist/liveline.d.ts",
+      "import": "./dist/liveline.js"
+    },
+    "./dev/leva": {
+      "types": "./dist/leva.d.ts",
+      "import": "./dist/leva.js"
+    },
+    "./styles.css": "./dist/styles.css"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json && node ../../scripts/copy-react-package-assets.mjs",
+    "check": "tsc --noEmit -p tsconfig.json && npm run build && node ../../scripts/test-react-package.mjs"
+  },
+  "dependencies": {
+    "@dnd-kit/core": "6.3.1",
+    "@dnd-kit/sortable": "10.0.0",
+    "@dnd-kit/utilities": "3.2.2",
+    "@number-flow/react": "0.6.1",
+    "cmdk": "1.1.1",
+    "input-otp": "1.4.2",
+    "liveline": "0.0.7",
+    "react-virtuoso": "4.18.10",
+    "sonner": "2.0.7"
+  },
+  "peerDependenciesMeta": {
+    "leva": {
+      "optional": true
+    }
+  },
+  "peerDependencies": {
+    "leva": "^0.10.1",
+    "react": "^18.2.0 || ^19.0.0",
+    "react-dom": "^18.2.0 || ^19.0.0"
+  }
+}

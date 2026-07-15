@@ -27,18 +27,29 @@
       </a>
       <div class="flow-preferences">
         <div class="language-control">
-          <button class="icon-control" type="button" data-language-trigger aria-expanded="false" aria-controls="language-menu" data-i18n-aria="common.language">
+          <button class="icon-control" type="button" data-language-trigger aria-haspopup="menu" aria-expanded="false" aria-controls="language-menu" data-i18n-aria="common.language">
             <i data-lucide="languages" aria-hidden="true"></i>
           </button>
-          <div class="language-menu" id="language-menu" data-language-menu role="menu" hidden>
+          <div class="language-menu preference-menu" id="language-menu" data-language-menu role="menu" data-state="closed" hidden>
             <button type="button" role="menuitemradio" aria-checked="true" data-language-option="zh-CN">中文</button>
             <button type="button" role="menuitemradio" aria-checked="false" data-language-option="en">English</button>
           </div>
         </div>
-        <button class="icon-control theme-switch" type="button" role="switch" aria-checked="false" data-theme-switch data-i18n-aria="common.themeDark">
-          <i class="theme-sun" data-lucide="sun" aria-hidden="true"></i>
-          <i class="theme-moon" data-lucide="moon" aria-hidden="true"></i>
-        </button>
+        <div class="theme-control">
+          <button class="theme-switch canonical-theme-switch" type="button" role="switch" aria-checked="false" data-theme-switch data-i18n-aria="common.themeDark">
+            <span class="theme-switch-icon"><i class="theme-sun" data-lucide="sun" aria-hidden="true"></i></span>
+            <span class="theme-switch-track" aria-hidden="true"><span></span></span>
+            <span class="theme-switch-icon"><i class="theme-moon" data-lucide="moon" aria-hidden="true"></i></span>
+          </button>
+          <button class="icon-control theme-menu-trigger" type="button" data-theme-menu-trigger aria-haspopup="menu" aria-expanded="false" aria-controls="theme-menu" data-i18n-aria="common.themeMenu">
+            <i data-lucide="chevron-down" aria-hidden="true"></i>
+          </button>
+          <div class="theme-menu preference-menu" id="theme-menu" data-theme-menu role="menu" data-state="closed" hidden>
+            <button type="button" role="menuitemradio" aria-checked="false" data-theme-option="light" data-i18n="common.themeLightChoice">日间模式</button>
+            <button type="button" role="menuitemradio" aria-checked="false" data-theme-option="dark" data-i18n="common.themeDarkChoice">夜间模式</button>
+            <button type="button" role="menuitemradio" aria-checked="true" data-theme-option="system" data-i18n="common.themeSystemChoice">跟随系统</button>
+          </div>
+        </div>
       </div>
     </header>
 
@@ -82,11 +93,28 @@
             <button class="flow-button primary-action auth-submit" type="submit" data-i18n="access.continue">继续</button>
             <p class="form-status" data-sign-in-status tabindex="-1" aria-live="polite"></p>
             <div class="auth-divider" data-i18n="access.or">或</div>
-            <button class="flow-button provider-action" type="button"><i data-lucide="key-round" aria-hidden="true"></i><span data-i18n="access.sso">使用组织 SSO</span></button>
+            <button class="flow-button provider-action" type="button" disabled aria-describedby="sso-unavailable"><i data-lucide="key-round" aria-hidden="true"></i><span data-i18n="access.sso">使用组织 SSO</span></button>
+            <p class="provider-note" id="sso-unavailable" data-i18n="access.ssoUnavailable">此确定性参考未配置组织 SSO。</p>
           </form>
           <div class="auth-footer">
             <span data-i18n="access.referenceNote">确定性参考：不会传输凭据。</span>
             <button class="text-action" type="button" data-reauth-open data-i18n="access.reauthDemo">查看页内重新验证</button>
+          </div>
+          <div class="auth-fixture" data-auth-fixture data-fixture-state="idle">
+            <div class="auth-fixture-control">
+              <label for="auth-fixture-state" data-i18n="access.fixtureLabel">确定性状态</label>
+              <select id="auth-fixture-state" data-auth-fixture-select>
+                <option value="idle" data-i18n="access.fixtureIdleChoice">空闲</option>
+                <option value="throttled" data-i18n="access.fixtureThrottledChoice">请求受限</option>
+                <option value="locked" data-i18n="access.fixtureLockedChoice">账号被锁定或管理员阻止</option>
+                <option value="provider-unavailable" data-i18n="access.fixtureProviderChoice">身份提供方不可用</option>
+                <option value="offline" data-i18n="access.fixtureOfflineChoice">离线</option>
+                <option value="expired" data-i18n="access.fixtureExpiredChoice">验证已过期</option>
+                <option value="verified" data-i18n="access.fixtureVerifiedChoice">已验证（参考）</option>
+                <option value="session-expired" data-i18n="access.fixtureSessionExpiredChoice">会话已过期</option>
+              </select>
+            </div>
+            <p data-auth-fixture-status role="status" aria-live="polite"></p>
           </div>
         </div>
 
@@ -106,7 +134,7 @@
       </section>
     </main>
 
-    <dialog class="auth-dialog" data-reauth-dialog aria-labelledby="reauth-title">
+    <dialog class="auth-dialog" data-reauth-dialog data-state="closed" aria-labelledby="reauth-title">
       <form data-reauth-form>
         <header>
           <h2 id="reauth-title" data-i18n="access.reauthTitle">重新验证身份</h2>
@@ -129,12 +157,12 @@
     <script type="application/json" data-i18n-dictionary>
       {
         "zh-CN": {
-          "common.direction": "ltr", "common.reference": "页面流程参考", "common.language": "切换语言", "common.themeDark": "切换到夜间模式", "common.themeLight": "切换到日间模式", "common.cancel": "取消",
-          "meta.title": "KIN 访问流程参考", "access.task": "访问任务", "access.destination": "返回：风险审查 / SIG-042", "access.contextTitle": "验证身份后继续当前工作", "access.contextBody": "登录只处理访问恢复。系统会保留当前对象、筛选条件和未提交的本地草稿。", "access.contextSecure": "凭据由产品的身份服务处理，本参考页不会发送或保存凭据。", "access.contextResume": "验证成功后返回原任务，不把用户送到无关首页。", "access.contextHelp": "账号、组织和恢复策略由采用产品配置，KIN 不假设认证后端。", "access.signInTitle": "登录工作区", "access.signInBody": "使用分配给你的工作邮箱。", "access.email": "工作邮箱", "access.emailPlaceholder": "name@company.com", "access.password": "密码", "access.showPassword": "显示密码", "access.hidePassword": "隐藏密码", "access.remember": "在这台设备上保持登录", "access.forgot": "无法登录？", "access.continue": "继续", "access.checking": "正在验证参考输入…", "access.referenceError": "这是界面参考，未连接身份服务。", "access.or": "或", "access.sso": "使用组织 SSO", "access.referenceNote": "确定性参考：不会传输凭据。", "access.reauthDemo": "查看页内重新验证", "access.back": "返回登录", "access.recoveryTitle": "恢复访问", "access.recoveryBody": "输入工作邮箱。无论账号是否存在，页面都显示相同结果。", "access.sendRecovery": "发送恢复说明", "access.recoveryResult": "如果该账号存在，恢复说明会发送到对应邮箱。", "access.reauthTitle": "重新验证身份", "access.reauthBody": "导出敏感记录前需要确认当前会话。", "access.verify": "验证并继续"
+          "common.direction": "ltr", "common.reference": "页面流程参考", "common.language": "切换语言", "common.themeDark": "切换到夜间模式", "common.themeLight": "切换到日间模式", "common.themeMenu": "选择外观", "common.themeLightChoice": "日间模式", "common.themeDarkChoice": "夜间模式", "common.themeSystemChoice": "跟随系统", "common.cancel": "取消",
+          "meta.title": "KIN 访问流程参考", "access.task": "访问任务", "access.destination": "返回：风险审查 / SIG-042", "access.contextTitle": "验证身份后继续当前工作", "access.contextBody": "登录只处理访问恢复。系统会保留当前对象、筛选条件和未提交的本地草稿。", "access.contextSecure": "凭据由产品的身份服务处理，本参考页不会发送或保存凭据。", "access.contextResume": "验证成功后返回原任务，不把用户送到无关首页。", "access.contextHelp": "账号、组织和恢复策略由采用产品配置，KIN 不假设认证后端。", "access.signInTitle": "登录工作区", "access.signInBody": "使用分配给你的工作邮箱。", "access.email": "工作邮箱", "access.emailPlaceholder": "name@company.com", "access.password": "密码", "access.showPassword": "显示密码", "access.hidePassword": "隐藏密码", "access.remember": "在这台设备上保持登录", "access.forgot": "无法登录？", "access.continue": "继续", "access.checking": "正在验证参考输入…", "access.referenceError": "这是界面参考，未连接身份服务。", "access.or": "或", "access.sso": "使用组织 SSO", "access.ssoUnavailable": "此确定性参考未配置组织 SSO。", "access.referenceNote": "确定性参考：不会传输凭据。", "access.reauthDemo": "查看页内重新验证", "access.fixtureLabel": "确定性状态", "access.fixtureIdleChoice": "空闲", "access.fixtureThrottledChoice": "请求受限", "access.fixtureLockedChoice": "账号被锁定或管理员阻止", "access.fixtureProviderChoice": "身份提供方不可用", "access.fixtureOfflineChoice": "离线", "access.fixtureExpiredChoice": "验证已过期", "access.fixtureVerifiedChoice": "已验证（参考）", "access.fixtureSessionExpiredChoice": "会话已过期", "access.fixtureIdle": "参考空闲状态：可以编辑字段；不会发送凭据。", "access.fixtureThrottled": "限流状态参考：实际产品必须说明何时可以安全重试。", "access.fixtureLocked": "锁定或管理员阻止状态参考：实际产品必须说明管理员或恢复路径。", "access.fixtureProviderUnavailable": "提供方不可用参考：保留可用方法，并解释组织 SSO 暂不可用。", "access.fixtureOffline": "离线状态参考：保留输入，恢复连接后再提交。", "access.fixtureExpired": "过期挑战参考：实际产品需要重新发起验证并说明到期时间。", "access.fixtureVerified": "已验证状态参考：未创建真实会话；实际产品将只恢复原任务。", "access.fixtureSessionExpired": "会话过期参考：保留当前工作，并要求重新验证后继续。", "access.back": "返回登录", "access.recoveryTitle": "恢复访问", "access.recoveryBody": "输入工作邮箱。无论账号是否存在，页面都显示相同结果。", "access.sendRecovery": "发送恢复说明", "access.recoveryResult": "如果该账号存在，恢复说明会发送到对应邮箱。", "access.reauthTitle": "重新验证身份", "access.reauthBody": "导出敏感记录前需要确认当前会话。", "access.verify": "验证并继续"
         },
         "en": {
-          "common.direction": "ltr", "common.reference": "Page flow reference", "common.language": "Change language", "common.themeDark": "Switch to dark theme", "common.themeLight": "Switch to light theme", "common.cancel": "Cancel",
-          "meta.title": "KIN access flow reference", "access.task": "Access task", "access.destination": "Return to: Risk review / SIG-042", "access.contextTitle": "Verify your identity and continue the current task", "access.contextBody": "Sign-in only restores access. The current record, filters, and local draft remain in context.", "access.contextSecure": "Credentials belong to the adopting product's identity service. This reference sends and stores none.", "access.contextResume": "Successful verification returns to the original task instead of an unrelated home page.", "access.contextHelp": "Account, organization, and recovery policy are product configuration; KIN does not assume an auth backend.", "access.signInTitle": "Sign in to the workspace", "access.signInBody": "Use the work email assigned to you.", "access.email": "Work email", "access.emailPlaceholder": "name@company.com", "access.password": "Password", "access.showPassword": "Show password", "access.hidePassword": "Hide password", "access.remember": "Keep me signed in on this device", "access.forgot": "Can't sign in?", "access.continue": "Continue", "access.checking": "Checking the reference input…", "access.referenceError": "This interface reference is not connected to an identity service.", "access.or": "or", "access.sso": "Continue with organization SSO", "access.referenceNote": "Deterministic reference: no credentials are transmitted.", "access.reauthDemo": "View in-page reauthentication", "access.back": "Back to sign in", "access.recoveryTitle": "Recover access", "access.recoveryBody": "Enter your work email. The result stays the same whether or not an account exists.", "access.sendRecovery": "Send recovery instructions", "access.recoveryResult": "If the account exists, recovery instructions will be sent to its email address.", "access.reauthTitle": "Verify your identity again", "access.reauthBody": "Confirm the current session before exporting sensitive records.", "access.verify": "Verify and continue"
+          "common.direction": "ltr", "common.reference": "Page flow reference", "common.language": "Change language", "common.themeDark": "Switch to dark theme", "common.themeLight": "Switch to light theme", "common.themeMenu": "Choose appearance", "common.themeLightChoice": "Light", "common.themeDarkChoice": "Dark", "common.themeSystemChoice": "System", "common.cancel": "Cancel",
+          "meta.title": "KIN access flow reference", "access.task": "Access task", "access.destination": "Return to: Risk review / SIG-042", "access.contextTitle": "Verify your identity and continue the current task", "access.contextBody": "Sign-in only restores access. The current record, filters, and local draft remain in context.", "access.contextSecure": "Credentials belong to the adopting product's identity service. This reference sends and stores none.", "access.contextResume": "Successful verification returns to the original task instead of an unrelated home page.", "access.contextHelp": "Account, organization, and recovery policy are product configuration; KIN does not assume an auth backend.", "access.signInTitle": "Sign in to the workspace", "access.signInBody": "Use the work email assigned to you.", "access.email": "Work email", "access.emailPlaceholder": "name@company.com", "access.password": "Password", "access.showPassword": "Show password", "access.hidePassword": "Hide password", "access.remember": "Keep me signed in on this device", "access.forgot": "Can't sign in?", "access.continue": "Continue", "access.checking": "Checking the reference input…", "access.referenceError": "This interface reference is not connected to an identity service.", "access.or": "or", "access.sso": "Continue with organization SSO", "access.ssoUnavailable": "Organization SSO is not configured in this deterministic reference.", "access.referenceNote": "Deterministic reference: no credentials are transmitted.", "access.reauthDemo": "View in-page reauthentication", "access.fixtureLabel": "Deterministic state", "access.fixtureIdleChoice": "Idle", "access.fixtureThrottledChoice": "Throttled", "access.fixtureLockedChoice": "Locked / admin-blocked", "access.fixtureProviderChoice": "Provider unavailable", "access.fixtureOfflineChoice": "Offline", "access.fixtureExpiredChoice": "Challenge expired", "access.fixtureVerifiedChoice": "Verified (fixture)", "access.fixtureSessionExpiredChoice": "Session expired", "access.fixtureIdle": "Idle fixture: fields remain editable and no credentials are sent.", "access.fixtureThrottled": "Throttled fixture: a real product must state when it is safe to retry.", "access.fixtureLocked": "Locked or admin-blocked fixture: a real product must expose an administrator or recovery path.", "access.fixtureProviderUnavailable": "Provider-unavailable fixture: keep available methods and explain that organization SSO cannot be used.", "access.fixtureOffline": "Offline fixture: preserve input and submit only after connectivity returns.", "access.fixtureExpired": "Expired-challenge fixture: a real product must restart verification and state its expiry.", "access.fixtureVerified": "Verified fixture only: no real session was created; a product would resume the original task.", "access.fixtureSessionExpired": "Session-expired fixture: preserve current work and require reauthentication before continuing.", "access.back": "Back to sign in", "access.recoveryTitle": "Recover access", "access.recoveryBody": "Enter your work email. The result stays the same whether or not an account exists.", "access.sendRecovery": "Send recovery instructions", "access.recoveryResult": "If the account exists, recovery instructions will be sent to its email address.", "access.reauthTitle": "Verify your identity again", "access.reauthBody": "Confirm the current session before exporting sensitive records.", "access.verify": "Verify and continue"
         }
       }
     </script>

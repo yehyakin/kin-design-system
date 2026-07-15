@@ -12,6 +12,7 @@ const required = [
   "assets/site.css",
   "assets/site.js",
   "assets/sonner.css",
+  "assets/kin-react.css",
   "assets/mark.svg",
   "assets/og-card.svg",
   "manifest.webmanifest",
@@ -23,6 +24,8 @@ const required = [
   "examples/workspace-reference/core-components.js",
   "examples/workspace-reference/motion.html",
   "examples/workspace-reference/motion-reference.js",
+  "examples/workspace-reference/integrations.html",
+  "examples/workspace-reference/integration-reference.js",
   "examples/page-patterns/access.html",
   "examples/page-patterns/scheduling.html",
   "examples/product-patterns/information.html",
@@ -53,6 +56,7 @@ if (fs.existsSync(output)) {
     "examples/workspace-reference/index.html",
     "examples/workspace-reference/core-components.html",
     "examples/workspace-reference/motion.html",
+    "examples/workspace-reference/integrations.html",
     "examples/page-patterns/access.html",
     "examples/page-patterns/scheduling.html",
   ].map((file) => path.join(output, file));
@@ -90,6 +94,7 @@ if (fs.existsSync(workspaceAssetDirectory)) {
   const bundle = path.join(workspaceAssetDirectory, "reference.js");
   const coreBundle = path.join(workspaceAssetDirectory, "core-components.js");
   const motionBundle = path.join(workspaceAssetDirectory, "motion-reference.js");
+  const integrationBundle = path.join(workspaceAssetDirectory, "integration-reference.js");
   const chunks = fs.existsSync(path.join(workspaceAssetDirectory, "chunks"))
     ? fs.readdirSync(path.join(workspaceAssetDirectory, "chunks"))
     : [];
@@ -97,6 +102,7 @@ if (fs.existsSync(workspaceAssetDirectory)) {
   if (fs.existsSync(bundle) && fs.statSync(bundle).size > 50_000) failures.push("workspace-reference/reference.js: initial JavaScript bundle exceeds 50 KB");
   if (fs.existsSync(coreBundle) && fs.statSync(coreBundle).size > 50_000) failures.push("workspace-reference/core-components.js: initial JavaScript bundle exceeds 50 KB");
   if (fs.existsSync(motionBundle) && fs.statSync(motionBundle).size > 50_000) failures.push("workspace-reference/motion-reference.js: initial JavaScript bundle exceeds 50 KB");
+  if (fs.existsSync(integrationBundle) && fs.statSync(integrationBundle).size > 90_000) failures.push("workspace-reference/integration-reference.js: initial integration bundle exceeds 90 KB");
 }
 
 const assetDirectory = path.join(output, "assets");
@@ -116,6 +122,13 @@ if (fs.existsSync(cssPath)) {
   if (/transition(?:-property)?\s*:\s*all\b/i.test(css)) failures.push("assets/site.css: transition: all is forbidden");
   if (!/prefers-reduced-motion/.test(css)) failures.push("assets/site.css: reduced-motion response is missing");
   if (!/:focus-visible/.test(css)) failures.push("assets/site.css: visible focus behavior is missing");
+}
+
+const integrationCssPath = path.join(output, "assets/kin-react.css");
+if (fs.existsSync(integrationCssPath)) {
+  const css = fs.readFileSync(integrationCssPath, "utf8");
+  if (/transition(?:-property)?\s*:\s*all\b/i.test(css)) failures.push("assets/kin-react.css: transition: all is forbidden");
+  if (!/prefers-reduced-motion/.test(css)) failures.push("assets/kin-react.css: reduced-motion response is missing");
 }
 
 if (failures.length > 0) {

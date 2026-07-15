@@ -12,6 +12,7 @@ These instructions apply to the entire repository.
 6. Read only the relevant files in `principles/`, `patterns/`, `components/`, `integrations/` and `tools/`.
 7. Read `CONTRIBUTING.md` before changing normative rules.
 8. Read `principles/verification.md` before claiming accessibility, cross-browser, motion, zoom or RTL completion.
+9. Read `integrations/catalog.md` and `packages/react/RFC.md` before changing official runtime integrations, adapter APIs, package exports, dependency boundaries or upstream motion behavior.
 
 ## Editing rules
 
@@ -22,6 +23,7 @@ These instructions apply to the entire repository.
 - Do not copy external documentation, source code, screenshots, fonts, icons or brand assets.
 - Keep local links relative and use stable source URLs.
 - Do not add runtime dependencies for documentation checks.
+- Preserve reviewed upstream interaction and animation engines. KIN adapters MAY configure and style them, but MUST NOT replace mature behavior with a lookalike without a documented defect, test, owner and removal condition.
 - Do not turn framework-free references into a runtime package or claim a Figma Library without satisfying `DELIVERY.md`.
 - Update `CHANGELOG.md` for user-visible normative changes.
 

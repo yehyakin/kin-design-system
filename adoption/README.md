@@ -61,6 +61,8 @@ This means:
 - production components remain owned by the consuming project;
 - framework-free references are behavioral fixtures, not a runtime package.
 
+The private pre-release [`@kin-design/react`](../packages/react/) laboratory does not change `runtime: project-owned`. It is an optional migration target for reviewed React products, not a supported universal package. A project evaluating it MUST pin the KIN revision and package version, import only required subpaths, map each adapter to a real workflow, keep backend and recovery ownership local, compare bundle and interaction evidence, and prove rollback to the prior project-owned component. Until a package release is approved, external projects SHOULD evaluate a locally packed artifact or an equivalent pinned workspace checkout rather than treating `main` as a floating dependency.
+
 A consuming project MUST NOT change these values merely because it uses React, Figma, or a documented third-party adapter. A separate approved artifact contract is required before claiming a KIN Figma Library or runtime package.
 
 ## Evidence stages

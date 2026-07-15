@@ -305,7 +305,9 @@ Starting with a gradient, card layout, animation, or component library reverses 
 
 ## Optional UI libraries
 
-The integration notes explain when a library may help and when it should be skipped. They are not required by the design contract. The showcase build uses Lucide and a lazy Sonner island as tested reference implementations; adopting products choose dependencies according to their own stack and existing components.
+The integration notes explain when a library helps and when it should be skipped. They are not required by the design contract. For React products, KIN now includes a private pre-release integration laboratory that directly runs the official Sonner, NumberFlow, cmdk, React Virtuoso, dnd kit, input-otp, Liveline, and Leva packages. KIN adapts semantics, Tokens, themes, accessibility boundaries, and product rules without recreating the upstream animation or behavior engines.
+
+Open the [Integration Lab](./examples/workspace-reference/integrations.html) to operate the real adapters. [`integrations/catalog.md`](./integrations/catalog.md) records integration status, while [`components/catalog.md`](./components/catalog.md) remains the source of truth for KIN component maturity. A runtime-integrated upstream package does not make a candidate KIN contract stable, and the private package is not a universal dependency or a completed adoption claim.
 
 | Library | Intended use | Skip when |
 |---|---|---|
@@ -355,7 +357,8 @@ Each adopting project is responsible for checking the current version, license, 
 | [`components/preference-controls.md`](./components/preference-controls.md) | Normative theme-switch, system-preference, and language-menu contract |
 | [`examples/workspace-reference/`](./examples/workspace-reference/) | Framework-free light/dark responsive visual fixture |
 | [`examples/workspace-reference/core-components.html`](./examples/workspace-reference/core-components.html) | Runnable authentication, controls, motion, feedback, data, and overlay reference |
-| [`examples/workspace-reference/motion.html`](./examples/workspace-reference/motion.html) | Motion Lab for stable icon slots, animated menus, Sonner tasks, responsive Drawer behavior, interruption, and reduced motion |
+| [`examples/workspace-reference/motion.html`](./examples/workspace-reference/motion.html) | Motion Lab for frequency-aware invocation, Tooltip sequences, stable icon slots, Sonner tasks, responsive Drawer behavior, gesture physics, slow review, interruption, and reduced motion |
+| [`examples/workspace-reference/integrations.html`](./examples/workspace-reference/integrations.html) | Operable Integration Lab for the official Sonner, NumberFlow, cmdk, React Virtuoso, dnd kit, input-otp, and Liveline runtimes plus the Leva development boundary |
 | [`examples/workspace-reference/advanced-components.html`](./examples/workspace-reference/advanced-components.html) | Deterministic local reference for AI, review, durable tasks, media, and accessible charts |
 | [`patterns/`](./patterns/) | Product contracts for information, intelligence, ecommerce, and engineering interfaces |
 | [`examples/product-patterns/`](./examples/product-patterns/) | Distinct reference pages for information, ecommerce, and engineering products |
@@ -366,8 +369,12 @@ Each adopting project is responsible for checking the current version, license, 
 | [`AGENTS.md`](./AGENTS.md) | Instructions for coding tools working in this repository |
 | [`REFERENCES.md`](./REFERENCES.md) | Source hierarchy, attribution, and third-party adoption |
 | [`principles/`](./principles/) | Interaction, visual review, hierarchy, density, and composition |
+| [`principles/motion-vocabulary.md`](./principles/motion-vocabulary.md) | Operational terms for purposeful, interruptible, origin-aware, gesture-driven, and reduced motion |
 | [`principles/verification.md`](./principles/verification.md) | Automated and manual evidence boundaries for motion, browsers, zoom, localization, RTL, Forced Colors, touch, and screen readers |
 | [`integrations/`](./integrations/) | Rules for optional UI libraries |
+| [`integrations/catalog.md`](./integrations/catalog.md) | Runtime integration registry and the boundary between upstream engines and KIN contracts |
+| [`packages/react/`](./packages/react/) | Private pre-release React adapters, RFC, support policy, tests, and rollback boundary |
+| [`packages/react/ADOPTION.md`](./packages/react/ADOPTION.md) | Pinned local-package evaluation, Token mapping, subpath selection, product verification, and rollback |
 | [`tools/`](./tools/) | Boundaries for brand motion and long-task loaders |
 | [`CONTRIBUTING.md`](./CONTRIBUTING.md) | Contribution and versioning rules |
 | [`scripts/validate-design.mjs`](./scripts/validate-design.mjs) | Token, reference, theme-parity, and contrast checks |

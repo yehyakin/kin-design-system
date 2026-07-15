@@ -32,7 +32,7 @@ Reusable interaction contracts, complete page families, and product-specific com
 
 ### 3. Delivery surfaces
 
-Normative documentation, the showcase website, framework-free references, generated Tokens, Figma Variables interoperability, and implementation guidance for project-owned components.
+Normative documentation, the showcase website, framework-free references, generated Tokens, Figma Variables interoperability, implementation guidance for project-owned components, and a gated private React integration laboratory. Optional runtime adapters are a delivery surface, not the direction of the system and not a requirement for non-React products.
 
 ### 4. Adoption and verification
 

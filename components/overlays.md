@@ -48,6 +48,16 @@ Every overlay MUST define opening, initial focus, keyboard traversal, dismissal,
 - Long Drawer content MUST own its scroll without trapping the page in an unusable position.
 - Drag-to-dismiss MAY be added only with an equivalent close control and safe unsaved-change handling.
 
+When drag-to-dismiss or snap points are implemented:
+
+- gesture commitment SHOULD wait for an approximately `10px` intent threshold so page or Drawer scrolling is not taken accidentally;
+- the active surface MUST track the committed pointer 1:1, preserve the grab offset and use pointer capture;
+- release MUST consider both distance and velocity; a quick flick MAY commit at approximately `0.11px/ms` in the KIN reference;
+- snap selection SHOULD use projected momentum and boundary over-drag MUST use progressive resistance rather than a hard stop;
+- the implementation MUST ignore additional pointers, preserve the visible close path, and start reversal from the live rendered position;
+- normal programmatic open/close MUST remain non-overshooting; bounce is conditional on real momentum and product personality;
+- reduced motion MUST preserve direct manipulation and final state while removing elastic settle or large travel.
+
 ## Popover
 
 - Popover MUST remain associated with its trigger and reposition to stay within the viewport.
@@ -72,6 +82,8 @@ Every overlay MUST define opening, initial focus, keyboard traversal, dismissal,
 - Both MUST open from keyboard focus as well as pointer behavior.
 - Touch layouts MUST provide a stable alternate path; hover alone is insufficient.
 - Escape MUST dismiss without changing the underlying selection.
+- Keyboard Tooltip display MUST be immediate. Pointer Tooltip groups SHOULD delay the first intentional hover and MUST make subsequent adjacent Tooltips instant while the group sequence remains active.
+- Tooltip entrance MUST be origin-aware when motion is visible. Subsequent sequence Tooltips MUST NOT replay scale or travel.
 
 ## Scrim and background
 
@@ -112,6 +124,7 @@ Every overlay MUST define opening, initial focus, keyboard traversal, dismissal,
 - Scroll position is stable before and after the overlay.
 - Small screens, virtual keyboard, 200% zoom, long content, and long localization remain usable.
 - Touch users can reach Tooltip, Hover Card, Context Menu, and close actions through stable alternatives.
+- Gesture-enabled Drawers and Sheets preserve capture, scroll ownership, velocity continuity, progressive resistance, cancellation and a non-gesture close path.
 - Reduced motion and reduced transparency preserve the full task.
 
 ## Migration

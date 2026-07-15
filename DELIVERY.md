@@ -19,7 +19,7 @@ The machine-readable adoption values are `mode: contract-first`, `figma: variabl
 | Reference interfaces | Framework-free deterministic examples and browser tests | Production-ready application components |
 | Agent support | KIN Skill, repository instructions, audit candidates, adoption checks, and evidence templates | Autonomous product redesign without project context or review |
 | Figma | A create-only Variables payload and documented interoperability boundary | Published component sets, library ownership, update/delete operations, credentials, or stable Figma node IDs |
-| Runtime code | Reference HTML, CSS, JavaScript, and optional integration contracts | `@kin/react`, Vue, Web Components, native SDKs, or framework support commitments |
+| Runtime code | Reference HTML, CSS, JavaScript, optional integration contracts, and the isolated private `@kin-design/react` pre-release laboratory | A published universal React package, Vue/Web Components/native SDKs, or framework support commitments |
 
 - Consuming projects MUST own their production components, dependencies, rendering boundaries, data behavior, and release process.
 - Reference code MUST NOT be copied into production without reviewing semantics, accessibility, performance, security, and local architecture.
@@ -36,7 +36,8 @@ Consuming projects MAY use:
 - framework-free references as behavioral evidence;
 - the KIN Agent Skill;
 - read-only audit, adoption, and validation tooling;
-- documented adapters when the product has the corresponding need.
+- documented adapters when the product has the corresponding need;
+- a pinned private `@kin-design/react` subpath as an explicitly experimental migration target in a reviewed React product.
 
 They MUST record the exact reviewed contract revision, local contract checksum, local mappings, verification results, exceptions, and owners. The revision and checksum remain optional for compatibility with earlier 2.0 configuration files, but new adoption records SHOULD supply them. Contract checksums MUST use KIN's canonical UTF-8 text form: remove an optional BOM and normalize CRLF or CR line endings to LF while preserving all other content. The machine-readable adoption evidence format is defined in [`adoption/kin.evidence.schema.json`](./adoption/kin.evidence.schema.json).
 
@@ -81,15 +82,19 @@ Until those conditions are met, KIN MUST describe Figma support as Variables int
 
 ## Runtime boundary
 
-KIN does not currently publish a runtime package.
+KIN does not currently publish a supported runtime package. The repository contains an isolated, private pre-release React integration laboratory at [`packages/react/`](./packages/react/). It runs selected official packages through KIN-owned semantic adapters, but it is not a universal dependency, a stable release, or evidence that a consuming product has completed KIN adoption.
 
 Framework-free references exist to make behavior inspectable and testable. They intentionally avoid establishing framework APIs, styling inheritance, application state, server/client boundaries, or dependency commitments for consuming products.
 
 Consuming projects SHOULD adapt KIN through their existing primitives. They MUST NOT introduce a second component framework only to make an interface appear KIN-like.
 
+A React product MAY evaluate a pinned private adapter when it already uses the matching upstream package or the adapter materially lowers implementation risk. It MUST retain project ownership of data, authorization, routing, recovery, analytics, release, and rollback. Candidate component contracts remain under `/experimental/*`; development-only tooling remains under `/dev/*`.
+
+Runtime adapters MUST prefer a thin composition boundary around the official package. They MUST preserve upstream behavior and motion unless a documented accessibility, security, compatibility, or product-semantic conflict requires an override. Visual adaptation SHOULD use supported public styling and theme interfaces. Copying or forking upstream source is not the meaning of direct integration and remains outside the default repository boundary.
+
 ### Gate for a future runtime package
 
-A runtime implementation such as `@kin/react` MUST be proposed and released separately from the contract core. Approval requires:
+A published runtime implementation such as `@kin-design/react` MUST be proposed and released separately from the contract core. Approval requires:
 
 1. a named maintainer and support policy;
 2. package scope, framework, rendering, styling, and browser commitments;
@@ -115,10 +120,11 @@ The core repository MAY contain:
 - development-only test dependencies;
 - validation, audit, and adoption scripts;
 - screenshots produced as uncommitted or CI review artifacts.
+- a clearly isolated private pre-release package with its own RFC, ownership, version, changelog, tests, bundle checks, and rollback record.
 
 The core repository MUST NOT silently accumulate:
 
-- framework source directories intended for publication;
+- framework source directories presented as approved publication artifacts without passing the runtime gates;
 - compiled packages or distribution archives;
 - remote design-tool credentials or mutable IDs;
 - copied third-party component source;
@@ -159,13 +165,13 @@ A proposal that adds remote synchronization, a published design library, or a ru
 - update this file, `DESIGN.md`, `ROADMAP.md`, adoption Schemas, release checks, and Agent instructions;
 - receive explicit approval before implementation begins.
 
-Examples and experiments MAY explore a future boundary, but they MUST be labeled experimental and MUST NOT be represented as supported KIN delivery.
+Examples and experiments MAY explore a future boundary, but they MUST be labeled experimental and MUST NOT be represented as supported KIN delivery. The current React laboratory records this approved experimental boundary in [`packages/react/RFC.md`](./packages/react/RFC.md); publication still requires all runtime gates above.
 
 ## Acceptance checklist
 
 - The project describes KIN as contract-first.
 - Figma support is described as Variables interoperability, not a published component library.
-- Runtime examples are not described as a package.
+- The private React integration laboratory is distinguished from a published or universally supported package.
 - Production components remain owned by the consuming project.
 - Optional package or design-library work has separate ownership and release gates.
 - Adoption evidence records mappings, verification, exceptions, owners, and production observation without fabricated pass results.

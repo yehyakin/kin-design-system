@@ -68,6 +68,7 @@ The Figma exporter deliberately does not manage credentials or update existing l
 4. Gather adoption evidence from real consuming products before expanding scanner rules or claiming that a mapping is visibly KIN.
 5. Add ID-aware Figma library synchronization only if an eligible team can test update and rollback behavior.
 6. Evaluate cross-platform screenshot baselines after font and renderer variance is measured.
+7. Validate the private `@kin-design/react` integration laboratory in two materially different production workflows before deciding whether it should be published, retained internally, or removed.
 
 ## Verification baseline
 
@@ -82,7 +83,7 @@ The Figma exporter deliberately does not manage credentials or update existing l
 
 - KIN core remains contract-first.
 - Figma delivery remains Variables interoperability; no published component library or remote ID synchronization is claimed.
-- Runtime components remain project-owned; the reference interfaces are not a universal package.
+- Runtime components remain project-owned. The private `@kin-design/react` laboratory is an optional pre-release migration surface, not a universal package or a completed adoption claim.
 - Any future Figma Library or runtime package requires the ownership, versioning, adoption evidence, migration and rollback gates in `DELIVERY.md` and SHOULD be released separately.
 - Adoption tooling records `initialized`, `mapped`, `verified` and `production-observed` evidence without running project commands or fabricating pass results.
 - A `verified` claim requires a passed representative-workflow visual review in addition to structural, automated and manual evidence.

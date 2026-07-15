@@ -2,7 +2,7 @@ import {
   Bell,
   BookOpen,
   Bot,
-  Boxes,
+  Blocks,
   Check,
   CirclePlay,
   Code2,
@@ -34,6 +34,7 @@ const root = document.documentElement;
 const locale = root.lang === "zh-CN" ? "zh" : "en";
 const colorScheme = matchMedia("(prefers-color-scheme: dark)");
 const compactLayout = matchMedia("(max-width: 780px)");
+const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
 const themeColor = document.querySelector('meta[name="theme-color"]');
 const themeSwitch = document.querySelector("[data-theme-switch]");
 const systemThemeActions = [...document.querySelectorAll("[data-theme-system]")];
@@ -108,18 +109,59 @@ addEventListener("resize", () => {
   if (!compactLayout.matches) setNavigation(false, false);
 });
 
-function setLanguageMenu(open, moveFocus = true) {
-  if (!languageMenu || !languageTrigger) return;
-  languageMenu.hidden = !open;
-  languageTrigger.setAttribute("aria-expanded", String(open));
-  if (!moveFocus) return;
-  if (open) languageMenu.querySelector('[role="menuitem"]')?.focus();
-  else languageTrigger.focus();
+let languageOpenFrame;
+let languageCloseTimer;
+
+function cancelLanguageMenuWork() {
+  if (languageOpenFrame !== undefined) cancelAnimationFrame(languageOpenFrame);
+  if (languageCloseTimer !== undefined) clearTimeout(languageCloseTimer);
+  languageOpenFrame = undefined;
+  languageCloseTimer = undefined;
 }
 
-languageTrigger?.addEventListener("click", () => setLanguageMenu(languageMenu.hidden));
+function setLanguageMenu(open, moveFocus = true) {
+  if (!languageMenu || !languageTrigger) return;
+  cancelLanguageMenuWork();
+  languageTrigger.setAttribute("aria-expanded", String(open));
+
+  if (open) {
+    languageMenu.hidden = false;
+    languageMenu.inert = false;
+    languageMenu.dataset.state = "opening";
+    languageOpenFrame = requestAnimationFrame(() => {
+      languageOpenFrame = undefined;
+      if (languageMenu.dataset.state !== "opening") return;
+      languageMenu.dataset.state = "open";
+      if (moveFocus) (languageMenu.querySelector('[aria-current="page"]') ?? languageMenu.querySelector('[role="menuitem"]'))?.focus();
+    });
+    return;
+  }
+
+  if (languageMenu.hidden || languageMenu.dataset.state === "closed") {
+    languageMenu.dataset.state = "closed";
+    if (moveFocus) languageTrigger.focus();
+    return;
+  }
+
+  languageMenu.inert = true;
+  languageMenu.dataset.state = "closing";
+  if (moveFocus) languageTrigger.focus();
+  languageCloseTimer = window.setTimeout(() => {
+    languageCloseTimer = undefined;
+    if (languageMenu.dataset.state !== "closing") return;
+    languageMenu.hidden = true;
+    languageMenu.inert = false;
+    languageMenu.dataset.state = "closed";
+  }, reducedMotion.matches ? 90 : 180);
+}
+
+languageTrigger?.addEventListener("click", () => {
+  const open = languageMenu?.dataset.state === "open" || languageMenu?.dataset.state === "opening";
+  setLanguageMenu(!open);
+});
 document.addEventListener("click", (event) => {
-  if (!languageMenu?.hidden && !languageControl?.contains(event.target)) setLanguageMenu(false, false);
+  const open = languageMenu?.dataset.state === "open" || languageMenu?.dataset.state === "opening";
+  if (open && !languageControl?.contains(event.target)) setLanguageMenu(false, false);
 });
 
 for (const tablist of document.querySelectorAll("[data-pattern-tabs]")) {
@@ -150,17 +192,46 @@ for (const tablist of document.querySelectorAll("[data-pattern-tabs]")) {
   }
 }
 
-function openCommand() {
-  if (!commandDialog?.open) {
-    commandDialog?.showModal();
-    commandSearch.value = "";
-    filterCommands("");
-    requestAnimationFrame(() => commandSearch?.focus());
-  }
+let commandOpenFrame;
+let commandCloseTimer;
+
+function cancelCommandWork() {
+  if (commandOpenFrame !== undefined) cancelAnimationFrame(commandOpenFrame);
+  if (commandCloseTimer !== undefined) clearTimeout(commandCloseTimer);
+  commandOpenFrame = undefined;
+  commandCloseTimer = undefined;
+}
+
+function openCommand(invocation = "pointer") {
+  if (!commandDialog) return;
+  cancelCommandWork();
+  if (!commandDialog.open) commandDialog.showModal();
+  commandDialog.inert = false;
+  commandDialog.dataset.invocation = invocation;
+  commandDialog.dataset.state = "opening";
+  commandSearch.value = "";
+  filterCommands("");
+  commandOpenFrame = requestAnimationFrame(() => {
+    commandOpenFrame = undefined;
+    if (commandDialog.dataset.state !== "opening") return;
+    commandDialog.dataset.state = "open";
+    commandSearch?.focus();
+  });
 }
 
 function closeCommand() {
-  if (commandDialog?.open) commandDialog.close();
+  if (!commandDialog?.open) return;
+  cancelCommandWork();
+  commandDialog.inert = true;
+  commandDialog.dataset.state = "closing";
+  commandCloseTimer = window.setTimeout(() => {
+    commandCloseTimer = undefined;
+    if (commandDialog.dataset.state !== "closing") return;
+    commandDialog.close();
+    commandDialog.inert = false;
+    commandDialog.dataset.state = "closed";
+    commandTrigger?.focus();
+  }, reducedMotion.matches ? 90 : 210);
 }
 
 function filterCommands(query) {
@@ -174,23 +245,26 @@ function filterCommands(query) {
   commandEmpty.hidden = visible > 0;
 }
 
-commandTrigger?.addEventListener("click", openCommand);
+commandTrigger?.addEventListener("click", () => openCommand("pointer"));
 commandSearch?.addEventListener("input", () => filterCommands(commandSearch.value));
 commandDialog?.addEventListener("click", (event) => {
   if (event.target === commandDialog) closeCommand();
 });
-commandDialog?.addEventListener("close", () => commandTrigger?.focus());
+commandDialog?.addEventListener("cancel", (event) => {
+  event.preventDefault();
+  closeCommand();
+});
 for (const item of commandItems) item.addEventListener("click", closeCommand);
 
 addEventListener("keydown", (event) => {
   const editable = event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement || event.target.isContentEditable;
   if ((event.metaKey || event.ctrlKey) && event.key.toLocaleLowerCase() === "k") {
     event.preventDefault();
-    openCommand();
+    openCommand("keyboard");
   }
   if (event.key === "/" && !editable && !commandDialog?.open) {
     event.preventDefault();
-    openCommand();
+    openCommand("keyboard");
   }
   if (event.key === "Escape" && commandDialog?.open) {
     event.preventDefault();
@@ -254,7 +328,7 @@ createIcons({
     Bell,
     BookOpen,
     Bot,
-    Boxes,
+    Blocks,
     Check,
     CirclePlay,
     Code2,

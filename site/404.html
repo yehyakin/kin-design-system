@@ -1,22 +1,112 @@
 <!doctype html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="dark" data-theme-preference="system" data-contrast="normal">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex">
   <meta name="theme-color" content="#08090a">
+  <script>
+    (() => {
+      const root = document.documentElement;
+      const params = new URLSearchParams(location.search);
+      const explicitLocale = params.get("lang");
+      const pathLocale = /\/zh(?:\/|$)/.test(location.pathname) ? "zh" : null;
+      const savedLocale = localStorage.getItem("kin-site-locale");
+      const locale = explicitLocale === "zh" || explicitLocale === "en"
+        ? explicitLocale
+        : pathLocale || (savedLocale === "zh" ? "zh" : "en");
+      const preference = localStorage.getItem("kin-site-theme") || "system";
+      const theme = preference === "system"
+        ? (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")
+        : preference;
+      if (explicitLocale === "zh" || explicitLocale === "en") localStorage.setItem("kin-site-locale", locale);
+      root.lang = locale === "zh" ? "zh-CN" : "en";
+      root.dataset.locale = locale;
+      root.dataset.themePreference = preference;
+      root.dataset.theme = theme;
+      root.style.colorScheme = theme;
+      root.dataset.contrast = localStorage.getItem("kin-site-contrast") === "more" ? "more" : "normal";
+      document.querySelector('meta[name="theme-color"]').content = theme === "dark" ? "#08090a" : "#f6f7f8";
+    })();
+  </script>
   <link rel="icon" href="/kin-design-system/assets/mark.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/kin-design-system/assets/site.css">
+  <script type="module" src="/kin-design-system/assets/site.js"></script>
   <title>Page not found · KIN Design System</title>
 </head>
-<body>
-  <main class="docs-main" style="min-height:100vh;display:grid;place-items:center;padding:24px">
-    <section style="width:min(100%,560px)">
+<body class="error-page">
+  <a class="skip-link" href="#main" data-404-key="skip">Skip to content</a>
+  <header class="site-header">
+    <a class="brand" data-404-home data-404-brand href="/kin-design-system/" aria-label="KIN Design System home">
+      <span class="brand-mark" aria-hidden="true">KIN</span>
+      <span class="brand-copy"><strong>KIN</strong><small>Design System 2.0</small></span>
+    </a>
+    <div class="header-center" aria-hidden="true"></div>
+    <div class="header-actions">
+      <div class="language-control" data-language-control>
+        <button class="language-trigger" type="button" data-language-trigger aria-haspopup="menu" aria-expanded="false" aria-label="Choose language"><i data-lucide="languages" aria-hidden="true"></i></button>
+        <div class="language-menu" data-language-menu role="menu" data-state="closed" hidden>
+          <a data-404-language="en" href="?lang=en" role="menuitem" lang="en"><span>English</span><i data-lucide="check" data-404-check="en" aria-hidden="true"></i></a>
+          <a data-404-language="zh" href="?lang=zh" role="menuitem" lang="zh-CN"><span>中文</span><i data-lucide="check" data-404-check="zh" aria-hidden="true"></i></a>
+        </div>
+      </div>
+      <button class="theme-switch" type="button" role="switch" data-theme-switch aria-checked="true" aria-label="Switch to light mode"><i class="theme-sun" data-lucide="sun" aria-hidden="true"></i><i class="theme-moon" data-lucide="moon" aria-hidden="true"></i></button>
+      <a class="github-link" href="https://github.com/yehyakin/kin-design-system" aria-label="KIN on GitHub"><i data-lucide="code-2" aria-hidden="true"></i><span>GitHub</span></a>
+    </div>
+  </header>
+  <main id="main" class="error-main">
+    <section class="error-content" aria-labelledby="error-title">
       <p class="eyebrow">404 / KIN DESIGN SYSTEM</p>
-      <h1 style="font-size:32px">This page is not part of the current contract.</h1>
-      <p class="lead" style="font-size:15px">The address may have changed, or the resource may belong to another version.</p>
-      <div class="intro-actions"><a class="button primary" href="/kin-design-system/">Return to KIN</a><a class="button" href="https://github.com/yehyakin/kin-design-system">Open the repository</a></div>
+      <h1 id="error-title" data-404-key="title">This page is not part of the current contract.</h1>
+      <p class="lead" data-404-key="body">The address may have changed, or the resource may belong to another version.</p>
+      <div class="intro-actions">
+        <a class="button primary" data-404-home href="/kin-design-system/" data-404-key="return">Return to KIN</a>
+        <a class="button" href="https://github.com/yehyakin/kin-design-system" data-404-key="repository">Open the repository</a>
+      </div>
     </section>
   </main>
+  <script>
+    (() => {
+      const root = document.documentElement;
+      const locale = root.dataset.locale === "zh" ? "zh" : "en";
+      const copy = {
+        en: {
+          skip: "Skip to content",
+          title: "This page is not part of the current contract.",
+          body: "The address may have changed, or the resource may belong to another version.",
+          return: "Return to KIN",
+          repository: "Open the repository",
+          language: "Choose language",
+          home: "KIN Design System home",
+          titleText: "Page not found · KIN Design System",
+        },
+        zh: {
+          skip: "跳到主要内容",
+          title: "当前设计合同中没有这个页面。",
+          body: "地址可能已经变更，或该资源属于其他版本。",
+          return: "返回 KIN",
+          repository: "打开代码仓库",
+          language: "选择语言",
+          home: "KIN 设计系统首页",
+          titleText: "找不到页面 · KIN 设计系统",
+        },
+      }[locale];
+      const pagesBase = location.pathname.includes("/kin-design-system/") ? "/kin-design-system/" : "/";
+      for (const element of document.querySelectorAll("[data-404-key]")) element.textContent = copy[element.dataset["404Key"]];
+      for (const link of document.querySelectorAll("[data-404-home]")) {
+        link.href = locale === "zh" ? `${pagesBase}zh/` : pagesBase;
+      }
+      document.querySelector("[data-404-brand]").setAttribute("aria-label", copy.home);
+      for (const link of document.querySelectorAll("[data-404-language]")) {
+        const selected = link.dataset["404Language"] === locale;
+        link.href = `${location.pathname}?lang=${link.dataset["404Language"]}`;
+        if (selected) link.setAttribute("aria-current", "page");
+        else link.removeAttribute("aria-current");
+      }
+      for (const check of document.querySelectorAll("[data-404-check]")) check.hidden = check.dataset["404Check"] !== locale;
+      document.querySelector("[data-language-trigger]").setAttribute("aria-label", copy.language);
+      document.title = copy.titleText;
+    })();
+  </script>
 </body>
 </html>

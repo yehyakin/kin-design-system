@@ -2,7 +2,7 @@
 
 ## Decision
 
-Core candidate only when data volume, dynamic row height or streaming content makes virtualization materially useful. Start with semantic markup and measure before adopting.
+Runtime-integrated implementation utility for stable list contracts, only when data volume, dynamic row height or streaming content makes virtualization materially useful. Start with semantic markup and measure before adopting.
 
 ## Allowed
 
@@ -27,6 +27,12 @@ Core candidate only when data volume, dynamic row height or streaming content ma
 - Small lists where native document flow is simpler.
 - As a substitute for pagination, filtering or data-query design.
 - If virtualization breaks table semantics or focus without a tested repair.
+
+## Runtime implementation
+
+[`@kin-design/react/virtuoso`](../packages/react/src/virtuoso.tsx) directly renders the official React Virtuoso engine. Virtuoso owns measurement, DOM windowing and scroll positioning; KIN requires stable keys, accessible naming, active-row visibility, product-owned selection, and measured overscan.
+
+The [Integration Lab](../examples/workspace-reference/integrations.html#virtuoso) runs one thousand objects while retaining a small rendered window and keyboard-followed selection.
 
 ## Source
 

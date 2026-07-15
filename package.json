@@ -11,33 +11,51 @@
   "engines": {
     "node": ">=20.11"
   },
+  "workspaces": [
+    "packages/*"
+  ],
   "type": "module",
   "scripts": {
-    "validate": "node scripts/validate-docs.mjs && node scripts/validate-design.mjs && node scripts/validate-components.mjs && node scripts/validate-pages.mjs && node scripts/validate-release.mjs && node scripts/export-tokens.mjs --check && node scripts/export-figma-variables.mjs --check",
+    "validate": "node scripts/validate-docs.mjs && node scripts/validate-design.mjs && node scripts/validate-components.mjs && node scripts/validate-pages.mjs && node scripts/validate-integrations.mjs && node scripts/validate-release.mjs && node scripts/export-tokens.mjs --check && node scripts/export-figma-variables.mjs --check",
     "tokens:export": "node scripts/export-tokens.mjs",
     "tokens:check": "node scripts/export-tokens.mjs --check && node scripts/export-figma-variables.mjs --check",
     "tokens:figma": "node scripts/export-figma-variables.mjs",
     "components:check": "node scripts/validate-components.mjs",
     "pages:check": "node scripts/validate-pages.mjs",
-    "site:build": "node scripts/build-site.mjs",
-    "site:check": "node scripts/build-site.mjs && node scripts/validate-site.mjs",
-    "site:serve": "node scripts/build-site.mjs && node scripts/serve-site.mjs",
+    "site:build": "npm run runtime:build && node scripts/build-site.mjs",
+    "site:check": "npm run runtime:build && node scripts/build-site.mjs && node scripts/validate-site.mjs",
+    "site:serve": "npm run runtime:build && node scripts/build-site.mjs && node scripts/serve-site.mjs",
     "adoption:init": "node scripts/init-adoption.mjs",
     "adoption:check": "node scripts/check-adoption.mjs",
     "test:reference": "playwright test",
     "test:reference:chromium": "playwright test --project=chromium-reduced --project=chromium-normal-motion",
     "test:reference:smoke": "playwright test --project=firefox-smoke --project=webkit-smoke",
     "test:reference:update": "playwright test --update-snapshots",
+    "runtime:build": "npm run build --workspace @kin-design/react",
+    "runtime:check": "npm run check --workspace @kin-design/react",
     "test:tooling": "node --test tests/tooling.test.mjs",
     "audit": "node scripts/audit-project.mjs"
   },
   "devDependencies": {
+    "@dnd-kit/core": "6.3.1",
+    "@dnd-kit/sortable": "10.0.0",
+    "@dnd-kit/utilities": "3.2.2",
     "@google/design.md": "0.3.0",
+    "@number-flow/react": "0.6.1",
     "@playwright/test": "1.61.1",
+    "@types/react": "19.2.17",
+    "@types/react-dom": "19.2.3",
+    "cmdk": "1.1.1",
     "esbuild": "0.28.1",
+    "input-otp": "1.4.2",
+    "leva": "0.10.1",
+    "liveline": "0.0.7",
     "lucide": "1.24.0",
+    "lucide-react": "1.24.0",
     "react": "19.2.7",
     "react-dom": "19.2.7",
-    "sonner": "2.0.7"
+    "react-virtuoso": "4.18.10",
+    "sonner": "2.0.7",
+    "typescript": "7.0.2"
   }
 }

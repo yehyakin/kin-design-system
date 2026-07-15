@@ -1,6 +1,7 @@
 import {
   Activity,
   Check,
+  ChevronDown,
   CirclePlay,
   Contrast,
   createIcons,
@@ -28,6 +29,10 @@ const root = document.documentElement;
 const media = matchMedia("(prefers-color-scheme: dark)");
 const themeColor = document.querySelector('meta[name="theme-color"]');
 const themeSwitch = document.querySelector("[data-theme-switch]");
+const themeControl = document.querySelector("[data-theme-control]");
+const themeMenuTrigger = document.querySelector("[data-theme-menu-trigger]");
+const themeMenu = document.querySelector("[data-theme-menu]");
+const themeOptions = [...document.querySelectorAll("[data-theme-option]")];
 const appShell = document.querySelector(".app-shell");
 const sidebar = document.querySelector(".sidebar");
 const workspace = document.querySelector(".workspace");
@@ -124,7 +129,7 @@ const copy = {
     asyncLabel: "异步完成", saveButton: "保存视图", savingButton: "正在保存", savedButton: "已保存", asyncDescription: "同一按钮连续呈现等待、完成和恢复状态。",
     taskButton: "启动导出任务", taskDescription: "同一条通知从处理中更新为完成，不重复堆叠。",
     errorLabel: "失败与重试", retryButton: "模拟请求失败", errorDescription: "失败通知保留上下文，并提供明确的重试动作。",
-    switchToLight: "切换到日间模式", switchToDark: "切换到夜间模式",
+    switchToLight: "切换到日间模式", switchToDark: "切换到夜间模式", appearance: "选择外观", themeLight: "日间模式", themeDark: "夜间模式", themeSystem: "跟随系统",
     followedTitle: "已加入关注", followedDescription: "Alpha Network 的变化会出现在关注视图中。", undo: "撤销", undone: "已撤销关注",
     scanTitle: "检测任务已创建", scanDescription: "系统将检测公开入口和监测节点。", viewTask: "查看任务", taskOpened: "检测任务已打开",
     savedTitle: "视图已保存", savedDescription: "筛选条件和列顺序已保存。",
@@ -159,7 +164,7 @@ const copy = {
     asyncLabel: "Async completion", saveButton: "Save view", savingButton: "Saving", savedButton: "Saved", asyncDescription: "One button moves through pending, complete, and restored states without shifting layout.",
     taskButton: "Start export task", taskDescription: "One notification updates from processing to complete instead of stacking duplicates.",
     errorLabel: "Failure and retry", retryButton: "Simulate request failure", errorDescription: "The error keeps its context and offers a clear retry action.",
-    switchToLight: "Switch to light mode", switchToDark: "Switch to dark mode",
+    switchToLight: "Switch to light mode", switchToDark: "Switch to dark mode", appearance: "Choose appearance", themeLight: "Light", themeDark: "Dark", themeSystem: "System",
     followedTitle: "Added to following", followedDescription: "Changes to Alpha Network will appear in your followed view.", undo: "Undo", undone: "Follow removed",
     scanTitle: "Scan created", scanDescription: "Public endpoints and monitoring nodes will be checked.", viewTask: "View task", taskOpened: "Scan task opened",
     savedTitle: "View saved", savedDescription: "Filters and column order have been saved.",
@@ -202,6 +207,11 @@ function updateThemeSwitch(theme) {
   const dark = theme === "dark";
   themeSwitch.setAttribute("aria-checked", String(dark));
   themeSwitch.setAttribute("aria-label", copy[currentLocale()][dark ? "switchToLight" : "switchToDark"]);
+  for (const option of themeOptions) {
+    const selected = option.dataset.themeOption === root.dataset.themePreference;
+    option.setAttribute("aria-checked", String(selected));
+    option.setAttribute("aria-current", selected ? "true" : "false");
+  }
 }
 
 function applyTheme(preference, persist = true) {
@@ -214,7 +224,10 @@ function applyTheme(preference, persist = true) {
   if (sonnerModulePromise) sonnerModulePromise.then((module) => module.updateToasterTheme(theme, currentLocale()));
 }
 
-themeSwitch.addEventListener("click", () => applyTheme(root.dataset.theme === "dark" ? "light" : "dark"));
+themeSwitch.addEventListener("click", () => {
+  if (transientIsOpen(themeMenu)) setThemeMenu(false, false);
+  applyTheme(root.dataset.theme === "dark" ? "light" : "dark");
+});
 media.addEventListener("change", () => {
   if (root.dataset.themePreference === "system") applyTheme("system", false);
 });
@@ -274,6 +287,35 @@ function setLanguageMenu(open, moveFocus = true) {
   });
 }
 
+function setThemeMenu(open, moveFocus = true) {
+  const selected = themeOptions.find((option) => option.getAttribute("aria-checked") === "true") ?? themeOptions[0];
+  setTransientSurface(themeMenu, open, {
+    trigger: themeMenuTrigger,
+    focusTarget: moveFocus ? selected : null,
+    restoreFocus: moveFocus && !open,
+  });
+}
+
+function bindMenuKeyboard(menu, items, close) {
+  menu.addEventListener("keydown", (event) => {
+    const index = items.indexOf(document.activeElement);
+    if (["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)) {
+      event.preventDefault();
+      const next = event.key === "Home"
+        ? 0
+        : event.key === "End"
+          ? items.length - 1
+          : (index + (event.key === "ArrowDown" ? 1 : -1) + items.length) % items.length;
+      items[next]?.focus();
+    }
+    if (event.key === "Escape") {
+      event.preventDefault();
+      event.stopPropagation();
+      close();
+    }
+  });
+}
+
 languageTrigger.addEventListener("click", () => setLanguageMenu(!transientIsOpen(languageMenu)));
 for (const button of localeButtons) {
   button.addEventListener("click", () => {
@@ -281,8 +323,18 @@ for (const button of localeButtons) {
     setLanguageMenu(false);
   });
 }
+themeMenuTrigger.addEventListener("click", () => setThemeMenu(!transientIsOpen(themeMenu)));
+for (const option of themeOptions) {
+  option.addEventListener("click", () => {
+    applyTheme(option.dataset.themeOption);
+    setThemeMenu(false);
+  });
+}
+bindMenuKeyboard(languageMenu, localeButtons, () => setLanguageMenu(false));
+bindMenuKeyboard(themeMenu, themeOptions, () => setThemeMenu(false));
 document.addEventListener("click", (event) => {
   if (transientIsOpen(languageMenu) && !languageControl.contains(event.target)) setLanguageMenu(false, false);
+  if (transientIsOpen(themeMenu) && !themeControl.contains(event.target)) setThemeMenu(false, false);
   if (transientIsOpen(locationOverflowMenu) && !locationOverflow.contains(event.target)) setLocationOverflow(false, false);
 });
 
@@ -346,6 +398,8 @@ inspector.addEventListener("keydown", (event) => {
 document.addEventListener("keydown", (event) => {
   if (event.key === "Escape" && transientIsOpen(languageMenu)) {
     setLanguageMenu(false);
+  } else if (event.key === "Escape" && transientIsOpen(themeMenu)) {
+    setThemeMenu(false);
   } else if (event.key === "Escape" && transientIsOpen(locationOverflowMenu)) {
     setLocationOverflow(false);
   } else if (event.key === "Escape" && inspectorIsOpen()) {
@@ -434,6 +488,7 @@ createIcons({
   icons: {
     Activity,
     Check,
+    ChevronDown,
     CirclePlay,
     Contrast,
     Database,
