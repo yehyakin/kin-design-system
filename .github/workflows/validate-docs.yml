@@ -114,7 +114,9 @@ jobs:
         run: npx playwright install --with-deps chromium
 
       - name: Verify SSR and hydration with React ${{ matrix.react }}
-        run: KIN_REACT_VERSION=${{ matrix.react }} node scripts/test-react-compatibility.mjs
+        env:
+          KIN_REACT_VERSION: ${{ matrix.react }}
+        run: npm run runtime:compat
 
   reference:
     needs:

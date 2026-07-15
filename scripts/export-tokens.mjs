@@ -46,7 +46,7 @@ function generate(format) {
   const generated = result.stdout.replace(/\r\n/g, "\n").trimEnd() + "\n";
   if (format === "css-tailwind") {
     const validFontStacks = generated.replace(
-      /(--font-[\w-]+:\s*)"((?:\\.|[^"])*)";/g,
+      /(--font-[\w-]+:\s*)"((?:\\.|[^"\\])*)";/g,
       (_, prefix, value) => `${prefix}${value.replaceAll('\\"', '"').replaceAll("\\\\", "\\")};`,
     );
     return `${validFontStacks.trimEnd()}\n\n${motionToCss(motionTokens)}`;

@@ -20,8 +20,13 @@ assert.match(
   "KIN_REACT_VERSION must be React 18.2.0 or an exact React 19 release",
 );
 
-const npmCli = process.env.npm_execpath
-  ?? path.join(path.dirname(process.execPath), "node_modules", "npm", "bin", "npm-cli.js");
+const npmCliCandidates = [
+  process.env.npm_execpath,
+  path.join(path.dirname(process.execPath), "node_modules", "npm", "bin", "npm-cli.js"),
+  path.resolve(path.dirname(process.execPath), "..", "lib", "node_modules", "npm", "bin", "npm-cli.js"),
+].filter(Boolean);
+const npmCli = npmCliCandidates.find((candidate) => fs.existsSync(candidate));
+assert.ok(npmCli, `Unable to locate npm CLI. Checked: ${npmCliCandidates.join(", ")}`);
 
 function runNpm(args, options) {
   return execFileSync(process.execPath, [npmCli, ...args], options);
