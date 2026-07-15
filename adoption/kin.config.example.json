@@ -3,9 +3,9 @@
   "kinVersion": "3.0.0",
   "profile": "information-site",
   "contract": {
-    "source": "https://github.com/yehyakin/kin-design-system/tree/0000000000000000000000000000000000000000",
+    "source": "https://github.com/yehyakin/kin-design-system/tree/030e69724923e32d5a61e479bfd0f81ce8fba18f",
     "local": "docs/KIN-DESIGN.md",
-    "revision": "0000000000000000000000000000000000000000",
+    "revision": "030e69724923e32d5a61e479bfd0f81ce8fba18f",
     "checksum": "ad31b4597cdab60361df3d99f681bf5f3697ad38c34f0e4f4223b10a34595301"
   },
   "tokens": {
