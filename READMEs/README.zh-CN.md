@@ -363,6 +363,9 @@ KIN 建议按照下面的顺序解决界面问题：
 | [`components/preference-controls.md`](../components/preference-controls.md) | 日夜间开关、系统主题与语言菜单的规范性合同 |
 | [`examples/workspace-reference/`](../examples/workspace-reference/) | 无框架、支持明暗主题和响应式的视觉基准页 |
 | [`examples/workspace-reference/core-components.html`](../examples/workspace-reference/core-components.html) | 登录、控件、动效、反馈、数据与浮层的可运行参考页 |
+| [`examples/page-patterns/access.html`](https://yehyakin.github.io/kin-design-system/examples/page-patterns/access.html?lang=zh-CN) | 完整页面中的登录、账户恢复、会话状态与返回上下文参考 |
+| [`登录弹窗`](https://yehyakin.github.io/kin-design-system/examples/workspace-reference/core-components.html?lang=zh-CN&dialog=authentication#authentication) | 直接打开保留当前任务的页内登录弹窗 |
+| [`会话重新验证弹窗`](https://yehyakin.github.io/kin-design-system/examples/workspace-reference/core-components.html?lang=zh-CN&dialog=reauthentication#authentication) | 直接打开敏感操作前的身份确认参考 |
 | [`examples/workspace-reference/motion.html`](../examples/workspace-reference/motion.html) | 稳定图标槽、菜单进退、Sonner 任务、响应式 Drawer、快速反向与减弱动效的 Motion Lab |
 | [`examples/workspace-reference/integrations.html`](../examples/workspace-reference/integrations.html) | 可操作的官方 Sonner、NumberFlow、cmdk、React Virtuoso、dnd kit、input-otp 与 Liveline 运行时，以及 Leva 开发边界 |
 | [`examples/workspace-reference/advanced-components.html`](../examples/workspace-reference/advanced-components.html) | AI、审核、持久任务、媒体与可访问图表的确定性本地参考页 |

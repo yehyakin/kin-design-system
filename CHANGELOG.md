@@ -21,6 +21,7 @@ The project follows semantic versioning for normative design documentation.
 
 ### Reference-control and overlay completion
 
+- Exposed the full sign-in page, in-context Authentication Dialog, and Session Re-authentication Dialog as separate bilingual showcase and Command Menu destinations; direct dialog links now open the requested reference, preserve focus behavior, and remove transient URL state on close.
 - Replaced focus suppression in chart points, virtual lists, command input, and Motion Lab search with transparent forced-color fallbacks plus explicit `:focus-visible` or `:focus-within` boundaries; the Integration Lab now resolves browser theme color from the active canvas Token.
 - Corrected the candidate audit so generated, test, coverage, and dependency directories remain excluded at nested workspace depths instead of only at the repository root.
 - Completed the authentication references with an in-context Authentication Dialog, honest unavailable-provider messaging, deterministic full-page failure and recovery fixtures, stable password icons, and reversible Dialog motion with focus restoration.

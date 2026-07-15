@@ -201,7 +201,13 @@ for (const option of themeOptions) {
 languageTrigger?.addEventListener("click", () => languageMenuController?.toggle());
 for (const option of languageOptions) {
   option.addEventListener("click", () => {
-    applyLocale(option.dataset.languageOption);
+    const locale = option.dataset.languageOption;
+    applyLocale(locale);
+    const url = new URL(window.location.href);
+    if (url.searchParams.has("lang")) {
+      url.searchParams.set("lang", locale);
+      window.history.replaceState(null, "", `${url.pathname}${url.search}${url.hash}`);
+    }
     languageMenuController?.close();
   });
 }
@@ -1507,7 +1513,11 @@ createIcons({
   },
 });
 
-applyLocale(localStorage.getItem("kin-reference-locale") || root.lang || "zh-CN", false);
+const requestedLocale = new URLSearchParams(window.location.search).get("lang");
+const initialLocale = ["en", "zh-CN"].includes(requestedLocale)
+  ? requestedLocale
+  : (localStorage.getItem("kin-reference-locale") || root.lang || "zh-CN");
+applyLocale(initialLocale, false);
 applyTheme(root.dataset.themePreference || "system", false);
 setupPasswords();
 
