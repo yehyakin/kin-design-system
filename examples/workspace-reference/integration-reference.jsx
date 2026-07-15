@@ -468,8 +468,8 @@ function App() {
     document.documentElement.dataset.themePreference = themePreference;
     document.documentElement.style.colorScheme = theme;
     localStorage.setItem("kin-reference-theme", themePreference);
-    const color = theme === "dark" ? "#08090a" : "#f6f7f8";
-    document.querySelector('meta[name="theme-color"]')?.setAttribute("content", color);
+    const canvasColor = getComputedStyle(document.documentElement).getPropertyValue("--canvas").trim();
+    if (canvasColor) document.querySelector('meta[name="theme-color"]')?.setAttribute("content", canvasColor);
   }, [theme, themePreference]);
 
   React.useEffect(() => {

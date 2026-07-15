@@ -91,7 +91,7 @@
 .chart-axis text { fill: var(--muted); font-size: 10px; }
 .chart-line { fill: none; stroke: var(--accent); stroke-width: 2; }
 .chart-points circle { fill: var(--surface-1); stroke: var(--accent); stroke-width: 2; }
-.chart-points circle:focus-visible { outline: none; stroke: var(--focus); stroke-width: 4; }
+.chart-points circle:focus-visible { outline: 2px solid transparent; outline-offset: 2px; stroke: var(--focus); stroke-width: 4; }
 .chart-summary { margin: 10px 0 0; color: var(--muted); font-size: 11px; }
 .chart-table { min-width: 0; }
 .chart-table table { width: 100%; border-collapse: collapse; }

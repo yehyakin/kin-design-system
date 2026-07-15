@@ -32,7 +32,8 @@
 .frequency-surface > div { display: grid; grid-template-columns: 16px minmax(0, 1fr) 32px; align-items: center; gap: 8px; min-height: 38px; padding: 0 4px 0 10px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface-1); }
 .frequency-surface > div > svg { width: 14px; height: 14px; color: var(--muted); }
 .frequency-surface input { min-width: 0; height: 34px; padding: 0; border: 0; background: transparent; color: var(--text); font: inherit; }
-.frequency-surface input:focus { outline: 0; }
+.frequency-surface > div:focus-within { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+.frequency-surface input:focus-visible { outline: 2px solid transparent; outline-offset: 2px; }
 .frequency-surface .icon-only-control { width: 32px; min-width: 32px; height: 32px; }
 .frequency-status, .tooltip-status, .gesture-status { margin: 0; color: var(--muted); font-size: 11px; line-height: 1.55; }
 .frequency-surface[data-invocation="pointer"][data-state="opening"] { opacity: 0; transform: translateY(-2px); }

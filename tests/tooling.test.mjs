@@ -341,6 +341,19 @@ test("candidate audit does not penalize required browser theme-color plumbing", 
   assert.equal(JSON.parse(run.stdout).findingCount, 0);
 });
 
+test("candidate audit excludes generated directories at any workspace depth", () => {
+  const project = fs.mkdtempSync(path.join(os.tmpdir(), "kin-generated-audit-"));
+  fs.mkdirSync(path.join(project, "packages", "sample", "dist"), { recursive: true });
+  fs.mkdirSync(path.join(project, "src"));
+  fs.writeFileSync(path.join(project, "packages", "sample", "dist", "generated.css"), ".generated { outline: 0; }\n");
+  fs.writeFileSync(path.join(project, "src", "app.css"), ".app { color: var(--text); }\n");
+  const run = spawnSync(process.execPath, [path.join(root, "scripts", "audit-project.mjs"), project, "--json"], { encoding: "utf8" });
+  assert.equal(run.status, 0, run.stderr);
+  const report = JSON.parse(run.stdout);
+  assert.equal(report.findingCount, 0);
+  assert.equal(report.scannedFiles, 1);
+});
+
 test("adoption checker detects a pinned contract version mismatch", () => {
   const project = fs.mkdtempSync(path.join(os.tmpdir(), "kin-version-"));
   initAdoption(project);
