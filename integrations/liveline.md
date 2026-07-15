@@ -34,6 +34,8 @@ Conditional. Appropriate for small, continuously updating React charts when real
 
 [`@kin-design/react/experimental/liveline`](../packages/react/src/liveline.tsx) directly renders the official Liveline Canvas engine. Liveline retains plotting, interpolation and its own `prefers-reduced-motion` behavior. KIN applies a restrained single-series preset, disables decorative effects, derives theme color, exposes the active motion preference for evidence, and requires a text summary plus data-table fallback. A product MAY set `paused` for a real paused-data state; KIN MUST NOT misuse that state as a replacement for Liveline's native Reduced Motion path.
 
+The locked Liveline Canvas theme parser requires a resolved hexadecimal or RGB color rather than a CSS custom-property expression. The adapter's dark and light defaults therefore intentionally mirror KIN's `monitor` Token values in executable code; a product MAY provide its own resolved `color` value.
+
 `LivelinePoint.time` follows Liveline's Unix-seconds contract. Adapters and fixtures MUST NOT pass JavaScript millisecond timestamps. The KIN table fallback uses the same `formatTime` and `formatValue` callbacks as the Canvas so visual and non-visual readings remain consistent.
 
 The [Integration Lab](../examples/workspace-reference/integrations.html#liveline) verifies Canvas output, theme-aware styling, normal motion, native Reduced Motion handling and structured fallback. High-DPI, reconnect, keyboard data exploration and real streaming transport remain product evidence; the component remains `candidate`.
