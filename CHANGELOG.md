@@ -6,6 +6,13 @@ The project follows semantic versioning for normative design documentation.
 
 ## Unreleased
 
+### Public documentation and discovery
+
+- Reworked the English and Chinese README as a shorter public entry point with plain-language positioning, direct live links to the workspace, authentication pages and dialogs, Motion Lab, and Integration Lab, plus distinct paths for stable adoption, current development, contribution, and coding-tool use.
+- Clarified the contract-first delivery boundary, product profiles, runtime-integration tiers, adoption evidence stages, and repository map without presenting component counts, a design lab, or a passing build as proof of production adoption.
+- Added a proposed Agent Distribution Layer RFC covering generated theme and locale snapshots, manifest and Recipe Schemas, stable/next/versioned publication channels, deterministic checks, ownership, rollout, and rollback without changing the current normative contract.
+- Added the RFC index and initial proposal to required documentation validation so their governance boundary cannot disappear unnoticed.
+
 ### Contract lifecycle and repository integrity
 
 - Advanced the working contract to KIN 3.0.0 development while preserving v2.3.0 as the latest immutable stable release; development adoption examples now pin a full commit whose DESIGN checksum is verified against Git history.
