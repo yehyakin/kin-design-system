@@ -15,6 +15,8 @@ const required = [
   "ROADMAP.md",
   "RELEASING.md",
   "AGENTS.md",
+  "rfcs/README.md",
+  "rfcs/001-agent-distribution-layer.md",
   "LICENSE",
   "principles/verification.md",
   "principles/visual-signature.md",
