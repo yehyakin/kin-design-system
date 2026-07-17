@@ -43,6 +43,226 @@ addEventListener("storage", (event) => {
   if (event.key === "kin-reference-contrast") applyContrast(event.newValue === "more", false);
 });
 
+function setupCommerceEditor() {
+  const form = document.querySelector("[data-commerce-edit-form]");
+  if (!form) return;
+
+  const fields = form.querySelector("[data-commerce-edit-fields]");
+  const price = form.querySelector("#commerce-price");
+  const stock = form.querySelector("#commerce-stock");
+  const priceError = form.querySelector("[data-commerce-price-error]");
+  const stockError = form.querySelector("[data-commerce-stock-error]");
+  const priceHelp = form.querySelector("[data-commerce-price-help]");
+  const impact = form.querySelector("[data-commerce-edit-impact]");
+  const status = form.querySelector("[data-commerce-edit-status]");
+  const permission = form.querySelector("[data-commerce-permission]");
+  const saveFailure = form.querySelector("[data-commerce-save-failure]");
+  const activity = document.querySelector("[data-commerce-edit-activity] span");
+  const shanghaiStock = document.querySelector("[data-commerce-stock-shanghai]");
+  const shenzhenStock = document.querySelector("[data-commerce-stock-shenzhen]");
+  const approvalTitle = document.querySelector("[data-commerce-approval-title]");
+  const approvalCopy = document.querySelector("[data-commerce-approval-copy]");
+  const discard = form.querySelector("[data-commerce-discard]");
+  const retry = form.querySelector("[data-commerce-retry]");
+  const save = form.querySelector("[data-commerce-save]");
+  const stateLabel = document.querySelector("[data-commerce-edit-state-label]");
+  const fixtures = {
+    normal: { currentPrice: 1299, currentStock: 6, draftPrice: 1299, draftStock: 6 },
+    pending: { currentPrice: 1299, currentStock: 6, draftPrice: 1349, draftStock: 8 },
+    error: { currentPrice: 1299, currentStock: 6, draftPrice: 0, draftStock: 8 },
+    loading: { currentPrice: 1299, currentStock: 6, draftPrice: 1349, draftStock: 8 },
+    committed: { currentPrice: 1349, currentStock: 8, draftPrice: 1349, draftStock: 8 },
+    permission: { currentPrice: 1299, currentStock: 6, draftPrice: 1299, draftStock: 6 },
+    failed: { currentPrice: 1299, currentStock: 6, draftPrice: 1349, draftStock: 8 },
+  };
+  const labels = {
+    normal: "无待保存",
+    pending: "未保存",
+    error: "需修正",
+    loading: "保存中",
+    committed: "本地已保存",
+    permission: "只读",
+    failed: "保存失败",
+  };
+  let currentPrice = 1299;
+  let currentStock = 6;
+  let saveTimer = null;
+
+  function numberValue(input) {
+    return input.value.trim() === "" ? Number.NaN : Number(input.value);
+  }
+
+  function formattedPrice(value) {
+    return `CNY ${new Intl.NumberFormat("zh-CN", { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(value)}`;
+  }
+
+  function syncCurrentValues() {
+    for (const target of document.querySelectorAll("[data-commerce-current-price]")) target.textContent = formattedPrice(currentPrice);
+    for (const target of document.querySelectorAll("[data-commerce-current-stock]")) target.textContent = String(currentStock);
+    priceHelp.textContent = `含币种；当前记录值 ${formattedPrice(currentPrice)}。`;
+    const shanghai = Math.round(currentStock * 2 / 3);
+    shanghaiStock.textContent = `${shanghai} 可售`;
+    shenzhenStock.textContent = `${currentStock - shanghai} 可售`;
+  }
+
+  function clearValidation() {
+    price.setAttribute("aria-invalid", "false");
+    stock.setAttribute("aria-invalid", "false");
+    priceError.hidden = true;
+    stockError.hidden = true;
+    priceError.textContent = "";
+    stockError.textContent = "";
+  }
+
+  function validateFields() {
+    clearValidation();
+    let firstInvalid = null;
+    const draftPrice = numberValue(price);
+    const draftStock = numberValue(stock);
+    if (!Number.isFinite(draftPrice) || draftPrice <= 0) {
+      price.setAttribute("aria-invalid", "true");
+      priceError.textContent = "售价必须高于 CNY 0.00。";
+      priceError.hidden = false;
+      firstInvalid = price;
+    }
+    if (!Number.isInteger(draftStock) || draftStock < 0) {
+      stock.setAttribute("aria-invalid", "true");
+      stockError.textContent = "可售库存必须是 0 或更大的整数。";
+      stockError.hidden = false;
+      firstInvalid ??= stock;
+    }
+    return firstInvalid;
+  }
+
+  function differenceSummary(state) {
+    if (state === "normal") return "无待保存更改";
+    if (state === "permission") return "只读：售价、库存与渠道状态均保持不变";
+    if (state === "committed") return `${formattedPrice(currentPrice)} · ${currentStock} 件可售 · 渠道发布仍为 2 / 3`;
+    const draftPrice = numberValue(price);
+    const draftStock = numberValue(stock);
+    const changes = [];
+    if (Number.isFinite(draftPrice) && draftPrice !== currentPrice) changes.push(`售价 ${formattedPrice(currentPrice)} → ${formattedPrice(draftPrice)}`);
+    if (Number.isFinite(draftStock) && draftStock !== currentStock) changes.push(`可售 ${currentStock} → ${draftStock}`);
+    return `${changes.length ? changes.join("；") : "没有有效字段变化"}；渠道发布仍为 2 / 3`;
+  }
+
+  function statusMessage(state) {
+    const changed = [numberValue(price) !== currentPrice, numberValue(stock) !== currentStock].filter(Boolean).length;
+    const messages = {
+      normal: "商品数据已加载，没有待保存更改。",
+      pending: `${changed} 项本地更改待保存；当前记录值保持可见。`,
+      error: "请修正标记字段；当前商品记录没有改变。",
+      loading: "正在保存到本地参考；不会自动发布到渠道。",
+      committed: "本地参考已保存为修订 R19；未发送到服务端。",
+      permission: "当前角色没有商品编辑权限；未创建草稿。",
+      failed: "保存失败；当前记录值保持不变，可重试或放弃本地更改。",
+    };
+    return messages[state];
+  }
+
+  function activityMessage(state) {
+    if (state === "normal" && (currentPrice !== 1299 || currentStock !== 6)) return "本地修订 R19 保持为当前记录，未发布到渠道。";
+    const messages = {
+      normal: "商品数据已加载，记录值未改变。",
+      pending: "本地草稿包含未保存的商品更改。",
+      error: "本地草稿校验失败，记录值未改变。",
+      loading: "本地参考正在保存商品更改。",
+      committed: "本地参考已保存为修订 R19，未发布到渠道。",
+      permission: "当前角色被限制为只读，没有创建草稿。",
+      failed: "保存失败，本地草稿已保留，记录值未改变。",
+    };
+    return messages[state];
+  }
+
+  function syncApproval(state) {
+    if (state === "committed" || currentPrice !== 1299 || currentStock !== 6) {
+      approvalTitle.textContent = "本地修订等待审批";
+      approvalCopy.textContent = `修订 R19 将基础售价调整为 ${formattedPrice(currentPrice)}；仍未发布到任何渠道。`;
+      return;
+    }
+    approvalTitle.textContent = "价格调整等待审批";
+    approvalCopy.textContent = "建议从 CNY 1,399.00 调整为 CNY 1,299.00；尚未发布到任何渠道。";
+  }
+
+  function writeCommerceState(state) {
+    const url = new URL(location.href);
+    url.searchParams.set("edit", state);
+    history.replaceState(null, "", url.pathname + url.search + url.hash);
+  }
+
+  function renderState(state, { writeUrl = false, commit = false } = {}) {
+    if (!fixtures[state]) state = "normal";
+    if (commit) {
+      currentPrice = numberValue(price);
+      currentStock = numberValue(stock);
+    }
+    form.dataset.state = state;
+    form.setAttribute("aria-busy", String(state === "loading"));
+    fields.disabled = state === "loading" || state === "permission";
+    stateLabel.dataset.state = state;
+    stateLabel.textContent = labels[state];
+    permission.hidden = state !== "permission";
+    saveFailure.hidden = state !== "failed";
+    retry.hidden = state !== "failed";
+    retry.disabled = state !== "failed";
+    save.hidden = state === "failed";
+    save.disabled = ["normal", "loading", "committed", "permission", "failed"].includes(state);
+    discard.disabled = ["normal", "loading", "committed", "permission"].includes(state);
+    if (state === "error") validateFields();
+    else clearValidation();
+    syncCurrentValues();
+    impact.textContent = differenceSummary(state);
+    status.textContent = statusMessage(state);
+    activity.textContent = activityMessage(state);
+    syncApproval(state);
+    if (writeUrl) writeCommerceState(state);
+  }
+
+  function applyFixture(state) {
+    const fixture = fixtures[state] ?? fixtures.normal;
+    currentPrice = fixture.currentPrice;
+    currentStock = fixture.currentStock;
+    price.value = fixture.draftPrice.toFixed(2);
+    stock.value = String(fixture.draftStock);
+    renderState(fixtures[state] ? state : "normal");
+  }
+
+  function startSave() {
+    clearTimeout(saveTimer);
+    renderState("loading", { writeUrl: true });
+    saveTimer = setTimeout(() => renderState("committed", { writeUrl: true, commit: true }), 650);
+  }
+
+  form.addEventListener("input", () => {
+    clearTimeout(saveTimer);
+    renderState("pending", { writeUrl: true });
+  });
+
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const firstInvalid = validateFields();
+    if (firstInvalid) {
+      renderState("error", { writeUrl: true });
+      firstInvalid.focus();
+      return;
+    }
+    startSave();
+  });
+
+  discard.addEventListener("click", () => {
+    clearTimeout(saveTimer);
+    price.value = currentPrice.toFixed(2);
+    stock.value = String(currentStock);
+    renderState("normal", { writeUrl: true });
+  });
+  retry.addEventListener("click", startSave);
+
+  const requestedState = new URLSearchParams(location.search).get("edit");
+  applyFixture(requestedState);
+}
+
+setupCommerceEditor();
+
 for (const tool of document.querySelectorAll("[data-tool]")) {
   tool.addEventListener("click", () => {
     for (const item of document.querySelectorAll("[data-tool]")) item.setAttribute("aria-pressed", "false");

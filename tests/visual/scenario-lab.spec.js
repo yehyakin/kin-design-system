@@ -38,7 +38,7 @@ test("scenario lab verifies every catalog-backed showcased state", async ({ page
   expect(response.ok()).toBe(true);
   const catalog = await response.json();
   const showcased = catalog.scenarios.filter((scenario) => scenario.presentation_status === "showcased");
-  expect(showcased).toHaveLength(14);
+  expect(showcased).toHaveLength(15);
 
   for (const scenario of showcased) {
     await page.goto("/scenarios/lab.html?scenario=" + scenario.id + "&viewport=narrow&theme=light-high-contrast");
@@ -62,6 +62,11 @@ test("scenario lab verifies every catalog-backed showcased state", async ({ page
     if (scenario.id === "ENG-02") {
       await expect(page.frameLocator("[data-lab-frame]").locator('[data-object][aria-pressed="true"]')).toContainText("Bracket-01");
       await page.screenshot({ path: testInfo.outputPath("scenario-lab-layer-structure.png"), fullPage: true });
+    }
+    if (scenario.id === "COM-02") {
+      await expect(page.frameLocator("[data-lab-frame]").locator("[data-commerce-save-failure]")).toBeVisible();
+      await page.locator("[data-lab-scenario]").focus();
+      await page.screenshot({ path: testInfo.outputPath("scenario-lab-commerce-save-failure.png") });
     }
   }
 

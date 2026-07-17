@@ -24,7 +24,7 @@ test("showcase exposes the English contract and live foundations", async ({ page
   expect(consoleWarnings).toEqual([]);
 });
 
-test("scenario atlas exposes honest coverage and fourteen inspectable scenarios", async ({ page }) => {
+test("scenario atlas exposes honest coverage and fifteen inspectable scenarios", async ({ page }) => {
   const consoleWarnings = [];
   page.on("console", (message) => {
     if (["warning", "error"].includes(message.type())) consoleWarnings.push(message.text());
@@ -34,13 +34,14 @@ test("scenario atlas exposes honest coverage and fourteen inspectable scenarios"
   await expect(page).toHaveTitle("Scenario Atlas - KIN Design System");
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("See KIN in the work, not just the parts.");
   await expect(page.locator("[data-scenario-id]")).toHaveCount(30);
-  await expect(page.locator('[data-scenario-id][data-presentation-status="showcased"]')).toHaveCount(14);
+  await expect(page.locator('[data-scenario-id][data-presentation-status="showcased"]')).toHaveCount(15);
   await expect(page.locator('[data-scenario-id][data-presentation-status="linked"]')).toHaveCount(0);
-  await expect(page.locator('[data-scenario-id][data-presentation-status="planned"]')).toHaveCount(16);
+  await expect(page.locator('[data-scenario-id][data-presentation-status="planned"]')).toHaveCount(15);
   await expect(page.getByRole("heading", { name: "Entity Database Review" })).toBeVisible();
   await expect(page.locator('[data-scenario-id="INT-01"]').getByRole("link", { name: "Inspect scenario" })).toHaveAttribute("href", "lab.html?scenario=INT-01");
   await expect(page.locator('[data-scenario-id="CORE-03"]').getByRole("link", { name: "Inspect scenario" })).toHaveAttribute("href", "lab.html?scenario=CORE-03");
   await expect(page.locator('[data-scenario-id="INF-02"]').getByRole("link", { name: "Inspect scenario" })).toHaveAttribute("href", "lab.html?scenario=INF-02");
+  await expect(page.locator('[data-scenario-id="COM-02"]').getByRole("link", { name: "Inspect scenario" })).toHaveAttribute("href", "lab.html?scenario=COM-02");
   await expect(page.locator('[data-scenario-id="ENG-02"]').getByRole("link", { name: "Inspect scenario" })).toHaveAttribute("href", "lab.html?scenario=ENG-02");
   await expect(page.locator('[data-scenario-id="WORK-01"] .source-status.candidate')).toHaveText("Candidate source");
   await expect(page.getByText("Discovery is not adoption evidence.")).toBeVisible();
@@ -50,7 +51,7 @@ test("scenario atlas exposes honest coverage and fourteen inspectable scenarios"
   await page.setViewportSize({ width: 390, height: 844 });
   await page.reload();
   await expect(page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).resolves.toBe(true);
-  await expect(page.locator('[data-scenario-id="ENG-02"]').getByRole("link", { name: "Inspect scenario" })).toBeVisible();
+  await expect(page.locator('[data-scenario-id="COM-02"]').getByRole("link", { name: "Inspect scenario" })).toBeVisible();
   await page.screenshot({ path: "test-results/playwright/scenario-atlas-mobile.png", fullPage: true });
   expect(consoleWarnings).toEqual([]);
 });

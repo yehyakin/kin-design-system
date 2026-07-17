@@ -129,7 +129,7 @@ const allowedThemes = new Set(["light", "dark", "light-high-contrast", "dark-hig
 const allowedAssertionKinds = new Set(["visible", "attribute", "text"]);
 const expectedPilots = ["INT-01", "INF-01", "COM-01", "ENG-01", "CORE-01", "WORK-01"];
 const expectedPhase3Shared = ["CORE-02", "CORE-03", "CORE-04", "CORE-05", "CORE-06"];
-const expectedPhase3ProductFamily = ["INF-02", "INF-03", "ENG-02"];
+const expectedPhase3ProductFamily = ["INF-02", "INF-03", "COM-02", "ENG-02"];
 const statusRank = { deprecated: 0, draft: 1, candidate: 2, stable: 3 };
 const prefixGroups = {
   INT: "intelligence",
