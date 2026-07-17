@@ -320,6 +320,32 @@ test("page catalog passes maturity and evidence-path validation", () => {
   assert.equal(result.summary.errors, 0);
 });
 
+test("scenario catalog passes source-maturity and presentation validation", () => {
+  const run = spawnSync(process.execPath, [path.join(root, "scripts", "validate-scenarios.mjs"), "--json"], { encoding: "utf8" });
+  assert.equal(run.status, 0, run.stderr);
+  const result = JSON.parse(run.stdout);
+  assert.equal(result.summary.scenarioEntries, 30);
+  assert.equal(result.summary.pilots, 6);
+  assert.equal(result.summary.linked, 0);
+  assert.equal(result.summary.showcased, 14);
+  assert.equal(result.summary.planned, 16);
+  assert.equal(result.summary.errors, 0);
+
+  const catalog = JSON.parse(fs.readFileSync(path.join(root, "scenarios", "catalog.json"), "utf8"));
+  assert.equal(catalog.schema_version, "1.1.0");
+  assert.equal(catalog.catalog_version, "1.3.0");
+  const showcased = catalog.scenarios.filter((scenario) => scenario.presentation_status === "showcased");
+  assert.ok(showcased.every((scenario) => scenario.states.length === scenario.state_controls.length));
+  assert.deepEqual(showcased.find((scenario) => scenario.id === "CORE-01").states, ["normal", "rate-limit", "permission", "error", "offline", "recovery"]);
+  assert.deepEqual(showcased.find((scenario) => scenario.id === "CORE-03").states, ["normal", "partial", "stale", "empty", "error"]);
+  assert.deepEqual(showcased.find((scenario) => scenario.id === "CORE-05").states, ["recovery", "permission", "conflict", "offline", "rate-limit", "error"]);
+  assert.deepEqual(showcased.find((scenario) => scenario.id === "WORK-01").states, ["normal", "partial", "conflict", "empty"]);
+  assert.deepEqual(showcased.find((scenario) => scenario.id === "INF-02").states, ["normal"]);
+  assert.deepEqual(showcased.find((scenario) => scenario.id === "INF-03").states, ["normal"]);
+  assert.deepEqual(showcased.find((scenario) => scenario.id === "ENG-02").states, ["normal"]);
+  assert.equal(showcased.reduce((total, scenario) => total + scenario.state_controls.length, 0), 31);
+});
+
 test("candidate audit reports context and does not fail on P2 alone", () => {
   const project = fs.mkdtempSync(path.join(os.tmpdir(), "kin-audit-"));
   fs.mkdirSync(path.join(project, "src"));

@@ -78,6 +78,7 @@ These projects were reviewed for page taxonomy, workflow boundaries and state co
 | [Ant Design Pro](https://github.com/ant-design/ant-design-pro) | broad page taxonomy including forms, lists, profiles, result states, account pages and access failures | template layout, page copying or visual defaults |
 | [Refine](https://github.com/refinedev/refine) | CRUD lifecycle, authentication, access control, URL state and unsaved-change concerns | framework adoption or generated-resource conventions as KIN requirements |
 | [Shadcn Fintech Template](https://github.com/Weebapp003/shadcn-fintech-template) | supplemental coverage for transaction filtering, bulk export, dashboard personalization, notification read state, account settings, and help/support routes | shadcn defaults, Card-wall composition, mock financial data, simulated transfers or market activity, decorative authentication, and framework/package adoption |
+| [shadcn UI Kit](https://shadcnuikit.com/) | discoverability of task-oriented dashboard, app, page, component, block, and example collections within one public showcase | copied layouts, code, screenshots, assets, route names, framework defaults, or presenting every KIN family through the same dashboard shell |
 
 ## Authentication, recovery and accessibility sources
 

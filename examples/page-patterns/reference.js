@@ -393,7 +393,8 @@ function setupAccessPage() {
     if (!signInView || !recoveryView) return;
     signInView.hidden = open;
     recoveryView.hidden = !open;
-    history.replaceState(null, "", open ? "#recovery" : location.pathname);
+    const base = location.pathname + location.search;
+    history.replaceState(null, "", open ? base + "#recovery" : base);
     (open ? recoveryView : signInView).querySelector("h2")?.focus();
   }
 
@@ -414,10 +415,21 @@ function setupAccessPage() {
     authFixtureStatus.textContent = text(key);
   }
 
+  const requestedFixture = new URLSearchParams(location.search).get("fixture");
+  if (authFixtureSelect && [...authFixtureSelect.options].some((option) => option.value === requestedFixture)) {
+    authFixtureSelect.value = requestedFixture;
+  }
+
   recoveryOpen?.addEventListener("click", () => showRecovery(true));
   recoveryBack?.addEventListener("click", () => showRecovery(false));
   if (location.hash === "#recovery") showRecovery(true);
-  authFixtureSelect?.addEventListener("change", renderAuthFixture);
+  authFixtureSelect?.addEventListener("change", () => {
+    const url = new URL(location.href);
+    if (authFixtureSelect.value === "idle") url.searchParams.delete("fixture");
+    else url.searchParams.set("fixture", authFixtureSelect.value);
+    history.replaceState(null, "", url.pathname + url.search + url.hash);
+    renderAuthFixture();
+  });
   document.addEventListener("kin:localechange", renderAuthFixture);
   renderAuthFixture();
 
@@ -621,6 +633,7 @@ function setupSystemPage() {
   for (const button of document.querySelectorAll("[data-system-state]")) {
     button.addEventListener("click", () => renderSystemState(button.dataset.systemState));
   }
+  addEventListener("hashchange", () => renderSystemState(currentSystemState(), false));
   const recoveryStatus = document.querySelector("[data-system-status]");
   document.querySelector("[data-system-primary]")?.addEventListener("click", () => {
     recoveryStatus.textContent = text("system.referenceAction");

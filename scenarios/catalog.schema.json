@@ -1,0 +1,497 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://yehyakin.github.io/kin-design-system/scenarios/catalog.schema.json",
+  "title": "KIN Scenario Atlas Catalog",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "schema_version",
+    "catalog_version",
+    "reviewed_on",
+    "pilot_ids",
+    "presentation_status_definitions",
+    "inspection_defaults",
+    "known_gaps",
+    "scenarios"
+  ],
+  "properties": {
+    "$schema": {
+      "const": "./catalog.schema.json"
+    },
+    "schema_version": {
+      "const": "1.1.0"
+    },
+    "catalog_version": {
+      "type": "string",
+      "pattern": "^[0-9]+[.][0-9]+[.][0-9]+$"
+    },
+    "reviewed_on": {
+      "type": "string",
+      "format": "date"
+    },
+    "pilot_ids": {
+      "type": "array",
+      "minItems": 6,
+      "maxItems": 6,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^(INT|INF|COM|ENG|CORE|WORK|COND)-[0-9]{2}$"
+      }
+    },
+    "presentation_status_definitions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "planned",
+        "linked",
+        "showcased"
+      ],
+      "properties": {
+        "planned": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "linked": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "showcased": {
+          "$ref": "#/$defs/nonEmptyString"
+        }
+      }
+    },
+    "known_gaps": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/nonEmptyString"
+      }
+    },
+    "scenarios": {
+      "type": "array",
+      "minItems": 30,
+      "items": {
+        "$ref": "#/$defs/scenario"
+      }
+    },
+    "inspection_defaults": {
+      "$ref": "#/$defs/inspectionDefaults"
+    }
+  },
+  "$defs": {
+    "nonEmptyString": {
+      "type": "string",
+      "minLength": 1
+    },
+    "scenario": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "canonical_name",
+        "group",
+        "product_profiles",
+        "wave",
+        "user_job",
+        "entry",
+        "completion",
+        "composition",
+        "contract_paths",
+        "page_ids",
+        "source_maturity",
+        "conditional",
+        "presentation_status",
+        "reference_path",
+        "inspection_path",
+        "states",
+        "state_controls",
+        "viewports",
+        "themes",
+        "known_gaps"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^(INT|INF|COM|ENG|CORE|WORK|COND)-[0-9]{2}$"
+        },
+        "canonical_name": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "group": {
+          "enum": [
+            "intelligence",
+            "information",
+            "ecommerce",
+            "engineering",
+            "shared"
+          ]
+        },
+        "product_profiles": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "information-site",
+              "intelligence-workspace",
+              "ecommerce-operations",
+              "engineering-canvas",
+              "all",
+              "conditional"
+            ]
+          }
+        },
+        "wave": {
+          "enum": [
+            "P0",
+            "P1",
+            "P2"
+          ]
+        },
+        "user_job": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "entry": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "completion": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "composition": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "first_meaningful_view",
+            "dominant_region",
+            "persistent_context"
+          ],
+          "properties": {
+            "first_meaningful_view": {
+              "$ref": "#/$defs/nonEmptyString"
+            },
+            "dominant_region": {
+              "$ref": "#/$defs/nonEmptyString"
+            },
+            "persistent_context": {
+              "$ref": "#/$defs/nonEmptyString"
+            }
+          }
+        },
+        "contract_paths": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^(patterns|pages)/.+[.]md$"
+          }
+        },
+        "page_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+          }
+        },
+        "source_maturity": {
+          "enum": [
+            "stable",
+            "candidate",
+            "draft"
+          ]
+        },
+        "conditional": {
+          "type": "boolean"
+        },
+        "presentation_status": {
+          "enum": [
+            "planned",
+            "linked",
+            "showcased"
+          ]
+        },
+        "reference_path": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^examples/.+[.]html(?:[?#].*)?$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "states": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "normal",
+              "loading",
+              "empty",
+              "partial",
+              "stale",
+              "offline",
+              "permission",
+              "rate-limit",
+              "error",
+              "conflict",
+              "recovery",
+              "pending",
+              "committed",
+              "failed",
+              "undo",
+              "rollback"
+            ]
+          }
+        },
+        "viewports": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "wide",
+              "narrow"
+            ]
+          }
+        },
+        "themes": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "light",
+              "dark",
+              "light-high-contrast",
+              "dark-high-contrast"
+            ]
+          }
+        },
+        "known_gaps": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/nonEmptyString"
+          }
+        },
+        "inspection_path": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^site/scenarios/lab[.]html[?]scenario=(INT|INF|COM|ENG|CORE|WORK|COND)-[0-9]{2}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "state_controls": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/stateControl"
+          }
+        }
+      }
+    },
+    "inspectionDefaults": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "viewports",
+        "themes"
+      ],
+      "properties": {
+        "viewports": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/inspectionViewport"
+          }
+        },
+        "themes": {
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 4,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/inspectionTheme"
+          }
+        }
+      }
+    },
+    "inspectionViewport": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "label",
+        "width",
+        "height"
+      ],
+      "properties": {
+        "id": {
+          "enum": [
+            "wide",
+            "narrow"
+          ]
+        },
+        "label": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "width": {
+          "type": "integer",
+          "minimum": 320,
+          "maximum": 1600
+        },
+        "height": {
+          "type": "integer",
+          "minimum": 480,
+          "maximum": 1200
+        }
+      }
+    },
+    "inspectionTheme": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "label",
+        "theme",
+        "contrast"
+      ],
+      "properties": {
+        "id": {
+          "enum": [
+            "light",
+            "dark",
+            "light-high-contrast",
+            "dark-high-contrast"
+          ]
+        },
+        "label": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "theme": {
+          "enum": [
+            "light",
+            "dark"
+          ]
+        },
+        "contrast": {
+          "enum": [
+            "normal",
+            "more"
+          ]
+        }
+      }
+    },
+    "stateControl": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "state",
+        "label",
+        "reference_path",
+        "assertion"
+      ],
+      "properties": {
+        "state": {
+          "enum": [
+            "normal",
+            "loading",
+            "empty",
+            "partial",
+            "stale",
+            "offline",
+            "permission",
+            "rate-limit",
+            "error",
+            "conflict",
+            "recovery",
+            "pending",
+            "committed",
+            "failed",
+            "undo",
+            "rollback"
+          ]
+        },
+        "label": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "reference_path": {
+          "type": "string",
+          "pattern": "^examples/.+[.]html(?:[?#].*)?$"
+        },
+        "assertion": {
+          "$ref": "#/$defs/stateAssertion"
+        }
+      }
+    },
+    "stateAssertion": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "selector"
+          ],
+          "properties": {
+            "kind": {
+              "const": "visible"
+            },
+            "selector": {
+              "$ref": "#/$defs/nonEmptyString"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "selector",
+            "attribute",
+            "value"
+          ],
+          "properties": {
+            "kind": {
+              "const": "attribute"
+            },
+            "selector": {
+              "$ref": "#/$defs/nonEmptyString"
+            },
+            "attribute": {
+              "$ref": "#/$defs/nonEmptyString"
+            },
+            "value": {
+              "$ref": "#/$defs/nonEmptyString"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "selector",
+            "value"
+          ],
+          "properties": {
+            "kind": {
+              "const": "text"
+            },
+            "selector": {
+              "$ref": "#/$defs/nonEmptyString"
+            },
+            "value": {
+              "$ref": "#/$defs/nonEmptyString"
+            }
+          }
+        }
+      ]
+    }
+  }
+}
