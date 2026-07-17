@@ -81,4 +81,13 @@ test("cross-browser smoke preserves navigation focus and advanced states", async
   await expect(engineeringFrame.locator('[data-object][aria-pressed="true"]')).toContainText("Bracket-01");
   await expect(engineeringFrame.locator("html")).toHaveAttribute("data-theme", "light");
   await expect(engineeringFrame.locator("html")).toHaveAttribute("data-contrast", "more");
+
+  await page.goto("/scenarios/lab.html?scenario=COM-02&state=failed&viewport=narrow&theme=dark-high-contrast", { waitUntil: "domcontentloaded" });
+  await expect(page.locator("[data-lab-verification]")).toHaveAttribute("data-state", "pass");
+  const commerceFrame = page.frameLocator("[data-lab-frame]");
+  await expect(commerceFrame.locator("[data-commerce-save-failure]")).toBeVisible();
+  await expect(commerceFrame.locator("[data-commerce-retry]")).toBeVisible();
+  await expect(commerceFrame.locator("[data-commerce-current-price]").first()).toHaveText("CNY 1,299.00");
+  await expect(commerceFrame.locator("html")).toHaveAttribute("data-theme", "dark");
+  await expect(commerceFrame.locator("html")).toHaveAttribute("data-contrast", "more");
 });

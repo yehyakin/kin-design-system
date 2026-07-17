@@ -1,7 +1,7 @@
 {
   "$schema": "./catalog.schema.json",
   "schema_version": "1.1.0",
-  "catalog_version": "1.3.0",
+  "catalog_version": "1.4.0",
   "reviewed_on": "2026-07-17",
   "pilot_ids": [
     "INT-01",
@@ -543,16 +543,106 @@
       ],
       "source_maturity": "stable",
       "conditional": false,
-      "presentation_status": "planned",
+      "presentation_status": "showcased",
       "reference_path": "examples/product-patterns/ecommerce.html",
-      "states": [],
-      "viewports": [],
-      "themes": [],
-      "known_gaps": [
-        "Dedicated Atlas presentation and deterministic state locators are not implemented."
+      "states": [
+        "normal",
+        "pending",
+        "error",
+        "loading",
+        "committed",
+        "permission",
+        "failed"
       ],
-      "inspection_path": null,
-      "state_controls": []
+      "viewports": [
+        "wide",
+        "narrow"
+      ],
+      "themes": [
+        "light",
+        "dark",
+        "light-high-contrast",
+        "dark-high-contrast"
+      ],
+      "known_gaps": [
+        "Save, permission, failure, and revision outcomes are deterministic local fixtures; no backend product record, authorization service, approval engine, or channel publication is connected.",
+        "The reference edits base price and available stock only; variants, tax basis, warehouse allocation, media, translations, and full activity history remain outside this fixture."
+      ],
+      "inspection_path": "site/scenarios/lab.html?scenario=COM-02",
+      "state_controls": [
+        {
+          "state": "normal",
+          "label": "Loaded product edit form",
+          "reference_path": "examples/product-patterns/ecommerce.html?edit=normal#product-context",
+          "assertion": {
+            "kind": "attribute",
+            "selector": "[data-commerce-edit-form]",
+            "attribute": "data-state",
+            "value": "normal"
+          }
+        },
+        {
+          "state": "pending",
+          "label": "Unsaved price and stock changes",
+          "reference_path": "examples/product-patterns/ecommerce.html?edit=pending#product-context",
+          "assertion": {
+            "kind": "attribute",
+            "selector": "[data-commerce-edit-form]",
+            "attribute": "data-state",
+            "value": "pending"
+          }
+        },
+        {
+          "state": "error",
+          "label": "Price validation error",
+          "reference_path": "examples/product-patterns/ecommerce.html?edit=error#product-context",
+          "assertion": {
+            "kind": "attribute",
+            "selector": "#commerce-price",
+            "attribute": "aria-invalid",
+            "value": "true"
+          }
+        },
+        {
+          "state": "loading",
+          "label": "Product update saving",
+          "reference_path": "examples/product-patterns/ecommerce.html?edit=loading#product-context",
+          "assertion": {
+            "kind": "attribute",
+            "selector": "[data-commerce-edit-form]",
+            "attribute": "aria-busy",
+            "value": "true"
+          }
+        },
+        {
+          "state": "committed",
+          "label": "Locally committed product revision",
+          "reference_path": "examples/product-patterns/ecommerce.html?edit=committed#product-context",
+          "assertion": {
+            "kind": "text",
+            "selector": "[data-commerce-edit-status]",
+            "value": "本地参考已保存为修订 R19"
+          }
+        },
+        {
+          "state": "permission",
+          "label": "Read-only permission boundary",
+          "reference_path": "examples/product-patterns/ecommerce.html?edit=permission#product-context",
+          "assertion": {
+            "kind": "visible",
+            "selector": "[data-commerce-permission]"
+          }
+        },
+        {
+          "state": "failed",
+          "label": "Failed save with retry",
+          "reference_path": "examples/product-patterns/ecommerce.html?edit=failed#product-context",
+          "assertion": {
+            "kind": "visible",
+            "selector": "[data-commerce-retry]"
+          }
+        }
+      ]
     },
     {
       "id": "COM-03",
