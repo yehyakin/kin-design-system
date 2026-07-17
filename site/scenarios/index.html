@@ -1,0 +1,419 @@
+<!doctype html>
+<html lang="en" data-theme="dark" data-theme-preference="system" data-contrast="normal">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#08090a">
+  <meta name="description" content="Browse 30 task-led KIN interface scenarios across intelligence, information, ecommerce, engineering, and shared workflows.">
+  <meta property="og:title" content="Scenario Atlas - KIN Design System">
+  <meta property="og:description" content="A task-led coverage map with checked state, viewport, and theme inspection for 14 KIN scenarios.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://yehyakin.github.io/kin-design-system/scenarios/">
+  <meta property="og:image" content="https://yehyakin.github.io/kin-design-system/assets/og-card.svg">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://yehyakin.github.io/kin-design-system/scenarios/">
+  <link rel="icon" href="../assets/mark.svg" type="image/svg+xml">
+  <link rel="manifest" href="../manifest.webmanifest">
+  <link rel="stylesheet" href="../assets/sonner.css">
+  <link rel="stylesheet" href="../assets/site.css">
+  <script>
+    (() => {
+      let storedTheme;
+      let storedContrast;
+      try {
+        storedTheme = localStorage.getItem("kin-site-theme");
+        storedContrast = localStorage.getItem("kin-site-contrast");
+      } catch {}
+      const preference = ["light", "dark", "system"].includes(storedTheme) ? storedTheme : "system";
+      const theme = preference === "system" ? (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light") : preference;
+      document.documentElement.dataset.themePreference = preference;
+      document.documentElement.dataset.theme = theme;
+      document.documentElement.dataset.contrast = storedContrast === "more" ? "more" : "normal";
+      document.documentElement.style.colorScheme = theme;
+      document.querySelector('meta[name="theme-color"]').content = theme === "dark" ? "#08090a" : "#f6f7f8";
+    })();
+  </script>
+  <title>Scenario Atlas - KIN Design System</title>
+</head>
+<body class="atlas-page">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <a class="brand" href="../" aria-label="KIN Design System home">
+      <span class="brand-mark" aria-hidden="true">KIN</span>
+      <span class="brand-copy"><strong>KIN</strong><small>Scenario Atlas</small></span>
+    </a>
+    <div class="header-center">
+      <button class="command-trigger" type="button" data-command-trigger aria-haspopup="dialog">
+        <i data-lucide="search"></i><span>Search Atlas sections and scenarios</span><kbd>Ctrl K</kbd>
+      </button>
+    </div>
+    <div class="header-actions">
+      <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="docs-nav" aria-label="Open navigation"><i data-lucide="menu"></i></button>
+      <div class="language-control" data-language-control>
+        <button class="language-trigger" type="button" data-language-trigger aria-haspopup="menu" aria-expanded="false" aria-label="Choose documentation language"><i data-lucide="languages"></i></button>
+        <div class="language-menu" data-language-menu role="menu" data-state="closed" hidden>
+          <a href="./" role="menuitem" lang="en" aria-current="page"><span>English Atlas</span><i data-lucide="check"></i></a>
+          <a href="../zh/" role="menuitem" lang="zh-CN" hreflang="zh-CN"><span>Chinese documentation</span></a>
+        </div>
+      </div>
+      <button class="theme-switch" type="button" role="switch" data-theme-switch aria-checked="true" aria-label="Switch to light mode"><i class="theme-sun" data-lucide="sun"></i><i class="theme-moon" data-lucide="moon"></i></button>
+      <button class="contrast-toggle" type="button" data-contrast-toggle aria-pressed="false" aria-label="Increase contrast"><i data-lucide="contrast"></i></button>
+      <a class="github-link" href="https://github.com/yehyakin/kin-design-system" aria-label="KIN on GitHub"><i data-lucide="code-2"></i><span>GitHub</span></a>
+    </div>
+  </header>
+
+  <div class="docs-shell">
+    <nav class="docs-nav" id="docs-nav" aria-label="Scenario Atlas">
+      <div class="nav-group">
+        <h2>Start here</h2>
+        <a href="../"><i data-lucide="layout-dashboard"></i>Documentation</a>
+        <a href="#overview" aria-current="location"><i data-lucide="panels-top-left"></i>Atlas overview</a>
+        <a href="#coverage"><i data-lucide="list-checks"></i>Coverage model</a>
+      </div>
+      <div class="nav-group">
+        <h2>Product families</h2>
+        <a href="#intelligence">Intelligence <span class="nav-count">5</span></a>
+        <a href="#information">Information <span class="nav-count">4</span></a>
+        <a href="#ecommerce">Ecommerce <span class="nav-count">5</span></a>
+        <a href="#engineering">Engineering <span class="nav-count">5</span></a>
+        <a href="#shared">Shared and conditional <span class="nav-count">11</span></a>
+      </div>
+      <div class="nav-group">
+        <h2>Source files</h2>
+        <a href="catalog.json"><i data-lucide="database"></i>Catalog JSON</a>
+        <a href="catalog.schema.json"><i data-lucide="blocks"></i>Catalog Schema</a>
+      </div>
+      <p class="nav-footer">Non-normative discovery layer<br>Phase 3 &middot; English only</p>
+    </nav>
+
+    <main class="docs-main" id="main">
+      <div class="content">
+        <section id="overview" aria-labelledby="overview-title">
+          <p class="eyebrow">SCENARIO ATLAS / PHASE 3</p>
+          <h1 id="overview-title">See KIN in the work, not just the parts.</h1>
+          <p class="lead">Thirty task-led scenarios connect KIN product patterns and page contracts to the work people need to complete. Fourteen are now inspectable: six P0 pilots, five stable shared workflows, and three product-family P1 scenarios. Each exposes only implemented local states across wide and narrow viewports and four theme modes; 16 entries remain visibly planned.</p>
+          <div class="intro-actions">
+            <a class="button primary" href="lab.html?scenario=INT-01">Inspect 14 showcased scenarios</a>
+            <a class="button" href="catalog.json">Inspect the machine catalog</a>
+            <a class="button" href="https://github.com/yehyakin/kin-design-system/blob/main/rfcs/002-scenario-atlas.md">Read RFC 002</a>
+          </div>
+          <dl class="atlas-summary">
+            <div><dt>Coverage map</dt><dd>30 scenarios</dd></div>
+            <div><dt>Inspectable today</dt><dd>14 showcased scenarios</dd></div>
+            <div><dt>Atlas backlog</dt><dd>16 planned</dd></div>
+            <div><dt>Families</dt><dd>5 composition groups</dd></div>
+          </dl>
+          <div class="atlas-notice" role="note">
+            <div>
+              <strong>Discovery is not adoption evidence.</strong>
+              <p>The Atlas joins existing sources; it does not promote page maturity, certify production behavior, or replace a product-owned implementation brief.</p>
+            </div>
+            <a href="https://github.com/yehyakin/kin-design-system/blob/main/adoption/implementation-brief.md">Review the adoption boundary</a>
+          </div>
+        </section>
+
+        <hr class="section-rule">
+        <section class="content-section" id="coverage" aria-labelledby="coverage-title">
+          <div class="section-heading">
+            <h2 id="coverage-title">Three statuses, one honest map</h2>
+            <p>Source maturity describes the underlying KIN contract. Presentation status describes what this Atlas currently exposes. They are deliberately independent.</p>
+          </div>
+          <div class="coverage-legend" role="list" aria-label="Scenario status definitions">
+            <div role="listitem"><span class="presentation-status showcased">Showcased</span><p>A checked inspection route exposes only states implemented by its local reference, plus wide and narrow viewports and four theme modes.</p></div>
+            <div role="listitem"><span class="presentation-status linked">Linked</span><p>A scenario may point to a runnable reference without claiming the checked controls required for showcased status.</p></div>
+            <div role="listitem"><span class="presentation-status planned">Planned</span><p>The scenario is catalogued, but its dedicated Atlas presentation, states, or responsive review has not been completed.</p></div>
+            <div role="listitem"><span class="source-status stable">Stable source</span><p>The governing page or product-pattern source is stable. This label does not make the Atlas presentation complete.</p></div>
+            <div role="listitem"><span class="source-status candidate">Candidate source</span><p>The source still has recorded gaps. Candidate and draft sources remain visible without being promoted.</p></div>
+          </div>
+        </section>
+
+        <hr class="section-rule">
+        <section class="content-section atlas-group" id="intelligence" aria-labelledby="intelligence-title">
+          <div class="atlas-group-heading">
+            <div><p class="eyebrow">FAMILY 01 / 5 SCENARIOS</p><h2 id="intelligence-title">Intelligence workspaces</h2></div>
+            <p>Identity, chronology, evidence, uncertainty, saved views, and reversible decisions remain visible together.</p>
+          </div>
+          <div class="scenario-list">
+            <article class="scenario-row is-showcased" data-scenario-id="INT-01" data-presentation-status="showcased">
+              <div class="scenario-code"><strong>INT-01</strong><span>P0</span></div>
+              <div class="scenario-copy">
+                <h3><a href="lab.html?scenario=INT-01">Entity Database Review</a></h3>
+                <p>Select an entity, inspect evidence and properties, and make a reversible decision.</p>
+                <ul class="scenario-meta" aria-label="Scenario metadata"><li><span class="source-status stable">Stable source</span></li><li>1 checked state</li><li>Wide + narrow</li><li>4 themes</li></ul>
+              </div>
+              <div class="scenario-end"><span class="presentation-status showcased">Showcased</span><a href="lab.html?scenario=INT-01">Inspect scenario <span aria-hidden="true">&rarr;</span></a></div>
+            </article>
+            <article class="scenario-row" data-scenario-id="INT-02" data-presentation-status="planned">
+              <div class="scenario-code"><strong>INT-02</strong><span>P1</span></div>
+              <div class="scenario-copy"><h3>Investigation and Evidence Review</h3><p>Compare chronology, sources, conflicts, and uncertainty before recording a finding.</p><ul class="scenario-meta" aria-label="Scenario metadata"><li><span class="source-status stable">Stable source</span></li><li>Phase 3</li></ul></div>
+              <div class="scenario-end"><span class="presentation-status planned">Planned</span></div>
+            </article>
+            <article class="scenario-row" data-scenario-id="INT-03" data-presentation-status="planned">
+              <div class="scenario-code"><strong>INT-03</strong><span>P1</span></div>
+              <div class="scenario-copy"><h3>Risk Queue Review</h3><p>Triage a signal, preserve semantic separation, and assign or resolve review.</p><ul class="scenario-meta" aria-label="Scenario metadata"><li><span class="source-status stable">Stable source</span></li><li>Phase 3</li></ul></div>
+              <div class="scenario-end"><span class="presentation-status planned">Planned</span></div>
+            </article>
+            <article class="scenario-row" data-scenario-id="INT-04" data-presentation-status="planned">
+              <div class="scenario-code"><strong>INT-04</strong><span>P1</span></div>
+              <div class="scenario-copy"><h3>Monitor Center Recovery</h3><p>Inspect current measurement, history, failure scope, and retry context.</p><ul class="scenario-meta" aria-label="Scenario metadata"><li><span class="source-status stable">Stable source</span></li><li>Phase 3</li></ul></div>
+              <div class="scenario-end"><span class="presentation-status planned">Planned</span></div>
+            </article>
+            <article class="scenario-row" data-scenario-id="INT-05" data-presentation-status="planned">
+              <div class="scenario-code"><strong>INT-05</strong><span>P2</span></div>
+              <div class="scenario-copy"><h3>Workspace Home</h3><p>Resume ranked work without inventing a generic KPI dashboard.</p><ul class="scenario-meta" aria-label="Scenario metadata"><li><span class="source-status candidate">Candidate source</span></li><li>Phase 4</li></ul></div>
+              <div class="scenario-end"><span class="presentation-status planned">Planned</span></div>
+            </article>
+          </div>
+        </section>
+
+        <hr class="section-rule">
+        <section class="content-section atlas-group" id="information" aria-labelledby="information-title">
+          <div class="atlas-group-heading">
+            <div><p class="eyebrow">FAMILY 02 / 4 SCENARIOS</p><h2 id="information-title">Information sites</h2></div>
+            <p>Reading order, provenance, stable URLs, correction history, and useful records lead the composition.</p>
+          </div>
+          <div class="scenario-list">
+            <article class="scenario-row is-showcased" data-scenario-id="INF-01" data-presentation-status="showcased">
+              <div class="scenario-code"><strong>INF-01</strong><span>P0</span></div>
+              <div class="scenario-copy">
+                <h3><a href="lab.html?scenario=INF-01">Find and Verify a Record</a></h3>
+                <p>Search, filter, open a record, and identify its source and currency.</p>
+                <ul class="scenario-meta" aria-label="Scenario metadata"><li><span class="source-status stable">Stable source</span></li><li>1 checked state</li><li>Wide + narrow</li><li>4 themes</li></ul>
+              </div>
+              <div class="scenario-end"><span class="presentation-status showcased">Showcased</span><a href="lab.html?scenario=INF-01">Inspect scenario <span aria-hidden="true">&rarr;</span></a></div>
+            </article>
+            <article class="scenario-row is-showcased" data-scenario-id="INF-02" data-presentation-status="showcased">
+              <div class="scenario-code"><strong>INF-02</strong><span>P1</span></div>
+              <div class="scenario-copy"><h3><a href="lab.html?scenario=INF-02">Reading With Provenance</a></h3><p>Follow headings, citations, source context, and related records.</p><ul class="scenario-meta" aria-label="Scenario metadata"><li><span class="source-status stable">Stable source</span></li><li>1 checked state</li><li>Wide + narrow</li><li>4 themes</li></ul></div>
+              <div class="scenario-end"><span class="presentation-status showcased">Showcased</span><a href="lab.html?scenario=INF-02">Inspect scenario <span aria-hidden="true">&rarr;</span></a></div>
+            </article>
+            <article class="scenario-row is-showcased" data-scenario-id="INF-03" data-presentation-status="showcased">
+              <div class="scenario-code"><strong>INF-03</strong><span>P1</span></div>
+              <div class="scenario-copy"><h3><a href="lab.html?scenario=INF-03">Revision and Correction History</a></h3><p>Understand what changed, when it changed, and why.</p><ul class="scenario-meta" aria-label="Scenario metadata"><li><span class="source-status stable">Stable source</span></li><li>1 checked state</li><li>Wide + narrow</li><li>4 themes</li></ul></div>
+              <div class="scenario-end"><span class="presentation-status showcased">Showcased</span><a href="lab.html?scenario=INF-03">Inspect scenario <span aria-hidden="true">&rarr;</span></a></div>
+            </article>
+            <article class="scenario-row" data-scenario-id="INF-04" data-presentation-status="planned">
+              <div class="scenario-code"><strong>INF-04</strong><span>P1</span></div>
+              <div class="scenario-copy"><h3>Collection and Archive</h3><p>Navigate stable records, saved views, and archived material.</p><ul class="scenario-meta" aria-label="Scenario metadata"><li><span class="source-status stable">Stable source</span></li><li>Phase 3</li></ul></div>
+              <div class="scenario-end"><span class="presentation-status planned">Planned</span></div>
+            </article>
+          </div>
+        </section>
+        <hr class="section-rule">
+        <section class="content-section atlas-group" id="ecommerce" aria-labelledby="ecommerce-title">
+          <div class="atlas-group-heading">
+            <div><p class="eyebrow">FAMILY 03 / 5 SCENARIOS</p><h2 id="ecommerce-title">Ecommerce operations</h2></div>
+            <p>Sellable state, money, inventory, channels, approvals, and automation stay semantically distinct.</p>
+          </div>
+          <div class="scenario-list">
+            <article class="scenario-row is-showcased" data-scenario-id="COM-01" data-presentation-status="showcased">
+              <div class="scenario-code"><strong>COM-01</strong><span>P0</span></div>
+              <div class="scenario-copy">
+                <h3><a href="lab.html?scenario=COM-01">Product or Inventory Exception</a></h3>
+                <p>Identify a blocking state, affected quantity or channel, and the next safe action.</p>
+                <ul class="scenario-meta" aria-label="Scenario metadata"><li><span class="source-status stable">Stable source</span></li><li>1 checked state</li><li>Wide + narrow</li><li>4 themes</li></ul>
+              </div>
+              <div class="scenario-end"><span class="presentation-status showcased">Showcased</span><a href="lab.html?scenario=COM-01">Inspect scenario <span aria-hidden="true">&rarr;</span></a></div>
+            </article>
+            <article class="scenario-row" data-scenario-id="COM-02" data-presentation-status="planned">
+              <div class="scenario-code"><strong>COM-02</strong><span>P1</span></div>
+              <div class="scenario-copy"><h3>Product Detail and Edit</h3><p>Edit a product while sellable state, price, inventory, channel status, and activity stay visible.</p><ul class="scenario-meta" aria-label="Scenario metadata"><li><span class="source-status stable">Stable source</span></li><li>Phase 3</li></ul></div>
+              <div class="scenario-end"><span class="presentation-status planned">Planned</span></div>
+            </article>
+            <article class="scenario-row" data-scenario-id="COM-03" data-presentation-status="planned">
+              <div class="scenario-code"><strong>COM-03</strong><span>P1</span></div>
+              <div class="scenario-copy"><h3>Order Operations</h3><p>Review an order while payment, fulfillment, refund, ownership, and timeline remain distinct.</p><ul class="scenario-meta" aria-label="Scenario metadata"><li><span class="source-status stable">Stable source</span></li><li>Phase 3</li></ul></div>
+              <div class="scenario-end"><span class="presentation-status planned">Planned</span></div>
+            </article>
+            <article class="scenario-row" data-scenario-id="COM-04" data-presentation-status="planned">
+              <div class="scenario-code"><strong>COM-04</strong><span>P1</span></div>
+              <div class="scenario-copy"><h3>Campaign and Creative Approval</h3><p>Review media, offer, channel, approver, and publication scope before release.</p><ul class="scenario-meta" aria-label="Scenario metadata"><li><span class="source-status stable">Stable source</span></li><li>Phase 3</li></ul></div>
+              <div class="scenario-end"><span class="presentation-status planned">Planned</span></div>
+            </article>
+            <article class="scenario-row" data-scenario-id="COM-05" data-presentation-status="planned">
+              <div class="scenario-code"><strong>COM-05</strong><span>P1</span></div>
+              <div class="scenario-copy"><h3>Scoped Batch Change</h3><p>Confirm visible selection, affected count, execution result, and rollback.</p><ul class="scenario-meta" aria-label="Scenario metadata"><li><span class="source-status stable">Stable source</span></li><li>Phase 3</li></ul></div>
+              <div class="scenario-end"><span class="presentation-status planned">Planned</span></div>
+            </article>
+          </div>
+        </section>
+
+        <hr class="section-rule">
+        <section class="content-section atlas-group" id="engineering" aria-labelledby="engineering-title">
+          <div class="atlas-group-heading">
+            <div><p class="eyebrow">FAMILY 04 / 5 SCENARIOS</p><h2 id="engineering-title">Engineering canvases</h2></div>
+            <p>Geometry, selection, structure, units, revisions, and generated changes support precision without competing with the canvas.</p>
+          </div>
+          <div class="scenario-list">
+            <article class="scenario-row is-showcased" data-scenario-id="ENG-01" data-presentation-status="showcased">
+              <div class="scenario-code"><strong>ENG-01</strong><span>P0</span></div>
+              <div class="scenario-copy">
+                <h3><a href="lab.html?scenario=ENG-01">Canvas Edit and Undo</a></h3>
+                <p>Select, modify, commit, and undo a structured object with precise context.</p>
+                <ul class="scenario-meta" aria-label="Scenario metadata"><li><span class="source-status stable">Stable source</span></li><li>1 checked state</li><li>Wide + narrow</li><li>4 themes</li></ul>
+              </div>
+              <div class="scenario-end"><span class="presentation-status showcased">Showcased</span><a href="lab.html?scenario=ENG-01">Inspect scenario <span aria-hidden="true">&rarr;</span></a></div>
+            </article>
+            <article class="scenario-row is-showcased" data-scenario-id="ENG-02" data-presentation-status="showcased">
+              <div class="scenario-code"><strong>ENG-02</strong><span>P1</span></div>
+              <div class="scenario-copy"><h3><a href="lab.html?scenario=ENG-02">Layer and Object Structure</a></h3><p>Navigate document hierarchy and inspect the current selection.</p><ul class="scenario-meta" aria-label="Scenario metadata"><li><span class="source-status stable">Stable source</span></li><li>1 checked state</li><li>Wide + narrow</li><li>4 themes</li></ul></div>
+              <div class="scenario-end"><span class="presentation-status showcased">Showcased</span><a href="lab.html?scenario=ENG-02">Inspect scenario <span aria-hidden="true">&rarr;</span></a></div>
+            </article>
+            <article class="scenario-row" data-scenario-id="ENG-03" data-presentation-status="planned">
+              <div class="scenario-code"><strong>ENG-03</strong><span>P1</span></div>
+              <div class="scenario-copy"><h3>Generated Change Review</h3><p>Preview a generated diff, accept or reject it, and preserve attribution and undo.</p><ul class="scenario-meta" aria-label="Scenario metadata"><li><span class="source-status stable">Stable source</span></li><li>Phase 3</li></ul></div>
+              <div class="scenario-end"><span class="presentation-status planned">Planned</span></div>
+            </article>
+            <article class="scenario-row" data-scenario-id="ENG-04" data-presentation-status="planned">
+              <div class="scenario-code"><strong>ENG-04</strong><span>P1</span></div>
+              <div class="scenario-copy"><h3>Revision and Conflict Recovery</h3><p>Compare revisions and recover from a conflict without crowding the canvas.</p><ul class="scenario-meta" aria-label="Scenario metadata"><li><span class="source-status stable">Stable source</span></li><li>Phase 3</li></ul></div>
+              <div class="scenario-end"><span class="presentation-status planned">Planned</span></div>
+            </article>
+            <article class="scenario-row" data-scenario-id="ENG-05" data-presentation-status="planned">
+              <div class="scenario-code"><strong>ENG-05</strong><span>P1</span></div>
+              <div class="scenario-copy"><h3>Export or Background Operation</h3><p>Inspect phase and progress, cancel or continue, and reach the result.</p><ul class="scenario-meta" aria-label="Scenario metadata"><li><span class="source-status stable">Stable source</span></li><li>Phase 3</li></ul></div>
+              <div class="scenario-end"><span class="presentation-status planned">Planned</span></div>
+            </article>
+          </div>
+        </section>
+        <hr class="section-rule">
+        <section class="content-section atlas-group" id="shared" aria-labelledby="shared-title">
+          <div class="atlas-group-heading">
+            <div><p class="eyebrow">FAMILY 05 / 11 SCENARIOS</p><h2 id="shared-title">Shared and conditional workflows</h2></div>
+            <p>Cross-product flows stay task-specific. Conditional capabilities remain absent unless a consuming product actually needs them.</p>
+          </div>
+          <div class="scenario-list">
+            <article class="scenario-row is-showcased" data-scenario-id="CORE-01" data-presentation-status="showcased">
+              <div class="scenario-code"><strong>CORE-01</strong><span>P0</span></div>
+              <div class="scenario-copy">
+                <h3><a href="lab.html?scenario=CORE-01">Access and Recovery</a></h3>
+                <p>Sign in, recover access, and return to the intended context.</p>
+                <ul class="scenario-meta" aria-label="Scenario metadata"><li><span class="source-status stable">Stable source</span></li><li>6 checked states</li><li>Wide + narrow</li><li>4 themes</li></ul>
+              </div>
+              <div class="scenario-end"><span class="presentation-status showcased">Showcased</span><a href="lab.html?scenario=CORE-01">Inspect scenario <span aria-hidden="true">&rarr;</span></a></div>
+            </article>
+            <article class="scenario-row is-showcased" data-scenario-id="CORE-02" data-presentation-status="showcased">
+              <div class="scenario-code"><strong>CORE-02</strong><span>P1</span></div>
+              <div class="scenario-copy"><h3><a href="lab.html?scenario=CORE-02">Onboarding and Setup</a></h3><p>Configure the product, invite collaborators, resume, and complete setup.</p><ul class="scenario-meta" aria-label="Scenario metadata"><li><span class="source-status stable">Stable source</span></li><li>1 checked state</li><li>Wide + narrow</li><li>4 themes</li></ul></div>
+              <div class="scenario-end"><span class="presentation-status showcased">Showcased</span><a href="lab.html?scenario=CORE-02">Inspect scenario <span aria-hidden="true">&rarr;</span></a></div>
+            </article>
+            <article class="scenario-row is-showcased" data-scenario-id="CORE-03" data-presentation-status="showcased">
+              <div class="scenario-code"><strong>CORE-03</strong><span>P1</span></div>
+              <div class="scenario-copy"><h3><a href="lab.html?scenario=CORE-03">Search and Results</a></h3><p>Search, refine, inspect a result, and restore URL state.</p><ul class="scenario-meta" aria-label="Scenario metadata"><li><span class="source-status stable">Stable source</span></li><li>5 checked states</li><li>Wide + narrow</li><li>4 themes</li></ul></div>
+              <div class="scenario-end"><span class="presentation-status showcased">Showcased</span><a href="lab.html?scenario=CORE-03">Inspect scenario <span aria-hidden="true">&rarr;</span></a></div>
+            </article>
+            <article class="scenario-row is-showcased" data-scenario-id="CORE-04" data-presentation-status="showcased">
+              <div class="scenario-code"><strong>CORE-04</strong><span>P1</span></div>
+              <div class="scenario-copy"><h3><a href="lab.html?scenario=CORE-04">Settings and Administration</a></h3><p>Change settings with authorization and unsaved-change protection.</p><ul class="scenario-meta" aria-label="Scenario metadata"><li><span class="source-status stable">Stable source</span></li><li>1 checked state</li><li>Wide + narrow</li><li>4 themes</li></ul></div>
+              <div class="scenario-end"><span class="presentation-status showcased">Showcased</span><a href="lab.html?scenario=CORE-04">Inspect scenario <span aria-hidden="true">&rarr;</span></a></div>
+            </article>
+            <article class="scenario-row is-showcased" data-scenario-id="CORE-05" data-presentation-status="showcased">
+              <div class="scenario-code"><strong>CORE-05</strong><span>P1</span></div>
+              <div class="scenario-copy"><h3><a href="lab.html?scenario=CORE-05">System and Recovery</a></h3><p>Recover from unavailable, permission, offline, or retryable state without losing useful context.</p><ul class="scenario-meta" aria-label="Scenario metadata"><li><span class="source-status stable">Stable source</span></li><li>6 checked states</li><li>Wide + narrow</li><li>4 themes</li></ul></div>
+              <div class="scenario-end"><span class="presentation-status showcased">Showcased</span><a href="lab.html?scenario=CORE-05">Inspect scenario <span aria-hidden="true">&rarr;</span></a></div>
+            </article>
+            <article class="scenario-row is-showcased" data-scenario-id="CORE-06" data-presentation-status="showcased">
+              <div class="scenario-code"><strong>CORE-06</strong><span>P1</span></div>
+              <div class="scenario-copy"><h3><a href="lab.html?scenario=CORE-06">Help and Support</a></h3><p>Find help, inspect service status, escalate, and preserve support context.</p><ul class="scenario-meta" aria-label="Scenario metadata"><li><span class="source-status stable">Stable source</span></li><li>1 checked state</li><li>Wide + narrow</li><li>4 themes</li></ul></div>
+              <div class="scenario-end"><span class="presentation-status showcased">Showcased</span><a href="lab.html?scenario=CORE-06">Inspect scenario <span aria-hidden="true">&rarr;</span></a></div>
+            </article>
+            <article class="scenario-row is-showcased" data-scenario-id="WORK-01" data-presentation-status="showcased">
+              <div class="scenario-code"><strong>WORK-01</strong><span>P0</span></div>
+              <div class="scenario-copy">
+                <h3><a href="lab.html?scenario=WORK-01">Scheduling Workspace</a></h3>
+                <p>Inspect a period, select an item, and reschedule with time and selection context intact.</p>
+                <ul class="scenario-meta" aria-label="Scenario metadata"><li><span class="source-status candidate">Candidate source</span></li><li>4 checked states</li><li>Wide + narrow</li><li>4 themes</li></ul>
+              </div>
+              <div class="scenario-end"><span class="presentation-status showcased">Showcased</span><a href="lab.html?scenario=WORK-01">Inspect scenario <span aria-hidden="true">&rarr;</span></a></div>
+            </article>
+            <article class="scenario-row" data-scenario-id="WORK-02" data-presentation-status="planned">
+              <div class="scenario-code"><strong>WORK-02</strong><span>P2</span></div>
+              <div class="scenario-copy"><h3>Transfer and Import</h3><p>Transfer or import data through mapping, partial failure, retry, and rollback.</p><ul class="scenario-meta" aria-label="Scenario metadata"><li><span class="source-status candidate">Candidate source</span></li><li>Phase 4</li></ul></div>
+              <div class="scenario-end"><span class="presentation-status planned">Planned</span></div>
+            </article>
+            <article class="scenario-row" data-scenario-id="WORK-03" data-presentation-status="planned">
+              <div class="scenario-code"><strong>WORK-03</strong><span>P2</span></div>
+              <div class="scenario-copy"><h3>Notifications and Audit</h3><p>Review notifications and audit records through read state, filters, detail, and retention boundaries.</p><ul class="scenario-meta" aria-label="Scenario metadata"><li><span class="source-status candidate">Candidate source</span></li><li>Phase 4</li></ul></div>
+              <div class="scenario-end"><span class="presentation-status planned">Planned</span></div>
+            </article>
+            <article class="scenario-row" data-scenario-id="WORK-04" data-presentation-status="planned">
+              <div class="scenario-code"><strong>WORK-04</strong><span>P2</span></div>
+              <div class="scenario-copy"><h3>Organization and Permissions</h3><p>Invite members, inspect roles, change permission scope, and confirm impact.</p><ul class="scenario-meta" aria-label="Scenario metadata"><li><span class="source-status candidate">Candidate source</span></li><li>Phase 4</li></ul></div>
+              <div class="scenario-end"><span class="presentation-status planned">Planned</span></div>
+            </article>
+            <article class="scenario-row" data-scenario-id="COND-01" data-presentation-status="planned">
+              <div class="scenario-code"><strong>COND-01</strong><span>P2</span></div>
+              <div class="scenario-copy"><h3>Billing and Plan</h3><p>Inspect plan, usage, invoice, cancellation, or payment recovery only when the product requires billing.</p><ul class="scenario-meta" aria-label="Scenario metadata"><li><span class="source-status draft">Draft source</span></li><li>Conditional</li><li>Phase 4</li></ul></div>
+              <div class="scenario-end"><span class="presentation-status planned">Planned</span></div>
+            </article>
+          </div>
+        </section>
+
+        <hr class="section-rule">
+        <section class="content-section" id="boundary" aria-labelledby="boundary-title">
+          <div class="section-heading">
+            <h2 id="boundary-title">What comes next</h2>
+            <p>Phase 3 now adds five stable shared workflows and three product-family P1 scenarios beside the six P0 pilots. Unsupported queue, commerce, generated-change, conflict, and background-operation tasks remain planned until complete references exist.</p>
+          </div>
+          <div class="atlas-next">
+            <div><span>03</span><strong>Continue stable coverage</strong><p>Join the next P1 product-family tasks to complete references without multiplying near-duplicate routes.</p></div>
+            <div><span>04</span><strong>Add missing evidence</strong><p>Implement real state routes before adding controls for undo, recovery, empty, or failure behavior.</p></div>
+            <div><span>ALWAYS</span><strong>Keep gaps visible</strong><p>Expose candidate, draft, and conditional work with current ownership and no maturity inflation.</p></div>
+          </div>
+        </section>
+
+        <footer class="site-footer"><div><span>KIN Design System &middot; Scenario Atlas</span><span>Coverage is visible; authority stays with the governing contracts.</span></div></footer>
+      </div>
+    </main>
+
+    <aside class="section-rail" aria-label="On this page">
+      <h2>On this page</h2>
+      <a href="#overview">Overview</a>
+      <a href="#coverage">Coverage model</a>
+      <a href="#intelligence">Intelligence</a>
+      <a href="#information">Information</a>
+      <a href="#ecommerce">Ecommerce</a>
+      <a href="#engineering">Engineering</a>
+      <a href="#shared">Shared and conditional</a>
+      <a href="#boundary">Next phases</a>
+      <p class="release-note">14 showcased scenarios<br>16 planned entries<br><br>English-only in Phase 3.</p>
+    </aside>
+  </div>
+
+  <dialog class="command-dialog" data-command-dialog data-state="closed" aria-label="Search Scenario Atlas">
+    <div class="command-search"><input type="search" data-command-search placeholder="Search sections and showcased scenarios" aria-label="Search commands"></div>
+    <div class="command-list">
+      <div class="command-group-label">Atlas sections</div>
+      <a class="command-item" data-command-item href="#coverage">Coverage model <span>Section</span></a>
+      <a class="command-item" data-command-item href="#intelligence">Intelligence workspaces <span>5 scenarios</span></a>
+      <a class="command-item" data-command-item href="#information">Information sites <span>4 scenarios</span></a>
+      <a class="command-item" data-command-item href="#ecommerce">Ecommerce operations <span>5 scenarios</span></a>
+      <a class="command-item" data-command-item href="#engineering">Engineering canvases <span>5 scenarios</span></a>
+      <a class="command-item" data-command-item href="#shared">Shared and conditional <span>11 scenarios</span></a>
+      <div class="command-group-label">Showcased scenarios</div>
+      <a class="command-item" data-command-item href="lab.html?scenario=INT-01">Entity Database Review <span>INT-01</span></a>
+      <a class="command-item" data-command-item href="lab.html?scenario=INF-01">Find and Verify a Record <span>INF-01</span></a>
+      <a class="command-item" data-command-item href="lab.html?scenario=INF-02">Reading With Provenance <span>INF-02</span></a>
+      <a class="command-item" data-command-item href="lab.html?scenario=INF-03">Revision and Correction History <span>INF-03</span></a>
+      <a class="command-item" data-command-item href="lab.html?scenario=COM-01">Product or Inventory Exception <span>COM-01</span></a>
+      <a class="command-item" data-command-item href="lab.html?scenario=ENG-01">Canvas Edit and Undo <span>ENG-01</span></a>
+      <a class="command-item" data-command-item href="lab.html?scenario=ENG-02">Layer and Object Structure <span>ENG-02</span></a>
+      <a class="command-item" data-command-item href="lab.html?scenario=CORE-01">Access and Recovery <span>CORE-01</span></a>
+      <a class="command-item" data-command-item href="lab.html?scenario=CORE-02">Onboarding and Setup <span>CORE-02</span></a>
+      <a class="command-item" data-command-item href="lab.html?scenario=CORE-03">Search and Results <span>CORE-03</span></a>
+      <a class="command-item" data-command-item href="lab.html?scenario=CORE-04">Settings and Administration <span>CORE-04</span></a>
+      <a class="command-item" data-command-item href="lab.html?scenario=CORE-05">System and Recovery <span>CORE-05</span></a>
+      <a class="command-item" data-command-item href="lab.html?scenario=CORE-06">Help and Support <span>CORE-06</span></a>
+      <a class="command-item" data-command-item href="lab.html?scenario=WORK-01">Scheduling Workspace <span>WORK-01</span></a>
+      <div class="command-group-label">Sources</div>
+      <a class="command-item" data-command-item href="catalog.json">Scenario catalog <span>JSON</span></a>
+      <a class="command-item" data-command-item href="catalog.schema.json">Catalog Schema <span>JSON</span></a>
+      <a class="command-item" data-command-item href="../">KIN documentation <span>Home</span></a>
+      <button class="command-item" type="button" data-command-item data-theme-system>Use system theme <span>Appearance</span></button>
+      <p class="command-empty" data-command-empty hidden>No matching scenario or section.</p>
+    </div>
+  </dialog>
+  <div data-sonner-root></div>
+  <script type="module" src="../assets/site.js"></script>
+</body>
+</html>

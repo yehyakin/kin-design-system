@@ -523,7 +523,9 @@ document.querySelector("[data-motion-task]").addEventListener("click", async () 
 overlayLayout.addEventListener("change", (event) => setInspector(!event.matches, false));
 applyTheme(root.dataset.themePreference || "system", false);
 applyContrast(root.dataset.contrast === "more", false);
-translate(root.dataset.locale === "en" ? "en" : "zh", false);
+const requestedLocale = new URLSearchParams(window.location.search).get("lang");
+const initialLocale = requestedLocale === "en" ? "en" : requestedLocale === "zh-CN" ? "zh" : root.dataset.locale === "en" ? "en" : "zh";
+translate(initialLocale, false);
 setInspector(!overlayLayout.matches, false);
 
 createIcons({

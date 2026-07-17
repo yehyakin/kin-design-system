@@ -8,6 +8,9 @@ The project follows semantic versioning for normative design documentation.
 
 ### Public documentation and discovery
 
+- Continued Scenario Atlas Phase 3 by promoting five stable shared workflows plus information reading, revision-history, and engineering hierarchy scenarios; the Atlas now exposes 14 showcased scenarios and 31 independently checked local states while 16 entries remain visibly planned.
+- Completed Scenario Atlas Phase 2 with a public inspection lab for six showcased P0 scenarios, 14 independently checked local states, exact wide and narrow viewport fixtures, four theme and contrast modes, shareable URL state, preserved control focus, and explicit unresolved behavior without changing source maturity or adoption status.
+- Accepted RFC 002 and added the Phase 1 Scenario Atlas: a machine-validated 30-scenario coverage map with six linked P0 references, 24 visibly planned entries, separate source-maturity and presentation labels, and an explicit non-adoption boundary.
 - Reworked the English and Chinese README as a shorter public entry point with plain-language positioning, direct live links to the workspace, authentication pages and dialogs, Motion Lab, and Integration Lab, plus distinct paths for stable adoption, current development, contribution, and coding-tool use.
 - Clarified the contract-first delivery boundary, product profiles, runtime-integration tiers, adoption evidence stages, and repository map without presenting component counts, a design lab, or a passing build as proof of production adoption.
 - Added a proposed Agent Distribution Layer RFC covering generated theme and locale snapshots, manifest and Recipe Schemas, stable/next/versioned publication channels, deterministic checks, ownership, rollout, and rollback without changing the current normative contract.

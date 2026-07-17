@@ -66,4 +66,19 @@ test("cross-browser smoke preserves navigation focus and advanced states", async
   await expect(page.locator("[data-sidecar-title]")).toHaveText("主图审核");
   await page.keyboard.press("Escape");
   await expect(page).not.toHaveURL(/selected=/);
+
+  await page.goto("/scenarios/lab.html?scenario=CORE-05&state=error&viewport=narrow&theme=dark-high-contrast", { waitUntil: "domcontentloaded" });
+  await expect(page.locator("[data-lab-verification]")).toHaveAttribute("data-state", "pass");
+  const labFrame = page.frameLocator("[data-lab-frame]");
+  await expect(labFrame.locator("[data-system-code]")).toHaveText("5XX");
+  await expect(labFrame.locator("html")).toHaveAttribute("data-theme", "dark");
+  await expect(labFrame.locator("html")).toHaveAttribute("data-contrast", "more");
+
+  await page.goto("/scenarios/lab.html?scenario=ENG-02&state=normal&viewport=narrow&theme=light-high-contrast", { waitUntil: "domcontentloaded" });
+  await expect(page.locator("[data-lab-verification]")).toHaveAttribute("data-state", "pass");
+  const engineeringFrame = page.frameLocator("[data-lab-frame]");
+  await expect(engineeringFrame.locator("#canvas-layers")).toBeVisible();
+  await expect(engineeringFrame.locator('[data-object][aria-pressed="true"]')).toContainText("Bracket-01");
+  await expect(engineeringFrame.locator("html")).toHaveAttribute("data-theme", "light");
+  await expect(engineeringFrame.locator("html")).toHaveAttribute("data-contrast", "more");
 });

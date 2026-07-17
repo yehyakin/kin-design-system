@@ -36,6 +36,7 @@ node scripts/validate-docs.mjs
 node scripts/validate-design.mjs
 node scripts/validate-components.mjs
 node scripts/validate-pages.mjs
+node scripts/validate-scenarios.mjs
 node scripts/validate-integrations.mjs
 node scripts/validate-release.mjs
 node scripts/export-tokens.mjs --check

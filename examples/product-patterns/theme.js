@@ -418,12 +418,19 @@ addEventListener("keydown", (event) => {
   }
 });
 
-canvasMobileLayout.addEventListener("change", syncCanvasPanelLayouts);
-canvasInspectorOverlay.addEventListener("change", syncCanvasPanelLayouts);
+function syncCanvasPanelLayoutAndFixture() {
+  syncCanvasPanelLayouts();
+  const requestedCanvasPanel = new URLSearchParams(location.search).get("panel");
+  if (requestedCanvasPanel === "layers") setCanvasLayers(true, false);
+  if (requestedCanvasPanel === "properties") setCanvasProperties(true, false);
+}
+
+canvasMobileLayout.addEventListener("change", syncCanvasPanelLayoutAndFixture);
+canvasInspectorOverlay.addEventListener("change", syncCanvasPanelLayoutAndFixture);
 reducedMotion.addEventListener("change", syncCanvasPanelMotionPreference);
 
 applyContrast(document.documentElement.dataset.contrast === "more", false);
 setSplitWidth(Number(localStorage.getItem(splitStorageKey)) || splitDefault, false);
 syncCanvasPanelMotionPreference();
-syncCanvasPanelLayouts();
+syncCanvasPanelLayoutAndFixture();
 syncToolbarTabStop();

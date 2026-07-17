@@ -6,6 +6,14 @@
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://yehyakin.github.io/kin-design-system/zh/" />
   </url>
   <url>
+    <loc>https://yehyakin.github.io/kin-design-system/scenarios/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://yehyakin.github.io/kin-design-system/scenarios/" />
+  </url>
+  <url>
+    <loc>https://yehyakin.github.io/kin-design-system/scenarios/lab.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://yehyakin.github.io/kin-design-system/scenarios/lab.html" />
+  </url>
+  <url>
     <loc>https://yehyakin.github.io/kin-design-system/zh/</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://yehyakin.github.io/kin-design-system/" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://yehyakin.github.io/kin-design-system/zh/" />
