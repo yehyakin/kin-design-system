@@ -38,7 +38,7 @@ test("scenario lab verifies every catalog-backed showcased state", async ({ page
   expect(response.ok()).toBe(true);
   const catalog = await response.json();
   const showcased = catalog.scenarios.filter((scenario) => scenario.presentation_status === "showcased");
-  expect(showcased).toHaveLength(15);
+  expect(showcased).toHaveLength(16);
 
   for (const scenario of showcased) {
     await page.goto("/scenarios/lab.html?scenario=" + scenario.id + "&viewport=narrow&theme=light-high-contrast");
@@ -67,6 +67,10 @@ test("scenario lab verifies every catalog-backed showcased state", async ({ page
       await expect(page.frameLocator("[data-lab-frame]").locator("[data-commerce-save-failure]")).toBeVisible();
       await page.locator("[data-lab-scenario]").focus();
       await page.screenshot({ path: testInfo.outputPath("scenario-lab-commerce-save-failure.png") });
+    }
+    if (scenario.id === "INT-03") {
+      await expect(page.frameLocator("[data-lab-frame]").locator("[data-risk-error]")).toBeVisible();
+      await page.screenshot({ path: testInfo.outputPath("scenario-lab-risk-queue-error.png") });
     }
   }
 
@@ -127,6 +131,69 @@ test("scenario lab changes viewport and appearance without stealing control focu
   expect(params.get("viewport")).toBe("narrow");
   expect(params.get("theme")).toBe("light-high-contrast");
   await page.screenshot({ path: testInfo.outputPath("scenario-lab-system-conflict.png"), fullPage: true });
+});
+
+test("scenario lab snaps exact viewport sizes under normal motion and settles rapid reversal", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  await page.setViewportSize({ width: 1500, height: 940 });
+  await page.goto("/scenarios/lab.html?scenario=INT-01&state=normal&viewport=wide&theme=dark");
+  await expectVerified(page);
+
+  const shell = page.locator("[data-lab-frame-shell]");
+  const frame = page.locator("[data-lab-frame]");
+  await expect(shell).toHaveCSS("transition-property", "opacity");
+  await expect(shell).toHaveCSS("transition-duration", "0.12s");
+
+  const wide = page.locator('[data-lab-viewport="wide"]');
+  const narrow = page.locator('[data-lab-viewport="narrow"]');
+  await wide.focus();
+  await page.keyboard.press("ArrowRight");
+  await page.keyboard.press("ArrowLeft");
+  await page.keyboard.press("ArrowRight");
+
+  await expect(narrow).toBeFocused();
+  await expect(narrow).toHaveAttribute("aria-pressed", "true");
+  await expect(wide).toHaveAttribute("aria-pressed", "false");
+  expect(await frame.evaluate((element) => Math.round(element.getBoundingClientRect().width))).toBe(390);
+  await expectVerified(page);
+});
+
+test("scenario lab clears a surfaced inspection error when a valid reference loads", async ({ page }) => {
+  await page.goto("/scenarios/lab.html?scenario=CORE-05&state=expired&viewport=narrow&theme=dark");
+  await expectVerified(page);
+
+  const frame = page.locator("[data-lab-frame]");
+  await frame.evaluate((element) => {
+    element.setAttribute("sandbox", "allow-scripts");
+    element.srcdoc = "<!doctype html><title>isolated fixture</title>";
+  });
+
+  const error = page.locator("[data-lab-error]");
+  await expect(error).toBeVisible();
+  await expect(error).toContainText("could not be inspected");
+
+  await frame.evaluate((element) => {
+    element.removeAttribute("sandbox");
+    element.removeAttribute("srcdoc");
+  });
+  await page.locator("[data-lab-state]").selectOption("permission");
+  await expectVerified(page);
+  await expect(error).toBeHidden();
+  await expect(page.locator("[data-lab-error-message]")).toBeEmpty();
+});
+
+test("scenario lab uses solid bars when reduced transparency is requested", async ({ page }) => {
+  const session = await page.context().newCDPSession(page);
+  await session.send("Emulation.setEmulatedMedia", {
+    features: [{ name: "prefers-reduced-transparency", value: "reduce" }]
+  });
+  await page.goto("/scenarios/lab.html?scenario=INT-01&state=normal&viewport=wide&theme=dark");
+  await expectVerified(page);
+
+  await expect(page.locator(".lab-topbar")).toHaveCSS("backdrop-filter", "none");
+  await expect(page.locator(".lab-preview-bar")).toHaveCSS("backdrop-filter", "none");
+  await expect(page.locator(".lab-topbar")).toHaveCSS("background-color", "rgb(15, 16, 17)");
+  await expect(page.locator(".lab-preview-bar")).toHaveCSS("background-color", "rgb(15, 16, 17)");
 });
 
 test("scenario lab defaults to a contained narrow preview on mobile", async ({ page }, testInfo) => {

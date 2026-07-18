@@ -78,6 +78,8 @@ if (fs.existsSync(output)) {
     "examples/page-patterns/system.html",
     "examples/page-patterns/support.html",
     "examples/page-patterns/scheduling.html",
+    "examples/product-patterns/information.html",
+    "examples/product-patterns/ecommerce.html",
     "examples/product-patterns/canvas.html",
   ].map((file) => path.join(output, file));
   const attributePattern = /\b(?:href|src)=["']([^"']+)["']/g;
@@ -213,8 +215,8 @@ if (fs.existsSync(scenarioCatalogPath) && fs.existsSync(scenarioHtmlPath)) {
     const showcasedRows = scenarioEntries.filter((entry) => entry.attributes.includes('data-presentation-status="showcased"')).length;
     const plannedRows = scenarioEntries.filter((entry) => entry.attributes.includes('data-presentation-status="planned"')).length;
     if (linkedRows !== 0) failures.push("scenarios/index.html: Phase 3 expects no linked-only rows");
-    if (showcasedRows !== 15) failures.push("scenarios/index.html: expected 15 showcased scenario rows");
-    if (plannedRows !== 15) failures.push("scenarios/index.html: expected 15 planned rows");
+    if (showcasedRows !== 16) failures.push("scenarios/index.html: expected 16 showcased scenario rows");
+    if (plannedRows !== 14) failures.push("scenarios/index.html: expected 14 planned rows");
   }
 }
 

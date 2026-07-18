@@ -1,8 +1,8 @@
 {
   "$schema": "./catalog.schema.json",
   "schema_version": "1.1.0",
-  "catalog_version": "1.4.0",
-  "reviewed_on": "2026-07-17",
+  "catalog_version": "1.5.0",
+  "reviewed_on": "2026-07-19",
   "pilot_ids": [
     "INT-01",
     "INF-01",
@@ -177,16 +177,119 @@
       ],
       "source_maturity": "stable",
       "conditional": false,
-      "presentation_status": "planned",
+      "presentation_status": "showcased",
       "reference_path": "examples/workspace-reference/index.html",
-      "states": [],
-      "viewports": [],
-      "themes": [],
-      "known_gaps": [
-        "Dedicated Atlas presentation and deterministic state locators are not implemented."
+      "states": [
+        "normal",
+        "loading",
+        "empty",
+        "conflict",
+        "pending",
+        "committed",
+        "undo",
+        "permission",
+        "error"
       ],
-      "inspection_path": null,
-      "state_controls": []
+      "viewports": [
+        "wide",
+        "narrow"
+      ],
+      "themes": [
+        "light",
+        "dark",
+        "light-high-contrast",
+        "dark-high-contrast"
+      ],
+      "known_gaps": [
+        "The deterministic reference has no live monitor, permission service, durable assignment, or review persistence.",
+        "Manual screen-reader, browser-zoom, and physical touch-device review remain outside the Atlas evidence."
+      ],
+      "inspection_path": "site/scenarios/lab.html?scenario=INT-03",
+      "state_controls": [
+        {
+          "state": "normal",
+          "label": "Elevated signal queue",
+          "reference_path": "examples/workspace-reference/index.html?view=risk-queue&lang=en&state=normal",
+          "assertion": {
+            "kind": "attribute",
+            "selector": "[data-risk-queue]",
+            "attribute": "data-risk-state",
+            "value": "normal"
+          }
+        },
+        {
+          "state": "loading",
+          "label": "Refreshing saved scope",
+          "reference_path": "examples/workspace-reference/index.html?view=risk-queue&lang=en&state=loading",
+          "assertion": {
+            "kind": "visible",
+            "selector": "[data-risk-loading]"
+          }
+        },
+        {
+          "state": "empty",
+          "label": "Empty saved scope",
+          "reference_path": "examples/workspace-reference/index.html?view=risk-queue&lang=en&state=empty",
+          "assertion": {
+            "kind": "visible",
+            "selector": "[data-risk-empty]"
+          }
+        },
+        {
+          "state": "conflict",
+          "label": "Conflicting evidence",
+          "reference_path": "examples/workspace-reference/index.html?view=risk-queue&lang=en&state=conflict",
+          "assertion": {
+            "kind": "visible",
+            "selector": "[data-risk-conflict]"
+          }
+        },
+        {
+          "state": "pending",
+          "label": "Decision recording",
+          "reference_path": "examples/workspace-reference/index.html?view=risk-queue&lang=en&state=pending",
+          "assertion": {
+            "kind": "visible",
+            "selector": "[data-risk-pending]"
+          }
+        },
+        {
+          "state": "committed",
+          "label": "Decision recorded",
+          "reference_path": "examples/workspace-reference/index.html?view=risk-queue&lang=en&state=committed",
+          "assertion": {
+            "kind": "visible",
+            "selector": "[data-risk-committed]"
+          }
+        },
+        {
+          "state": "undo",
+          "label": "Decision undone",
+          "reference_path": "examples/workspace-reference/index.html?view=risk-queue&lang=en&state=undo",
+          "assertion": {
+            "kind": "visible",
+            "selector": "[data-risk-undo]"
+          }
+        },
+        {
+          "state": "permission",
+          "label": "Read-only review",
+          "reference_path": "examples/workspace-reference/index.html?view=risk-queue&lang=en&state=permission",
+          "assertion": {
+            "kind": "visible",
+            "selector": "[data-risk-permission]"
+          }
+        },
+        {
+          "state": "error",
+          "label": "Failed record with draft preserved",
+          "reference_path": "examples/workspace-reference/index.html?view=risk-queue&lang=en&state=error",
+          "assertion": {
+            "kind": "visible",
+            "selector": "[data-risk-error]"
+          }
+        }
+      ]
     },
     {
       "id": "INT-04",

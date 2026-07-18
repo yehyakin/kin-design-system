@@ -240,6 +240,7 @@ function verifyCurrentState() {
     detail = assertion.selector + " must include \"" + assertion.value + "\".";
   }
 
+  if (passed) clearError();
   setVerification(passed ? "pass" : "fail", passed ? "Verified local fixture" : "Fixture check failed", detail);
   lab.dataset.loadState = passed ? "ready" : "mismatch";
   elements.frameShell.dataset.loading = "false";
@@ -251,6 +252,7 @@ function afterLayout(callback) {
 }
 
 function inspectReference() {
+  clearError();
   try {
     applyAppearance();
     afterLayout(verifyCurrentState);
@@ -262,6 +264,7 @@ function inspectReference() {
 function loadReference() {
   const control = selectedControl();
   const nextUrl = referenceUrl(control.reference_path);
+  clearError();
   elements.frame.dataset.referencePath = control.reference_path;
   renderDirectLink();
   setVerification("loading", "Checking fixture", control.label);
@@ -314,6 +317,7 @@ function chooseState(state) {
 
 function chooseViewport(id) {
   if (!viewports.some((viewport) => viewport.id === id)) return;
+  clearError();
   current.viewport = id;
   renderViewport();
   syncPressedControls();
@@ -324,6 +328,7 @@ function chooseViewport(id) {
 
 function chooseTheme(id) {
   if (!themes.some((theme) => theme.id === id)) return;
+  clearError();
   current.theme = id;
   syncPressedControls();
   writeUrl();
@@ -359,6 +364,11 @@ function showError(message) {
   elements.error.hidden = false;
   elements.errorMessage.textContent = message;
   setVerification("fail", "Inspection unavailable", message);
+}
+
+function clearError() {
+  elements.error.hidden = true;
+  elements.errorMessage.textContent = "";
 }
 
 elements.frame.addEventListener("load", () => {

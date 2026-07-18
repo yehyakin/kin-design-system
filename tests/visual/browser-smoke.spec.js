@@ -16,6 +16,7 @@ test.afterEach(async ({ page }) => {
 });
 
 test("cross-browser smoke preserves navigation focus and advanced states", async ({ page }) => {
+  test.setTimeout(60_000);
   await page.goto("/", { waitUntil: "domcontentloaded" });
   await expect(page.locator("html")).toHaveAttribute("data-site-ready", "true");
   await expect(page).toHaveTitle("KIN Design System");
@@ -73,6 +74,14 @@ test("cross-browser smoke preserves navigation focus and advanced states", async
   await expect(labFrame.locator("[data-system-code]")).toHaveText("5XX");
   await expect(labFrame.locator("html")).toHaveAttribute("data-theme", "dark");
   await expect(labFrame.locator("html")).toHaveAttribute("data-contrast", "more");
+
+  await page.goto("/scenarios/lab.html?scenario=INT-03&state=error&viewport=narrow&theme=dark-high-contrast", { waitUntil: "domcontentloaded" });
+  await expect(page.locator("[data-lab-verification]")).toHaveAttribute("data-state", "pass");
+  const riskFrame = page.frameLocator("[data-lab-frame]");
+  await expect(riskFrame.locator("[data-risk-error]")).toBeVisible();
+  await expect(riskFrame.locator("[data-risk-reason]")).not.toHaveValue("");
+  await expect(riskFrame.locator("html")).toHaveAttribute("data-theme", "dark");
+  await expect(riskFrame.locator("html")).toHaveAttribute("data-contrast", "more");
 
   await page.goto("/scenarios/lab.html?scenario=ENG-02&state=normal&viewport=narrow&theme=light-high-contrast", { waitUntil: "domcontentloaded" });
   await expect(page.locator("[data-lab-verification]")).toHaveAttribute("data-state", "pass");
