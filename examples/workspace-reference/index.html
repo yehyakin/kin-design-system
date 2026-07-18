@@ -17,6 +17,7 @@
         document.documentElement.dataset.locale = locale;
         document.documentElement.lang = locale === "zh" ? "zh-CN" : "en";
         document.documentElement.dataset.contrast = localStorage.getItem("kin-reference-contrast") === "more" ? "more" : "normal";
+        document.documentElement.dataset.workspaceView = new URLSearchParams(location.search).get("view") === "risk-queue" ? "risk-queue" : "entity";
       })();
     </script>
     <link rel="stylesheet" href="../../assets/sonner.css" />
@@ -38,8 +39,8 @@
 
         <nav class="primary-nav" data-i18n-aria="workspaceNav">
           <a href="#summary"><i data-lucide="layout-dashboard"></i><span data-i18n="overview">情报概览</span></a>
-          <a href="#workspace" aria-current="page"><i data-lucide="database"></i><span data-i18n="database">对象数据库</span></a>
-          <a href="#activity"><i data-lucide="triangle-alert"></i><span data-i18n="signals">风险信号</span></a>
+          <a href="./" aria-current="page" data-nav-view="entity"><i data-lucide="database"></i><span data-i18n="database">对象数据库</span></a>
+          <a href="?view=risk-queue" data-nav-view="risk-queue"><i data-lucide="triangle-alert"></i><span data-i18n="signals">风险信号</span></a>
           <a href="#activity"><i data-lucide="activity"></i><span data-i18n="monitoring">监测任务</span></a>
         </nav>
 
@@ -61,14 +62,15 @@
       <main id="workspace" class="workspace" tabindex="-1">
         <header class="workspace-bar">
           <div class="location-identity" data-i18n-aria="breadcrumb">
-            <span data-i18n="database">对象数据库</span><span aria-hidden="true">/</span><strong aria-current="page" title="Alpha Network">Alpha Network</strong>
+            <span data-view="entity" data-i18n="database">对象数据库</span><span data-view="entity" aria-hidden="true">/</span><strong data-view="entity" aria-current="page" title="Alpha Network">Alpha Network</strong>
+            <span data-view="risk-queue" data-i18n="signals">风险信号</span><span data-view="risk-queue" aria-hidden="true">/</span><strong data-view="risk-queue" aria-current="page" data-i18n="riskSavedView">高优先级待复核</strong>
           </div>
           <div class="workspace-actions">
             <button type="button" class="search-button" data-i18n-aria="search">
               <i data-lucide="search"></i><span data-i18n="search">搜索</span><kbd>⌘ K</kbd>
             </button>
             <button type="button" class="icon-label-button" data-inspector-open aria-controls="inspector" aria-expanded="true" data-i18n-aria="properties">
-              <i data-lucide="panel-right"></i><span data-i18n="properties">属性</span>
+              <i data-lucide="panel-right"></i><span data-view="entity" data-i18n="properties">属性</span><span data-view="risk-queue" data-i18n="riskReview">审核</span>
             </button>
 
             <div class="language-control" data-language-control>
@@ -108,14 +110,21 @@
           </div>
         </header>
 
-        <nav class="view-bar" data-i18n-aria="entityViews">
+        <nav class="view-bar" data-view="entity" data-i18n-aria="entityViews">
           <a href="#summary" aria-current="page" data-i18n="summaryTab">概览</a>
           <a href="#activity" data-i18n="activityTab">事件</a>
           <a href="#sources" data-i18n="sourcesTab">来源</a>
           <a href="#relations" data-i18n="relationsTab">关联</a>
         </nav>
 
-        <article class="entity-content">
+        <nav class="view-bar" data-view="risk-queue" data-i18n-aria="riskQueueViews">
+          <a href="?view=risk-queue&amp;scope=elevated" aria-current="page" data-risk-scope="elevated" data-i18n="riskScopeElevated">高优先级</a>
+          <a href="?view=risk-queue&amp;scope=unassigned" data-risk-scope="unassigned" data-i18n="riskScopeUnassigned">未指派</a>
+          <a href="?view=risk-queue&amp;scope=conflicting" data-risk-scope="conflicting" data-i18n="riskScopeConflicting">证据冲突</a>
+          <a href="?view=risk-queue&amp;scope=resolved" data-risk-scope="resolved" data-i18n="riskScopeResolved">已解决</a>
+        </nav>
+
+        <article class="entity-content" data-view="entity">
           <header class="entity-header">
             <div>
               <p class="object-id">PRX-1027</p>
@@ -225,16 +234,99 @@
             </div>
           </section>
         </article>
+
+        <article class="risk-queue-content" data-view="risk-queue" data-risk-queue data-risk-state="normal">
+          <header class="risk-queue-header">
+            <div>
+              <p class="object-id" data-i18n="riskSavedViewLabel">保存视图 · 过去 24 小时</p>
+              <h1 data-i18n="riskQueueTitle">高优先级待复核</h1>
+              <p data-i18n="riskQueueDescription">先核对严重度与证据状态，再指派负责人或记录可撤销结论。</p>
+            </div>
+            <button type="button" class="queue-refresh" data-risk-refresh><i data-lucide="refresh-cw"></i><span data-i18n="riskRefresh">刷新本地范围</span></button>
+          </header>
+
+          <p class="fixture-note" role="note" data-i18n="riskFixtureNote">确定性本地参考，基准时间为 2026-07-19 10:32 +08:00；相对时间均以该时刻计算。未连接实时监测、权限服务或持久化存储。</p>
+
+          <dl class="queue-scope" data-i18n-aria="riskScopeSummary">
+            <div><dt data-i18n="riskScopeLabel">范围</dt><dd data-i18n="riskScopeValue">高或严重 · 未解决</dd></div>
+            <div><dt data-i18n="riskSortLabel">排序</dt><dd data-i18n="riskSortValue">严重度 → 观察时间</dd></div>
+            <div><dt data-i18n="riskCoverageLabel">证据要求</dt><dd data-i18n="riskCoverageValue">至少 2 个可归因来源</dd></div>
+          </dl>
+
+          <div class="risk-state-messages" aria-live="polite" data-risk-live>
+            <div class="risk-state-message" data-risk-state-panel="loading" data-risk-loading hidden><strong data-i18n="riskLoadingTitle">正在刷新保存范围</strong><span data-i18n="riskLoadingBody">保留当前队列与选择，等待本地 fixture 完成。</span></div>
+            <div class="risk-state-message" data-risk-state-panel="conflict" data-risk-conflict hidden><strong data-i18n="riskConflictTitle">证据存在冲突</strong><span data-i18n="riskConflictBody">两个来源对证书变更是否预期给出不同结论，需记录人工判断。</span></div>
+            <div class="risk-state-message" data-risk-state-panel="pending" data-risk-pending hidden><strong data-i18n="riskPendingTitle">正在记录审核决定</strong><span data-i18n="riskPendingBody">本地 fixture 暂时锁定控件，队列范围与草稿保持不变。</span></div>
+            <div class="risk-state-message positive-message" data-risk-state-panel="committed" data-risk-committed hidden><strong data-i18n="riskCommittedTitle">审核决定已记录</strong><span data-i18n="riskCommittedBody">该决定仍可撤销；风险等级本身未被自动改写。</span></div>
+            <div class="risk-state-message" data-risk-state-panel="undo" data-risk-undo hidden><strong data-i18n="riskUndoTitle">审核决定已撤销</strong><span data-i18n="riskUndoBody">信号回到待复核状态，原理由保留在本地草稿中。</span></div>
+            <div class="risk-state-message" data-risk-state-panel="permission" data-risk-permission hidden><strong data-i18n="riskPermissionTitle">仅可查看</strong><span data-i18n="riskPermissionBody">当前 fixture 模拟缺少审核权限；队列与证据仍可读取。</span></div>
+            <div class="risk-state-message error-message" data-risk-state-panel="error" data-risk-error hidden><strong data-i18n="riskErrorTitle">审核记录失败</strong><span data-i18n="riskErrorBody">本地草稿、负责人和理由均已保留，可以重试。</span><button type="button" data-risk-retry data-i18n="retry">重试</button></div>
+          </div>
+
+          <section class="risk-table-region" aria-labelledby="risk-table-title">
+            <div class="section-heading queue-heading">
+              <div><h2 id="risk-table-title" data-i18n="riskTableTitle">信号队列</h2><p data-i18n="riskTableDescription">严重度、证据状态和审核状态分别显示，不合并为单一分数。</p></div>
+              <span class="queue-count" data-risk-count>2 个本地信号</span>
+            </div>
+
+            <div class="risk-empty" data-risk-state-panel="empty" data-risk-empty hidden>
+              <strong data-i18n="riskEmptyTitle">当前范围没有待复核信号</strong>
+              <p data-i18n="riskEmptyBody">可以切换保存视图；本地 fixture 不会自动扩大范围。</p>
+            </div>
+
+            <div class="risk-table-scroll" data-risk-table-wrap>
+              <table class="risk-table" data-risk-table data-i18n-aria="riskTableLabel">
+                <thead><tr><th scope="col" data-i18n="riskColumnSignal">信号</th><th scope="col" data-i18n="riskColumnSeverity">严重度</th><th scope="col" data-i18n="riskColumnEvidence">证据状态</th><th scope="col" data-i18n="riskColumnOwner">负责人</th><th scope="col" data-i18n="riskColumnReview">审核状态</th><th scope="col" data-i18n="riskColumnObserved">观察时间</th></tr></thead>
+                <tbody>
+                  <tr data-risk-row="RSK-204" data-selected="true">
+                    <td data-label="信号"><button type="button" class="risk-row-button" data-risk-signal="RSK-204" aria-current="true"><strong>RSK-204</strong><span data-i18n="riskSignal204">证书签发者发生变化</span></button></td>
+                    <td data-label="严重度"><span class="semantic-status severity-high"><i></i><span data-i18n="riskSeverityHigh">高</span></span></td>
+                    <td data-label="证据状态"><span class="semantic-status evidence-conflict"><i></i><span data-i18n="riskEvidenceConflict">冲突</span></span></td>
+                    <td data-label="负责人"><span data-risk-row-owner data-i18n="riskUnassigned">未指派</span></td>
+                    <td data-label="审核状态"><span data-risk-row-review data-i18n="riskReviewOpen">待复核</span></td>
+                    <td data-label="观察时间"><time datetime="2026-07-19T10:24:00+08:00" data-i18n="riskObservedEight">8 分钟前</time></td>
+                  </tr>
+                  <tr data-risk-row="RSK-198" data-selected="false">
+                    <td data-label="信号"><button type="button" class="risk-row-button" data-risk-signal="RSK-198"><strong>RSK-198</strong><span data-i18n="riskSignal198">公开频道入口不可用</span></button></td>
+                    <td data-label="严重度"><span class="semantic-status severity-critical"><i></i><span data-i18n="riskSeverityCritical">严重</span></span></td>
+                    <td data-label="证据状态"><span class="semantic-status evidence-confirmed"><i></i><span data-i18n="riskEvidenceConfirmed">已确认</span></span></td>
+                    <td data-label="负责人"><span data-risk-row-owner>Mina Chen</span></td>
+                    <td data-label="审核状态"><span data-risk-row-review data-i18n="riskReviewActive">审核中</span></td>
+                    <td data-label="观察时间"><time datetime="2026-07-19T09:51:00+08:00" data-i18n="riskObservedFortyOne">41 分钟前</time></td>
+                  </tr>
+                  <tr data-risk-row="RSK-191" data-selected="false">
+                    <td data-label="信号"><button type="button" class="risk-row-button" data-risk-signal="RSK-191"><strong>RSK-191</strong><span data-i18n="riskSignal191">新增关联域名待核验</span></button></td>
+                    <td data-label="严重度"><span class="semantic-status severity-medium"><i></i><span data-i18n="riskSeverityMedium">中</span></span></td>
+                    <td data-label="证据状态"><span class="semantic-status evidence-pending"><i></i><span data-i18n="riskEvidencePending">待核验</span></span></td>
+                    <td data-label="负责人"><span data-risk-row-owner>Omar Li</span></td>
+                    <td data-label="审核状态"><span data-risk-row-review data-i18n="riskReviewEvidence">等待证据</span></td>
+                    <td data-label="观察时间"><time datetime="2026-07-19T08:17:00+08:00" data-i18n="riskObservedTwoHours">2 小时前</time></td>
+                  </tr>
+                  <tr data-risk-row="RSK-184" data-selected="false">
+                    <td data-label="信号"><button type="button" class="risk-row-button" data-risk-signal="RSK-184"><strong>RSK-184</strong><span data-i18n="riskSignal184">节点延迟已恢复</span></button></td>
+                    <td data-label="严重度"><span class="semantic-status severity-low"><i></i><span data-i18n="riskSeverityLow">低</span></span></td>
+                    <td data-label="证据状态"><span class="semantic-status evidence-confirmed"><i></i><span data-i18n="riskEvidenceConfirmed">已确认</span></span></td>
+                    <td data-label="负责人"><span data-risk-row-owner>Kaito Wu</span></td>
+                    <td data-label="审核状态"><span data-risk-row-review data-i18n="riskReviewResolved">已解决</span></td>
+                    <td data-label="观察时间"><time datetime="2026-07-19T07:04:00+08:00" data-i18n="riskObservedThreeHours">3 小时前</time></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </article>
       </main>
 
       <div class="inspector-scrim" data-inspector-scrim aria-hidden="true"></div>
 
       <aside id="inspector" class="inspector" aria-labelledby="inspector-title" aria-hidden="false">
         <header>
-          <div><span data-i18n="currentObject">当前对象</span><h2 id="inspector-title">Alpha Network</h2></div>
+          <div data-view="entity"><span data-i18n="currentObject">当前对象</span><h2 id="inspector-title">Alpha Network</h2></div>
+          <div data-view="risk-queue"><span data-i18n="riskSelectedSignal">选中信号</span><h2 id="risk-inspector-title" data-risk-inspector-title>RSK-204 · Alpha Network</h2></div>
           <button type="button" class="icon-button" data-inspector-close data-i18n-aria="closeInspector"><i data-lucide="x"></i></button>
         </header>
 
+        <div data-view="entity">
         <section id="sources">
           <h3 data-i18n="status">状态</h3>
           <dl>
@@ -262,6 +354,47 @@
           </dl>
           <p class="definition" data-i18n="confidenceDefinition">该分数表示当前证据来源的可信程度，不代表对象整体安全等级。</p>
         </section>
+        </div>
+
+        <div class="risk-inspector" data-view="risk-queue">
+          <section>
+            <h3 data-i18n="riskSignalContext">信号上下文</h3>
+            <dl>
+              <div><dt data-i18n="riskColumnSeverity">严重度</dt><dd data-risk-detail-severity>高</dd></div>
+              <div><dt data-i18n="riskColumnEvidence">证据状态</dt><dd data-risk-detail-evidence>冲突</dd></div>
+              <div><dt data-i18n="riskColumnOwner">负责人</dt><dd data-risk-detail-owner>未指派</dd></div>
+              <div><dt data-i18n="riskColumnReview">审核状态</dt><dd data-risk-detail-review>待复核</dd></div>
+            </dl>
+            <p class="definition" data-risk-detail-summary>证书观察记录到新签发者；公开入口扫描未发现主机变化。</p>
+          </section>
+
+          <section>
+            <h3 data-i18n="riskEvidenceRows">可归因证据</h3>
+            <ol class="risk-evidence-list" data-risk-evidence-list>
+              <li><strong data-risk-evidence-source="0">证书观察器</strong><span data-risk-evidence-result="0">签发者变更 · 已观察</span><time datetime="2026-07-19T10:24:00+08:00">10:24</time></li>
+              <li><strong data-risk-evidence-source="1">公开入口扫描</strong><span data-risk-evidence-result="1">主机未变化 · 已确认</span><time datetime="2026-07-19T10:27:00+08:00">10:27</time></li>
+              <li><strong data-risk-evidence-source="2">维护记录</strong><span data-risk-evidence-result="2">未找到对应说明 · 缺失</span><time datetime="2026-07-19T10:29:00+08:00">10:29</time></li>
+            </ol>
+          </section>
+
+          <section class="risk-review-section">
+            <h3 data-i18n="riskReviewDecision">审核决定</h3>
+            <form data-risk-review-form novalidate>
+              <fieldset data-risk-review-fields>
+                <label class="risk-field"><span data-i18n="riskOwnerLabel">负责人</span><select name="owner" required data-risk-owner aria-describedby="risk-owner-error"><option value="" data-i18n="riskChooseOwner">选择负责人</option><option value="Mina Chen">Mina Chen</option><option value="Omar Li">Omar Li</option><option value="Kaito Wu">Kaito Wu</option></select><span id="risk-owner-error" class="risk-field-error" data-risk-owner-error data-i18n="riskOwnerError" hidden>记录决定前请选择负责人。</span></label>
+                <fieldset class="risk-decision-group"><legend data-i18n="riskDecisionLabel">决定</legend><label><input type="radio" name="decision" value="watch" checked><span data-i18n="riskDecisionWatch">保持观察</span></label><label><input type="radio" name="decision" value="escalate"><span data-i18n="riskDecisionEscalate">升级复核</span></label><label><input type="radio" name="decision" value="resolve"><span data-i18n="riskDecisionResolve">按预期变更解决</span></label></fieldset>
+                <label class="risk-field"><span data-i18n="riskReasonLabel">记录理由</span><textarea name="reason" rows="4" required data-risk-reason aria-describedby="risk-reason-error" data-i18n-placeholder="riskReasonPlaceholder" placeholder="说明证据如何支持该决定"></textarea><span id="risk-reason-error" class="risk-field-error" data-risk-reason-error data-i18n="riskReasonError" hidden>请记录证据如何支持该决定。</span></label>
+                <button type="submit" class="primary-action risk-submit" data-risk-submit data-i18n="riskRecordDecision">记录决定</button>
+              </fieldset>
+            </form>
+
+            <div class="risk-commit-record" data-risk-commit-record hidden>
+              <strong data-i18n="riskRecordedTitle">已记录的决定</strong>
+              <dl><div><dt data-i18n="riskOwnerLabel">负责人</dt><dd data-risk-commit-owner>Mina Chen</dd></div><div><dt data-i18n="riskDecisionLabel">决定</dt><dd data-risk-commit-decision>按预期变更解决</dd></div><div><dt data-i18n="riskReasonLabel">记录理由</dt><dd data-risk-commit-reason>证书轮换与已核对的入口状态一致。</dd></div><div><dt data-i18n="riskRecordedAt">记录时间</dt><dd>2026-07-19 10:32 +08:00</dd></div></dl>
+              <button type="button" data-risk-undo-action><i data-lucide="refresh-cw"></i><span data-i18n="undo">撤销</span></button>
+            </div>
+          </section>
+        </div>
       </aside>
     </div>
 

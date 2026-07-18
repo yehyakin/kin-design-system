@@ -362,9 +362,10 @@
 .access-context h1 {
   max-width: 470px;
   margin: 10px 0 12px;
-  font-size: clamp(26px, 2.5vw, 34px);
-  line-height: 1.15;
-  letter-spacing: -.035em;
+  font-size: clamp(26px, 2vw, 30px);
+  line-height: 1.2;
+  letter-spacing: -.01em;
+  text-wrap: balance;
 }
 
 .access-context p {

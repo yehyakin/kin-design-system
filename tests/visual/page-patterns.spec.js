@@ -55,6 +55,65 @@ async function capture(page, testInfo, name) {
   await page.screenshot({ path: testInfo.outputPath(name), fullPage: true });
 }
 
+async function renderedTextLines(locator) {
+  return locator.evaluate((element) => {
+    const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT);
+    const lines = [];
+    let node = walker.nextNode();
+
+    while (node) {
+      for (let index = 0; index < node.textContent.length; index += 1) {
+        const range = document.createRange();
+        range.setStart(node, index);
+        range.setEnd(node, index + 1);
+        const rect = range.getBoundingClientRect();
+        if (rect.width > 0 && rect.height > 0) {
+          const top = Math.round(rect.top);
+          const line = lines.find((candidate) => Math.abs(candidate.top - top) <= 1);
+          if (line) line.text += node.textContent[index];
+          else lines.push({ text: node.textContent[index], top });
+        }
+      }
+      node = walker.nextNode();
+    }
+
+    return lines
+      .sort((left, right) => left.top - right.top)
+      .map(({ text }) => text.trim().replace(/\s+/g, " "))
+      .filter(Boolean);
+  });
+}
+
+const accessTitleCases = [
+  { height: 900, language: "zh-CN", theme: "light", width: 1440 },
+  { height: 900, language: "en", theme: "dark", width: 1440 },
+  { height: 800, language: "zh-CN", theme: "dark", width: 1280 },
+  { height: 800, language: "en", theme: "light", width: 1280 },
+  { height: 844, language: "zh-CN", theme: "dark", width: 390 },
+  { height: 844, language: "en", theme: "light", width: 390 },
+];
+
+for (const { height, language, theme, width } of accessTitleCases) {
+  test(`access title avoids orphaned lines at ${width}px in ${language} ${theme}`, async ({ page }) => {
+    await seedPreferences(page, theme, language);
+    await page.setViewportSize({ width, height });
+    await page.goto(`/examples/page-patterns/access.html?lang=${language}`);
+
+    const title = page.locator("#access-context-title");
+    await expect(title).toBeVisible();
+    const lines = await renderedTextLines(title);
+    expect(lines.length).toBeGreaterThan(0);
+
+    if (language === "zh-CN") {
+      expect(lines.filter((line) => Array.from(line.replace(/\s/g, "")).length === 1)).toEqual([]);
+    } else {
+      expect(lines.filter((line) => line.split(/\s+/).length === 1)).toEqual([]);
+    }
+
+    await assertNoHorizontalOverflow(page);
+  });
+}
+
 for (const pattern of ["access", "onboarding", "settings", "system", "search", "support", "scheduling"]) {
   test(`${pattern} exposes the complete theme and language preference contract`, async ({ page }) => {
     await seedPreferences(page, "light");

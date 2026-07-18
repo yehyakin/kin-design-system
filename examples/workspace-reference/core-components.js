@@ -263,7 +263,7 @@ function startLocalTransfer() {
       stopFileTimers();
       renderFileState("complete", "本地模拟完成", "本地交互已完成；未连接服务器，也未创建真实上传记录。", 100);
     }
-  }, 55);
+  }, 320);
 }
 
 function validateSelectedFile(file) {

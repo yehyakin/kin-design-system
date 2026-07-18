@@ -5,7 +5,13 @@ import process from "node:process";
 const root = process.cwd();
 const args = process.argv.slice(2);
 const asJson = args.includes("--json");
-const catalogPath = path.resolve(root, "scenarios/catalog.json");
+const catalogArgumentIndex = args.indexOf("--catalog");
+const catalogArgument = catalogArgumentIndex >= 0 ? args[catalogArgumentIndex + 1] : null;
+if (catalogArgumentIndex >= 0 && !catalogArgument) {
+  console.error("--catalog requires a file path");
+  process.exit(2);
+}
+const catalogPath = path.resolve(root, catalogArgument || "scenarios/catalog.json");
 const schemaPath = path.resolve(root, "scenarios/catalog.schema.json");
 const pageCatalogPath = path.resolve(root, "pages/catalog.json");
 const findings = [];
@@ -129,7 +135,7 @@ const allowedThemes = new Set(["light", "dark", "light-high-contrast", "dark-hig
 const allowedAssertionKinds = new Set(["visible", "attribute", "text"]);
 const expectedPilots = ["INT-01", "INF-01", "COM-01", "ENG-01", "CORE-01", "WORK-01"];
 const expectedPhase3Shared = ["CORE-02", "CORE-03", "CORE-04", "CORE-05", "CORE-06"];
-const expectedPhase3ProductFamily = ["INF-02", "INF-03", "COM-02", "ENG-02"];
+const expectedPhase3ProductFamily = ["INT-03", "INF-02", "INF-03", "COM-02", "ENG-02"];
 const statusRank = { deprecated: 0, draft: 1, candidate: 2, stable: 3 };
 const prefixGroups = {
   INT: "intelligence",
@@ -152,6 +158,19 @@ const ids = new Set();
 const names = new Set();
 
 if (catalog) {
+  const catalogFields = [
+    "$schema",
+    "schema_version",
+    "catalog_version",
+    "reviewed_on",
+    "pilot_ids",
+    "presentation_status_definitions",
+    "inspection_defaults",
+    "known_gaps",
+    "scenarios"
+  ];
+  const catalogExtras = Object.keys(catalog).filter((field) => !catalogFields.includes(field));
+  if (catalogExtras.length > 0) add("$", "contains unsupported fields: " + catalogExtras.join(", "));
   if (catalog.$schema !== "./catalog.schema.json") add("$schema", "must equal ./catalog.schema.json");
   if (catalog.schema_version !== "1.1.0") add("schema_version", "must equal 1.1.0");
   if (!/^[0-9]+[.][0-9]+[.][0-9]+$/.test(catalog.catalog_version || "")) add("catalog_version", "must be SemVer");
@@ -163,6 +182,10 @@ if (catalog) {
   if (!catalog.presentation_status_definitions || typeof catalog.presentation_status_definitions !== "object") {
     add("presentation_status_definitions", "must define planned, linked, and showcased");
   } else {
+    const presentationExtras = Object.keys(catalog.presentation_status_definitions).filter((field) => !allowedPresentation.has(field));
+    if (presentationExtras.length > 0) {
+      add("presentation_status_definitions", "contains unsupported fields: " + presentationExtras.join(", "));
+    }
     for (const status of allowedPresentation) {
       if (!nonEmpty(catalog.presentation_status_definitions[status])) add("presentation_status_definitions." + status, "must be a non-empty string");
     }
@@ -180,6 +203,31 @@ if (catalog) {
         add(base, "must be an object");
         continue;
       }
+      const scenarioFields = [
+        "id",
+        "canonical_name",
+        "group",
+        "product_profiles",
+        "wave",
+        "user_job",
+        "entry",
+        "completion",
+        "composition",
+        "contract_paths",
+        "page_ids",
+        "source_maturity",
+        "conditional",
+        "presentation_status",
+        "reference_path",
+        "inspection_path",
+        "states",
+        "state_controls",
+        "viewports",
+        "themes",
+        "known_gaps"
+      ];
+      const scenarioExtras = Object.keys(scenario).filter((field) => !scenarioFields.includes(field));
+      if (scenarioExtras.length > 0) add(base, "contains unsupported fields: " + scenarioExtras.join(", "));
       if (!/^(INT|INF|COM|ENG|CORE|WORK|COND)-[0-9]{2}$/.test(scenario.id || "")) {
         add(base + ".id", "must use the approved scenario ID form");
       } else if (ids.has(scenario.id)) {

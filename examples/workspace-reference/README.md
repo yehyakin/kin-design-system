@@ -10,7 +10,7 @@ It is a visual regression fixture, not a component package or a required product
 
 `integrations.html` is the React Integration Lab. It directly runs the official Sonner, NumberFlow, cmdk, React Virtuoso, dnd kit, input-otp, and Liveline packages through private pre-release KIN adapters, while documenting why Leva is development-only. The page preserves upstream motion and engines, lazy-loads heavy subpaths, and separates runtime evidence from component-maturity claims.
 
-The main workspace page also demonstrates Location Bar action priority and overflow. The engineering canvas product pattern carries the Toolbar and Split View reference used by the workspace-structure contract.
+The main workspace page also demonstrates Location Bar action priority and overflow. `?view=risk-queue` adds a deterministic saved-scope risk queue with separate severity, evidence, owner, and review semantics plus assignment, recorded reason, retry, and undo behavior; it does not connect to live monitoring, authorization, or persistence. The engineering canvas product pattern carries the Toolbar and Split View reference used by the workspace-structure contract.
 
 `advanced-components.html` is a deterministic local interaction fixture for AI Composer, streaming stop/retry, evidence, suggested changes, execution scope, media review, background tasks, and accessible charts. It does not contact a model or remote service.
 
@@ -21,7 +21,7 @@ npm run site:build
 npm run site:serve
 ```
 
-Then visit `http://localhost:4174/examples/workspace-reference/` and `http://localhost:4174/examples/workspace-reference/motion.html`.
+Then visit `http://localhost:4174/examples/workspace-reference/`, `http://localhost:4174/examples/workspace-reference/?view=risk-queue`, and `http://localhost:4174/examples/workspace-reference/motion.html`.
 
 Review at minimum:
 
@@ -30,6 +30,7 @@ Review at minimum:
 - 390×844 light and dark;
 - keyboard focus from the skip link through navigation, language and theme controls, rows, and Inspector;
 - English and Chinese content, lazy Sonner loading, success/error/task feedback, and Lucide replacement;
+- risk queue selection, saved scope, semantic separation, assignment, recorded reason, failed-save retry, undo, empty scope, read-only permission, and narrow-screen Drawer focus;
 - official-package Integration Lab status, lazy subpath loading, cmdk focus return, Virtuoso windowing, dnd-kit keyboard sorting, input-otp metadata, NumberFlow lifecycle, and Liveline fallback;
 - local-only sign-in, password visibility, contextual reauthentication, button press, paired-state replacement, pending, completion, disclosure, Tooltip sequence, frequency-aware invocation, Drawer, gesture settling, failure, and reduced-motion behavior;
 - normal and reduced motion, system-theme changes, reflow, long-content and RTL stress, and Forced Colors;

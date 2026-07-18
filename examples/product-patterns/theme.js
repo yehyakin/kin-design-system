@@ -43,6 +43,168 @@ addEventListener("storage", (event) => {
   if (event.key === "kin-reference-contrast") applyContrast(event.newValue === "more", false);
 });
 
+function setupCommerceInspector() {
+  const shell = document.querySelector(".commerce-shell");
+  const sidebar = document.querySelector(".commerce-sidebar");
+  const main = document.querySelector(".commerce-main");
+  const inspector = document.querySelector("#commerce-inspector");
+  const trigger = document.querySelector("[data-commerce-inspector-open]");
+  const closeButton = document.querySelector("[data-commerce-inspector-close]");
+  const scrim = document.querySelector("[data-commerce-inspector-scrim]");
+  if (!shell || !sidebar || !main || !inspector || !trigger || !closeButton || !scrim) return;
+
+  const overlayQuery = matchMedia("(min-width: 701px) and (max-width: 1000px)");
+  const focusableSelector = 'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+  let overlayMode = false;
+  let closeTimer = null;
+  let openFrame = null;
+  let returnFocus = trigger;
+
+  function clearScheduledState() {
+    clearTimeout(closeTimer);
+    closeTimer = null;
+    if (openFrame !== null) cancelAnimationFrame(openFrame);
+    openFrame = null;
+  }
+
+  function setBackgroundUnavailable(unavailable) {
+    sidebar.inert = unavailable;
+    main.inert = unavailable;
+  }
+
+  function overlayIsActive() {
+    return overlayMode && ["opening", "open"].includes(inspector.dataset.state);
+  }
+
+  function focusableItems() {
+    return [...inspector.querySelectorAll(focusableSelector)].filter((item) => !item.hidden && !item.disabled && item.getClientRects().length > 0);
+  }
+
+  function finishClosed() {
+    if (inspector.dataset.state !== "closing") return;
+    inspector.dataset.state = "closed";
+    inspector.hidden = true;
+    scrim.dataset.state = "closed";
+    scrim.hidden = true;
+  }
+
+  function closeInspector({ immediate = false, restoreFocus = true } = {}) {
+    if (!overlayMode) return;
+    clearScheduledState();
+    trigger.setAttribute("aria-expanded", "false");
+    inspector.setAttribute("aria-hidden", "true");
+    inspector.inert = true;
+    setBackgroundUnavailable(false);
+
+    if (restoreFocus && returnFocus?.isConnected) returnFocus.focus({ preventScroll: true });
+
+    if (immediate || inspector.hidden || inspector.dataset.state === "closed") {
+      inspector.dataset.state = "closed";
+      inspector.hidden = true;
+      scrim.dataset.state = "closed";
+      scrim.hidden = true;
+      return;
+    }
+
+    inspector.dataset.state = "closing";
+    scrim.dataset.state = "closing";
+    const exitDuration = reducedMotion.matches ? 110 : 200;
+    closeTimer = setTimeout(finishClosed, exitDuration);
+  }
+
+  function openInspector({ source = trigger, preserveFocus = false } = {}) {
+    if (!overlayMode) return;
+    clearScheduledState();
+    returnFocus = source?.isConnected ? source : trigger;
+    inspector.hidden = false;
+    inspector.inert = false;
+    inspector.setAttribute("aria-hidden", "false");
+    trigger.setAttribute("aria-expanded", "true");
+    setBackgroundUnavailable(true);
+    scrim.hidden = false;
+    inspector.dataset.state = "opening";
+    scrim.dataset.state = "opening";
+    void inspector.offsetWidth;
+    openFrame = requestAnimationFrame(() => {
+      openFrame = null;
+      if (inspector.dataset.state !== "opening") return;
+      inspector.dataset.state = "open";
+      scrim.dataset.state = "open";
+    });
+    if (!preserveFocus) closeButton.focus({ preventScroll: true });
+  }
+
+  function setPersistentInspector() {
+    clearScheduledState();
+    const closeHadFocus = document.activeElement === closeButton;
+    setBackgroundUnavailable(false);
+    inspector.hidden = false;
+    inspector.inert = false;
+    inspector.dataset.state = "persistent";
+    inspector.setAttribute("aria-hidden", "false");
+    inspector.removeAttribute("role");
+    inspector.removeAttribute("aria-modal");
+    trigger.setAttribute("aria-expanded", "false");
+    scrim.dataset.state = "closed";
+    scrim.hidden = true;
+    if (closeHadFocus) inspector.focus({ preventScroll: true });
+  }
+
+  function syncLayout() {
+    const nextOverlayMode = overlayQuery.matches;
+    const focusedInside = inspector.contains(document.activeElement);
+    overlayMode = nextOverlayMode;
+    if (!overlayMode) {
+      setPersistentInspector();
+      return;
+    }
+
+    inspector.setAttribute("role", "dialog");
+    inspector.setAttribute("aria-modal", "true");
+    const deepLinked = ["#product-context", "#product-edit"].includes(location.hash);
+    if (deepLinked || focusedInside) openInspector({ source: trigger, preserveFocus: focusedInside });
+    else closeInspector({ immediate: true, restoreFocus: false });
+  }
+
+  trigger.addEventListener("click", () => {
+    if (overlayIsActive()) closeInspector();
+    else openInspector({ source: trigger });
+  });
+  closeButton.addEventListener("click", () => closeInspector());
+  scrim.addEventListener("click", () => closeInspector());
+
+  document.addEventListener("keydown", (event) => {
+    if (!overlayIsActive()) return;
+    if (event.key === "Escape") {
+      event.preventDefault();
+      closeInspector();
+      return;
+    }
+    if (event.key !== "Tab") return;
+    const items = focusableItems();
+    if (!items.length) {
+      event.preventDefault();
+      inspector.focus();
+      return;
+    }
+    const first = items[0];
+    const last = items.at(-1);
+    if (event.shiftKey && (document.activeElement === first || document.activeElement === inspector)) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
+  });
+
+  overlayQuery.addEventListener("change", syncLayout);
+  addEventListener("hashchange", () => {
+    if (overlayMode && ["#product-context", "#product-edit"].includes(location.hash)) openInspector({ source: trigger });
+  });
+  syncLayout();
+}
+
 function setupCommerceEditor() {
   const form = document.querySelector("[data-commerce-edit-form]");
   if (!form) return;
@@ -58,8 +220,6 @@ function setupCommerceEditor() {
   const permission = form.querySelector("[data-commerce-permission]");
   const saveFailure = form.querySelector("[data-commerce-save-failure]");
   const activity = document.querySelector("[data-commerce-edit-activity] span");
-  const shanghaiStock = document.querySelector("[data-commerce-stock-shanghai]");
-  const shenzhenStock = document.querySelector("[data-commerce-stock-shenzhen]");
   const approvalTitle = document.querySelector("[data-commerce-approval-title]");
   const approvalCopy = document.querySelector("[data-commerce-approval-copy]");
   const discard = form.querySelector("[data-commerce-discard]");
@@ -100,9 +260,25 @@ function setupCommerceEditor() {
     for (const target of document.querySelectorAll("[data-commerce-current-price]")) target.textContent = formattedPrice(currentPrice);
     for (const target of document.querySelectorAll("[data-commerce-current-stock]")) target.textContent = String(currentStock);
     priceHelp.textContent = `含币种；当前记录值 ${formattedPrice(currentPrice)}。`;
-    const shanghai = Math.round(currentStock * 2 / 3);
-    shanghaiStock.textContent = `${shanghai} 可售`;
-    shenzhenStock.textContent = `${currentStock - shanghai} 可售`;
+  }
+
+  function priceHasSupportedPrecision() {
+    const raw = price.value.trim();
+    return /^\d+(?:\.\d{1,2})?$/.test(raw) && !price.validity.stepMismatch;
+  }
+
+  function priceMatchesCurrent() {
+    const draftPrice = numberValue(price);
+    return Number.isFinite(draftPrice) && priceHasSupportedPrecision() && Math.round(draftPrice * 100) === Math.round(currentPrice * 100);
+  }
+
+  function stockMatchesCurrent() {
+    const draftStock = numberValue(stock);
+    return Number.isInteger(draftStock) && draftStock >= 0 && draftStock === currentStock;
+  }
+
+  function draftMatchesCurrent() {
+    return priceMatchesCurrent() && stockMatchesCurrent();
   }
 
   function clearValidation() {
@@ -124,6 +300,11 @@ function setupCommerceEditor() {
       priceError.textContent = "售价必须高于 CNY 0.00。";
       priceError.hidden = false;
       firstInvalid = price;
+    } else if (!priceHasSupportedPrecision()) {
+      price.setAttribute("aria-invalid", "true");
+      priceError.textContent = "售价最多保留两位小数，并按 CNY 0.01 递增。";
+      priceError.hidden = false;
+      firstInvalid = price;
     }
     if (!Number.isInteger(draftStock) || draftStock < 0) {
       stock.setAttribute("aria-invalid", "true");
@@ -137,13 +318,13 @@ function setupCommerceEditor() {
   function differenceSummary(state) {
     if (state === "normal") return "无待保存更改";
     if (state === "permission") return "只读：售价、库存与渠道状态均保持不变";
-    if (state === "committed") return `${formattedPrice(currentPrice)} · ${currentStock} 件可售 · 渠道发布仍为 2 / 3`;
+    if (state === "committed") return `${formattedPrice(currentPrice)} · ${currentStock} 件可售 · 渠道发布不在此表单范围内`;
     const draftPrice = numberValue(price);
     const draftStock = numberValue(stock);
     const changes = [];
-    if (Number.isFinite(draftPrice) && draftPrice !== currentPrice) changes.push(`售价 ${formattedPrice(currentPrice)} → ${formattedPrice(draftPrice)}`);
+    if (Number.isFinite(draftPrice) && Math.round(draftPrice * 100) !== Math.round(currentPrice * 100)) changes.push(`售价 ${formattedPrice(currentPrice)} → ${formattedPrice(draftPrice)}`);
     if (Number.isFinite(draftStock) && draftStock !== currentStock) changes.push(`可售 ${currentStock} → ${draftStock}`);
-    return `${changes.length ? changes.join("；") : "没有有效字段变化"}；渠道发布仍为 2 / 3`;
+    return `${changes.length ? changes.join("；") : "没有有效字段变化"}；渠道发布与分仓分配不在此表单范围内`;
   }
 
   function statusMessage(state) {
@@ -195,6 +376,8 @@ function setupCommerceEditor() {
     if (commit) {
       currentPrice = numberValue(price);
       currentStock = numberValue(stock);
+      price.value = currentPrice.toFixed(2);
+      stock.value = String(currentStock);
     }
     form.dataset.state = state;
     form.setAttribute("aria-busy", String(state === "loading"));
@@ -229,13 +412,17 @@ function setupCommerceEditor() {
 
   function startSave() {
     clearTimeout(saveTimer);
+    if (draftMatchesCurrent()) {
+      renderState("normal", { writeUrl: true });
+      return;
+    }
     renderState("loading", { writeUrl: true });
     saveTimer = setTimeout(() => renderState("committed", { writeUrl: true, commit: true }), 650);
   }
 
   form.addEventListener("input", () => {
     clearTimeout(saveTimer);
-    renderState("pending", { writeUrl: true });
+    renderState(draftMatchesCurrent() ? "normal" : "pending", { writeUrl: true });
   });
 
   form.addEventListener("submit", (event) => {
@@ -244,6 +431,10 @@ function setupCommerceEditor() {
     if (firstInvalid) {
       renderState("error", { writeUrl: true });
       firstInvalid.focus();
+      return;
+    }
+    if (draftMatchesCurrent()) {
+      renderState("normal", { writeUrl: true });
       return;
     }
     startSave();
@@ -261,6 +452,7 @@ function setupCommerceEditor() {
   applyFixture(requestedState);
 }
 
+setupCommerceInspector();
 setupCommerceEditor();
 
 for (const tool of document.querySelectorAll("[data-tool]")) {
