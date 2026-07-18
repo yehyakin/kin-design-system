@@ -148,6 +148,7 @@ function renderDirectLink() {
   const control = selectedControl();
   elements.directLink.href = referenceUrl(control.reference_path).href;
   elements.directLink.setAttribute("aria-label", "Open " + control.label + " directly in a new tab");
+  elements.directLink.hidden = false;
 }
 
 function syncEmbeddedAppearanceControls(frameDocument, theme) {
