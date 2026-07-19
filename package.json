@@ -36,6 +36,7 @@
     "runtime:check": "npm run check --workspace @kin-design/react",
     "runtime:compat": "node scripts/test-react-compatibility.mjs",
     "test:tooling": "node --test tests/tooling.test.mjs",
+    "test:plugin": "node --test plugins/kin-design-engineer/tests/*.test.mjs",
     "audit": "node scripts/audit-project.mjs"
   },
   "devDependencies": {

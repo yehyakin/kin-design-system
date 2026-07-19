@@ -1,0 +1,10 @@
+interface:
+  display_name: "KIN Design Engineer"
+  short_description: "Audit, repair, and verify frontends with KIN"
+  icon_small: "./assets/mark.svg"
+  icon_large: "./assets/mark.svg"
+  brand_color: "#5E6AD2"
+  default_prompt: "Use $kin-design-engineer to audit this frontend, fix confirmed issues, and verify the result."
+
+policy:
+  allow_implicit_invocation: true
