@@ -11,4 +11,4 @@ npm run agent:export
 npm run agent:check
 ```
 
-No version archive, stable alias, registry, or component Recipe artifact exists in Phase 1. Locale manifests remain incomplete until the exact English and Simplified Chinese copy receives checksum-bound human review.
+No version archive, stable alias, registry, or component Recipe artifact exists in Phase 1. Manifest locale entries remain incomplete until the exact English and Simplified Chinese copy receives checksum-bound human review.

@@ -39,7 +39,7 @@ try {
       console.error(`Generated Agent distribution drift detected (${drift.length}):`);
       for (const finding of drift) console.error(`- ${finding}`);
       process.exitCode = 1;
-    } else console.log("Generated Agent distribution matches reviewed inputs.");
+    } else console.log("Generated Agent distribution matches declared inputs.");
   } else {
     replaceDirectorySafely(target, temporary);
     console.log("Generated Agent distribution written to generated/agent/next.");

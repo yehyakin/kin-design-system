@@ -28,7 +28,7 @@ Also verify:
 - `DELIVERY.md`, the adoption configuration, and the evidence Schema agree on contract-first, Variables-only Figma interoperability, and project-owned runtime components.
 - The adoption evidence example remains `initialized`; a release example MUST NOT contain fabricated passing verification or production observation.
 - Generated Tailwind, DTCG, and Figma Variables files are committed.
-- Generated Agent `next` artifacts match their reviewed inputs. While RFC 001 remains before Phase 2, they are repository-only and MUST NOT be described as published stable endpoints.
+- Generated Agent `next` artifacts match their declared inputs, and every locale keeps its actual review state. While RFC 001 remains before Phase 2, they are repository-only and MUST NOT be described as published stable endpoints.
 - Reference screenshots have been reviewed in light, dark, high-contrast, desktop, and mobile states.
 - Normal-motion, reduced-motion, Firefox smoke, WebKit smoke, reflow-proxy, long-content, RTL, and Forced Colors results are reported according to [`principles/verification.md`](./principles/verification.md).
 - Real browser zoom and screen-reader work are either recorded with an environment and findings or explicitly reported as not verified.
