@@ -113,7 +113,7 @@ python <codex-home>/skills/.system/plugin-creator/scripts/validate_plugin.py plu
 
 Repository validation and a real target trial remain separate from the plugin's unit tests.
 
-See the [AgentOS repair trial](./examples/agentos-trial.md) for the complete candidate-to-confirmation-to-verification case.
+See the [AgentOS repair trial](./examples/agentos-trial.md) for the primary candidate-to-confirmation-to-verification case and the [kin3.net independent trial](./examples/kin3-trial.md) for a second product with a browser-discovered production failure.
 
 ## Build Week package
 

@@ -1,4 +1,4 @@
-# KIN Design Engineer demo — target 2:15
+# KIN Design Engineer demo — target 2:30
 
 The official limit is under three minutes. The recording must include audio explaining both Codex and GPT-5.6 use and must be publicly visible on YouTube.
 
@@ -60,13 +60,21 @@ The official limit is under three minutes. The recording must include audio expl
 
 “The repaired product now supports English and Chinese, light, dark, and system preferences, transparent replay and provider labels, cancellation, retry, and a responsive decision brief. The mobile check caught one more issue: the native preference controls looked large but exposed only a sixteen-pixel target, so the actual selects were repaired.”
 
-### 1:58–2:15 — Honest result
+### 1:58–2:15 — Independent target
+
+**Screen:** kin3.net production-asset regression test, then the preserved brand composition.
+
+**Narration:**
+
+“On a second product, the same workflow found something the scanner could not: the production page returned HTML while its CSS and JavaScript returned 404 on Windows. It repaired the path boundary, added a regression test, improved touch and Reduced Motion behavior, and preserved the product's valid brand gradients.”
+
+### 2:15–2:30 — Honest result
 
 **Screen:** Final scan with 4 P2 candidates and the verification report's ‘Not verified’ section.
 
 **Narration:**
 
-“The final scan leaves four reviewed exceptions: one functional progress gradient and three legitimate status or progress pills. The report also states what was not tested. KIN Design Engineer turns a design contract into an evidence-led engineering loop—without pretending that AI certainty is proof.”
+“AgentOS finishes with four reviewed exceptions, and every report states what was not tested. KIN Design Engineer turns a design contract into an evidence-led engineering loop—without pretending that AI certainty is proof.”
 
 ## Final recording checks
 
@@ -74,6 +82,7 @@ The official limit is under three minutes. The recording must include audio expl
 - [ ] The collector is described as deterministic, not as a model call.
 - [ ] Audit and repair authority are visibly separate.
 - [ ] AgentOS is clearly identified as the case-study target, not the submitted plugin itself.
+- [ ] kin3.net is shown briefly as independent validation, not as a second submission.
 - [ ] Replay mode visibly says that no API call occurred.
 - [ ] No API key, provider URL, personal notification, or private repository detail is visible.
 - [ ] Audio is clear and total duration remains below three minutes.

@@ -6,6 +6,8 @@ Plugin: KIN Design Engineer `0.1.0`
 
 Baseline target revision: AgentOS `dcb8577183e858bf5b8892fa79b03ad5fa7c57b0` on `codex/build-week-agentos`
 
+Repaired target revision: AgentOS `6e32403`
+
 Mode: audit, user-authorized repair, and verification
 
 This trial checks whether the plugin keeps deterministic candidates, model judgment, edits, and browser evidence separate. It is local development evidence, not a blanket KIN-compliance, accessibility, production, adoption, or competition-result claim.
@@ -44,8 +46,8 @@ The user authorized the full repair. The change also added English/Chinese local
 - English and Chinese chrome, sample mission, agent states, and final brief were observed.
 - Light and dark preferences both applied to the root document and rendered without decorative glow or persistent blur.
 - Running, completed, canceled, and restart states were exercised in deterministic replay; the UI explicitly stated that no API call occurred.
-- A `390 × 844` viewport reported no horizontal page overflow. Primary template and run actions measured 44 pixels high.
-- The touch-target audit found that native theme/language selects were initially only 16 pixels high. After repair and the final production rebuild, both native selects measured approximately 43 pixels high inside their 44-pixel controls.
+- A `390 × 844` viewport reported no horizontal page overflow.
+- The touch-target audit found that native theme/language selects were initially only 16 pixels high. After repair and the final production rebuild, both native selects measured exactly 45 pixels high.
 - Final English/light desktop, Chinese/dark desktop, and Chinese/dark mobile evidence images were visually inspected after capture.
 - Textarea and summary focus states resolved to a visible two-pixel outline.
 
@@ -53,13 +55,15 @@ The user authorized the full repair. The change also added English/Chinese local
 
 After repair, the collector scanned 9 frontend files and returned 4 P2 review candidates: one functional progress gradient and three deliberate status/progress pill contexts. It also detected explicit theme behavior, Reduced Motion, visible focus rules, semantic landmarks, and CSS variables.
 
+A detached clean worktree at `6e32403` completed `npm ci`, `npm run typecheck`, `npm run build`, and `npm audit --audit-level=low`; the audit reported zero vulnerabilities. The collector independently reproduced the 9-file, 4-candidate packet against that clean checkout.
+
 ## Not verified
 
 - No paid or external model request was made in this repair run. The configured compatible endpoint and model identifier were inspected without exposing credentials; model provenance was not independently verified.
 - The client error screen was reviewed in source but not forced through a live failing provider.
 - Reduced Motion rules were found in source but the preference was not emulated in this browser session.
 - Touch-device physics, real browser zoom, screen-reader behavior, Firefox, WebKit, deployment, production data, and adoption remain unverified.
-- The desktop app installed KIN Design Engineer from the personal marketplace after action-time user confirmation. Codex showed an installation-success notice, cached version `0.1.0`, and enabled `kin-design-engineer@personal` in the local configuration.
+- The desktop app installed KIN Design Engineer from the personal marketplace after action-time user confirmation. Codex showed an installation-success notice, cached version `0.1.0`, and enabled `kin-design-engineer@personal` in the local configuration. The exact repository-local marketplace CLI installation remains unverified because `codex plugin list` failed with Windows `Access is denied` in this environment.
 
 ## Result
 
