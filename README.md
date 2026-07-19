@@ -104,6 +104,8 @@ gallery, invent data, or claim KIN adoption from Tokens or a passing build.
 
 The Skill is one way to apply KIN, not the direction of the system.
 
+For a runnable Codex workflow that collects deterministic candidates, confirms them against source and rendered behavior, applies explicitly authorized repairs, and reports verification limits, use the experimental [KIN Design Engineer plugin](./plugins/kin-design-engineer/README.md). It uses the model selected in the Codex session; it does not embed an API key or claim that a static scan proves KIN compliance.
+
 ### Contribute to KIN 3.0
 
 Repository tooling requires Node.js 20.11 or newer:
@@ -198,6 +200,7 @@ Automated checks, screenshots, browser smoke tests, real zoom, touch, and screen
 | [`tokens/`](./tokens/) | Generated CSS, DTCG, Tailwind-compatible, and Figma Variables output |
 | [`adoption/`](./adoption/) | Project configuration, implementation brief, evidence, and migration guide |
 | [`skills/kin-design/`](./skills/kin-design/) | Agent task routing and review workflow |
+| [`plugins/kin-design-engineer/`](./plugins/kin-design-engineer/) | Experimental installable Codex audit, repair, and verification workflow |
 | [`DELIVERY.md`](./DELIVERY.md) | Figma, runtime, ownership, and release boundaries |
 | [`rfcs/`](./rfcs/) | RFC proposals, decisions, and status; an accepted RFC remains non-normative until its outcomes are incorporated into the governing contracts |
 
