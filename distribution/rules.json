@@ -1,0 +1,96 @@
+{
+  "$schema": "schemas/rules.schema.json",
+  "schema_version": "1.0.0",
+  "kind": "kin-agent-rules",
+  "normative": false,
+  "rules": [
+    {
+      "id": "snapshot-source-boundary",
+      "level": "must",
+      "source_path": "DELIVERY.md",
+      "source_heading": "Current decision",
+      "snapshot_section": "status-and-source",
+      "order": 10
+    },
+    {
+      "id": "task-before-explanation",
+      "level": "must",
+      "source_path": "principles/visual-signature.md",
+      "source_heading": "1. The task appears before the explanation",
+      "snapshot_section": "visual-register",
+      "order": 20
+    },
+    {
+      "id": "one-dominant-region",
+      "level": "must",
+      "source_path": "principles/visual-signature.md",
+      "source_heading": "2. One region owns attention",
+      "snapshot_section": "visual-register",
+      "order": 30
+    },
+    {
+      "id": "neutral-precise-emphasis",
+      "level": "should",
+      "source_path": "principles/visual-signature.md",
+      "source_heading": "5. Neutral structure, precise emphasis",
+      "snapshot_section": "theme-usage",
+      "order": 40
+    },
+    {
+      "id": "typography-supports-hierarchy",
+      "level": "must",
+      "source_path": "DESIGN.md",
+      "source_heading": "4.3 排版规则",
+      "snapshot_section": "typography-roles",
+      "order": 50
+    },
+    {
+      "id": "density-removes-repetition",
+      "level": "must",
+      "source_path": "principles/visual-signature.md",
+      "source_heading": "4. Density removes repetition",
+      "snapshot_section": "layout-and-density",
+      "order": 60
+    },
+    {
+      "id": "continuous-structure",
+      "level": "should",
+      "source_path": "principles/visual-signature.md",
+      "source_heading": "3. Structure is continuous",
+      "snapshot_section": "surface-and-elevation",
+      "order": 70
+    },
+    {
+      "id": "motion-explains-change",
+      "level": "must",
+      "source_path": "principles/visual-signature.md",
+      "source_heading": "7. Motion explains change",
+      "snapshot_section": "motion",
+      "order": 80
+    },
+    {
+      "id": "semantics-remain-separate",
+      "level": "must",
+      "source_path": "principles/visual-signature.md",
+      "source_heading": "6. Semantics remain separate",
+      "snapshot_section": "content-rules",
+      "order": 90
+    },
+    {
+      "id": "route-by-product-profile",
+      "level": "must",
+      "source_path": "DELIVERY.md",
+      "source_heading": "What may be consumed directly",
+      "snapshot_section": "task-and-product-routing",
+      "order": 100
+    },
+    {
+      "id": "delivery-is-not-adoption",
+      "level": "must-not",
+      "source_path": "principles/visual-signature.md",
+      "source_heading": "Adoption claims",
+      "snapshot_section": "verification-and-adoption",
+      "order": 110
+    }
+  ]
+}

@@ -62,9 +62,10 @@ node scripts/validate-components.mjs
 node scripts/validate-pages.mjs
 node scripts/validate-scenarios.mjs
 node scripts/validate-integrations.mjs
-node scripts/validate-release.mjs
+npm run release:check:pre-tag
 node scripts/export-tokens.mjs --check
 node scripts/export-figma-variables.mjs --check
+npm run agent:check:generated
 npm run test:tooling
 npm run runtime:check
 npm run site:check
@@ -100,10 +101,14 @@ When `release_status: released`:
 - `latest_stable` MUST equal `kin_version`;
 - the source and translated README badges MUST use the released `v<kin_version>` wording without a development qualifier;
 - the adoption example MUST use the `v<kin_version>` tag;
-- that Git tag MUST contain a `DESIGN.md` whose canonical checksum matches the working contract;
 - `CHANGELOG.md` MUST contain the matching version section.
+- pre-Tag validation MUST pass before the release commit reaches `main` and skips only the missing current-version Tag checks;
+- after the exact commit reaches validated `main`, an annotated matching Tag MUST be created and `npm run release:check:post-tag` MUST verify its type, commit, and tagged `DESIGN.md` checksum.
+- Pages MUST defer a `released` candidate until the matching Tag workflow confirms that the annotated Tag points to a commit reachable from `origin/main`.
 
-Prepare a release as one immutable commit: update lifecycle fields, move the completed notes from `Unreleased` to the version heading, update the adoption locator, create the annotated tag on that commit, and then run the full validation matrix. If validation fails, delete the unpublished local tag, correct the release commit, and repeat. Do not publish a tag or GitHub Release until the checks and human review are complete.
+Prepare a release as one immutable commit: update lifecycle fields, move the completed notes from `Unreleased` to the version heading, update the adoption locator, regenerate all tracked outputs, commit, and run the pre-Tag matrix. Merge only that reviewed commit. Then create the annotated Tag on the exact validated `main` commit and run the post-Tag gate. If post-Tag validation fails, delete the unpublished local Tag, correct the release commit through review, and repeat. Do not publish a Tag or GitHub Release until both gates and human review are complete.
+
+Changes to `distribution/`, `generated/agent/next/`, or the Agent exporter MUST follow accepted RFC 001. Generated files are never edited directly. Phase 1 MUST keep both locales' truthful review state, omit unavailable Recipe artifacts, and keep the `next` tree outside Pages publication.
 
 ## Versioning
 

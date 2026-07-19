@@ -1,9 +1,9 @@
 # RFC 001 — Agent Distribution Layer
 
-Status: proposed
+Status: accepted
 Decision scope: generated artifacts and Agent delivery
 Normative effect: none; accepted decisions become normative only when incorporated into the governing contracts
-Implementation status: not started
+Implementation status: Phase 1 implemented; Phases 2-5 remain pending
 Accountable owner: [@yehyakin](https://github.com/yehyakin)
 First eligible stable bundle: the earliest KIN release whose tagged commit contains the accepted generator and artifacts; expected v3.0.0 and never retroactive
 
@@ -305,6 +305,10 @@ generated: true
 normative: false
 artifact_status: generated-derivative
 editable: false
+publication:
+  state: repository-only
+  published: false
+  public_locators: reserved-for-phase-2
 kin_version: "<resolved KIN lifecycle version>"
 release_status: "<resolved from DESIGN.md>"
 latest_stable_contract: "<resolved from DESIGN.md.latest_stable>"
@@ -568,6 +572,11 @@ Minimum structure:
   "artifact_status": "generated-derivative",
   "generated": true,
   "normative": false,
+  "publication": {
+    "state": "repository-only",
+    "published": false,
+    "public_locators": "reserved-for-phase-2"
+  },
   "kin_version": "<resolved KIN lifecycle version>",
   "release_status": "<resolved from DESIGN.md>",
   "latest_stable_contract": "<resolved from DESIGN.md.latest_stable>",
@@ -695,6 +704,8 @@ Minimum structure:
 ~~~
 
 The implementation MUST include all four modes and both locale entries, not only the abbreviated example above. Versioned and stable publication require both locales to be complete and reviewed. `next` MAY expose an explicitly incomplete locale under Section 11.1. A Manifest MUST NOT advertise a locale as reviewed unless every required locale record is reviewed against the current normative and localized-content checksums. The Manifest records checksums for every other artifact but MUST NOT contain a self-referential checksum for itself.
+
+Phase 1 output is repository-only. Every Phase 1 Snapshot and Manifest MUST expose the machine-readable `publication` object shown above. `published: false` is authoritative: URLs carried in `links`, `schemas`, catalogs, or artifacts are reserved Phase 2 locators and MUST NOT be fetched or presented as live endpoints. Phase 2 MAY introduce published channels only with a new reviewed Schema contract and the publication gates defined later in this RFC.
 
 Schema v1 uses semantic-version strings. Additive optional fields MAY evolve within one Schema major. Required-field removal or incompatible meaning requires a Schema-major change. The implementation MUST use committed JSON Schemas plus a handwritten structural validator consistent with existing repository tooling. Tests MUST prove representative valid and invalid fixtures agree with the Schemas; adding a runtime validator dependency is out of scope.
 
@@ -908,7 +919,7 @@ Inside the KIN repository, the current `AGENTS.md` full-reading requirements rem
 
 ## 15. Public URL contract
 
-The canonical Pages base is `https://yehyakin.github.io/kin-design-system`. Repository-relative paths, bundle-relative paths, and public URLs MUST remain separate fields. After acceptance and implementation, the Pages build MUST publish only the endpoints eligible for the current Registry state: `next` always; versioned endpoints only for `publication_state: released`; and root stable aliases only when `latest_agent_distribution` is non-null. The resulting path families are:
+The canonical Pages base is `https://yehyakin.github.io/kin-design-system`. Repository-relative paths, bundle-relative paths, and public URLs MUST remain separate fields. After the Phase 2 publication gates are implemented, the Pages build MUST publish only endpoints eligible for the current Registry state: `next` when its Manifest explicitly permits publication; versioned endpoints only for `publication_state: released`; and root stable aliases only when `latest_agent_distribution` is non-null. Phase 1 MUST publish none of these generated Agent paths. The reserved path families are:
 
 ~~~text
 https://yehyakin.github.io/kin-design-system/design-manifest.json

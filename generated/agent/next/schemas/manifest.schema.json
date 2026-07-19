@@ -1,0 +1,476 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://yehyakin.github.io/kin-design-system/next/schemas/manifest.schema.json",
+  "$comment": "Generated non-normative copy. Edit distribution/schemas/manifest.schema.json, not this file.",
+  "title": "KIN Agent distribution manifest",
+  "$defs": {
+    "hash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "url": {
+      "type": "string",
+      "pattern": "^https://"
+    },
+    "path": {
+      "type": "string",
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))[A-Za-z0-9._/-]+$"
+    },
+    "catalog": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "repository_path",
+        "raw_url",
+        "human_url",
+        "schema_version",
+        "reviewed_on",
+        "entry_count",
+        "status_counts",
+        "source_sha256"
+      ],
+      "properties": {
+        "repository_path": {
+          "$ref": "#/$defs/path"
+        },
+        "raw_url": {
+          "$ref": "#/$defs/url"
+        },
+        "human_url": {
+          "$ref": "#/$defs/url"
+        },
+        "schema_version": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+        },
+        "catalog_version": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+        },
+        "reviewed_on": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+        },
+        "entry_count": {
+          "type": "integer"
+        },
+        "status_counts": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": {
+            "type": "integer"
+          }
+        },
+        "source_sha256": {
+          "$ref": "#/$defs/hash"
+        }
+      }
+    }
+  },
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "schema_version",
+    "kind",
+    "artifact_status",
+    "generated",
+    "normative",
+    "publication",
+    "kin_version",
+    "release_status",
+    "latest_stable_contract",
+    "channel",
+    "source",
+    "coverage",
+    "features",
+    "links",
+    "schemas",
+    "locales",
+    "modes",
+    "catalogs",
+    "delivery",
+    "artifacts"
+  ],
+  "properties": {
+    "$schema": {
+      "const": "https://yehyakin.github.io/kin-design-system/next/schemas/manifest.schema.json"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "kind": {
+      "const": "kin-agent-distribution"
+    },
+    "artifact_status": {
+      "const": "generated-derivative"
+    },
+    "generated": {
+      "const": true
+    },
+    "normative": {
+      "const": false
+    },
+    "publication": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "state",
+        "published",
+        "public_locators"
+      ],
+      "properties": {
+        "state": {
+          "const": "repository-only"
+        },
+        "published": {
+          "const": false
+        },
+        "public_locators": {
+          "const": "reserved-for-phase-2"
+        }
+      }
+    },
+    "kin_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "release_status": {
+      "enum": [
+        "development",
+        "released"
+      ]
+    },
+    "latest_stable_contract": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "channel": {
+      "const": "next"
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contract_path",
+        "checksum_algorithm",
+        "checksum",
+        "input_set_checksum",
+        "ref",
+        "revision_status",
+        "inputs"
+      ],
+      "properties": {
+        "contract_path": {
+          "const": "DESIGN.md"
+        },
+        "checksum_algorithm": {
+          "const": "sha256"
+        },
+        "checksum": {
+          "$ref": "#/$defs/hash"
+        },
+        "input_set_checksum": {
+          "$ref": "#/$defs/hash"
+        },
+        "ref": {
+          "const": "main"
+        },
+        "revision_status": {
+          "const": "mutable"
+        },
+        "inputs": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "path",
+              "role",
+              "sha256"
+            ],
+            "properties": {
+              "path": {
+                "$ref": "#/$defs/path"
+              },
+              "role": {
+                "type": "string",
+                "minLength": 1
+              },
+              "sha256": {
+                "$ref": "#/$defs/hash"
+              }
+            }
+          }
+        }
+      }
+    },
+    "coverage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "level",
+        "complete_contract"
+      ],
+      "properties": {
+        "level": {
+          "const": "compact"
+        },
+        "complete_contract": {
+          "const": false
+        }
+      }
+    },
+    "features": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "component_recipes"
+      ],
+      "properties": {
+        "component_recipes": {
+          "const": "unavailable"
+        }
+      }
+    },
+    "links": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_raw_base_url",
+        "source_human_base_url",
+        "public_base_url",
+        "versions_registry_url"
+      ],
+      "properties": {
+        "source_raw_base_url": {
+          "$ref": "#/$defs/url"
+        },
+        "source_human_base_url": {
+          "$ref": "#/$defs/url"
+        },
+        "public_base_url": {
+          "$ref": "#/$defs/url"
+        },
+        "versions_registry_url": {
+          "$ref": "#/$defs/url"
+        }
+      }
+    },
+    "schemas": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": true
+    },
+    "locales": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "complete",
+          "review"
+        ],
+        "properties": {
+          "id": {
+            "enum": [
+              "en",
+              "zh-CN"
+            ]
+          },
+          "complete": {
+            "type": "boolean"
+          },
+          "review": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "status",
+              "reviewers",
+              "normative_source_checksum",
+              "localized_content_checksum"
+            ],
+            "properties": {
+              "status": {
+                "enum": [
+                  "reviewed",
+                  "unreviewed"
+                ]
+              },
+              "reviewers": {
+                "type": "array",
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "normative_source_checksum": {
+                "$ref": "#/$defs/hash"
+              },
+              "localized_content_checksum": {
+                "$ref": "#/$defs/hash"
+              }
+            }
+          }
+        }
+      }
+    },
+    "modes": {
+      "type": "array",
+      "minItems": 8,
+      "maxItems": 8,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "theme",
+          "contrast",
+          "locale",
+          "artifact_id"
+        ],
+        "properties": {
+          "theme": {
+            "enum": [
+              "light",
+              "dark"
+            ]
+          },
+          "contrast": {
+            "enum": [
+              "normal",
+              "more"
+            ]
+          },
+          "locale": {
+            "enum": [
+              "en",
+              "zh-CN"
+            ]
+          },
+          "artifact_id": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "catalogs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "components",
+        "pages",
+        "integrations",
+        "recipes"
+      ],
+      "properties": {
+        "components": {
+          "$ref": "#/$defs/catalog"
+        },
+        "pages": {
+          "$ref": "#/$defs/catalog"
+        },
+        "integrations": {
+          "$ref": "#/$defs/catalog"
+        },
+        "recipes": {
+          "type": "null"
+        }
+      }
+    },
+    "delivery": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mode",
+        "figma",
+        "runtime"
+      ],
+      "properties": {
+        "mode": {
+          "const": "contract-first"
+        },
+        "figma": {
+          "const": "variables-only"
+        },
+        "runtime": {
+          "const": "project-owned"
+        }
+      }
+    },
+    "artifacts": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "kind",
+          "repository_path",
+          "bundle_path",
+          "public_url",
+          "media_type",
+          "normative",
+          "sha256"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "kind": {
+            "enum": [
+              "agent-markdown",
+              "json-schema"
+            ]
+          },
+          "locale": {
+            "enum": [
+              "en",
+              "zh-CN"
+            ]
+          },
+          "theme": {
+            "enum": [
+              "light",
+              "dark"
+            ]
+          },
+          "contrast": {
+            "enum": [
+              "normal",
+              "more"
+            ]
+          },
+          "repository_path": {
+            "$ref": "#/$defs/path"
+          },
+          "bundle_path": {
+            "$ref": "#/$defs/path"
+          },
+          "public_url": {
+            "$ref": "#/$defs/url"
+          },
+          "media_type": {
+            "type": "string",
+            "minLength": 1
+          },
+          "normative": {
+            "const": false
+          },
+          "sha256": {
+            "$ref": "#/$defs/hash"
+          }
+        }
+      }
+    }
+  }
+}

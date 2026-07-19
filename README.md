@@ -104,6 +104,8 @@ gallery, invent data, or claim KIN adoption from Tokens or a passing build.
 
 The Skill is one way to apply KIN, not the direction of the system.
 
+The accepted Agent Distribution Layer also stages compact, theme-resolved files under [`generated/agent/next/`](./generated/agent/next/). They cover four theme/contrast modes and both repository locales, but are still mutable development artifacts: the copy is explicitly unreviewed, the files are not published to Pages, and no stable Agent endpoint exists yet. For production work, use the [complete v2.3.0 contract](https://github.com/yehyakin/kin-design-system/blob/v2.3.0/DESIGN.md) and [Skill from the same pinned checkout](https://github.com/yehyakin/kin-design-system/tree/v2.3.0/skills/kin-design) until a later release completes the review and immutable-publication gates.
+
 ### Contribute to KIN 3.0
 
 Repository tooling requires Node.js 20.11 or newer:
@@ -198,6 +200,8 @@ Automated checks, screenshots, browser smoke tests, real zoom, touch, and screen
 | [`tokens/`](./tokens/) | Generated CSS, DTCG, Tailwind-compatible, and Figma Variables output |
 | [`adoption/`](./adoption/) | Project configuration, implementation brief, evidence, and migration guide |
 | [`skills/kin-design/`](./skills/kin-design/) | Agent task routing and review workflow |
+| [`distribution/`](./distribution/) | Non-normative Agent routing, locale inputs, and Phase 1 Schemas |
+| [`generated/agent/next/`](./generated/agent/next/) | Generated mutable development Snapshots and Manifest; not a stable public endpoint |
 | [`DELIVERY.md`](./DELIVERY.md) | Figma, runtime, ownership, and release boundaries |
 | [`rfcs/`](./rfcs/) | RFC proposals, decisions, and status; an accepted RFC remains non-normative until its outcomes are incorporated into the governing contracts |
 

@@ -1601,7 +1601,7 @@ human visual-signature review before claiming the workflow is verified.
 
 KIN 核心仓库采用 [`DELIVERY.md`](./DELIVERY.md) 定义的 `contract-first` 交付模式：Figma 仅提供 Variables 互操作文件，生产组件由接入项目拥有。私有预发布 `@kin-design/react` 只是一项经批准的集成实验室；不得把它描述成已发布、通用或已完成生产验证的运行时包。没有独立、经批准并可回滚的交付合同，不得声称 KIN 已提供 Figma Component Library、Code Connect 覆盖或稳定运行时组件包。
 
-KIN 的机器与接入输出包括以下七类：
+KIN 的机器与接入输出包括以下八类：
 
 1. `kin.tokens.json` 与 `kin.tailwind.css`：从规范 Token 生成的互操作文件。
 2. `kin.figma.variables.json`：面向 Figma Variables REST API 的 create-only 请求体；不包含凭据，不负责同步既有 ID。
@@ -1610,6 +1610,17 @@ KIN 的机器与接入输出包括以下七类：
 5. `visualReview`：记录一个代表性生产流程、范围路由、可比基线与候选截图、评审环境、评审者和发现；缺少该记录时不得把接入状态提升为 `verified`。
 6. `scope.routeProfiles`：为混合产品记录路由族与 KIN 产品类型的映射，并标出一个代表性工作流。
 7. `kin-implementation-brief.md`：把真实任务、第一有效视图、主导区域、持续上下文、Surface、密度、移动优先级、状态、交互、禁止替代和回滚写成项目级构图合同。
+8. `generated/agent/next/`：从当前合同、Token、目录、产品类型和经过声明的本地化输入生成的精简快照与清单。它是不可编辑、非规范、可变的开发交付面，不是稳定版本、运行时组件、自动接入或视觉质量证明。
+
+Agent Distribution Layer 必须遵守以下边界：
+
+- `DESIGN.md` 始终是唯一规范性设计来源；生成快照不得补写、改写或推断规范。
+- Phase 1 只提交并校验 `generated/agent/next/`，不得发布到 Pages、创建稳定别名或伪造历史版本。
+- 每个快照必须解析 Light / Dark 与 Normal / More Contrast 的完整 Token 命名空间，并保留相同键集。
+- 英文与简体中文必须保留相同规则 ID、产品类型 ID、主题键和来源路径。本地化内容未经逐字人工审核时必须明确标记 `unreviewed`。
+- `component_recipes` 在独立映射阶段完成前必须保持 `unavailable`，不得生成空文件或根据组件名称猜测实现。
+- `--check` 不得改写受跟踪文件；生成器不得访问网络、调用生成式服务、安装依赖或执行接入产品代码。
+- 生成文件与通过的校验仍然只是交付证据，不能替代代表性生产流程、可比截图和人工视觉评审。
 
 工具结果不得越过以下边界：
 

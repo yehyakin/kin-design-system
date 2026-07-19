@@ -1,0 +1,28 @@
+{
+  "$schema": "schemas/profiles.schema.json",
+  "schema_version": "1.0.0",
+  "kind": "kin-agent-profiles",
+  "normative": false,
+  "profiles": [
+    {
+      "id": "information-site",
+      "contract_path": "patterns/information-site.md",
+      "task_intents": ["find", "read", "verify", "cite"]
+    },
+    {
+      "id": "intelligence-workspace",
+      "contract_path": "patterns/intelligence-workspace.md",
+      "task_intents": ["inspect", "monitor", "investigate", "verify", "decide"]
+    },
+    {
+      "id": "ecommerce-operations",
+      "contract_path": "patterns/ecommerce-operations.md",
+      "task_intents": ["operate", "compare", "approve", "recover"]
+    },
+    {
+      "id": "engineering-canvas",
+      "contract_path": "patterns/engineering-canvas.md",
+      "task_intents": ["create", "select", "inspect", "modify", "compare", "undo"]
+    }
+  ]
+}

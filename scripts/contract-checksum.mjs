@@ -1,10 +1,9 @@
-import { createHash } from "node:crypto";
+import { canonicalizeText, sha256CanonicalText } from "./lib/canonical-content.mjs";
 
 export function canonicalizeContract(source) {
-  const text = Buffer.isBuffer(source) ? source.toString("utf8") : String(source);
-  return text.replace(/^\uFEFF/, "").replace(/\r\n?/g, "\n");
+  return canonicalizeText(source);
 }
 
 export function contractChecksum(source) {
-  return createHash("sha256").update(canonicalizeContract(source), "utf8").digest("hex");
+  return sha256CanonicalText(source);
 }

@@ -1,0 +1,452 @@
+{
+  "$schema": "https://yehyakin.github.io/kin-design-system/next/schemas/manifest.schema.json",
+  "schema_version": "1.0.0",
+  "kind": "kin-agent-distribution",
+  "artifact_status": "generated-derivative",
+  "generated": true,
+  "normative": false,
+  "publication": {
+    "state": "repository-only",
+    "published": false,
+    "public_locators": "reserved-for-phase-2"
+  },
+  "kin_version": "3.0.0",
+  "release_status": "development",
+  "latest_stable_contract": "2.3.0",
+  "channel": "next",
+  "source": {
+    "contract_path": "DESIGN.md",
+    "checksum_algorithm": "sha256",
+    "checksum": "75e62f81a34d95dd9efbb36a32ad672c9d13e413ca8910992a3ea9de286c3a6d",
+    "input_set_checksum": "31cd9bfdbd1872241047f655d408baa945198ba1131224582efd1b9e2cb59f2b",
+    "ref": "main",
+    "revision_status": "mutable",
+    "inputs": [
+      {
+        "path": "DELIVERY.md",
+        "role": "normative-contract",
+        "sha256": "93aab7d04bdceb26daf5f105e3d162f48f9f347ab6d428f01fd8cc1fb709a0be"
+      },
+      {
+        "path": "DESIGN.md",
+        "role": "normative-contract",
+        "sha256": "75e62f81a34d95dd9efbb36a32ad672c9d13e413ca8910992a3ea9de286c3a6d"
+      },
+      {
+        "path": "components/catalog.json",
+        "role": "machine-catalog",
+        "sha256": "5d677fda6c05210092b6824b70fb19eb1b1ab5c935f0ffc0f3dae5abc2515c08"
+      },
+      {
+        "path": "distribution/locales/en.json",
+        "role": "informative-translation-input",
+        "sha256": "6a5c7ae53f6a1aa7e1da69e328eabf41522b1debe2adb37f2953957e90373685"
+      },
+      {
+        "path": "distribution/locales/zh-CN.json",
+        "role": "informative-translation-input",
+        "sha256": "aad303ed744473441bdc2baaaedd33fa40a57c63b19a2757af34aec82a6f1756"
+      },
+      {
+        "path": "distribution/profiles.json",
+        "role": "distribution-profile-input",
+        "sha256": "6118cef821bf93678f3e1c075dab40e83d7fb175f992042e2f2499ffc9d74908"
+      },
+      {
+        "path": "distribution/rules.json",
+        "role": "distribution-rule-input",
+        "sha256": "090ea736aefdda8152617adbf9bc1ba722060269d38d03c8bc2882d2fea3dc0b"
+      },
+      {
+        "path": "distribution/schemas/locale-source.schema.json",
+        "role": "distribution-schema",
+        "sha256": "430b360695046288f86f08f898459dc37de2a0945873eb86b1a8d13b13b91eea"
+      },
+      {
+        "path": "distribution/schemas/manifest.schema.json",
+        "role": "distribution-schema",
+        "sha256": "d92155a9f621b56185fbe783aa3eed9fd391211150dd9c82493635443c5e4b70"
+      },
+      {
+        "path": "distribution/schemas/profiles.schema.json",
+        "role": "distribution-schema",
+        "sha256": "1d58bf9177cb645c245675664c72855867059327746e583a402a4f5460e3981d"
+      },
+      {
+        "path": "distribution/schemas/rules.schema.json",
+        "role": "distribution-schema",
+        "sha256": "7733e29ea45c729826160ea7da0421ed0d45a790dfdf71b316d519b588c93ee9"
+      },
+      {
+        "path": "distribution/schemas/snapshot.schema.json",
+        "role": "distribution-schema",
+        "sha256": "514ff2d10753fcca2a88b5ca02774df1d73e105e12d44b6a5e8356576f9b57d7"
+      },
+      {
+        "path": "integrations/catalog.json",
+        "role": "machine-catalog",
+        "sha256": "5f8ef6281e876727109af2f4212de71a50669c0c19ee93f3b3e32c39a94898b2"
+      },
+      {
+        "path": "package.json",
+        "role": "lifecycle-metadata",
+        "sha256": "639f01434ce795543c1bf5f6eafcc5afa5ebd338dbb7fe75e0f10f567183e713"
+      },
+      {
+        "path": "pages/catalog.json",
+        "role": "machine-catalog",
+        "sha256": "ea45c92c32bb2d1d94dda76659f3ab848d4be550e074dfbb2c91fe0ab27cdde1"
+      },
+      {
+        "path": "patterns/ecommerce-operations.md",
+        "role": "normative-pattern",
+        "sha256": "0d0509f6ebd58526e48678da1ca9a05d8508448333a40cc897dd0038c8461562"
+      },
+      {
+        "path": "patterns/engineering-canvas.md",
+        "role": "normative-pattern",
+        "sha256": "21d097c6d2325a9792b29570acea76dc1cacf10eec4b091639e70b7c87bd302c"
+      },
+      {
+        "path": "patterns/information-site.md",
+        "role": "normative-pattern",
+        "sha256": "3c884aa4d77bfa718fbd3b945c57f5ff77e2bc527d1805056e2d6de1f6c2ba3c"
+      },
+      {
+        "path": "patterns/intelligence-workspace.md",
+        "role": "normative-pattern",
+        "sha256": "466eacdd6b1940275b16eb9a5964b5abed9ce0eced59185449d72589209aaee2"
+      },
+      {
+        "path": "principles/visual-signature.md",
+        "role": "normative-contract",
+        "sha256": "34176492402ce0d3cfcb623f66c87e999eac87665c65caa40f8294e30799a14b"
+      },
+      {
+        "path": "tokens/kin.tokens.json",
+        "role": "generated-token-source",
+        "sha256": "9a67c67cbcc464b3375100e5cf4946cf84289fea80dade6527f9064f936f41d7"
+      }
+    ]
+  },
+  "coverage": {
+    "level": "compact",
+    "complete_contract": false
+  },
+  "features": {
+    "component_recipes": "unavailable"
+  },
+  "links": {
+    "source_raw_base_url": "https://raw.githubusercontent.com/yehyakin/kin-design-system/main/",
+    "source_human_base_url": "https://github.com/yehyakin/kin-design-system/blob/main/",
+    "public_base_url": "https://yehyakin.github.io/kin-design-system/next/",
+    "versions_registry_url": "https://yehyakin.github.io/kin-design-system/versions.json"
+  },
+  "schemas": {
+    "snapshot": {
+      "repository_source_path": "distribution/schemas/snapshot.schema.json",
+      "bundle_path": "schemas/snapshot.schema.json",
+      "public_url": "https://yehyakin.github.io/kin-design-system/next/schemas/snapshot.schema.json"
+    },
+    "manifest": {
+      "repository_source_path": "distribution/schemas/manifest.schema.json",
+      "bundle_path": "schemas/manifest.schema.json",
+      "public_url": "https://yehyakin.github.io/kin-design-system/next/schemas/manifest.schema.json"
+    },
+    "rules": {
+      "repository_source_path": "distribution/schemas/rules.schema.json",
+      "bundle_path": "schemas/rules.schema.json",
+      "public_url": "https://yehyakin.github.io/kin-design-system/next/schemas/rules.schema.json"
+    },
+    "profiles": {
+      "repository_source_path": "distribution/schemas/profiles.schema.json",
+      "bundle_path": "schemas/profiles.schema.json",
+      "public_url": "https://yehyakin.github.io/kin-design-system/next/schemas/profiles.schema.json"
+    },
+    "locale_source": {
+      "repository_source_path": "distribution/schemas/locale-source.schema.json",
+      "bundle_path": "schemas/locale-source.schema.json",
+      "public_url": "https://yehyakin.github.io/kin-design-system/next/schemas/locale-source.schema.json"
+    }
+  },
+  "locales": [
+    {
+      "id": "en",
+      "complete": false,
+      "review": {
+        "status": "unreviewed",
+        "reviewers": [],
+        "normative_source_checksum": "28d428a4429c45b5bcc6dc4cfddfd97682ef2f6a2b0297852954be1c247c4fe2",
+        "localized_content_checksum": "8cbc0ee2535f738266c73e9f80419076c0da5afad2212a6049408902706f412a"
+      }
+    },
+    {
+      "id": "zh-CN",
+      "complete": false,
+      "review": {
+        "status": "unreviewed",
+        "reviewers": [],
+        "normative_source_checksum": "28d428a4429c45b5bcc6dc4cfddfd97682ef2f6a2b0297852954be1c247c4fe2",
+        "localized_content_checksum": "5ce67d168f77941fa5cf023d00f72ffcbc0235a0fcf13c2af5a34fcf93cd2bc2"
+      }
+    }
+  ],
+  "modes": [
+    {
+      "theme": "light",
+      "contrast": "normal",
+      "locale": "en",
+      "artifact_id": "design-en-light"
+    },
+    {
+      "theme": "dark",
+      "contrast": "normal",
+      "locale": "en",
+      "artifact_id": "design-en-dark"
+    },
+    {
+      "theme": "light",
+      "contrast": "more",
+      "locale": "en",
+      "artifact_id": "design-en-light-high-contrast"
+    },
+    {
+      "theme": "dark",
+      "contrast": "more",
+      "locale": "en",
+      "artifact_id": "design-en-dark-high-contrast"
+    },
+    {
+      "theme": "light",
+      "contrast": "normal",
+      "locale": "zh-CN",
+      "artifact_id": "design-zh-cn-light"
+    },
+    {
+      "theme": "dark",
+      "contrast": "normal",
+      "locale": "zh-CN",
+      "artifact_id": "design-zh-cn-dark"
+    },
+    {
+      "theme": "light",
+      "contrast": "more",
+      "locale": "zh-CN",
+      "artifact_id": "design-zh-cn-light-high-contrast"
+    },
+    {
+      "theme": "dark",
+      "contrast": "more",
+      "locale": "zh-CN",
+      "artifact_id": "design-zh-cn-dark-high-contrast"
+    }
+  ],
+  "catalogs": {
+    "components": {
+      "repository_path": "components/catalog.json",
+      "raw_url": "https://raw.githubusercontent.com/yehyakin/kin-design-system/main/components/catalog.json",
+      "human_url": "https://github.com/yehyakin/kin-design-system/blob/main/components/catalog.json",
+      "schema_version": "1.0.0",
+      "catalog_version": "1.5.0",
+      "reviewed_on": "2026-07-16",
+      "entry_count": 77,
+      "status_counts": {
+        "candidate": 6,
+        "draft": 6,
+        "stable": 65
+      },
+      "source_sha256": "5d677fda6c05210092b6824b70fb19eb1b1ab5c935f0ffc0f3dae5abc2515c08"
+    },
+    "pages": {
+      "repository_path": "pages/catalog.json",
+      "raw_url": "https://raw.githubusercontent.com/yehyakin/kin-design-system/main/pages/catalog.json",
+      "human_url": "https://github.com/yehyakin/kin-design-system/blob/main/pages/catalog.json",
+      "schema_version": "1.0.0",
+      "catalog_version": "1.4.0",
+      "reviewed_on": "2026-07-16",
+      "entry_count": 16,
+      "status_counts": {
+        "candidate": 5,
+        "draft": 1,
+        "stable": 10
+      },
+      "source_sha256": "ea45c92c32bb2d1d94dda76659f3ab848d4be550e074dfbb2c91fe0ab27cdde1"
+    },
+    "integrations": {
+      "repository_path": "integrations/catalog.json",
+      "raw_url": "https://raw.githubusercontent.com/yehyakin/kin-design-system/main/integrations/catalog.json",
+      "human_url": "https://github.com/yehyakin/kin-design-system/blob/main/integrations/catalog.json",
+      "schema_version": "1.0.0",
+      "reviewed_on": "2026-07-15",
+      "entry_count": 9,
+      "status_counts": {
+        "development-integrated": 1,
+        "runtime-integrated": 7,
+        "visual-integrated": 1
+      },
+      "source_sha256": "5f8ef6281e876727109af2f4212de71a50669c0c19ee93f3b3e32c39a94898b2"
+    },
+    "recipes": null
+  },
+  "delivery": {
+    "mode": "contract-first",
+    "figma": "variables-only",
+    "runtime": "project-owned"
+  },
+  "artifacts": [
+    {
+      "id": "design-en-dark-high-contrast",
+      "kind": "agent-markdown",
+      "locale": "en",
+      "theme": "dark",
+      "contrast": "more",
+      "repository_path": "generated/agent/next/en/design.dark.high-contrast.md",
+      "bundle_path": "en/design.dark.high-contrast.md",
+      "public_url": "https://yehyakin.github.io/kin-design-system/next/design.dark.high-contrast.md",
+      "media_type": "text/markdown; charset=utf-8",
+      "normative": false,
+      "sha256": "3e1234d56517221151566d189c5718bc61d5e5887f6ebb8888e40e353243a816"
+    },
+    {
+      "id": "design-en-dark",
+      "kind": "agent-markdown",
+      "locale": "en",
+      "theme": "dark",
+      "contrast": "normal",
+      "repository_path": "generated/agent/next/en/design.dark.md",
+      "bundle_path": "en/design.dark.md",
+      "public_url": "https://yehyakin.github.io/kin-design-system/next/design.dark.md",
+      "media_type": "text/markdown; charset=utf-8",
+      "normative": false,
+      "sha256": "57aedc15953ed9916aeda0bb86ce69a9bc2627010bc6a671327348cfdb52f755"
+    },
+    {
+      "id": "design-en-light-high-contrast",
+      "kind": "agent-markdown",
+      "locale": "en",
+      "theme": "light",
+      "contrast": "more",
+      "repository_path": "generated/agent/next/en/design.high-contrast.md",
+      "bundle_path": "en/design.high-contrast.md",
+      "public_url": "https://yehyakin.github.io/kin-design-system/next/design.high-contrast.md",
+      "media_type": "text/markdown; charset=utf-8",
+      "normative": false,
+      "sha256": "98cdb5bfbc3a04be90f025c2538ff1f1d1af80e246b66360ddc37ab8e59d899b"
+    },
+    {
+      "id": "design-en-light",
+      "kind": "agent-markdown",
+      "locale": "en",
+      "theme": "light",
+      "contrast": "normal",
+      "repository_path": "generated/agent/next/en/design.md",
+      "bundle_path": "en/design.md",
+      "public_url": "https://yehyakin.github.io/kin-design-system/next/design.md",
+      "media_type": "text/markdown; charset=utf-8",
+      "normative": false,
+      "sha256": "601a96cedac96fffa53ee46d7f154c36d8bfa23ab6e54cd50ba33f053f92e8ab"
+    },
+    {
+      "id": "schema-locale_source",
+      "kind": "json-schema",
+      "repository_path": "generated/agent/next/schemas/locale-source.schema.json",
+      "bundle_path": "schemas/locale-source.schema.json",
+      "public_url": "https://yehyakin.github.io/kin-design-system/next/schemas/locale-source.schema.json",
+      "media_type": "application/schema+json; charset=utf-8",
+      "normative": false,
+      "sha256": "4131b8bcf0eada4635c5b5037148a44140e718cfd48f9eb3caed15ed042a5bb2"
+    },
+    {
+      "id": "schema-manifest",
+      "kind": "json-schema",
+      "repository_path": "generated/agent/next/schemas/manifest.schema.json",
+      "bundle_path": "schemas/manifest.schema.json",
+      "public_url": "https://yehyakin.github.io/kin-design-system/next/schemas/manifest.schema.json",
+      "media_type": "application/schema+json; charset=utf-8",
+      "normative": false,
+      "sha256": "e18f720ab1b5226a880030f992924ca5d067f37868b1de1dc22f5e138cbbffd8"
+    },
+    {
+      "id": "schema-profiles",
+      "kind": "json-schema",
+      "repository_path": "generated/agent/next/schemas/profiles.schema.json",
+      "bundle_path": "schemas/profiles.schema.json",
+      "public_url": "https://yehyakin.github.io/kin-design-system/next/schemas/profiles.schema.json",
+      "media_type": "application/schema+json; charset=utf-8",
+      "normative": false,
+      "sha256": "a48a3408caf685872ad653a83a269f114ed7229bf1988931effbd3791dc5c084"
+    },
+    {
+      "id": "schema-rules",
+      "kind": "json-schema",
+      "repository_path": "generated/agent/next/schemas/rules.schema.json",
+      "bundle_path": "schemas/rules.schema.json",
+      "public_url": "https://yehyakin.github.io/kin-design-system/next/schemas/rules.schema.json",
+      "media_type": "application/schema+json; charset=utf-8",
+      "normative": false,
+      "sha256": "bd48f561959714132c5cc8823878863b5ce5b8a5892eea16663a4c3781a61b41"
+    },
+    {
+      "id": "schema-snapshot",
+      "kind": "json-schema",
+      "repository_path": "generated/agent/next/schemas/snapshot.schema.json",
+      "bundle_path": "schemas/snapshot.schema.json",
+      "public_url": "https://yehyakin.github.io/kin-design-system/next/schemas/snapshot.schema.json",
+      "media_type": "application/schema+json; charset=utf-8",
+      "normative": false,
+      "sha256": "8c4c015f256e56f78cfd91e3068ec7c26e864bc07bb107c410bbd03a5e1cfad3"
+    },
+    {
+      "id": "design-zh-cn-dark-high-contrast",
+      "kind": "agent-markdown",
+      "locale": "zh-CN",
+      "theme": "dark",
+      "contrast": "more",
+      "repository_path": "generated/agent/next/zh-CN/design.dark.high-contrast.md",
+      "bundle_path": "zh-CN/design.dark.high-contrast.md",
+      "public_url": "https://yehyakin.github.io/kin-design-system/next/zh/design.dark.high-contrast.md",
+      "media_type": "text/markdown; charset=utf-8",
+      "normative": false,
+      "sha256": "b0a8179bf172a8c1c5f7945a47817e5cb0bb69de95c03b84aa25e21d7c09303f"
+    },
+    {
+      "id": "design-zh-cn-dark",
+      "kind": "agent-markdown",
+      "locale": "zh-CN",
+      "theme": "dark",
+      "contrast": "normal",
+      "repository_path": "generated/agent/next/zh-CN/design.dark.md",
+      "bundle_path": "zh-CN/design.dark.md",
+      "public_url": "https://yehyakin.github.io/kin-design-system/next/zh/design.dark.md",
+      "media_type": "text/markdown; charset=utf-8",
+      "normative": false,
+      "sha256": "c748de3e8e8d25002aadfd4894be97c91ab16e97c5a8ec00da5667b10adbcfff"
+    },
+    {
+      "id": "design-zh-cn-light-high-contrast",
+      "kind": "agent-markdown",
+      "locale": "zh-CN",
+      "theme": "light",
+      "contrast": "more",
+      "repository_path": "generated/agent/next/zh-CN/design.high-contrast.md",
+      "bundle_path": "zh-CN/design.high-contrast.md",
+      "public_url": "https://yehyakin.github.io/kin-design-system/next/zh/design.high-contrast.md",
+      "media_type": "text/markdown; charset=utf-8",
+      "normative": false,
+      "sha256": "7249b6e59159c59053717799f0ba1e19c90522ebc1a77b237b8a47b0c4398e76"
+    },
+    {
+      "id": "design-zh-cn-light",
+      "kind": "agent-markdown",
+      "locale": "zh-CN",
+      "theme": "light",
+      "contrast": "normal",
+      "repository_path": "generated/agent/next/zh-CN/design.md",
+      "bundle_path": "zh-CN/design.md",
+      "public_url": "https://yehyakin.github.io/kin-design-system/next/zh/design.md",
+      "media_type": "text/markdown; charset=utf-8",
+      "normative": false,
+      "sha256": "4505699b041da8ae89e04a93d0b5264a62ced8fc5d24bc590caabe80420c8dda"
+    }
+  ]
+}
