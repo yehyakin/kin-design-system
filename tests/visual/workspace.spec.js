@@ -41,11 +41,16 @@ async function assertMinimumTouchTargets(page, selector) {
       return style.display !== "none" && style.visibility !== "hidden" && bounds.width > 0 && bounds.height > 0;
     }).map((element) => {
       const bounds = element.getBoundingClientRect();
-      return { height: bounds.height, width: bounds.width };
+      return {
+        height: bounds.height,
+        width: bounds.width,
+        target: element.getAttribute("aria-label") || element.textContent?.trim() || element.id || element.tagName,
+      };
     }),
   );
   expect(targets.length).toBeGreaterThan(0);
-  expect(targets.every(({ height, width }) => height >= 44 && width >= 44)).toBe(true);
+  const undersized = targets.filter(({ height, width }) => height < 44 || width < 44);
+  expect(undersized, `Undersized touch targets: ${JSON.stringify(undersized)}`).toEqual([]);
 }
 
 async function capture(page, testInfo, name, fullPage = true) {
@@ -575,6 +580,7 @@ test("authentication dialogs can be opened from direct showcase links", async ({
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/examples/workspace-reference/core-components.html?dialog=authentication#authentication");
   await expect(page.getByRole("dialog", { name: "登录后保存筛选视图" })).toBeVisible();
+  await assertMinimumTouchTargets(page, "[data-auth-dialog] input, [data-auth-dialog] button");
   await expect(page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).resolves.toBe(true);
 });
 

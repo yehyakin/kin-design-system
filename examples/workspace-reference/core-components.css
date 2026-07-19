@@ -282,6 +282,9 @@
   .overlay-triggers > button, .overlay-triggers .popover-anchor > button { min-height: 44px; }
   .sample-menu button, .sample-popover button, .core-drawer button { min-height: 44px; }
   .core-drawer .icon-only-control { width: 44px; min-width: 44px; }
+  .core-dialog button, .core-dialog .core-field input { min-height: 45px; }
+  .core-dialog button { min-width: 45px; }
+  .core-dialog .icon-only-control { width: 45px; min-width: 45px; }
   .sample-popover { right: 0; left: auto; }
   .truncation-heading { align-items: flex-start; flex-direction: column; gap: 2px; }
   .truncation-sample, .truncation-sample[dir="rtl"] { grid-template-columns: minmax(0, 1fr) auto; }
