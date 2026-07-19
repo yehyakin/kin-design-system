@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en" data-theme="dark" data-contrast="normal">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark light">
+  <meta name="theme-color" content="#111315">
+  <meta name="description" content="Inspect KIN scenarios across deterministic states, viewports, and theme modes.">
+  <meta property="og:title" content="Scenario Inspection Lab - KIN Design System">
+  <meta property="og:description" content="Checked local state, viewport, and theme inspection for 16 KIN scenarios.">
+  <meta property="og:type" content="website">
+  <link rel="canonical" href="https://yehyakin.github.io/kin-design-system/scenarios/lab.html">
+  <title>Scenario Inspection Lab - KIN Design System</title>
+  <link rel="icon" href="../assets/mark.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../assets/site.css">
+</head>
+<body class="scenario-lab-page">
+  <a class="skip-link" href="#main">Skip to scenario inspection</a>
+
+  <header class="lab-topbar">
+    <a class="lab-brand" href="./" aria-label="Back to the Scenario Atlas">
+      <img src="../assets/mark.svg" alt="" width="22" height="22">
+      <span><strong>KIN</strong><small>Scenario Atlas</small></span>
+    </a>
+    <div class="lab-topbar-end">
+      <span class="lab-phase">Phase 3 inspection</span>
+      <a class="lab-back" href="./"><span aria-hidden="true">&larr;</span> All scenarios</a>
+    </div>
+  </header>
+
+  <main id="main" class="lab-shell" data-scenario-lab data-load-state="loading">
+    <aside class="lab-controls" aria-labelledby="lab-controls-title">
+      <header class="lab-controls-heading">
+        <p class="eyebrow">Inspection controls</p>
+        <h1 id="lab-controls-title">Review the reference in context.</h1>
+        <p>Only deterministic states implemented by the linked reference appear here.</p>
+      </header>
+
+      <div class="lab-field">
+        <label for="lab-scenario">Scenario</label>
+        <select id="lab-scenario" data-lab-scenario aria-describedby="lab-scenario-help"></select>
+        <p id="lab-scenario-help" class="lab-field-help">Sixteen checked scenarios: six P0 pilots, five stable shared workflows, and five product-family P1 scenarios.</p>
+      </div>
+
+      <div class="lab-field">
+        <div class="lab-label-row">
+          <label for="lab-state">Reference state</label>
+          <span data-lab-state-count></span>
+        </div>
+        <select id="lab-state" data-lab-state></select>
+      </div>
+
+      <fieldset class="lab-field">
+        <legend>Viewport</legend>
+        <div class="lab-segmented" data-lab-viewport-group>
+          <button type="button" data-lab-viewport="wide" aria-pressed="false"><span>Wide</span><small>1180 &times; 760</small></button>
+          <button type="button" data-lab-viewport="narrow" aria-pressed="false"><span>Narrow</span><small>390 &times; 844</small></button>
+        </div>
+      </fieldset>
+
+      <fieldset class="lab-field">
+        <legend>Appearance</legend>
+        <div class="lab-theme-grid" data-lab-theme-group>
+          <button type="button" data-lab-theme="light" aria-pressed="false"><span class="lab-theme-swatch is-light" aria-hidden="true"></span><span>Light</span></button>
+          <button type="button" data-lab-theme="dark" aria-pressed="false"><span class="lab-theme-swatch is-dark" aria-hidden="true"></span><span>Dark</span></button>
+          <button type="button" data-lab-theme="light-high-contrast" aria-pressed="false"><span class="lab-theme-swatch is-light is-contrast" aria-hidden="true"></span><span>Light HC</span></button>
+          <button type="button" data-lab-theme="dark-high-contrast" aria-pressed="false"><span class="lab-theme-swatch is-dark is-contrast" aria-hidden="true"></span><span>Dark HC</span></button>
+        </div>
+      </fieldset>
+
+      <section class="lab-brief" aria-labelledby="lab-brief-title">
+        <div class="lab-brief-heading">
+          <div>
+            <p class="eyebrow" data-lab-scenario-id>Scenario</p>
+            <h2 id="lab-brief-title" data-lab-scenario-title>Loading catalog...</h2>
+          </div>
+          <span class="source-status" data-lab-source-maturity></span>
+        </div>
+        <dl class="lab-brief-list">
+          <div><dt>User job</dt><dd data-lab-user-job></dd></div>
+          <div><dt>Entry</dt><dd data-lab-entry></dd></div>
+          <div><dt>Completion</dt><dd data-lab-completion></dd></div>
+          <div><dt>Persistent context</dt><dd data-lab-context></dd></div>
+        </dl>
+        <div class="lab-gaps">
+          <h3>Known gaps</h3>
+          <ul data-lab-gaps></ul>
+        </div>
+        <p class="lab-motion-note">Motion follows the reference and the user's reduced-motion preference; this phase does not claim a separate motion fixture.</p>
+          <a class="lab-direct-link" data-lab-direct-link href="./" target="_blank" rel="noopener" hidden>Open this state directly <span aria-hidden="true">&nearr;</span></a>
+      </section>
+    </aside>
+
+    <section class="lab-preview" aria-labelledby="lab-preview-title">
+      <header class="lab-preview-bar">
+        <div>
+          <p class="eyebrow" data-lab-preview-kicker>Loading scenario</p>
+          <h2 id="lab-preview-title" data-lab-preview-title>Preparing reference...</h2>
+        </div>
+        <div class="lab-readouts" aria-label="Resolved inspection settings">
+          <span data-lab-viewport-readout>Viewport</span>
+          <span data-lab-theme-readout>Theme</span>
+          <span class="lab-verification" data-lab-verification data-state="loading" role="status" aria-live="polite">Checking fixture</span>
+        </div>
+      </header>
+
+      <div class="lab-stage" data-lab-stage tabindex="0" aria-label="Scrollable scenario preview">
+        <div class="lab-frame-shell" data-lab-frame-shell>
+          <div class="lab-frame-label" aria-hidden="true"><span data-lab-frame-size></span><span>Local deterministic reference</span></div>
+          <iframe data-lab-frame title="Scenario reference" loading="eager"></iframe>
+        </div>
+      </div>
+
+      <div class="lab-error" data-lab-error hidden role="alert">
+        <strong>The inspection lab could not load.</strong>
+        <p data-lab-error-message>Check the local site build and try again.</p>
+        <a href="./">Return to the Scenario Atlas</a>
+      </div>
+      <noscript><p class="lab-error">JavaScript is required to resolve catalog fixtures and verify their state.</p></noscript>
+    </section>
+  </main>
+
+  <script type="module" src="../assets/scenario-lab.js"></script>
+</body>
+</html>

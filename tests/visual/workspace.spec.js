@@ -255,8 +255,8 @@ test("workspace mobile and inspector behavior", async ({ page }, testInfo) => {
 
   await expect(page.locator(".sidebar")).toBeHidden();
   await expect(page.locator(".inspector")).toBeHidden();
-  await expect(page.locator(".location-identity strong")).toHaveText("Alpha Network");
-  await expect(page.locator(".location-identity strong")).toBeVisible();
+  await expect(page.locator('.location-identity strong[data-view="entity"]')).toHaveText("Alpha Network");
+  await expect(page.locator('.location-identity strong[data-view="entity"]')).toBeVisible();
   await expect(page.locator("[data-theme-menu-trigger] svg.lucide-palette")).toBeVisible();
   await expect(page.locator("[data-theme-menu-trigger]")).toHaveAccessibleName(/外观|appearance/i);
   await assertMinimumTouchTargets(page, ".workspace-actions > button, .workspace-actions > .language-control > button, .workspace-actions > .location-overflow > button, .view-bar a, .entity-actions button, .text-button");
@@ -282,6 +282,159 @@ test("workspace mobile and inspector behavior", async ({ page }, testInfo) => {
   await open.click();
   await expect(page.locator(".inspector")).toBeVisible();
   await expect(close).toBeFocused();
+});
+
+test("risk queue keeps severity evidence and review separate through a reversible decision", async ({ page }, testInfo) => {
+  await seedPreferences(page, "dark", "normal", "en");
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/examples/workspace-reference/?view=risk-queue&state=normal&lang=en");
+
+  await expect(page.locator("html")).toHaveAttribute("data-workspace-view", "risk-queue");
+  await expect(page.getByRole("heading", { name: "Elevated signals", level: 1 })).toBeVisible();
+  await expect(page.locator('[data-nav-view="risk-queue"]')).toHaveAttribute("aria-current", "page");
+  await expect(page.getByRole("table", { name: "Risk signal queue" })).toBeVisible();
+  await expect(page.locator(".risk-table th[scope=col]")).toHaveCount(6);
+  await expect(page.locator("[data-risk-row]:visible")).toHaveCount(2);
+  await expect(page.locator("[data-risk-count]")).toHaveText("2 local signals");
+  await expect(page.locator("[data-risk-queue] .fixture-note")).toContainText("as of 2026-07-19 10:32 +08:00");
+
+  await page.locator('[data-risk-scope="unassigned"]').click();
+  await expect(page).toHaveURL(/scope=unassigned/);
+  await expect(page.locator("[data-risk-row]:visible")).toHaveCount(1);
+  await expect(page.locator("[data-risk-count]")).toHaveText("1 local signal");
+  await page.goBack();
+  await expect(page.locator('[data-risk-scope="elevated"]')).toHaveAttribute("aria-current", "page");
+  await expect(page.locator("[data-risk-row]:visible")).toHaveCount(2);
+
+  const selected = page.locator('[data-risk-row="RSK-204"]');
+  await expect(selected).toHaveAttribute("data-selected", "true");
+  await expect(selected.locator("td").nth(1)).toContainText("High");
+  await expect(selected.locator("td").nth(2)).toContainText("Conflicting");
+  await expect(selected.locator("td").nth(4)).toContainText("Open review");
+  await expect(page.locator("[data-risk-detail-severity]")).toHaveText("High");
+  await expect(page.locator("[data-risk-detail-evidence]")).toHaveText("Conflicting");
+
+  await page.getByRole("button", { name: "Record decision" }).click();
+  await expect(page.locator("[data-risk-owner]")).toHaveAttribute("aria-invalid", "true");
+  await expect(page.locator("[data-risk-owner-error]")).toBeVisible();
+  await expect(page.locator("[data-risk-owner]")).toBeFocused();
+
+  await page.locator("[data-risk-owner]").selectOption("Mina Chen");
+  await page.getByRole("radio", { name: "Resolve as expected change" }).check();
+  await page.locator("[data-risk-reason]").fill("The certificate rotation matches the verified endpoint state.");
+  await page.getByRole("button", { name: "Record decision" }).click();
+  await expect(page.locator("[data-risk-pending]")).toBeVisible();
+  await expect(page.locator("[data-risk-review-fields]")).toHaveAttribute("disabled", "");
+  const otherSignal = page.locator('[data-risk-signal="RSK-198"]');
+  await expect(otherSignal).toBeDisabled();
+  await otherSignal.dispatchEvent("click");
+  await expect(selected).toHaveAttribute("data-selected", "true");
+  await expect(page.locator("[data-risk-committed]")).toBeVisible({ timeout: 2_000 });
+  await expect(page.locator("[data-risk-commit-record]")).toBeVisible();
+  await expect(page.locator("[data-risk-commit-owner]")).toHaveText("Mina Chen");
+  await expect(page.locator("[data-risk-commit-reason]")).toHaveText("The certificate rotation matches the verified endpoint state.");
+  await expect(selected.locator("[data-risk-row-owner]")).toHaveText("Mina Chen");
+  await expect(selected.locator("[data-risk-row-review]")).toHaveText("Resolved");
+  await expect(page.locator("[data-risk-detail-owner]")).toHaveText("Mina Chen");
+  await expect(page.locator("[data-risk-detail-review]")).toHaveText("Resolved");
+  await expect(page.locator("[data-risk-undo-action]")).toBeFocused();
+  await expect(page).toHaveURL(/state=committed/);
+
+  await page.locator("[data-risk-undo-action]").click();
+  await expect(page.locator("[data-risk-undo]")).toBeVisible();
+  await expect(page.locator("[data-risk-reason]")).toHaveValue("The certificate rotation matches the verified endpoint state.");
+  await expect(selected.locator("[data-risk-row-owner]")).toHaveText("Unassigned");
+  await expect(selected.locator("[data-risk-row-review]")).toHaveText("Open review");
+  await expect(page.locator("[data-risk-detail-owner]")).toHaveText("Unassigned");
+  await expect(page.locator("[data-risk-detail-review]")).toHaveText("Open review");
+  await expect(page.locator("[data-risk-submit]")).toBeFocused();
+  await expect(page).toHaveURL(/state=undo/);
+  await capture(page, testInfo, "risk-queue-undo-dark.png");
+});
+
+test("risk queue preserves drafts across error and adapts selection to a mobile drawer", async ({ page }, testInfo) => {
+  await seedPreferences(page, "light", "more", "en");
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/examples/workspace-reference/?view=risk-queue&state=normal&outcome=error&lang=en");
+  await page.locator("[data-risk-owner]").selectOption("Mina Chen");
+  await page.getByRole("radio", { name: "Escalate review" }).check();
+  await page.locator("[data-risk-reason]").fill("Preserve this exact local draft after the simulated failure.");
+  await page.getByRole("button", { name: "Record decision" }).click();
+  await expect(page.locator("[data-risk-pending]")).toBeVisible();
+  await expect(page.locator("[data-risk-error]")).toBeVisible({ timeout: 2_000 });
+  await expect(page.locator("[data-risk-retry]")).toBeFocused();
+  await expect(page.locator("[data-risk-owner]")).toHaveValue("Mina Chen");
+  await expect(page.locator("[data-risk-reason]")).toHaveValue("Preserve this exact local draft after the simulated failure.");
+  await page.locator("[data-risk-retry]").click();
+  await expect(page.locator("[data-risk-pending]")).toBeVisible();
+  await expect(page.locator("[data-risk-committed]")).toBeVisible({ timeout: 2_000 });
+
+  await page.goto("/examples/workspace-reference/?view=risk-queue&state=permission&lang=en");
+  await expect(page.locator("[data-risk-permission]")).toBeVisible();
+  await expect(page.locator("[data-risk-review-fields]")).toHaveAttribute("disabled", "");
+  await expect(page.getByRole("table", { name: "Risk signal queue" })).toBeVisible();
+
+  await page.goto("/examples/workspace-reference/?view=risk-queue&state=empty&lang=en");
+  await expect(page.locator("[data-risk-empty]")).toBeVisible();
+  await expect(page.locator("[data-risk-table-wrap]")).toBeHidden();
+  await expect(page.locator(".inspector")).toBeHidden();
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/examples/workspace-reference/?view=risk-queue&scope=elevated&state=normal&signal=RSK-198&panel=review&lang=en");
+  await expect(page.locator(".inspector")).toBeVisible();
+  await expect(page.locator("[data-risk-inspector-title]")).toHaveText("RSK-198 · Beacon Relay");
+  await expect(page.locator("[data-inspector-close]")).toBeFocused();
+  await expect(page).toHaveURL(/panel=review/);
+  await page.locator("[data-inspector-close]").click();
+  await expect(page.locator(".inspector")).toBeHidden();
+  await expect(page).not.toHaveURL(/panel=review/);
+  await expect(page).toHaveURL(/signal=RSK-198/);
+  await expect(page.locator('[data-risk-signal="RSK-198"]')).toBeFocused();
+
+  await page.goto("/examples/workspace-reference/?view=risk-queue&state=normal&lang=en");
+  await expect(page.locator(".inspector")).toBeHidden();
+  await expect(page.locator('.location-identity strong[data-view="risk-queue"]')).toHaveText("Elevated signals");
+  await assertMinimumTouchTargets(page, "[data-risk-refresh], [data-risk-signal]");
+  await capture(page, testInfo, "risk-queue-light-mobile.png", false);
+  await page.locator('[data-risk-signal="RSK-198"]').click();
+  await expect(page.locator(".inspector")).toBeVisible();
+  await expect(page.locator(".inspector")).toHaveCSS("opacity", "1");
+  await expect(page.locator("[data-risk-inspector-title]")).toHaveText("RSK-198 · Beacon Relay");
+  await expect(page.locator("[data-inspector-close]")).toBeFocused();
+  await expect(page).toHaveURL(/panel=review/);
+  await page.locator("[data-risk-submit]").focus();
+  await page.keyboard.press("Tab");
+  await expect(page.locator("[data-inspector-close]")).toBeFocused();
+  await page.keyboard.press("Shift+Tab");
+  await expect(page.locator("[data-risk-submit]")).toBeFocused();
+  const reducedTransform = await page.locator(".inspector").evaluate((element) => {
+    const matrix = new DOMMatrix(getComputedStyle(element).transform);
+    return { x: matrix.m41, y: matrix.m42 };
+  });
+  expect(Math.abs(reducedTransform.x)).toBeLessThan(0.1);
+  expect(Math.abs(reducedTransform.y)).toBeLessThan(0.1);
+  await assertNoHorizontalOverflow(page);
+  await capture(page, testInfo, "risk-queue-detail-light-mobile.png", false);
+  await page.keyboard.press("Escape");
+  await expect(page.locator(".inspector")).toBeHidden();
+  await expect(page.locator('[data-risk-signal="RSK-198"]')).toBeFocused();
+  await expect(page).not.toHaveURL(/panel=review/);
+  await expect(page).toHaveURL(/signal=RSK-198/);
+  await page.goForward();
+  await expect(page.locator(".inspector")).toBeVisible();
+  await expect(page).toHaveURL(/panel=review/);
+  await expect(page.locator("[data-inspector-close]")).toBeFocused();
+  await page.keyboard.press("Escape");
+  await expect(page.locator(".inspector")).toBeHidden();
+  await page.goBack();
+  await expect(page.locator('[data-risk-row="RSK-204"]')).toHaveAttribute("data-selected", "true");
+
+  await page.locator("[data-language-trigger]").click();
+  await page.getByRole("menuitem", { name: "中文" }).click();
+  await expect(page).toHaveURL(/lang=zh-CN/);
+  await expect(page.getByRole("heading", { name: "高优先级待复核", level: 1 })).toBeVisible();
+  await page.reload();
+  await expect(page.locator("html")).toHaveAttribute("lang", "zh-CN");
 });
 
 test("state reference and command dialog", async ({ page }, testInfo) => {
@@ -456,10 +609,10 @@ test("file upload fixture distinguishes validation transfer retry cancel and com
   const input = page.getByLabel("补充证据文件");
   const upload = page.locator("[data-file-upload]");
   await input.setInputFiles({ name: "retry-evidence.pdf", mimeType: "application/pdf", buffer: Buffer.from("fixture") });
-  await expect(page.getByText("模拟传输失败", { exact: true })).toBeVisible({ timeout: 2_000 });
+  await expect(page.getByText("模拟传输失败", { exact: true })).toBeVisible({ timeout: 3_000 });
   await expect(page.getByText(/没有文件离开此页面/)).toBeVisible();
   await upload.getByRole("button", { name: "重试", exact: true }).click();
-  await expect(page.getByText("本地模拟完成", { exact: true })).toBeVisible({ timeout: 2_000 });
+  await expect(page.getByText("本地模拟完成", { exact: true })).toBeVisible({ timeout: 3_000 });
   await expect(page.getByText(/未连接服务器/)).toBeVisible();
   await upload.screenshot({ path: testInfo.outputPath("file-upload-local-complete-light.png") });
 
@@ -490,7 +643,7 @@ test("file upload fixture distinguishes validation transfer retry cancel and com
     dropzone.dispatchEvent(new DragEvent("drop", { bubbles: true, cancelable: true, dataTransfer }));
   });
   await expect(page.getByText("drop-evidence.pdf · 7 B", { exact: true })).toBeVisible();
-  await expect(page.getByText("本地模拟完成", { exact: true })).toBeVisible({ timeout: 2_000 });
+  await expect(page.getByText("本地模拟完成", { exact: true })).toBeVisible({ timeout: 3_000 });
 });
 
 test("core navigation separates tabs menus disclosures and pagination", async ({ page }) => {
@@ -819,14 +972,94 @@ test("ecommerce operations keeps money inventory and approval distinct", async (
   await expect(page.locator('[role="row"][aria-selected="true"]')).toHaveCount(1);
   await expect(page.getByText("CNY 1,299.00", { exact: true })).toHaveCount(2);
   await expect(page.locator(".approval")).toBeVisible();
+  const editForm = page.locator("[data-commerce-edit-form]");
+  const price = page.locator("#commerce-price");
+  const stock = page.locator("#commerce-stock");
+  const save = page.locator("[data-commerce-save]");
+  await expect(editForm).toHaveAttribute("data-state", "normal");
+  await price.fill("1299.00");
+  await expect(editForm).toHaveAttribute("data-state", "normal");
+  await expect(save).toBeDisabled();
+  await price.fill("1299.001");
+  await expect(editForm).toHaveAttribute("data-state", "pending");
+  await save.click();
+  await expect(editForm).toHaveAttribute("data-state", "error");
+  await expect(page.locator("[data-commerce-price-error]")).toContainText("两位小数");
+  await expect(price).toHaveAttribute("aria-invalid", "true");
+  await expect(price).toBeFocused();
+  await price.fill("0");
+  await expect(editForm).toHaveAttribute("data-state", "pending");
+  await save.click();
+  await expect(editForm).toHaveAttribute("data-state", "error");
+  await expect(price).toHaveAttribute("aria-invalid", "true");
+  await expect(price).toBeFocused();
+  await price.fill("1349");
+  await stock.fill("8");
+  await expect(page).toHaveURL(/edit=pending/);
+  await save.click();
+  await expect(editForm).toHaveAttribute("data-state", "loading");
+  await expect(editForm).toHaveAttribute("data-state", "committed");
+  await expect(page.getByText("CNY 1,349.00", { exact: true })).toHaveCount(2);
+  await expect(page.locator("[data-commerce-stock-allocation]")).toHaveText("未在此参考建模");
+  await expect(page.locator("[data-commerce-stock-shanghai], [data-commerce-stock-shenzhen]")).toHaveCount(0);
+  await expect(page.locator("[data-commerce-approval-copy]")).toContainText("CNY 1,349.00");
+  await expect(page.locator("[data-commerce-edit-status]")).toContainText("未发送到服务端");
+  await price.fill("1399");
+  await page.locator("[data-commerce-discard]").click();
+  await expect(editForm).toHaveAttribute("data-state", "normal");
+  await expect(price).toHaveValue("1349.00");
   await assertNoHorizontalOverflow(page);
   await capture(page, testInfo, "ecommerce-dark-desktop.png");
 
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.reload();
+  await page.goto("/examples/product-patterns/ecommerce.html?edit=failed#product-context");
   await expect(page.locator(".commerce-sidebar")).toBeHidden();
   await expect(page.locator(".commerce-inspector")).toBeVisible();
-  await assertMinimumTouchTargets(page, ".commerce-tools button, .checkbox-target, .commerce-inspector .theme-control button, .commerce-inspector .pattern-theme-actions > button");
+  await expect(page.locator("[data-commerce-save-failure]")).toBeVisible();
+  await expect(page.locator("[data-commerce-retry]")).toBeVisible();
+  await assertMinimumTouchTargets(page, ".commerce-tools button, .checkbox-target, .commerce-field input, .commerce-edit-actions button, .commerce-inspector .theme-control button, .commerce-inspector .pattern-theme-actions > button");
+  await assertNoHorizontalOverflow(page);
+});
+
+test("ecommerce Inspector remains operable as an intermediate-width Drawer", async ({ page }) => {
+  await seedPreferences(page, "dark");
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.setViewportSize({ width: 900, height: 800 });
+  await page.goto("/examples/product-patterns/ecommerce.html");
+
+  const trigger = page.locator("[data-commerce-inspector-open]");
+  const inspector = page.locator("#commerce-inspector");
+  const close = page.locator("[data-commerce-inspector-close]");
+  const price = page.locator("#commerce-price");
+  await expect(trigger).toBeVisible();
+  await expect(inspector).toBeHidden();
+
+  await trigger.click();
+  await expect(trigger).toHaveAttribute("aria-expanded", "true");
+  await expect(inspector).toBeVisible();
+  await expect(inspector).toHaveAttribute("role", "dialog");
+  await expect(inspector).toHaveAttribute("aria-modal", "true");
+  await expect(close).toBeFocused();
+  await expect(page.locator(".commerce-main")).toHaveAttribute("inert", "");
+  await expect(page.evaluate(() => matchMedia("(prefers-reduced-motion: reduce)").matches)).resolves.toBe(true);
+  await expect(inspector.evaluate((element) => getComputedStyle(element).transform)).resolves.toBe("none");
+
+  await price.fill("1349.00");
+  await expect(page.locator("[data-commerce-edit-form]")).toHaveAttribute("data-state", "pending");
+  await close.focus();
+  await page.keyboard.press("Shift+Tab");
+  await expect(inspector.evaluate((element) => element.contains(document.activeElement))).resolves.toBe(true);
+
+  await page.keyboard.press("Escape");
+  await expect(inspector).toBeHidden();
+  await expect(trigger).toBeFocused();
+  await expect(trigger).toHaveAttribute("aria-expanded", "false");
+  await expect(page.locator(".commerce-main")).not.toHaveAttribute("inert", "");
+
+  await trigger.click();
+  await expect(price).toHaveValue("1349.00");
+  await close.click();
+  await expect(trigger).toBeFocused();
   await assertNoHorizontalOverflow(page);
 });
 

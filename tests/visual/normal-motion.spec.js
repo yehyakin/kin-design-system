@@ -284,3 +284,31 @@ test("normal motion coordinates Sidebar collapse and reversible Context Sidecar 
   await expect(scrim).toHaveCSS("opacity", "1");
   await expect(sidecar).toBeVisible();
 });
+
+test("normal motion keeps the commerce Inspector edge path reversible", async ({ page }) => {
+  await page.addInitScript(() => localStorage.setItem("kin-reference-theme", "dark"));
+  await page.setViewportSize({ width: 900, height: 800 });
+  await page.goto("/examples/product-patterns/ecommerce.html");
+
+  const trigger = page.locator("[data-commerce-inspector-open]");
+  const inspector = page.locator("#commerce-inspector");
+  const close = page.locator("[data-commerce-inspector-close]");
+  await trigger.click();
+  await expect(inspector).toHaveAttribute("data-state", "open");
+  const transitionProperties = await inspector.evaluate((element) => getComputedStyle(element).transitionProperty.split(",").map((value) => value.trim()));
+  expect(transitionProperties).toContain("transform");
+  expect(transitionProperties).toContain("opacity");
+
+  await close.click();
+  await expect(inspector).toHaveAttribute("data-state", "closing");
+  await trigger.click();
+  await expect(inspector).toHaveAttribute("data-state", /opening|open/);
+  await page.waitForTimeout(260);
+  await expect(inspector).toHaveAttribute("data-state", "open");
+  await expect(inspector).toBeVisible();
+  await expect(trigger).toHaveAttribute("aria-expanded", "true");
+
+  await page.keyboard.press("Escape");
+  await expect(trigger).toBeFocused();
+  await expect(inspector).toBeHidden();
+});

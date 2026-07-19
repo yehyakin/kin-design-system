@@ -8,6 +8,7 @@ const output = path.join(root, ".site-dist");
 const sources = [
   ["site", "."],
   ["examples", "examples"],
+  ["scenarios", "scenarios"],
   ["tokens", "tokens"],
 ];
 
@@ -27,7 +28,10 @@ fs.copyFileSync(
 );
 
 await build({
-  entryPoints: [path.join(root, "site", "assets", "site.js")],
+  entryPoints: [
+    path.join(root, "site", "assets", "site.js"),
+    path.join(root, "site", "assets", "scenario-lab.js"),
+  ],
   outdir: path.join(output, "assets"),
   bundle: true,
   splitting: true,

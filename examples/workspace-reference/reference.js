@@ -54,6 +54,39 @@ const languageMenu = document.querySelector("[data-language-menu]");
 const localeButtons = [...document.querySelectorAll("[data-locale-value]")];
 const overlayLayout = matchMedia("(max-width: 1180px)");
 const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+const workspaceView = root.dataset.workspaceView === "risk-queue" ? "risk-queue" : "entity";
+const riskQueue = document.querySelector("[data-risk-queue]");
+const riskTableWrap = document.querySelector("[data-risk-table-wrap]");
+const riskCount = document.querySelector("[data-risk-count]");
+const riskRows = [...document.querySelectorAll("[data-risk-row]")];
+const riskSignalButtons = [...document.querySelectorAll("[data-risk-signal]")];
+const riskInspectorTitle = document.querySelector("[data-risk-inspector-title]");
+const riskDetailSeverity = document.querySelector("[data-risk-detail-severity]");
+const riskDetailEvidence = document.querySelector("[data-risk-detail-evidence]");
+const riskDetailOwner = document.querySelector("[data-risk-detail-owner]");
+const riskDetailReview = document.querySelector("[data-risk-detail-review]");
+const riskDetailSummary = document.querySelector("[data-risk-detail-summary]");
+const riskEvidenceSources = [...document.querySelectorAll("[data-risk-evidence-source]")];
+const riskEvidenceResults = [...document.querySelectorAll("[data-risk-evidence-result]")];
+const riskReviewForm = document.querySelector("[data-risk-review-form]");
+const riskReviewFields = document.querySelector("[data-risk-review-fields]");
+const riskOwner = document.querySelector("[data-risk-owner]");
+const riskReason = document.querySelector("[data-risk-reason]");
+const riskSubmit = document.querySelector("[data-risk-submit]");
+const riskCommitRecord = document.querySelector("[data-risk-commit-record]");
+const riskCommitOwner = document.querySelector("[data-risk-commit-owner]");
+const riskCommitDecision = document.querySelector("[data-risk-commit-decision]");
+const riskCommitReason = document.querySelector("[data-risk-commit-reason]");
+const riskUndoAction = document.querySelector("[data-risk-undo-action]");
+const riskRetry = document.querySelector("[data-risk-retry]");
+const riskRefresh = document.querySelector("[data-risk-refresh]");
+const riskOwnerError = document.querySelector("[data-risk-owner-error]");
+const riskReasonError = document.querySelector("[data-risk-reason-error]");
+const riskQueueTitle = document.querySelector("[data-risk-queue] h1");
+const riskLocationTitle = document.querySelector('.location-identity strong[data-view="risk-queue"]');
+const riskScopeValue = document.querySelector('[data-risk-queue] [data-i18n="riskScopeValue"]');
+const riskStatePanels = [...document.querySelectorAll("[data-risk-state-panel]")];
+const riskScopeLinks = [...document.querySelectorAll("[data-risk-scope]")];
 let sonnerModulePromise;
 const transientSurfaceCleanups = new WeakMap();
 
@@ -136,6 +169,17 @@ const copy = {
     savedTitle: "视图已保存", savedDescription: "筛选条件和列顺序已保存。",
     exportLoading: "正在创建导出任务", exportSuccess: "导出任务已创建", exportDescription: "任务完成后可在下载中心查看。",
     errorTitle: "请求失败", errorToastDescription: "监测服务暂时没有响应。", retry: "重试", retryQueued: "已重新提交请求",
+    riskSavedView: "高优先级待复核", riskReview: "审核", riskQueueViews: "风险队列视图", riskScopeElevated: "高优先级", riskScopeUnassigned: "未指派", riskScopeConflicting: "证据冲突", riskScopeResolved: "已解决",
+    riskSavedViewLabel: "保存视图 · 过去 24 小时", riskQueueTitle: "高优先级待复核", riskQueueDescription: "先核对严重度与证据状态，再指派负责人或记录可撤销结论。", riskRefresh: "刷新本地范围", riskFixtureNote: "确定性本地参考，基准时间为 2026-07-19 10:32 +08:00；相对时间均以该时刻计算。未连接实时监测、权限服务或持久化存储。",
+    riskScopeSummary: "保存范围摘要", riskScopeLabel: "范围", riskScopeValue: "高或严重 · 未解决", riskSortLabel: "排序", riskSortValue: "严重度 → 观察时间", riskCoverageLabel: "证据要求", riskCoverageValue: "至少 2 个可归因来源",
+    riskLoadingTitle: "正在刷新保存范围", riskLoadingBody: "保留当前队列与选择，等待本地 fixture 完成。", riskConflictTitle: "证据存在冲突", riskConflictBody: "两个来源对证书变更是否预期给出不同结论，需记录人工判断。", riskPendingTitle: "正在记录审核决定", riskPendingBody: "本地 fixture 暂时锁定控件，队列范围与草稿保持不变。",
+    riskCommittedTitle: "审核决定已记录", riskCommittedBody: "该决定仍可撤销；风险等级本身未被自动改写。", riskUndoTitle: "审核决定已撤销", riskUndoBody: "信号回到待复核状态，原理由保留在本地草稿中。", riskPermissionTitle: "仅可查看", riskPermissionBody: "当前 fixture 模拟缺少审核权限；队列与证据仍可读取。", riskErrorTitle: "审核记录失败", riskErrorBody: "本地草稿、负责人和理由均已保留，可以重试。",
+    riskTableTitle: "信号队列", riskTableDescription: "严重度、证据状态和审核状态分别显示，不合并为单一分数。", riskCount: "4 个本地信号", riskCountEmpty: "0 个本地信号", riskEmptyTitle: "当前范围没有待复核信号", riskEmptyBody: "可以切换保存视图；本地 fixture 不会自动扩大范围。", riskTableLabel: "风险信号队列",
+    riskColumnSignal: "信号", riskColumnSeverity: "严重度", riskColumnEvidence: "证据状态", riskColumnOwner: "负责人", riskColumnReview: "审核状态", riskColumnObserved: "观察时间",
+    riskSignal204: "证书签发者发生变化", riskSignal198: "公开频道入口不可用", riskSignal191: "新增关联域名待核验", riskSignal184: "节点延迟已恢复", riskSeverityCritical: "严重", riskSeverityHigh: "高", riskSeverityMedium: "中", riskSeverityLow: "低", riskEvidenceConflict: "冲突", riskEvidenceConfirmed: "已确认", riskEvidencePending: "待核验", riskUnassigned: "未指派", riskReviewOpen: "待复核", riskReviewActive: "审核中", riskReviewEvidence: "等待证据", riskReviewResolved: "已解决", riskObservedEight: "8 分钟前", riskObservedFortyOne: "41 分钟前", riskObservedTwoHours: "2 小时前", riskObservedThreeHours: "3 小时前",
+    riskSelectedSignal: "选中信号", riskSignalContext: "信号上下文", riskEvidenceRows: "可归因证据", riskReviewDecision: "审核决定", riskOwnerLabel: "负责人", riskChooseOwner: "选择负责人", riskDecisionLabel: "决定", riskDecisionWatch: "保持观察", riskDecisionEscalate: "升级复核", riskDecisionResolve: "按预期变更解决", riskReasonLabel: "记录理由", riskReasonPlaceholder: "说明证据如何支持该决定", riskRecordDecision: "记录决定", riskRecordingDecision: "正在记录", riskRecordedTitle: "已记录的决定", riskRecordedAt: "记录时间", riskReviewSignal: "审核选中信号",
+    riskSummary204: "证书观察记录到新签发者；公开入口扫描未发现主机变化。", riskSummary198: "公开频道入口连续两次不可用；独立检查得到相同结果。", riskSummary191: "发现新关联域名，但第二来源与所有权记录仍待核验。", riskSummary184: "节点延迟恢复并由独立检查确认；该信号已有解决记录。",
+    riskEvidencePrimary: "主要来源", riskEvidenceIndependent: "独立监测", riskEvidenceReview: "审核记录", riskResultObserved: "变更已观察", riskResultBaseline: "基线未变化", riskResultMissing: "没有对应说明", riskResultFailureConfirmed: "故障已确认", riskResultCheckAgrees: "独立检查一致", riskResultReviewAvailable: "已有审核记录", riskResultRelationObserved: "关联已观察", riskResultCheckPending: "独立检查待完成", riskResultDecisionOpen: "尚未记录决定", riskResultRecoveryConfirmed: "恢复已确认", riskResultResolutionRecorded: "已记录解决结论", riskDraftReason: "证书轮换与已核对的入口状态一致。", riskDraftPreserved: "草稿已保留", riskCountTemplate: "{count} 个本地信号", riskCountOne: "1 个本地信号", riskOwnerError: "记录决定前请选择负责人。", riskReasonError: "请记录证据如何支持该决定。", riskScopeValueElevated: "高或严重 · 未解决", riskScopeValueUnassigned: "未指派 · 未解决", riskScopeValueConflicting: "证据冲突 · 待判断", riskScopeValueResolved: "已记录解决结论",
   },
   en: {
     skip: "Skip to main content", primaryNav: "Primary navigation", workspaceNav: "Workspace", overview: "Overview",
@@ -171,8 +215,93 @@ const copy = {
     savedTitle: "View saved", savedDescription: "Filters and column order have been saved.",
     exportLoading: "Creating export task", exportSuccess: "Export task created", exportDescription: "The result will appear in Downloads when ready.",
     errorTitle: "Request failed", errorToastDescription: "The monitoring service did not respond.", retry: "Retry", retryQueued: "Request submitted again",
+    riskSavedView: "Elevated signals", riskReview: "Review", riskQueueViews: "Risk queue views", riskScopeElevated: "Elevated", riskScopeUnassigned: "Unassigned", riskScopeConflicting: "Conflicting evidence", riskScopeResolved: "Resolved",
+    riskSavedViewLabel: "Saved view · Last 24 hours", riskQueueTitle: "Elevated signals", riskQueueDescription: "Check severity and evidence state before assigning an owner or recording a reversible decision.", riskRefresh: "Refresh local scope", riskFixtureNote: "Deterministic local reference as of 2026-07-19 10:32 +08:00; relative times are anchored to that instant. No live monitoring, permission service, or persistent storage is connected.",
+    riskScopeSummary: "Saved scope summary", riskScopeLabel: "Scope", riskScopeValue: "High or critical · Unresolved", riskSortLabel: "Sort", riskSortValue: "Severity → Observed time", riskCoverageLabel: "Evidence requirement", riskCoverageValue: "At least 2 attributable sources",
+    riskLoadingTitle: "Refreshing saved scope", riskLoadingBody: "The current queue and selection remain visible while the local fixture completes.", riskConflictTitle: "Evidence is conflicting", riskConflictBody: "Two sources disagree about whether the certificate change was expected; a human judgment is required.", riskPendingTitle: "Recording review decision", riskPendingBody: "The local fixture temporarily locks controls while preserving the scope and draft.",
+    riskCommittedTitle: "Review decision recorded", riskCommittedBody: "The decision remains reversible; the risk severity was not changed automatically.", riskUndoTitle: "Review decision undone", riskUndoBody: "The signal is open for review again and the previous reason remains in the local draft.", riskPermissionTitle: "View only", riskPermissionBody: "This fixture simulates missing review permission; the queue and evidence remain readable.", riskErrorTitle: "Review record failed", riskErrorBody: "The local draft, owner, and reason are preserved and can be retried.",
+    riskTableTitle: "Signal queue", riskTableDescription: "Severity, evidence state, and review state stay separate instead of collapsing into one score.", riskCount: "4 local signals", riskCountEmpty: "0 local signals", riskEmptyTitle: "No signals need review in this scope", riskEmptyBody: "Choose another saved view; the local fixture will not widen the scope automatically.", riskTableLabel: "Risk signal queue",
+    riskColumnSignal: "Signal", riskColumnSeverity: "Severity", riskColumnEvidence: "Evidence state", riskColumnOwner: "Owner", riskColumnReview: "Review state", riskColumnObserved: "Observed",
+    riskSignal204: "Certificate issuer changed", riskSignal198: "Public channel endpoint unavailable", riskSignal191: "New related domain needs verification", riskSignal184: "Node latency recovered", riskSeverityCritical: "Critical", riskSeverityHigh: "High", riskSeverityMedium: "Medium", riskSeverityLow: "Low", riskEvidenceConflict: "Conflicting", riskEvidenceConfirmed: "Confirmed", riskEvidencePending: "Pending verification", riskUnassigned: "Unassigned", riskReviewOpen: "Open review", riskReviewActive: "In review", riskReviewEvidence: "Awaiting evidence", riskReviewResolved: "Resolved", riskObservedEight: "8 minutes ago", riskObservedFortyOne: "41 minutes ago", riskObservedTwoHours: "2 hours ago", riskObservedThreeHours: "3 hours ago",
+    riskSelectedSignal: "Selected signal", riskSignalContext: "Signal context", riskEvidenceRows: "Attributable evidence", riskReviewDecision: "Review decision", riskOwnerLabel: "Owner", riskChooseOwner: "Choose owner", riskDecisionLabel: "Decision", riskDecisionWatch: "Keep watch", riskDecisionEscalate: "Escalate review", riskDecisionResolve: "Resolve as expected change", riskReasonLabel: "Recorded reason", riskReasonPlaceholder: "Explain how the evidence supports this decision", riskRecordDecision: "Record decision", riskRecordingDecision: "Recording", riskRecordedTitle: "Recorded decision", riskRecordedAt: "Recorded at", riskReviewSignal: "Review selected signal",
+    riskSummary204: "The certificate observer found a new issuer; the public endpoint scan found no host change.", riskSummary198: "The public channel endpoint was unavailable in two observations and an independent check agreed.", riskSummary191: "A new related domain was observed, but a second source and ownership record are still pending.", riskSummary184: "Node latency recovered and an independent check confirmed the result; a resolution is recorded.",
+    riskEvidencePrimary: "Primary source", riskEvidenceIndependent: "Independent monitor", riskEvidenceReview: "Review record", riskResultObserved: "Change observed", riskResultBaseline: "Baseline unchanged", riskResultMissing: "No matching note", riskResultFailureConfirmed: "Failure confirmed", riskResultCheckAgrees: "Independent check agrees", riskResultReviewAvailable: "Review record available", riskResultRelationObserved: "Relationship observed", riskResultCheckPending: "Independent check pending", riskResultDecisionOpen: "No decision recorded", riskResultRecoveryConfirmed: "Recovery confirmed", riskResultResolutionRecorded: "Resolution recorded", riskDraftReason: "The certificate rotation matches the verified endpoint state.", riskDraftPreserved: "Draft preserved", riskCountTemplate: "{count} local signals", riskCountOne: "1 local signal", riskOwnerError: "Choose an owner before recording the decision.", riskReasonError: "Record how the evidence supports this decision.", riskScopeValueElevated: "High or critical · Unresolved", riskScopeValueUnassigned: "Unassigned · Unresolved", riskScopeValueConflicting: "Conflicting evidence · Judgment needed", riskScopeValueResolved: "Resolution recorded",
   },
 };
+
+const riskSignals = {
+  "RSK-204": {
+    entity: "Alpha Network",
+    severityKey: "riskSeverityHigh",
+    evidenceKey: "riskEvidenceConflict",
+    owner: "",
+    reviewKey: "riskReviewOpen",
+    summaryKey: "riskSummary204",
+    resultKeys: ["riskResultObserved", "riskResultBaseline", "riskResultMissing"],
+  },
+  "RSK-198": {
+    entity: "Beacon Relay",
+    severityKey: "riskSeverityCritical",
+    evidenceKey: "riskEvidenceConfirmed",
+    owner: "Mina Chen",
+    reviewKey: "riskReviewActive",
+    summaryKey: "riskSummary198",
+    resultKeys: ["riskResultFailureConfirmed", "riskResultCheckAgrees", "riskResultReviewAvailable"],
+  },
+  "RSK-191": {
+    entity: "Northstar Index",
+    severityKey: "riskSeverityMedium",
+    evidenceKey: "riskEvidencePending",
+    owner: "Omar Li",
+    reviewKey: "riskReviewEvidence",
+    summaryKey: "riskSummary191",
+    resultKeys: ["riskResultRelationObserved", "riskResultCheckPending", "riskResultDecisionOpen"],
+  },
+  "RSK-184": {
+    entity: "Harbor Node",
+    severityKey: "riskSeverityLow",
+    evidenceKey: "riskEvidenceConfirmed",
+    owner: "Kaito Wu",
+    reviewKey: "riskReviewResolved",
+    summaryKey: "riskSummary184",
+    resultKeys: ["riskResultRecoveryConfirmed", "riskResultCheckAgrees", "riskResultResolutionRecorded"],
+  },
+};
+const riskEvidenceSourceKeys = ["riskEvidencePrimary", "riskEvidenceIndependent", "riskEvidenceReview"];
+const allowedRiskStates = new Set(["normal", "loading", "empty", "conflict", "pending", "committed", "undo", "permission", "error"]);
+const riskScopeSignals = {
+  elevated: ["RSK-204", "RSK-198"],
+  unassigned: ["RSK-204"],
+  conflicting: ["RSK-204"],
+  resolved: ["RSK-184"],
+};
+const allowedRiskScopes = new Set(Object.keys(riskScopeSignals));
+const initialRiskParams = new URLSearchParams(window.location.search);
+const initialRiskPanelRequested = initialRiskParams.get("panel") === "review";
+let currentRiskScope = allowedRiskScopes.has(initialRiskParams.get("scope")) ? initialRiskParams.get("scope") : "elevated";
+let selectedRiskId = riskSignals[initialRiskParams.get("signal")] ? initialRiskParams.get("signal") : riskScopeSignals[currentRiskScope][0];
+if (!riskScopeSignals[currentRiskScope].includes(selectedRiskId)) selectedRiskId = riskScopeSignals[currentRiskScope][0];
+let currentRiskState = allowedRiskStates.has(initialRiskParams.get("state")) ? initialRiskParams.get("state") : "normal";
+const riskDrafts = new Map();
+const riskRecords = new Map(Object.entries(riskSignals).map(([id, signal]) => [id, {
+  owner: signal.owner,
+  reviewKey: signal.reviewKey,
+}]));
+const riskCommits = new Map();
+const riskDecisionMessageKeys = {
+  watch: "riskDecisionWatch",
+  escalate: "riskDecisionEscalate",
+  resolve: "riskDecisionResolve",
+};
+const riskDecisionReviewKeys = {
+  watch: "riskReviewOpen",
+  escalate: "riskReviewActive",
+  resolve: "riskReviewResolved",
+};
+let riskSubmissionFailed = currentRiskState === "error";
+let pendingRiskSubmission = null;
+let inspectorReturnTarget = inspectorOpen;
+let riskStateTimer;
 
 function currentLocale() {
   return root.dataset.locale === "en" ? "en" : "zh";
@@ -190,18 +319,299 @@ function translate(locale, persist = true) {
     const value = messages[element.dataset.i18nAria];
     if (value) element.setAttribute("aria-label", value);
   }
+  for (const element of document.querySelectorAll("[data-i18n-placeholder]")) {
+    const value = messages[element.dataset.i18nPlaceholder];
+    if (value) element.setAttribute("placeholder", value);
+  }
+  const riskColumnKeys = ["riskColumnSignal", "riskColumnSeverity", "riskColumnEvidence", "riskColumnOwner", "riskColumnReview", "riskColumnObserved"];
+  for (const row of riskRows) {
+    [...row.cells].forEach((cell, index) => {
+      cell.dataset.label = messages[riskColumnKeys[index]];
+    });
+  }
   for (const button of localeButtons) {
     const active = button.dataset.localeValue === locale;
     button.setAttribute("aria-current", active ? "true" : "false");
   }
   updateThemeSwitch(root.dataset.theme);
-  if (persist) localStorage.setItem("kin-reference-locale", locale);
+  if (persist) {
+    localStorage.setItem("kin-reference-locale", locale);
+    const url = new URL(window.location.href);
+    url.searchParams.set("lang", locale === "zh" ? "zh-CN" : "en");
+    history.replaceState(history.state, "", url.pathname + url.search + url.hash);
+  }
   if (sonnerModulePromise) sonnerModulePromise.then((module) => module.updateToasterTheme(root.dataset.theme, locale));
   const toggle = document.querySelector("[data-motion-toggle]");
   if (toggle) {
     const label = toggle.querySelector("span");
     label.textContent = messages[toggle.getAttribute("aria-pressed") === "true" ? "watchingButton" : "watchButton"];
   }
+  if (workspaceView === "risk-queue") {
+    inspectorOpen.dataset.i18nAria = "riskReviewSignal";
+    inspectorOpen.setAttribute("aria-label", messages.riskReviewSignal);
+    renderRiskScope();
+    renderRiskSignal({ syncForm: false });
+    renderRiskState();
+  }
+}
+
+function syncWorkspaceView() {
+  root.dataset.workspaceView = workspaceView;
+  for (const link of document.querySelectorAll("[data-nav-view]")) {
+    if (link.dataset.navView === workspaceView) link.setAttribute("aria-current", "page");
+    else link.removeAttribute("aria-current");
+  }
+  for (const link of riskScopeLinks) {
+    if (link.dataset.riskScope === currentRiskScope) link.setAttribute("aria-current", "page");
+    else link.removeAttribute("aria-current");
+  }
+  inspector.setAttribute("aria-labelledby", workspaceView === "risk-queue" ? "risk-inspector-title" : "inspector-title");
+}
+
+function writeRiskUrl({ mode = "replace", panel = overlayLayout.matches && appShell.classList.contains("inspector-open") } = {}) {
+  if (workspaceView !== "risk-queue") return;
+  const url = new URL(window.location.href);
+  url.searchParams.set("view", "risk-queue");
+  url.searchParams.set("scope", currentRiskScope);
+  url.searchParams.set("state", currentRiskState);
+  url.searchParams.set("signal", selectedRiskId);
+  if (panel) url.searchParams.set("panel", "review");
+  else url.searchParams.delete("panel");
+  const panelPushed = Boolean(panel && (mode === "push" || history.state?.kinRiskPanelPushed));
+  const nextState = {
+    ...(history.state || {}),
+    kinRiskEntry: true,
+    kinRiskPanel: Boolean(panel),
+    kinRiskPanelPushed: panelPushed,
+  };
+  history[mode + "State"](nextState, "", url.pathname + url.search + url.hash);
+}
+
+function riskDraft(id = selectedRiskId) {
+  if (!riskDrafts.has(id)) {
+    riskDrafts.set(id, { owner: riskRecords.get(id)?.owner || "", decision: "watch", reason: "" });
+  }
+  return riskDrafts.get(id);
+}
+
+function saveRiskDraft(id = selectedRiskId) {
+  if (!riskReviewForm || !riskSignals[id]) return;
+  const decision = riskReviewForm.querySelector('input[name="decision"]:checked')?.value || "watch";
+  riskDrafts.set(id, { owner: riskOwner.value, decision, reason: riskReason.value });
+}
+
+function applyRiskDraft(id = selectedRiskId) {
+  const draft = riskDraft(id);
+  riskOwner.value = draft.owner;
+  riskReason.value = draft.reason;
+  const decision = riskReviewForm.querySelector(`input[name="decision"][value="${draft.decision}"]`);
+  if (decision) decision.checked = true;
+}
+
+function renderRiskRows() {
+  const messages = copy[currentLocale()];
+  for (const row of riskRows) {
+    const record = riskRecords.get(row.dataset.riskRow);
+    if (!record) continue;
+    const owner = row.querySelector("[data-risk-row-owner]");
+    const review = row.querySelector("[data-risk-row-review]");
+    if (record.owner) {
+      owner.removeAttribute("data-i18n");
+      owner.textContent = record.owner;
+    } else {
+      owner.dataset.i18n = "riskUnassigned";
+      owner.textContent = messages.riskUnassigned;
+    }
+    review.dataset.i18n = record.reviewKey;
+    review.textContent = messages[record.reviewKey];
+  }
+}
+
+function commitRiskSubmission(submission) {
+  if (!submission || !riskRecords.has(submission.signalId)) return;
+  const record = riskRecords.get(submission.signalId);
+  const existing = riskCommits.get(submission.signalId);
+  const previous = existing?.previous || { owner: record.owner, reviewKey: record.reviewKey };
+  record.owner = submission.draft.owner;
+  record.reviewKey = riskDecisionReviewKeys[submission.draft.decision] || "riskReviewOpen";
+  riskCommits.set(submission.signalId, {
+    previous,
+    draft: { ...submission.draft },
+  });
+  renderRiskRows();
+}
+
+function ensureRiskCommit(id = selectedRiskId) {
+  if (riskCommits.has(id)) return;
+  ensureRiskDraft(id);
+  commitRiskSubmission({ signalId: id, draft: { ...riskDraft(id) } });
+}
+
+function restoreRiskCommit(id = selectedRiskId) {
+  const commit = riskCommits.get(id);
+  if (!commit || !riskRecords.has(id)) return;
+  const record = riskRecords.get(id);
+  record.owner = commit.previous.owner;
+  record.reviewKey = commit.previous.reviewKey;
+  riskCommits.delete(id);
+  renderRiskRows();
+}
+
+function renderRiskScope() {
+  if (!riskQueue) return;
+  const messages = copy[currentLocale()];
+  const visibleIds = riskScopeSignals[currentRiskScope];
+  if (!visibleIds.includes(selectedRiskId)) selectedRiskId = visibleIds[0];
+  for (const row of riskRows) row.hidden = !visibleIds.includes(row.dataset.riskRow);
+  const scopeMessageKey = {
+    elevated: "riskSavedView",
+    unassigned: "riskScopeUnassigned",
+    conflicting: "riskScopeConflicting",
+    resolved: "riskScopeResolved",
+  }[currentRiskScope];
+  const scopeValueKey = {
+    elevated: "riskScopeValueElevated",
+    unassigned: "riskScopeValueUnassigned",
+    conflicting: "riskScopeValueConflicting",
+    resolved: "riskScopeValueResolved",
+  }[currentRiskScope];
+  riskQueueTitle.textContent = messages[scopeMessageKey];
+  riskLocationTitle.textContent = messages[scopeMessageKey];
+  riskScopeValue.textContent = messages[scopeValueKey];
+  riskCount.textContent = visibleIds.length === 1
+    ? messages.riskCountOne
+    : messages.riskCountTemplate.replace("{count}", String(visibleIds.length));
+  syncWorkspaceView();
+}
+
+function renderRiskSignal({ syncForm = false } = {}) {
+  if (!riskQueue) return;
+  const messages = copy[currentLocale()];
+  const signal = riskSignals[selectedRiskId] || riskSignals["RSK-204"];
+  const record = riskRecords.get(selectedRiskId);
+  renderRiskRows();
+  for (const row of riskRows) {
+    const selected = row.dataset.riskRow === selectedRiskId;
+    row.dataset.selected = String(selected);
+    const button = row.querySelector("[data-risk-signal]");
+    if (selected) button.setAttribute("aria-current", "true");
+    else button.removeAttribute("aria-current");
+  }
+  riskInspectorTitle.textContent = selectedRiskId + " · " + signal.entity;
+  riskDetailSeverity.textContent = messages[signal.severityKey];
+  riskDetailEvidence.textContent = messages[signal.evidenceKey];
+  riskDetailOwner.textContent = record?.owner || messages.riskUnassigned;
+  riskDetailReview.textContent = messages[record?.reviewKey || signal.reviewKey];
+  riskDetailSummary.textContent = messages[signal.summaryKey];
+  riskEvidenceSources.forEach((element, index) => {
+    element.textContent = messages[riskEvidenceSourceKeys[index]];
+  });
+  riskEvidenceResults.forEach((element, index) => {
+    element.textContent = messages[signal.resultKeys[index]];
+  });
+  if (syncForm) {
+    applyRiskDraft();
+  }
+}
+
+function ensureRiskDraft(id = selectedRiskId) {
+  const messages = copy[currentLocale()];
+  const draft = riskDraft(id);
+  const needsFixtureDraft = !draft.reason;
+  if (!draft.owner) draft.owner = "Mina Chen";
+  if (needsFixtureDraft) draft.reason = messages.riskDraftReason;
+  if (needsFixtureDraft || !draft.decision) {
+    draft.decision = "resolve";
+  }
+  applyRiskDraft(id);
+  if (![...riskReviewForm.elements.decision].some((option) => option.checked)) {
+    riskReviewForm.querySelector('input[name="decision"][value="resolve"]').checked = true;
+  }
+}
+
+function renderRiskState() {
+  if (!riskQueue) return;
+  const messages = copy[currentLocale()];
+  const state = currentRiskState;
+  const isEmpty = state === "empty";
+  const isCommitted = state === "committed";
+  const locked = ["loading", "pending", "permission"].includes(state);
+  if (["pending", "committed", "undo", "error"].includes(state)) ensureRiskDraft();
+  if (isCommitted) ensureRiskCommit();
+
+  riskQueue.dataset.riskState = state;
+  riskQueue.setAttribute("aria-busy", String(state === "loading" || state === "pending"));
+  for (const panel of riskStatePanels) panel.hidden = panel.dataset.riskStatePanel !== state;
+  riskTableWrap.hidden = isEmpty;
+  if (isEmpty) riskCount.textContent = messages.riskCountEmpty;
+  else {
+    const count = riskScopeSignals[currentRiskScope].length;
+    riskCount.textContent = count === 1 ? messages.riskCountOne : messages.riskCountTemplate.replace("{count}", String(count));
+  }
+  riskReviewForm.hidden = isCommitted || isEmpty;
+  riskCommitRecord.hidden = !isCommitted;
+  riskReviewFields.disabled = locked;
+  for (const button of riskSignalButtons) button.disabled = state === "pending";
+  for (const link of riskScopeLinks) {
+    if (state === "pending") link.setAttribute("aria-disabled", "true");
+    else link.removeAttribute("aria-disabled");
+  }
+  riskSubmit.textContent = messages[state === "pending" ? "riskRecordingDecision" : "riskRecordDecision"];
+  inspectorOpen.disabled = isEmpty;
+
+  const signal = riskSignals[selectedRiskId];
+  const record = riskRecords.get(selectedRiskId);
+  riskDetailReview.textContent = state === "pending"
+    ? messages.riskRecordingDecision
+    : state === "error"
+        ? messages.riskDraftPreserved
+        : messages[record?.reviewKey || signal.reviewKey];
+  riskDetailOwner.textContent = record?.owner || messages.riskUnassigned;
+
+  if (isCommitted) {
+    const commit = riskCommits.get(selectedRiskId);
+    riskCommitOwner.textContent = commit.draft.owner;
+    riskCommitDecision.textContent = messages[riskDecisionMessageKeys[commit.draft.decision] || "riskDecisionWatch"];
+    riskCommitReason.textContent = commit.draft.reason;
+  }
+}
+
+function setRiskState(state, { write = true, historyMode = "replace" } = {}) {
+  if (!allowedRiskStates.has(state)) return;
+  const previous = currentRiskState;
+  currentRiskState = state;
+  renderRiskState();
+  if (write) writeRiskUrl({ mode: historyMode });
+  if (state === "empty" && inspectorIsOpen()) setInspector(false, false);
+  if (previous === "empty" && state !== "empty" && !overlayLayout.matches) setInspector(true, false);
+}
+
+function completeRiskDecision({ retry = false } = {}) {
+  window.clearTimeout(riskStateTimer);
+  saveRiskDraft();
+  const submission = {
+    signalId: selectedRiskId,
+    draft: { ...riskDraft(selectedRiskId) },
+  };
+  pendingRiskSubmission = submission;
+  setRiskState("pending");
+  const shouldFail = !retry
+    && new URLSearchParams(window.location.search).get("outcome") === "error"
+    && !riskSubmissionFailed;
+  riskStateTimer = window.setTimeout(() => {
+    if (pendingRiskSubmission !== submission) return;
+    if (shouldFail) {
+      riskSubmissionFailed = true;
+      pendingRiskSubmission = null;
+      setRiskState("error");
+      riskRetry.focus({ preventScroll: true });
+      return;
+    }
+    commitRiskSubmission(submission);
+    pendingRiskSubmission = null;
+    setRiskState("committed");
+    riskUndoAction.focus({ preventScroll: true });
+  }, 240);
 }
 
 function updateThemeSwitch(theme) {
@@ -369,9 +779,10 @@ function syncInspectorMode() {
   }
 }
 
-function setInspector(open, moveFocus = true) {
+function setInspector(open, moveFocus = true, returnTarget) {
   window.clearTimeout(inspectorCloseTimer);
   inspectorCloseTimer = undefined;
+  if (open && returnTarget) inspectorReturnTarget = returnTarget;
   const modal = overlayLayout.matches && open;
   if (open) {
     appShell.classList.remove("inspector-closing", "inspector-closed");
@@ -395,7 +806,18 @@ function setInspector(open, moveFocus = true) {
   document.body.classList.toggle("inspector-modal-open", modal);
   syncInspectorMode();
   if (moveFocus) {
-    const target = open ? inspectorClose : inspectorOpen;
+    const target = open
+      ? inspectorClose
+      : inspectorReturnTarget?.isConnected
+        ? inspectorReturnTarget
+        : inspectorOpen;
+    if (open) {
+      inspector.addEventListener("transitionend", (event) => {
+        if (event.target === inspector && appShell.classList.contains("inspector-open") && document.activeElement !== target) {
+          target.focus({ preventScroll: true });
+        }
+      }, { once: true });
+    }
     target.focus({ preventScroll: true });
     // Chromium may clear focus after the clicked control's ancestor becomes
     // inert. Reassert only when that deferred inert update displaced focus.
@@ -412,19 +834,44 @@ function setInspector(open, moveFocus = true) {
       if (requestIsCurrent && document.activeElement !== target) {
         target.focus({ preventScroll: true });
       }
+      requestAnimationFrame(() => {
+        const stillCurrent = open
+          ? appShell.classList.contains("inspector-open")
+          : !appShell.classList.contains("inspector-open");
+        if (stillCurrent && document.activeElement !== target) target.focus({ preventScroll: true });
+      });
     });
   }
   if (!open) inspector.inert = true;
 }
 
-inspectorOpen.addEventListener("click", () => setInspector(true));
-inspectorClose.addEventListener("click", () => setInspector(false));
-inspectorScrim.addEventListener("click", () => setInspector(false));
+function closeInspectorFromUser() {
+  if (workspaceView === "risk-queue" && overlayLayout.matches && history.state?.kinRiskPanelPushed) {
+    history.back();
+    return;
+  }
+  setInspector(false);
+  if (workspaceView === "risk-queue") writeRiskUrl({ panel: false });
+}
+
+inspectorOpen.addEventListener("click", () => {
+  if (workspaceView === "risk-queue" && overlayLayout.matches) {
+    inspectorReturnTarget = inspectorOpen;
+    writeRiskUrl({ mode: "push", panel: true });
+  }
+  setInspector(true, true, inspectorOpen);
+});
+inspectorClose.addEventListener("click", closeInspectorFromUser);
+inspectorScrim.addEventListener("click", closeInspectorFromUser);
 
 inspector.addEventListener("keydown", (event) => {
   if (!overlayLayout.matches || !inspectorIsOpen() || event.key !== "Tab") return;
   const focusable = [...inspector.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])')]
-    .filter((element) => !element.disabled && !element.hidden);
+    .filter((element) => {
+      if (element.disabled || element.closest("[hidden], [inert]")) return false;
+      const style = getComputedStyle(element);
+      return style.display !== "none" && style.visibility !== "hidden" && element.getClientRects().length > 0;
+    });
   const first = focusable[0];
   const last = focusable.at(-1);
   if (!first || !last) return;
@@ -445,7 +892,7 @@ document.addEventListener("keydown", (event) => {
   } else if (event.key === "Escape" && transientIsOpen(locationOverflowMenu)) {
     setLocationOverflow(false);
   } else if (event.key === "Escape" && inspectorIsOpen()) {
-    setInspector(false);
+    closeInspectorFromUser();
   }
 });
 
@@ -520,11 +967,151 @@ document.querySelector("[data-motion-task]").addEventListener("click", async () 
   });
 });
 
-overlayLayout.addEventListener("change", (event) => setInspector(!event.matches, false));
+function setRiskFieldValidity(field, error, invalid) {
+  field.setAttribute("aria-invalid", String(invalid));
+  error.hidden = !invalid;
+}
+
+function clearRiskFormErrors() {
+  setRiskFieldValidity(riskOwner, riskOwnerError, false);
+  setRiskFieldValidity(riskReason, riskReasonError, false);
+}
+
+function validateRiskReview() {
+  const ownerInvalid = !riskOwner.value;
+  const reasonInvalid = !riskReason.value.trim();
+  setRiskFieldValidity(riskOwner, riskOwnerError, ownerInvalid);
+  setRiskFieldValidity(riskReason, riskReasonError, reasonInvalid);
+  if (ownerInvalid) riskOwner.focus({ preventScroll: true });
+  else if (reasonInvalid) riskReason.focus({ preventScroll: true });
+  return !ownerInvalid && !reasonInvalid;
+}
+
+for (const link of riskScopeLinks) {
+  link.addEventListener("click", (event) => {
+    if (workspaceView !== "risk-queue") return;
+    event.preventDefault();
+    if (currentRiskState === "pending") return;
+    saveRiskDraft();
+    currentRiskScope = link.dataset.riskScope;
+    selectedRiskId = riskScopeSignals[currentRiskScope][0];
+    if (currentRiskState !== "permission") currentRiskState = "normal";
+    clearRiskFormErrors();
+    renderRiskScope();
+    renderRiskSignal({ syncForm: true });
+    renderRiskState();
+    writeRiskUrl({ mode: "push", panel: false });
+    if (overlayLayout.matches) setInspector(false, false);
+  });
+}
+
+for (const button of riskSignalButtons) {
+  button.addEventListener("click", () => {
+    if (currentRiskState === "pending") return;
+    const changed = selectedRiskId !== button.dataset.riskSignal;
+    saveRiskDraft();
+    selectedRiskId = button.dataset.riskSignal;
+    if (changed && currentRiskState !== "permission") currentRiskState = "normal";
+    clearRiskFormErrors();
+    renderRiskSignal({ syncForm: changed });
+    renderRiskState();
+    if (overlayLayout.matches) {
+      if (changed) writeRiskUrl({ mode: "push", panel: false });
+      writeRiskUrl({ mode: "push", panel: true });
+      setInspector(true, true, button);
+    } else {
+      writeRiskUrl({ mode: "push", panel: false });
+    }
+  });
+}
+
+riskReviewForm.addEventListener("submit", (event) => {
+  event.preventDefault();
+  if (!validateRiskReview()) return;
+  completeRiskDecision();
+});
+
+riskOwner.addEventListener("change", () => {
+  setRiskFieldValidity(riskOwner, riskOwnerError, false);
+  saveRiskDraft();
+});
+riskReason.addEventListener("input", () => {
+  if (riskReason.value.trim()) setRiskFieldValidity(riskReason, riskReasonError, false);
+  saveRiskDraft();
+});
+for (const decision of riskReviewForm.elements.decision) {
+  decision.addEventListener("change", () => saveRiskDraft());
+}
+
+riskUndoAction.addEventListener("click", () => {
+  saveRiskDraft();
+  restoreRiskCommit();
+  setRiskState("undo");
+  riskSubmit.focus();
+});
+
+riskRetry.addEventListener("click", () => completeRiskDecision({ retry: true }));
+riskRefresh.addEventListener("click", () => {
+  window.clearTimeout(riskStateTimer);
+  pendingRiskSubmission = null;
+  setRiskState("loading");
+  riskStateTimer = window.setTimeout(() => setRiskState("normal"), 320);
+});
+
+overlayLayout.addEventListener("change", (event) => {
+  const emptyRiskQueue = workspaceView === "risk-queue" && currentRiskState === "empty";
+  setInspector(!event.matches && !emptyRiskQueue, false);
+  if (workspaceView === "risk-queue") writeRiskUrl({ panel: false });
+});
+
+window.addEventListener("popstate", () => {
+  if (workspaceView !== "risk-queue") return;
+  window.clearTimeout(riskStateTimer);
+  pendingRiskSubmission = null;
+  saveRiskDraft();
+  const params = new URLSearchParams(window.location.search);
+  const nextScope = allowedRiskScopes.has(params.get("scope")) ? params.get("scope") : "elevated";
+  const requestedSignal = riskSignals[params.get("signal")] ? params.get("signal") : riskScopeSignals[nextScope][0];
+  const nextSignal = riskScopeSignals[nextScope].includes(requestedSignal) ? requestedSignal : riskScopeSignals[nextScope][0];
+  const changed = selectedRiskId !== nextSignal;
+  currentRiskScope = nextScope;
+  selectedRiskId = nextSignal;
+  currentRiskState = allowedRiskStates.has(params.get("state")) ? params.get("state") : "normal";
+  riskSubmissionFailed = currentRiskState === "error";
+  clearRiskFormErrors();
+  renderRiskScope();
+  renderRiskSignal({ syncForm: changed });
+  renderRiskState();
+  const shouldOpen = !overlayLayout.matches
+    ? currentRiskState !== "empty"
+    : params.get("panel") === "review" && currentRiskState !== "empty";
+  const wasOpen = inspectorIsOpen();
+  const selectedButton = document.querySelector(`[data-risk-signal="${selectedRiskId}"]`);
+  inspectorReturnTarget = selectedButton || inspectorOpen;
+  setInspector(shouldOpen, shouldOpen !== wasOpen, inspectorReturnTarget);
+});
+syncWorkspaceView();
 applyTheme(root.dataset.themePreference || "system", false);
 applyContrast(root.dataset.contrast === "more", false);
-translate(root.dataset.locale === "en" ? "en" : "zh", false);
-setInspector(!overlayLayout.matches, false);
+const requestedLocale = new URLSearchParams(window.location.search).get("lang");
+const initialLocale = requestedLocale === "en" ? "en" : requestedLocale === "zh-CN" ? "zh" : root.dataset.locale === "en" ? "en" : "zh";
+if (workspaceView === "risk-queue") {
+  renderRiskScope();
+  renderRiskSignal({ syncForm: true });
+}
+const initialRiskPanelOpen = workspaceView === "risk-queue"
+  && overlayLayout.matches
+  && initialRiskPanelRequested
+  && currentRiskState !== "empty";
+const initialInspectorOpen = workspaceView === "risk-queue"
+  ? currentRiskState !== "empty" && (!overlayLayout.matches || initialRiskPanelRequested)
+  : !overlayLayout.matches;
+const initialRiskReturnTarget = workspaceView === "risk-queue"
+  ? document.querySelector(`[data-risk-signal="${selectedRiskId}"]`) || inspectorOpen
+  : inspectorOpen;
+setInspector(initialInspectorOpen, initialRiskPanelOpen, initialRiskReturnTarget);
+translate(initialLocale, false);
+if (workspaceView === "risk-queue") writeRiskUrl({ panel: initialRiskPanelOpen });
 
 createIcons({
   icons: {

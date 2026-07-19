@@ -1,0 +1,1797 @@
+{
+  "$schema": "./catalog.schema.json",
+  "schema_version": "1.1.0",
+  "catalog_version": "1.5.0",
+  "reviewed_on": "2026-07-19",
+  "pilot_ids": [
+    "INT-01",
+    "INF-01",
+    "COM-01",
+    "ENG-01",
+    "CORE-01",
+    "WORK-01"
+  ],
+  "inspection_defaults": {
+    "viewports": [
+      {
+        "id": "wide",
+        "label": "Wide",
+        "width": 1180,
+        "height": 760
+      },
+      {
+        "id": "narrow",
+        "label": "Narrow",
+        "width": 390,
+        "height": 844
+      }
+    ],
+    "themes": [
+      {
+        "id": "light",
+        "label": "Light",
+        "theme": "light",
+        "contrast": "normal"
+      },
+      {
+        "id": "dark",
+        "label": "Dark",
+        "theme": "dark",
+        "contrast": "normal"
+      },
+      {
+        "id": "light-high-contrast",
+        "label": "Light high contrast",
+        "theme": "light",
+        "contrast": "more"
+      },
+      {
+        "id": "dark-high-contrast",
+        "label": "Dark high contrast",
+        "theme": "dark",
+        "contrast": "more"
+      }
+    ]
+  },
+  "presentation_status_definitions": {
+    "planned": "The scenario is mapped to governing sources but has no checked Atlas presentation.",
+    "linked": "The Atlas names the scenario and links an existing deterministic reference.",
+    "showcased": "A dedicated Atlas presentation exposes checked state, viewport, and theme controls."
+  },
+  "known_gaps": [
+    "The Scenario Atlas discovery and inspection interfaces are currently English-only.",
+    "Motion follows each reference and the user motion preference; the Atlas does not claim a separate scenario motion control."
+  ],
+  "scenarios": [
+    {
+      "id": "INT-01",
+      "canonical_name": "Entity Database Review",
+      "group": "intelligence",
+      "product_profiles": [
+        "intelligence-workspace"
+      ],
+      "wave": "P0",
+      "user_job": "Select an entity, inspect evidence and properties, and make a reversible decision.",
+      "entry": "An analyst opens a saved entity view or deep link.",
+      "completion": "The analyst records or exits a review decision without losing list context.",
+      "composition": {
+        "first_meaningful_view": "Entity list or current entity with evidence.",
+        "dominant_region": "Entity list and selected detail.",
+        "persistent_context": "Entity identity, filters, source time, and review state."
+      },
+      "contract_paths": [
+        "patterns/intelligence-workspace.md"
+      ],
+      "page_ids": [
+        "intelligence-workspace"
+      ],
+      "source_maturity": "stable",
+      "conditional": false,
+      "presentation_status": "showcased",
+      "reference_path": "examples/workspace-reference/index.html",
+      "states": [
+        "normal"
+      ],
+      "viewports": [
+        "wide",
+        "narrow"
+      ],
+      "themes": [
+        "light",
+        "dark",
+        "light-high-contrast",
+        "dark-high-contrast"
+      ],
+      "known_gaps": [
+        "Selection changes and review decisions are interactive but are not URL-addressable fixtures yet."
+      ],
+      "inspection_path": "site/scenarios/lab.html?scenario=INT-01",
+      "state_controls": [
+        {
+          "state": "normal",
+          "label": "Selected entity review",
+          "reference_path": "examples/workspace-reference/index.html?lang=en",
+          "assertion": {
+            "kind": "visible",
+            "selector": ".entity-content"
+          }
+        }
+      ]
+    },
+    {
+      "id": "INT-02",
+      "canonical_name": "Investigation and Evidence Review",
+      "group": "intelligence",
+      "product_profiles": [
+        "intelligence-workspace"
+      ],
+      "wave": "P1",
+      "user_job": "Compare chronology, sources, conflicts, and uncertainty before recording a finding.",
+      "entry": "An analyst opens an entity investigation from a queue or direct URL.",
+      "completion": "The analyst records an attributable finding or leaves the investigation unchanged.",
+      "composition": {
+        "first_meaningful_view": "Entity identity with chronology and evidence.",
+        "dominant_region": "Evidence and event chronology.",
+        "persistent_context": "Entity, source attribution, verification state, and current finding."
+      },
+      "contract_paths": [
+        "patterns/intelligence-workspace.md"
+      ],
+      "page_ids": [
+        "intelligence-workspace"
+      ],
+      "source_maturity": "stable",
+      "conditional": false,
+      "presentation_status": "planned",
+      "reference_path": "examples/workspace-reference/index.html",
+      "states": [],
+      "viewports": [],
+      "themes": [],
+      "known_gaps": [
+        "Dedicated Atlas presentation and deterministic state locators are not implemented."
+      ],
+      "inspection_path": null,
+      "state_controls": []
+    },
+    {
+      "id": "INT-03",
+      "canonical_name": "Risk Queue Review",
+      "group": "intelligence",
+      "product_profiles": [
+        "intelligence-workspace"
+      ],
+      "wave": "P1",
+      "user_job": "Triage a signal, preserve semantic separation, and assign or resolve review.",
+      "entry": "An analyst opens a risk queue with a saved scope.",
+      "completion": "The signal has an owner, reversible decision, and recorded reason.",
+      "composition": {
+        "first_meaningful_view": "Prioritized signal queue with evidence state.",
+        "dominant_region": "Actionable risk queue.",
+        "persistent_context": "Queue scope, signal severity, evidence state, owner, and review status."
+      },
+      "contract_paths": [
+        "patterns/intelligence-workspace.md"
+      ],
+      "page_ids": [
+        "intelligence-workspace"
+      ],
+      "source_maturity": "stable",
+      "conditional": false,
+      "presentation_status": "showcased",
+      "reference_path": "examples/workspace-reference/index.html",
+      "states": [
+        "normal",
+        "loading",
+        "empty",
+        "conflict",
+        "pending",
+        "committed",
+        "undo",
+        "permission",
+        "error"
+      ],
+      "viewports": [
+        "wide",
+        "narrow"
+      ],
+      "themes": [
+        "light",
+        "dark",
+        "light-high-contrast",
+        "dark-high-contrast"
+      ],
+      "known_gaps": [
+        "The deterministic reference has no live monitor, permission service, durable assignment, or review persistence.",
+        "Manual screen-reader, browser-zoom, and physical touch-device review remain outside the Atlas evidence."
+      ],
+      "inspection_path": "site/scenarios/lab.html?scenario=INT-03",
+      "state_controls": [
+        {
+          "state": "normal",
+          "label": "Elevated signal queue",
+          "reference_path": "examples/workspace-reference/index.html?view=risk-queue&lang=en&state=normal",
+          "assertion": {
+            "kind": "attribute",
+            "selector": "[data-risk-queue]",
+            "attribute": "data-risk-state",
+            "value": "normal"
+          }
+        },
+        {
+          "state": "loading",
+          "label": "Refreshing saved scope",
+          "reference_path": "examples/workspace-reference/index.html?view=risk-queue&lang=en&state=loading",
+          "assertion": {
+            "kind": "visible",
+            "selector": "[data-risk-loading]"
+          }
+        },
+        {
+          "state": "empty",
+          "label": "Empty saved scope",
+          "reference_path": "examples/workspace-reference/index.html?view=risk-queue&lang=en&state=empty",
+          "assertion": {
+            "kind": "visible",
+            "selector": "[data-risk-empty]"
+          }
+        },
+        {
+          "state": "conflict",
+          "label": "Conflicting evidence",
+          "reference_path": "examples/workspace-reference/index.html?view=risk-queue&lang=en&state=conflict",
+          "assertion": {
+            "kind": "visible",
+            "selector": "[data-risk-conflict]"
+          }
+        },
+        {
+          "state": "pending",
+          "label": "Decision recording",
+          "reference_path": "examples/workspace-reference/index.html?view=risk-queue&lang=en&state=pending",
+          "assertion": {
+            "kind": "visible",
+            "selector": "[data-risk-pending]"
+          }
+        },
+        {
+          "state": "committed",
+          "label": "Decision recorded",
+          "reference_path": "examples/workspace-reference/index.html?view=risk-queue&lang=en&state=committed",
+          "assertion": {
+            "kind": "visible",
+            "selector": "[data-risk-committed]"
+          }
+        },
+        {
+          "state": "undo",
+          "label": "Decision undone",
+          "reference_path": "examples/workspace-reference/index.html?view=risk-queue&lang=en&state=undo",
+          "assertion": {
+            "kind": "visible",
+            "selector": "[data-risk-undo]"
+          }
+        },
+        {
+          "state": "permission",
+          "label": "Read-only review",
+          "reference_path": "examples/workspace-reference/index.html?view=risk-queue&lang=en&state=permission",
+          "assertion": {
+            "kind": "visible",
+            "selector": "[data-risk-permission]"
+          }
+        },
+        {
+          "state": "error",
+          "label": "Failed record with draft preserved",
+          "reference_path": "examples/workspace-reference/index.html?view=risk-queue&lang=en&state=error",
+          "assertion": {
+            "kind": "visible",
+            "selector": "[data-risk-error]"
+          }
+        }
+      ]
+    },
+    {
+      "id": "INT-04",
+      "canonical_name": "Monitor Center Recovery",
+      "group": "intelligence",
+      "product_profiles": [
+        "intelligence-workspace"
+      ],
+      "wave": "P1",
+      "user_job": "Inspect current measurement, history, failure scope, and retry context.",
+      "entry": "An analyst opens a monitor task from an entity or alert.",
+      "completion": "The analyst understands the last verified state and chooses retry or manual continuation.",
+      "composition": {
+        "first_meaningful_view": "Monitor identity, task state, and current measurement.",
+        "dominant_region": "Measurement history and failure context.",
+        "persistent_context": "Monitor identity, source time, last verified value, and retry scope."
+      },
+      "contract_paths": [
+        "patterns/intelligence-workspace.md"
+      ],
+      "page_ids": [
+        "intelligence-workspace"
+      ],
+      "source_maturity": "stable",
+      "conditional": false,
+      "presentation_status": "planned",
+      "reference_path": "examples/workspace-reference/index.html",
+      "states": [],
+      "viewports": [],
+      "themes": [],
+      "known_gaps": [
+        "Dedicated Atlas presentation and deterministic state locators are not implemented."
+      ],
+      "inspection_path": null,
+      "state_controls": []
+    },
+    {
+      "id": "INT-05",
+      "canonical_name": "Workspace Home",
+      "group": "intelligence",
+      "product_profiles": [
+        "intelligence-workspace",
+        "ecommerce-operations",
+        "engineering-canvas"
+      ],
+      "wave": "P2",
+      "user_job": "Resume ranked work without inventing a generic KPI dashboard.",
+      "entry": "A returning user opens the workspace root.",
+      "completion": "The user enters a real pending task with its context intact.",
+      "composition": {
+        "first_meaningful_view": "Ranked work, recent context, or blocked task.",
+        "dominant_region": "Next meaningful work.",
+        "persistent_context": "Workspace identity, task ownership, ranking reason, and recency."
+      },
+      "contract_paths": [
+        "pages/workspace-home.md"
+      ],
+      "page_ids": [
+        "workspace-home"
+      ],
+      "source_maturity": "candidate",
+      "conditional": false,
+      "presentation_status": "planned",
+      "reference_path": null,
+      "states": [],
+      "viewports": [],
+      "themes": [],
+      "known_gaps": [
+        "Runnable reference, personalization boundary, responsive behavior, and automated checks remain open."
+      ],
+      "inspection_path": null,
+      "state_controls": []
+    },
+    {
+      "id": "INF-01",
+      "canonical_name": "Find and Verify a Record",
+      "group": "information",
+      "product_profiles": [
+        "information-site"
+      ],
+      "wave": "P0",
+      "user_job": "Search, filter, open a record, and identify its source and currency.",
+      "entry": "A reader arrives with a query, topic, or stable record URL.",
+      "completion": "The reader can identify the subject, source, update state, and next navigation step.",
+      "composition": {
+        "first_meaningful_view": "Search, results, or record subject.",
+        "dominant_region": "Result list or reading content.",
+        "persistent_context": "Query, subject, source, revision, and stable URL."
+      },
+      "contract_paths": [
+        "patterns/information-site.md",
+        "pages/search-and-results.md"
+      ],
+      "page_ids": [
+        "information-record",
+        "search-and-results"
+      ],
+      "source_maturity": "stable",
+      "conditional": false,
+      "presentation_status": "showcased",
+      "reference_path": "examples/product-patterns/information.html",
+      "states": [
+        "normal"
+      ],
+      "viewports": [
+        "wide",
+        "narrow"
+      ],
+      "themes": [
+        "light",
+        "dark",
+        "light-high-contrast",
+        "dark-high-contrast"
+      ],
+      "known_gaps": [
+        "Search-result, empty, stale, and unavailable states are not URL-addressable in this product-pattern reference."
+      ],
+      "inspection_path": "site/scenarios/lab.html?scenario=INF-01",
+      "state_controls": [
+        {
+          "state": "normal",
+          "label": "Record with provenance",
+          "reference_path": "examples/product-patterns/information.html",
+          "assertion": {
+            "kind": "visible",
+            "selector": "main.article h1"
+          }
+        }
+      ]
+    },
+    {
+      "id": "INF-02",
+      "canonical_name": "Reading With Provenance",
+      "group": "information",
+      "product_profiles": [
+        "information-site"
+      ],
+      "wave": "P1",
+      "user_job": "Follow headings, citations, source context, and related records.",
+      "entry": "A reader opens a stable record or article URL.",
+      "completion": "The reader understands the content and can inspect or return from its sources.",
+      "composition": {
+        "first_meaningful_view": "Subject identity and readable content.",
+        "dominant_region": "Article or record body.",
+        "persistent_context": "Subject, author or source, revision, and location trail."
+      },
+      "contract_paths": [
+        "patterns/information-site.md"
+      ],
+      "page_ids": [
+        "information-record"
+      ],
+      "source_maturity": "stable",
+      "conditional": false,
+      "presentation_status": "showcased",
+      "reference_path": "examples/product-patterns/information.html",
+      "states": [
+        "normal"
+      ],
+      "viewports": [
+        "wide",
+        "narrow"
+      ],
+      "themes": [
+        "light",
+        "dark",
+        "light-high-contrast",
+        "dark-high-contrast"
+      ],
+      "known_gaps": [
+        "Citation navigation and related-record transitions are static; no selected citation or unavailable-source fixture is URL-addressable.",
+        "The deterministic reference does not fetch authoritative sources or prove consuming-product provenance."
+      ],
+      "inspection_path": "site/scenarios/lab.html?scenario=INF-02",
+      "state_controls": [
+        {
+          "state": "normal",
+          "label": "Article with source context",
+          "reference_path": "examples/product-patterns/information.html#method",
+          "assertion": {
+            "kind": "visible",
+            "selector": ".source-rail"
+          }
+        }
+      ]
+    },
+    {
+      "id": "INF-03",
+      "canonical_name": "Revision and Correction History",
+      "group": "information",
+      "product_profiles": [
+        "information-site"
+      ],
+      "wave": "P1",
+      "user_job": "Understand what changed, when it changed, and why.",
+      "entry": "A reader follows a revision marker or correction link.",
+      "completion": "The reader can compare the current record with an attributable prior state.",
+      "composition": {
+        "first_meaningful_view": "Current revision identity and change summary.",
+        "dominant_region": "Revision comparison or chronological change record.",
+        "persistent_context": "Record identity, revision dates, editor or source, and correction status."
+      },
+      "contract_paths": [
+        "patterns/information-site.md"
+      ],
+      "page_ids": [
+        "information-record"
+      ],
+      "source_maturity": "stable",
+      "conditional": false,
+      "presentation_status": "showcased",
+      "reference_path": "examples/product-patterns/information.html",
+      "states": [
+        "normal"
+      ],
+      "viewports": [
+        "wide",
+        "narrow"
+      ],
+      "themes": [
+        "light",
+        "dark",
+        "light-high-contrast",
+        "dark-high-contrast"
+      ],
+      "known_gaps": [
+        "The reference exposes a concise revision summary only; diff, correction approval, rollback, and per-version deep links are not implemented.",
+        "The revision entries are deterministic local content, not an authoritative change history."
+      ],
+      "inspection_path": "site/scenarios/lab.html?scenario=INF-03",
+      "state_controls": [
+        {
+          "state": "normal",
+          "label": "Attributable revision summary",
+          "reference_path": "examples/product-patterns/information.html#revisions",
+          "assertion": {
+            "kind": "visible",
+            "selector": "#revisions"
+          }
+        }
+      ]
+    },
+    {
+      "id": "INF-04",
+      "canonical_name": "Collection and Archive",
+      "group": "information",
+      "product_profiles": [
+        "information-site"
+      ],
+      "wave": "P1",
+      "user_job": "Navigate stable records, saved views, and archived material.",
+      "entry": "A reader opens a topic, collection, or archived record.",
+      "completion": "The reader finds the intended record or understands why it is archived.",
+      "composition": {
+        "first_meaningful_view": "Collection identity with records or archive state.",
+        "dominant_region": "Comparable record list.",
+        "persistent_context": "Collection, topic, filters, archive reason, and stable URLs."
+      },
+      "contract_paths": [
+        "patterns/information-site.md"
+      ],
+      "page_ids": [
+        "information-record"
+      ],
+      "source_maturity": "stable",
+      "conditional": false,
+      "presentation_status": "planned",
+      "reference_path": "examples/product-patterns/information.html",
+      "states": [],
+      "viewports": [],
+      "themes": [],
+      "known_gaps": [
+        "Dedicated Atlas presentation and deterministic state locators are not implemented."
+      ],
+      "inspection_path": null,
+      "state_controls": []
+    },
+    {
+      "id": "COM-01",
+      "canonical_name": "Product or Inventory Exception",
+      "group": "ecommerce",
+      "product_profiles": [
+        "ecommerce-operations"
+      ],
+      "wave": "P0",
+      "user_job": "Identify a blocking state, affected quantity or channel, and the next safe action.",
+      "entry": "An operator opens an exception queue or selected product.",
+      "completion": "The exception is resolved, assigned, or left with an explicit recovery path.",
+      "composition": {
+        "first_meaningful_view": "Actionable exception queue and selected product.",
+        "dominant_region": "Queue or selected operational record.",
+        "persistent_context": "Selection, batch scope, currency, quantity, channel, and owner."
+      },
+      "contract_paths": [
+        "patterns/ecommerce-operations.md"
+      ],
+      "page_ids": [
+        "ecommerce-operations"
+      ],
+      "source_maturity": "stable",
+      "conditional": false,
+      "presentation_status": "showcased",
+      "reference_path": "examples/product-patterns/ecommerce.html",
+      "states": [
+        "normal"
+      ],
+      "viewports": [
+        "wide",
+        "narrow"
+      ],
+      "themes": [
+        "light",
+        "dark",
+        "light-high-contrast",
+        "dark-high-contrast"
+      ],
+      "known_gaps": [
+        "Resolution, assignment, batch recovery, and rollback are not URL-addressable fixtures yet."
+      ],
+      "inspection_path": "site/scenarios/lab.html?scenario=COM-01",
+      "state_controls": [
+        {
+          "state": "normal",
+          "label": "Selected inventory exception",
+          "reference_path": "examples/product-patterns/ecommerce.html",
+          "assertion": {
+            "kind": "visible",
+            "selector": "[role=\"row\"][aria-selected=\"true\"]"
+          }
+        }
+      ]
+    },
+    {
+      "id": "COM-02",
+      "canonical_name": "Product Detail and Edit",
+      "group": "ecommerce",
+      "product_profiles": [
+        "ecommerce-operations"
+      ],
+      "wave": "P1",
+      "user_job": "Edit a product while sellable state, price, inventory, channel status, and activity stay visible.",
+      "entry": "An operator opens a product from a scoped catalog view.",
+      "completion": "The product change is saved, rejected, or left as a recoverable draft.",
+      "composition": {
+        "first_meaningful_view": "Product identity and sellable state.",
+        "dominant_region": "Product detail and editable operational fields.",
+        "persistent_context": "Product, channel, money, inventory, approval, and save state."
+      },
+      "contract_paths": [
+        "patterns/ecommerce-operations.md"
+      ],
+      "page_ids": [
+        "ecommerce-operations"
+      ],
+      "source_maturity": "stable",
+      "conditional": false,
+      "presentation_status": "showcased",
+      "reference_path": "examples/product-patterns/ecommerce.html",
+      "states": [
+        "normal",
+        "pending",
+        "error",
+        "loading",
+        "committed",
+        "permission",
+        "failed"
+      ],
+      "viewports": [
+        "wide",
+        "narrow"
+      ],
+      "themes": [
+        "light",
+        "dark",
+        "light-high-contrast",
+        "dark-high-contrast"
+      ],
+      "known_gaps": [
+        "Save, permission, failure, and revision outcomes are deterministic local fixtures; no backend product record, authorization service, approval engine, or channel publication is connected.",
+        "The reference edits base price and available stock only; variants, tax basis, warehouse allocation, media, translations, and full activity history remain outside this fixture."
+      ],
+      "inspection_path": "site/scenarios/lab.html?scenario=COM-02",
+      "state_controls": [
+        {
+          "state": "normal",
+          "label": "Loaded product edit form",
+          "reference_path": "examples/product-patterns/ecommerce.html?edit=normal#product-context",
+          "assertion": {
+            "kind": "attribute",
+            "selector": "[data-commerce-edit-form]",
+            "attribute": "data-state",
+            "value": "normal"
+          }
+        },
+        {
+          "state": "pending",
+          "label": "Unsaved price and stock changes",
+          "reference_path": "examples/product-patterns/ecommerce.html?edit=pending#product-context",
+          "assertion": {
+            "kind": "attribute",
+            "selector": "[data-commerce-edit-form]",
+            "attribute": "data-state",
+            "value": "pending"
+          }
+        },
+        {
+          "state": "error",
+          "label": "Price validation error",
+          "reference_path": "examples/product-patterns/ecommerce.html?edit=error#product-context",
+          "assertion": {
+            "kind": "attribute",
+            "selector": "#commerce-price",
+            "attribute": "aria-invalid",
+            "value": "true"
+          }
+        },
+        {
+          "state": "loading",
+          "label": "Product update saving",
+          "reference_path": "examples/product-patterns/ecommerce.html?edit=loading#product-context",
+          "assertion": {
+            "kind": "attribute",
+            "selector": "[data-commerce-edit-form]",
+            "attribute": "aria-busy",
+            "value": "true"
+          }
+        },
+        {
+          "state": "committed",
+          "label": "Locally committed product revision",
+          "reference_path": "examples/product-patterns/ecommerce.html?edit=committed#product-context",
+          "assertion": {
+            "kind": "text",
+            "selector": "[data-commerce-edit-status]",
+            "value": "本地参考已保存为修订 R19"
+          }
+        },
+        {
+          "state": "permission",
+          "label": "Read-only permission boundary",
+          "reference_path": "examples/product-patterns/ecommerce.html?edit=permission#product-context",
+          "assertion": {
+            "kind": "visible",
+            "selector": "[data-commerce-permission]"
+          }
+        },
+        {
+          "state": "failed",
+          "label": "Failed save with retry",
+          "reference_path": "examples/product-patterns/ecommerce.html?edit=failed#product-context",
+          "assertion": {
+            "kind": "visible",
+            "selector": "[data-commerce-retry]"
+          }
+        }
+      ]
+    },
+    {
+      "id": "COM-03",
+      "canonical_name": "Order Operations",
+      "group": "ecommerce",
+      "product_profiles": [
+        "ecommerce-operations"
+      ],
+      "wave": "P1",
+      "user_job": "Review an order while payment, fulfillment, refund, ownership, and timeline remain distinct.",
+      "entry": "An operator opens an order from a queue or direct link.",
+      "completion": "The operator commits a safe fulfillment, refund, or assignment action.",
+      "composition": {
+        "first_meaningful_view": "Order identity with payment and fulfillment state.",
+        "dominant_region": "Order context and operational timeline.",
+        "persistent_context": "Order, customer scope, money, fulfillment, payment, and owner."
+      },
+      "contract_paths": [
+        "patterns/ecommerce-operations.md"
+      ],
+      "page_ids": [
+        "ecommerce-operations"
+      ],
+      "source_maturity": "stable",
+      "conditional": false,
+      "presentation_status": "planned",
+      "reference_path": "examples/product-patterns/ecommerce.html",
+      "states": [],
+      "viewports": [],
+      "themes": [],
+      "known_gaps": [
+        "Dedicated Atlas presentation and deterministic state locators are not implemented."
+      ],
+      "inspection_path": null,
+      "state_controls": []
+    },
+    {
+      "id": "COM-04",
+      "canonical_name": "Campaign and Creative Approval",
+      "group": "ecommerce",
+      "product_profiles": [
+        "ecommerce-operations"
+      ],
+      "wave": "P1",
+      "user_job": "Review media, offer, channel, approver, and publication scope before release.",
+      "entry": "An operator opens a campaign or creative review task.",
+      "completion": "The campaign is approved, rejected, or returned with attributable feedback.",
+      "composition": {
+        "first_meaningful_view": "Campaign identity, readiness, and review material.",
+        "dominant_region": "Creative or offer review.",
+        "persistent_context": "Campaign, channel, approver, publication scope, and revision."
+      },
+      "contract_paths": [
+        "patterns/ecommerce-operations.md"
+      ],
+      "page_ids": [
+        "ecommerce-operations"
+      ],
+      "source_maturity": "stable",
+      "conditional": false,
+      "presentation_status": "planned",
+      "reference_path": "examples/product-patterns/ecommerce.html",
+      "states": [],
+      "viewports": [],
+      "themes": [],
+      "known_gaps": [
+        "Dedicated Atlas presentation and deterministic state locators are not implemented."
+      ],
+      "inspection_path": null,
+      "state_controls": []
+    },
+    {
+      "id": "COM-05",
+      "canonical_name": "Scoped Batch Change",
+      "group": "ecommerce",
+      "product_profiles": [
+        "ecommerce-operations"
+      ],
+      "wave": "P1",
+      "user_job": "Confirm visible selection, affected count, execution result, and rollback.",
+      "entry": "An operator selects comparable records in a filtered queue.",
+      "completion": "The exact selected scope is changed or the action is safely cancelled.",
+      "composition": {
+        "first_meaningful_view": "Selected records and exact batch scope.",
+        "dominant_region": "Comparable queue with attached batch action.",
+        "persistent_context": "Filter, selection count, affected fields, permission, and rollback."
+      },
+      "contract_paths": [
+        "patterns/ecommerce-operations.md"
+      ],
+      "page_ids": [
+        "ecommerce-operations"
+      ],
+      "source_maturity": "stable",
+      "conditional": false,
+      "presentation_status": "planned",
+      "reference_path": "examples/product-patterns/ecommerce.html",
+      "states": [],
+      "viewports": [],
+      "themes": [],
+      "known_gaps": [
+        "Dedicated Atlas presentation and deterministic state locators are not implemented."
+      ],
+      "inspection_path": null,
+      "state_controls": []
+    },
+    {
+      "id": "ENG-01",
+      "canonical_name": "Canvas Edit and Undo",
+      "group": "engineering",
+      "product_profiles": [
+        "engineering-canvas"
+      ],
+      "wave": "P0",
+      "user_job": "Select, modify, commit, and undo a structured object with precise context.",
+      "entry": "A user opens a document and selects an object or tool.",
+      "completion": "The change is committed to document history or safely cancelled.",
+      "composition": {
+        "first_meaningful_view": "Canvas with a real selection or active tool.",
+        "dominant_region": "Precision canvas.",
+        "persistent_context": "Tool mode, selection, units, zoom, save state, and revision."
+      },
+      "contract_paths": [
+        "patterns/engineering-canvas.md"
+      ],
+      "page_ids": [
+        "engineering-canvas"
+      ],
+      "source_maturity": "stable",
+      "conditional": false,
+      "presentation_status": "showcased",
+      "reference_path": "examples/product-patterns/canvas.html",
+      "states": [
+        "normal"
+      ],
+      "viewports": [
+        "wide",
+        "narrow"
+      ],
+      "themes": [
+        "light",
+        "dark",
+        "light-high-contrast",
+        "dark-high-contrast"
+      ],
+      "known_gaps": [
+        "Committed, cancelled, undo, and revision-history states are interactive but are not URL-addressable fixtures yet."
+      ],
+      "inspection_path": "site/scenarios/lab.html?scenario=ENG-01",
+      "state_controls": [
+        {
+          "state": "normal",
+          "label": "Selected object on canvas",
+          "reference_path": "examples/product-patterns/canvas.html",
+          "assertion": {
+            "kind": "visible",
+            "selector": ".drawing-area svg[role=\"img\"]"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ENG-02",
+      "canonical_name": "Layer and Object Structure",
+      "group": "engineering",
+      "product_profiles": [
+        "engineering-canvas"
+      ],
+      "wave": "P1",
+      "user_job": "Navigate document hierarchy and inspect the current selection.",
+      "entry": "A user opens the layer or object rail in a document.",
+      "completion": "The intended object is selected, located, or structurally changed.",
+      "composition": {
+        "first_meaningful_view": "Document hierarchy beside the canvas.",
+        "dominant_region": "Canvas with supporting object structure.",
+        "persistent_context": "Document, layer hierarchy, selection, visibility, and lock state."
+      },
+      "contract_paths": [
+        "patterns/engineering-canvas.md"
+      ],
+      "page_ids": [
+        "engineering-canvas"
+      ],
+      "source_maturity": "stable",
+      "conditional": false,
+      "presentation_status": "showcased",
+      "reference_path": "examples/product-patterns/canvas.html",
+      "states": [
+        "normal"
+      ],
+      "viewports": [
+        "wide",
+        "narrow"
+      ],
+      "themes": [
+        "light",
+        "dark",
+        "light-high-contrast",
+        "dark-high-contrast"
+      ],
+      "known_gaps": [
+        "Object selection is interactive but not URL-addressable or persisted; the Atlas exposes the deterministic default hierarchy selection only.",
+        "Screen-reader tree semantics, precision input, and consuming-product hierarchy evidence remain open."
+      ],
+      "inspection_path": "site/scenarios/lab.html?scenario=ENG-02",
+      "state_controls": [
+        {
+          "state": "normal",
+          "label": "Selected object in hierarchy",
+          "reference_path": "examples/product-patterns/canvas.html?panel=layers",
+          "assertion": {
+            "kind": "visible",
+            "selector": "#canvas-layers"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ENG-03",
+      "canonical_name": "Generated Change Review",
+      "group": "engineering",
+      "product_profiles": [
+        "engineering-canvas"
+      ],
+      "wave": "P1",
+      "user_job": "Preview a generated diff, accept or reject it, and preserve attribution and undo.",
+      "entry": "A generated proposal is ready for document review.",
+      "completion": "The proposal is accepted into history, rejected, or left pending.",
+      "composition": {
+        "first_meaningful_view": "Proposed change with affected objects and scope.",
+        "dominant_region": "Canvas comparison or focused review.",
+        "persistent_context": "Document, proposal source, affected selection, revision, and decision."
+      },
+      "contract_paths": [
+        "patterns/engineering-canvas.md"
+      ],
+      "page_ids": [
+        "engineering-canvas"
+      ],
+      "source_maturity": "stable",
+      "conditional": false,
+      "presentation_status": "planned",
+      "reference_path": "examples/product-patterns/canvas.html",
+      "states": [],
+      "viewports": [],
+      "themes": [],
+      "known_gaps": [
+        "Dedicated Atlas presentation and deterministic state locators are not implemented."
+      ],
+      "inspection_path": null,
+      "state_controls": []
+    },
+    {
+      "id": "ENG-04",
+      "canonical_name": "Revision and Conflict Recovery",
+      "group": "engineering",
+      "product_profiles": [
+        "engineering-canvas"
+      ],
+      "wave": "P1",
+      "user_job": "Compare revisions and recover from a conflict without crowding the canvas.",
+      "entry": "A save conflict or revision comparison is opened.",
+      "completion": "The user selects, merges, or preserves a trustworthy document state.",
+      "composition": {
+        "first_meaningful_view": "Current document and conflicting or prior revision.",
+        "dominant_region": "Revision comparison.",
+        "persistent_context": "Document, revision identities, save state, selection, and recovery action."
+      },
+      "contract_paths": [
+        "patterns/engineering-canvas.md"
+      ],
+      "page_ids": [
+        "engineering-canvas"
+      ],
+      "source_maturity": "stable",
+      "conditional": false,
+      "presentation_status": "planned",
+      "reference_path": "examples/product-patterns/canvas.html",
+      "states": [],
+      "viewports": [],
+      "themes": [],
+      "known_gaps": [
+        "Dedicated Atlas presentation and deterministic state locators are not implemented."
+      ],
+      "inspection_path": null,
+      "state_controls": []
+    },
+    {
+      "id": "ENG-05",
+      "canonical_name": "Export or Background Operation",
+      "group": "engineering",
+      "product_profiles": [
+        "engineering-canvas"
+      ],
+      "wave": "P1",
+      "user_job": "Inspect phase and progress, cancel or continue, and reach the result.",
+      "entry": "A long export or simulation operation starts.",
+      "completion": "The operation completes, moves to background, fails with recovery, or is cancelled.",
+      "composition": {
+        "first_meaningful_view": "Task identity, phase, progress, and affected document.",
+        "dominant_region": "Current document or task detail according to interruption cost.",
+        "persistent_context": "Document, operation, progress, cancellation, and result location."
+      },
+      "contract_paths": [
+        "patterns/engineering-canvas.md"
+      ],
+      "page_ids": [
+        "engineering-canvas"
+      ],
+      "source_maturity": "stable",
+      "conditional": false,
+      "presentation_status": "planned",
+      "reference_path": "examples/product-patterns/canvas.html",
+      "states": [],
+      "viewports": [],
+      "themes": [],
+      "known_gaps": [
+        "Dedicated Atlas presentation and deterministic state locators are not implemented."
+      ],
+      "inspection_path": null,
+      "state_controls": []
+    },
+    {
+      "id": "CORE-01",
+      "canonical_name": "Access and Recovery",
+      "group": "shared",
+      "product_profiles": [
+        "all"
+      ],
+      "wave": "P0",
+      "user_job": "Sign in, recover access, and return to the intended context.",
+      "entry": "A protected route or explicit sign-in action requires identity.",
+      "completion": "The user returns to the intended destination or receives an honest recovery path.",
+      "composition": {
+        "first_meaningful_view": "Current authentication step and form.",
+        "dominant_region": "Access or recovery task.",
+        "persistent_context": "Intended destination, identity boundary, session state, and recovery path."
+      },
+      "contract_paths": [
+        "pages/authentication-and-access.md"
+      ],
+      "page_ids": [
+        "authentication-and-access"
+      ],
+      "source_maturity": "stable",
+      "conditional": false,
+      "presentation_status": "showcased",
+      "reference_path": "examples/page-patterns/access.html?lang=en",
+      "states": [
+        "normal",
+        "rate-limit",
+        "permission",
+        "error",
+        "offline",
+        "recovery"
+      ],
+      "viewports": [
+        "wide",
+        "narrow"
+      ],
+      "themes": [
+        "light",
+        "dark",
+        "light-high-contrast",
+        "dark-high-contrast"
+      ],
+      "known_gaps": [
+        "Expired-challenge, verified, and session-expired fixtures remain available in the reference but are outside this scenario inspection set."
+      ],
+      "inspection_path": "site/scenarios/lab.html?scenario=CORE-01",
+      "state_controls": [
+        {
+          "state": "normal",
+          "label": "Idle sign-in",
+          "reference_path": "examples/page-patterns/access.html?lang=en",
+          "assertion": {
+            "kind": "attribute",
+            "selector": "[data-auth-fixture]",
+            "attribute": "data-fixture-state",
+            "value": "idle"
+          }
+        },
+        {
+          "state": "rate-limit",
+          "label": "Rate limited",
+          "reference_path": "examples/page-patterns/access.html?lang=en&fixture=throttled",
+          "assertion": {
+            "kind": "attribute",
+            "selector": "[data-auth-fixture]",
+            "attribute": "data-fixture-state",
+            "value": "throttled"
+          }
+        },
+        {
+          "state": "permission",
+          "label": "Account locked",
+          "reference_path": "examples/page-patterns/access.html?lang=en&fixture=locked",
+          "assertion": {
+            "kind": "attribute",
+            "selector": "[data-auth-fixture]",
+            "attribute": "data-fixture-state",
+            "value": "locked"
+          }
+        },
+        {
+          "state": "error",
+          "label": "Provider unavailable",
+          "reference_path": "examples/page-patterns/access.html?lang=en&fixture=provider-unavailable",
+          "assertion": {
+            "kind": "attribute",
+            "selector": "[data-auth-fixture]",
+            "attribute": "data-fixture-state",
+            "value": "provider-unavailable"
+          }
+        },
+        {
+          "state": "offline",
+          "label": "Offline with input preserved",
+          "reference_path": "examples/page-patterns/access.html?lang=en&fixture=offline",
+          "assertion": {
+            "kind": "attribute",
+            "selector": "[data-auth-fixture]",
+            "attribute": "data-fixture-state",
+            "value": "offline"
+          }
+        },
+        {
+          "state": "recovery",
+          "label": "Access recovery",
+          "reference_path": "examples/page-patterns/access.html?lang=en#recovery",
+          "assertion": {
+            "kind": "visible",
+            "selector": "[data-recovery-view]"
+          }
+        }
+      ]
+    },
+    {
+      "id": "CORE-02",
+      "canonical_name": "Onboarding and Setup",
+      "group": "shared",
+      "product_profiles": [
+        "all"
+      ],
+      "wave": "P1",
+      "user_job": "Configure the product, invite collaborators, resume, and complete setup.",
+      "entry": "A new or returning user enters an incomplete setup flow.",
+      "completion": "Required setup is saved and the user reaches the first real task.",
+      "composition": {
+        "first_meaningful_view": "Current setup step, progress, and required decision.",
+        "dominant_region": "Current setup task.",
+        "persistent_context": "Workspace identity, progress, saved decisions, and exit or resume path."
+      },
+      "contract_paths": [
+        "pages/onboarding-and-setup.md"
+      ],
+      "page_ids": [
+        "onboarding-and-setup"
+      ],
+      "source_maturity": "stable",
+      "conditional": false,
+      "presentation_status": "showcased",
+      "reference_path": "examples/page-patterns/onboarding.html",
+      "states": [
+        "normal"
+      ],
+      "viewports": [
+        "wide",
+        "narrow"
+      ],
+      "themes": [
+        "light",
+        "dark",
+        "light-high-contrast",
+        "dark-high-contrast"
+      ],
+      "known_gaps": [
+        "Later setup steps remain navigable in the deterministic reference, but the Atlas does not equate navigation progress with persisted setup completion.",
+        "Resume state is local to the device and no workspace, import, or invitation is created by the reference."
+      ],
+      "inspection_path": "site/scenarios/lab.html?scenario=CORE-02",
+      "state_controls": [
+        {
+          "state": "normal",
+          "label": "Workspace identity step",
+          "reference_path": "examples/page-patterns/onboarding.html?lang=en#step-1",
+          "assertion": {
+            "kind": "visible",
+            "selector": "[data-onboarding-step=\"1\"]"
+          }
+        }
+      ]
+    },
+    {
+      "id": "CORE-03",
+      "canonical_name": "Search and Results",
+      "group": "shared",
+      "product_profiles": [
+        "all"
+      ],
+      "wave": "P1",
+      "user_job": "Search, refine, inspect a result, and restore URL state.",
+      "entry": "A user opens search directly or starts from a global query.",
+      "completion": "The user reaches a relevant result or an honest no-result or recovery state.",
+      "composition": {
+        "first_meaningful_view": "Query and result scope.",
+        "dominant_region": "Result list or selected result.",
+        "persistent_context": "Query, filters, ranking scope, selection, and URL."
+      },
+      "contract_paths": [
+        "pages/search-and-results.md"
+      ],
+      "page_ids": [
+        "search-and-results"
+      ],
+      "source_maturity": "stable",
+      "conditional": false,
+      "presentation_status": "showcased",
+      "reference_path": "examples/page-patterns/search.html",
+      "states": [
+        "normal",
+        "partial",
+        "stale",
+        "empty",
+        "error"
+      ],
+      "viewports": [
+        "wide",
+        "narrow"
+      ],
+      "themes": [
+        "light",
+        "dark",
+        "light-high-contrast",
+        "dark-high-contrast"
+      ],
+      "known_gaps": [
+        "Result selection, query, scope, access, and sort remain interactive URL state but are not represented as separate lifecycle states in the Atlas.",
+        "The deterministic reference has no search service, live ranking, or authoritative permission check."
+      ],
+      "inspection_path": "site/scenarios/lab.html?scenario=CORE-03",
+      "state_controls": [
+        {
+          "state": "normal",
+          "label": "Complete search results",
+          "reference_path": "examples/page-patterns/search.html?lang=en",
+          "assertion": {
+            "kind": "visible",
+            "selector": "[data-search-result-list]"
+          }
+        },
+        {
+          "state": "partial",
+          "label": "Partial source results",
+          "reference_path": "examples/page-patterns/search.html?lang=en&state=partial",
+          "assertion": {
+            "kind": "text",
+            "selector": "[data-search-state-title]",
+            "value": "Some sources are unavailable"
+          }
+        },
+        {
+          "state": "stale",
+          "label": "Stale search index",
+          "reference_path": "examples/page-patterns/search.html?lang=en&state=stale",
+          "assertion": {
+            "kind": "text",
+            "selector": "[data-search-state-title]",
+            "value": "Results come from a stale index"
+          }
+        },
+        {
+          "state": "empty",
+          "label": "No matching results",
+          "reference_path": "examples/page-patterns/search.html?lang=en&state=no-results",
+          "assertion": {
+            "kind": "visible",
+            "selector": "[data-search-empty]"
+          }
+        },
+        {
+          "state": "error",
+          "label": "Search service unavailable",
+          "reference_path": "examples/page-patterns/search.html?lang=en&state=error",
+          "assertion": {
+            "kind": "visible",
+            "selector": "[data-search-error]"
+          }
+        }
+      ]
+    },
+    {
+      "id": "CORE-04",
+      "canonical_name": "Settings and Administration",
+      "group": "shared",
+      "product_profiles": [
+        "all"
+      ],
+      "wave": "P1",
+      "user_job": "Change settings with authorization and unsaved-change protection.",
+      "entry": "A user opens a personal, workspace, or administration setting.",
+      "completion": "The change is saved, cancelled, or preserved for recovery.",
+      "composition": {
+        "first_meaningful_view": "Current settings section and saved state.",
+        "dominant_region": "Editable settings group.",
+        "persistent_context": "Account or workspace identity, permission, save state, and location."
+      },
+      "contract_paths": [
+        "pages/settings-and-administration.md"
+      ],
+      "page_ids": [
+        "settings-and-administration"
+      ],
+      "source_maturity": "stable",
+      "conditional": false,
+      "presentation_status": "showcased",
+      "reference_path": "examples/page-patterns/settings.html",
+      "states": [
+        "normal"
+      ],
+      "viewports": [
+        "wide",
+        "narrow"
+      ],
+      "themes": [
+        "light",
+        "dark",
+        "light-high-contrast",
+        "dark-high-contrast"
+      ],
+      "known_gaps": [
+        "Unsaved, saved, cancellation, and session-revocation behavior is interactive but not URL-addressable, so the Atlas exposes only the baseline profile section.",
+        "The reference does not persist profile, appearance, session, or notification changes to a backend."
+      ],
+      "inspection_path": "site/scenarios/lab.html?scenario=CORE-04",
+      "state_controls": [
+        {
+          "state": "normal",
+          "label": "Profile settings",
+          "reference_path": "examples/page-patterns/settings.html?lang=en#profile",
+          "assertion": {
+            "kind": "visible",
+            "selector": "[data-settings-section=\"profile\"]"
+          }
+        }
+      ]
+    },
+    {
+      "id": "CORE-05",
+      "canonical_name": "System and Recovery",
+      "group": "shared",
+      "product_profiles": [
+        "all"
+      ],
+      "wave": "P1",
+      "user_job": "Recover from unavailable, permission, offline, or retryable state without losing useful context.",
+      "entry": "A route, request, or dependency fails or becomes unavailable.",
+      "completion": "The user retries, returns, restores context, or understands the durable boundary.",
+      "composition": {
+        "first_meaningful_view": "Named failure with retained useful context.",
+        "dominant_region": "Recovery action and preserved work.",
+        "persistent_context": "Route, draft or cached data, failure scope, and return path."
+      },
+      "contract_paths": [
+        "pages/system-and-recovery.md"
+      ],
+      "page_ids": [
+        "system-and-recovery"
+      ],
+      "source_maturity": "stable",
+      "conditional": false,
+      "presentation_status": "showcased",
+      "reference_path": "examples/page-patterns/system.html",
+      "states": [
+        "recovery",
+        "permission",
+        "conflict",
+        "offline",
+        "rate-limit",
+        "error"
+      ],
+      "viewports": [
+        "wide",
+        "narrow"
+      ],
+      "themes": [
+        "light",
+        "dark",
+        "light-high-contrast",
+        "dark-high-contrast"
+      ],
+      "known_gaps": [
+        "The not-found fixture remains available in the reference but is outside this shared inspection vocabulary.",
+        "Recovery actions only report deterministic local feedback; they do not retry, restore a session, request access, merge, or submit data."
+      ],
+      "inspection_path": "site/scenarios/lab.html?scenario=CORE-05",
+      "state_controls": [
+        {
+          "state": "recovery",
+          "label": "Expired session recovery",
+          "reference_path": "examples/page-patterns/system.html?lang=en#session",
+          "assertion": {
+            "kind": "text",
+            "selector": "[data-system-code]",
+            "value": "401"
+          }
+        },
+        {
+          "state": "permission",
+          "label": "Forbidden action",
+          "reference_path": "examples/page-patterns/system.html?lang=en#forbidden",
+          "assertion": {
+            "kind": "text",
+            "selector": "[data-system-code]",
+            "value": "403"
+          }
+        },
+        {
+          "state": "conflict",
+          "label": "Newer server version",
+          "reference_path": "examples/page-patterns/system.html?lang=en#conflict",
+          "assertion": {
+            "kind": "text",
+            "selector": "[data-system-code]",
+            "value": "409"
+          }
+        },
+        {
+          "state": "offline",
+          "label": "Offline with draft preserved",
+          "reference_path": "examples/page-patterns/system.html?lang=en#offline",
+          "assertion": {
+            "kind": "text",
+            "selector": "[data-system-code]",
+            "value": "OFFLINE"
+          }
+        },
+        {
+          "state": "rate-limit",
+          "label": "Retry after throttling",
+          "reference_path": "examples/page-patterns/system.html?lang=en#rate-limit",
+          "assertion": {
+            "kind": "text",
+            "selector": "[data-system-code]",
+            "value": "429"
+          }
+        },
+        {
+          "state": "error",
+          "label": "Server unavailable",
+          "reference_path": "examples/page-patterns/system.html?lang=en#server",
+          "assertion": {
+            "kind": "text",
+            "selector": "[data-system-code]",
+            "value": "5XX"
+          }
+        }
+      ]
+    },
+    {
+      "id": "CORE-06",
+      "canonical_name": "Help and Support",
+      "group": "shared",
+      "product_profiles": [
+        "all"
+      ],
+      "wave": "P1",
+      "user_job": "Find help, inspect service status, escalate, and preserve support context.",
+      "entry": "A user opens contextual help or a support route.",
+      "completion": "The user resolves the issue, opens a durable request, or reaches a truthful status source.",
+      "composition": {
+        "first_meaningful_view": "Current issue, search, or support path.",
+        "dominant_region": "Relevant help or support task.",
+        "persistent_context": "Product area, issue context, status, ticket identity, and return path."
+      },
+      "contract_paths": [
+        "pages/help-and-support.md"
+      ],
+      "page_ids": [
+        "help-and-support"
+      ],
+      "source_maturity": "stable",
+      "conditional": false,
+      "presentation_status": "showcased",
+      "reference_path": "examples/page-patterns/support.html",
+      "states": [
+        "normal"
+      ],
+      "viewports": [
+        "wide",
+        "narrow"
+      ],
+      "themes": [
+        "light",
+        "dark",
+        "light-high-contrast",
+        "dark-high-contrast"
+      ],
+      "known_gaps": [
+        "Help, request, ticket, and status sections are URL-addressable navigation, but only baseline help is a lifecycle state in this tranche.",
+        "The reference creates no support ticket and connects to no authoritative status service."
+      ],
+      "inspection_path": "site/scenarios/lab.html?scenario=CORE-06",
+      "state_controls": [
+        {
+          "state": "normal",
+          "label": "Contextual help",
+          "reference_path": "examples/page-patterns/support.html?lang=en#help",
+          "assertion": {
+            "kind": "visible",
+            "selector": "[data-support-section=\"help\"]"
+          }
+        }
+      ]
+    },
+    {
+      "id": "WORK-01",
+      "canonical_name": "Scheduling Workspace",
+      "group": "shared",
+      "product_profiles": [
+        "intelligence-workspace",
+        "ecommerce-operations",
+        "engineering-canvas"
+      ],
+      "wave": "P0",
+      "user_job": "Inspect a period, select an item, and reschedule with time and selection context intact.",
+      "entry": "A user opens a saved period or selected schedule item.",
+      "completion": "The schedule change is committed, rejected by conflict, or safely recovered.",
+      "composition": {
+        "first_meaningful_view": "Period view or agenda with selected item.",
+        "dominant_region": "Schedule or agenda.",
+        "persistent_context": "Period, time zone, filters, selection, and pending change."
+      },
+      "contract_paths": [
+        "pages/scheduling-workspace.md"
+      ],
+      "page_ids": [
+        "scheduling-workspace"
+      ],
+      "source_maturity": "candidate",
+      "conditional": false,
+      "presentation_status": "showcased",
+      "reference_path": "examples/page-patterns/scheduling.html",
+      "states": [
+        "normal",
+        "partial",
+        "conflict",
+        "empty"
+      ],
+      "viewports": [
+        "wide",
+        "narrow"
+      ],
+      "themes": [
+        "light",
+        "dark",
+        "light-high-contrast",
+        "dark-high-contrast"
+      ],
+      "known_gaps": [
+        "Real-product time-zone, recurrence, persisted rescheduling, and assistive-technology evidence remain open.",
+        "The local reference does not commit a schedule change; the candidate source maturity remains unchanged."
+      ],
+      "inspection_path": "site/scenarios/lab.html?scenario=WORK-01",
+      "state_controls": [
+        {
+          "state": "normal",
+          "label": "Week schedule",
+          "reference_path": "examples/page-patterns/scheduling.html?lang=en",
+          "assertion": {
+            "kind": "attribute",
+            "selector": "[data-schedule-shell]",
+            "attribute": "data-schedule-view",
+            "value": "week"
+          }
+        },
+        {
+          "state": "partial",
+          "label": "Source unavailable",
+          "reference_path": "examples/page-patterns/scheduling.html?lang=en&selected=SCH-102",
+          "assertion": {
+            "kind": "text",
+            "selector": "[data-sidecar-status]",
+            "value": "Source unavailable"
+          }
+        },
+        {
+          "state": "conflict",
+          "label": "Reviewer conflict",
+          "reference_path": "examples/page-patterns/scheduling.html?lang=en&selected=SCH-103",
+          "assertion": {
+            "kind": "text",
+            "selector": "[data-sidecar-conflict]",
+            "value": "share one reviewer"
+          }
+        },
+        {
+          "state": "empty",
+          "label": "Empty period",
+          "reference_path": "examples/page-patterns/scheduling.html?lang=en&week=2026-07-20",
+          "assertion": {
+            "kind": "visible",
+            "selector": "[data-schedule-empty]"
+          }
+        }
+      ]
+    },
+    {
+      "id": "WORK-02",
+      "canonical_name": "Transfer and Import",
+      "group": "shared",
+      "product_profiles": [
+        "all"
+      ],
+      "wave": "P2",
+      "user_job": "Transfer or import data through mapping, partial failure, retry, and rollback.",
+      "entry": "A user chooses a file, source, or migration job.",
+      "completion": "The import completes with an attributable result or returns to a recoverable mapping state.",
+      "composition": {
+        "first_meaningful_view": "Source identity, mapping task, and current phase.",
+        "dominant_region": "Mapping or result review.",
+        "persistent_context": "Source, destination, progress, validation, failed rows, and rollback."
+      },
+      "contract_paths": [
+        "pages/transfer-and-import.md"
+      ],
+      "page_ids": [
+        "transfer-and-import"
+      ],
+      "source_maturity": "candidate",
+      "conditional": false,
+      "presentation_status": "planned",
+      "reference_path": null,
+      "states": [],
+      "viewports": [],
+      "themes": [],
+      "known_gaps": [
+        "Mapping and partial-failure reference, large-file behavior, and automated recovery checks remain open."
+      ],
+      "inspection_path": null,
+      "state_controls": []
+    },
+    {
+      "id": "WORK-03",
+      "canonical_name": "Notifications and Audit",
+      "group": "shared",
+      "product_profiles": [
+        "all"
+      ],
+      "wave": "P2",
+      "user_job": "Review notifications and audit records through read state, filters, detail, and retention boundaries.",
+      "entry": "A user opens a notification inbox or audit route.",
+      "completion": "The user reads, filters, follows, or records the relevant durable event.",
+      "composition": {
+        "first_meaningful_view": "Notification or audit list with current scope.",
+        "dominant_region": "Comparable event list and selected detail.",
+        "persistent_context": "Filters, read state, actor, time, retention, and selected event."
+      },
+      "contract_paths": [
+        "pages/notifications-and-audit.md"
+      ],
+      "page_ids": [
+        "notifications-and-audit"
+      ],
+      "source_maturity": "candidate",
+      "conditional": false,
+      "presentation_status": "planned",
+      "reference_path": null,
+      "states": [],
+      "viewports": [],
+      "themes": [],
+      "known_gaps": [
+        "Notification inbox, audit filter/detail reference, and automated read-state checks remain open."
+      ],
+      "inspection_path": null,
+      "state_controls": []
+    },
+    {
+      "id": "WORK-04",
+      "canonical_name": "Organization and Permissions",
+      "group": "shared",
+      "product_profiles": [
+        "all"
+      ],
+      "wave": "P2",
+      "user_job": "Invite members, inspect roles, change permission scope, and confirm impact.",
+      "entry": "An authorized user opens organization membership or role settings.",
+      "completion": "The invitation or role change is committed with explicit scope and audit context.",
+      "composition": {
+        "first_meaningful_view": "Organization identity and member or invitation list.",
+        "dominant_region": "Membership and role management.",
+        "persistent_context": "Organization, member, role, permission scope, and pending invitation."
+      },
+      "contract_paths": [
+        "pages/organization-and-permissions.md"
+      ],
+      "page_ids": [
+        "organization-and-permissions"
+      ],
+      "source_maturity": "candidate",
+      "conditional": false,
+      "presentation_status": "planned",
+      "reference_path": null,
+      "states": [],
+      "viewports": [],
+      "themes": [],
+      "known_gaps": [
+        "Member and invitation reference, role-change confirmation, responsive behavior, and automated checks remain open."
+      ],
+      "inspection_path": null,
+      "state_controls": []
+    },
+    {
+      "id": "COND-01",
+      "canonical_name": "Billing and Plan",
+      "group": "shared",
+      "product_profiles": [
+        "conditional"
+      ],
+      "wave": "P2",
+      "user_job": "Inspect plan, usage, invoice, cancellation, or payment recovery only when the product requires billing.",
+      "entry": "An authorized user opens a real billing capability.",
+      "completion": "The user understands the plan or completes a provider-owned billing action.",
+      "composition": {
+        "first_meaningful_view": "Current plan, usage, invoice, or payment problem.",
+        "dominant_region": "Relevant billing task.",
+        "persistent_context": "Account, plan, currency, provider boundary, invoice, and recovery state."
+      },
+      "contract_paths": [
+        "pages/billing-and-plan.md"
+      ],
+      "page_ids": [
+        "billing-and-plan"
+      ],
+      "source_maturity": "draft",
+      "conditional": true,
+      "presentation_status": "planned",
+      "reference_path": null,
+      "states": [],
+      "viewports": [],
+      "themes": [],
+      "known_gaps": [
+        "Product evidence, complete contract, reference, themes, localization, interaction checks, and provider integration remain open."
+      ],
+      "inspection_path": null,
+      "state_controls": []
+    }
+  ]
+}

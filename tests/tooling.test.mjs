@@ -320,6 +320,66 @@ test("page catalog passes maturity and evidence-path validation", () => {
   assert.equal(result.summary.errors, 0);
 });
 
+test("scenario catalog passes source-maturity and presentation validation", () => {
+  const run = spawnSync(process.execPath, [path.join(root, "scripts", "validate-scenarios.mjs"), "--json"], { encoding: "utf8" });
+  assert.equal(run.status, 0, run.stderr);
+  const result = JSON.parse(run.stdout);
+  assert.equal(result.summary.scenarioEntries, 30);
+  assert.equal(result.summary.pilots, 6);
+  assert.equal(result.summary.linked, 0);
+  assert.equal(result.summary.showcased, 16);
+  assert.equal(result.summary.planned, 14);
+  assert.equal(result.summary.errors, 0);
+
+  const catalog = JSON.parse(fs.readFileSync(path.join(root, "scenarios", "catalog.json"), "utf8"));
+  assert.equal(catalog.schema_version, "1.1.0");
+  assert.equal(catalog.catalog_version, "1.5.0");
+  const showcased = catalog.scenarios.filter((scenario) => scenario.presentation_status === "showcased");
+  assert.ok(showcased.every((scenario) => scenario.states.length === scenario.state_controls.length));
+  assert.deepEqual(showcased.find((scenario) => scenario.id === "CORE-01").states, ["normal", "rate-limit", "permission", "error", "offline", "recovery"]);
+  assert.deepEqual(showcased.find((scenario) => scenario.id === "CORE-03").states, ["normal", "partial", "stale", "empty", "error"]);
+  assert.deepEqual(showcased.find((scenario) => scenario.id === "CORE-05").states, ["recovery", "permission", "conflict", "offline", "rate-limit", "error"]);
+  assert.deepEqual(showcased.find((scenario) => scenario.id === "INT-03").states, ["normal", "loading", "empty", "conflict", "pending", "committed", "undo", "permission", "error"]);
+  assert.deepEqual(showcased.find((scenario) => scenario.id === "WORK-01").states, ["normal", "partial", "conflict", "empty"]);
+  assert.deepEqual(showcased.find((scenario) => scenario.id === "INF-02").states, ["normal"]);
+  assert.deepEqual(showcased.find((scenario) => scenario.id === "INF-03").states, ["normal"]);
+  assert.deepEqual(showcased.find((scenario) => scenario.id === "COM-02").states, ["normal", "pending", "error", "loading", "committed", "permission", "failed"]);
+  assert.deepEqual(showcased.find((scenario) => scenario.id === "ENG-02").states, ["normal"]);
+  assert.equal(showcased.reduce((total, scenario) => total + scenario.state_controls.length, 0), 47);
+});
+
+test("scenario validator rejects unsupported catalog and presentation-status fields", () => {
+  const source = JSON.parse(fs.readFileSync(path.join(root, "scenarios", "catalog.json"), "utf8"));
+  const cases = [
+    {
+      mutate: (catalog) => { catalog.unsupported_field = true; },
+      field: "$",
+    },
+    {
+      mutate: (catalog) => { catalog.presentation_status_definitions.unsupported_field = "not in the Schema"; },
+      field: "presentation_status_definitions",
+    },
+  ];
+
+  for (const [index, fixture] of cases.entries()) {
+    const fixtureDirectory = fs.mkdtempSync(path.join(os.tmpdir(), `kin-scenario-schema-${index}-`));
+    const fixturePath = path.join(fixtureDirectory, "catalog.json");
+    const catalog = structuredClone(source);
+    fixture.mutate(catalog);
+    fs.writeFileSync(fixturePath, JSON.stringify(catalog, null, 2) + "\n");
+
+    const run = spawnSync(process.execPath, [
+      path.join(root, "scripts", "validate-scenarios.mjs"),
+      "--json",
+      "--catalog",
+      fixturePath,
+    ], { cwd: root, encoding: "utf8" });
+    assert.equal(run.status, 1, run.stderr);
+    const result = JSON.parse(run.stdout);
+    assert.ok(result.findings.some((finding) => finding.field === fixture.field && finding.message.includes("unsupported_field")));
+  }
+});
+
 test("candidate audit reports context and does not fail on P2 alone", () => {
   const project = fs.mkdtempSync(path.join(os.tmpdir(), "kin-audit-"));
   fs.mkdirSync(path.join(project, "src"));

@@ -17,30 +17,63 @@
     <div class="commerce-shell">
       <aside class="commerce-sidebar" aria-label="电商工作区导航">
         <header class="commerce-brand"><strong>Merch Desk</strong><span>电商运营</span></header>
-        <nav class="commerce-nav"><a href="#overview">概览</a><a href="#catalog" aria-current="page">商品 <span>284</span></a><a href="#inventory">库存 <span>12</span></a><a href="#orders">订单 <span>36</span></a><a href="#campaigns">活动 <span>4</span></a><a href="#approvals">待审批 <span>7</span></a></nav>
+        <nav class="commerce-nav"><a href="#overview">概览</a><a href="#catalog" aria-current="page">商品 <span>284</span></a><span class="commerce-nav-item" aria-disabled="true">库存 <small>未提供</small></span><span class="commerce-nav-item" aria-disabled="true">订单 <small>未提供</small></span><span class="commerce-nav-item" aria-disabled="true">活动 <small>未提供</small></span><span class="commerce-nav-item" aria-disabled="true">待审批 <small>未提供</small></span></nav>
       </aside>
 
       <main class="commerce-main">
         <header class="commerce-bar">
           <div><p class="location-path">商品目录 / 全部商品</p><h1>商品运营</h1></div>
-          <div class="commerce-tools"><button type="button">筛选</button><button type="button">导出</button><button type="button" class="primary-action">新建商品</button></div>
+          <div class="commerce-tools"><button type="button">筛选</button><button type="button">导出</button><button type="button" class="commerce-inspector-trigger" data-commerce-inspector-open aria-controls="commerce-inspector" aria-expanded="false" aria-haspopup="dialog">商品属性</button><button type="button" class="primary-action">新建商品</button></div>
         </header>
-        <section class="commerce-summary" aria-label="当前队列摘要"><div><span>当前视图</span><strong>284 个商品</strong></div><div><span>低库存</span><strong>12</strong></div><div><span>待审批</span><strong>7</strong></div><div><span>同步失败</span><strong>2</strong></div></section>
+        <section id="overview" class="commerce-summary" aria-label="当前队列摘要"><div><span>当前视图</span><strong>284 个商品</strong></div><div><span>低库存</span><strong>12</strong></div><div><span>待审批</span><strong>7</strong></div><div><span>同步失败</span><strong>2</strong></div></section>
 
-        <div class="commerce-table" role="grid" aria-label="商品列表">
+        <div id="catalog" class="commerce-table" role="grid" aria-label="商品列表">
           <div class="commerce-row header" role="row"><span role="columnheader"></span><span role="columnheader">商品</span><span role="columnheader">售价</span><span role="columnheader">可售</span><span role="columnheader">渠道状态</span><span role="columnheader">更新</span></div>
           <div class="commerce-row" role="row" tabindex="0"><span role="gridcell"><label class="checkbox-target"><input type="checkbox" aria-label="选择 Linen Overshirt" /></label></span><strong role="gridcell">Linen Overshirt<br /><small>SKU OS-041</small></strong><span class="money" role="gridcell">CNY 699.00</span><span class="quantity" role="gridcell">84</span><span role="gridcell"><i class="status-dot positive"></i>3 个渠道</span><span role="gridcell">8 分钟前</span></div>
-          <div class="commerce-row selected" role="row" tabindex="0" aria-selected="true"><span role="gridcell"><label class="checkbox-target"><input type="checkbox" aria-label="选择 Field Jacket" /></label></span><strong role="gridcell">Field Jacket<br /><small>SKU FJ-018</small></strong><span class="money" role="gridcell">CNY 1,299.00</span><span class="quantity" role="gridcell">6</span><span role="gridcell"><i class="status-dot warning"></i>待补货</span><span role="gridcell">12 分钟前</span></div>
+          <div class="commerce-row selected" role="row" tabindex="0" aria-selected="true"><span role="gridcell"><label class="checkbox-target"><input type="checkbox" aria-label="选择 Field Jacket" /></label></span><strong role="gridcell">Field Jacket<br /><small>SKU FJ-018</small></strong><span class="money" role="gridcell" data-commerce-current-price>CNY 1,299.00</span><span class="quantity" role="gridcell" data-commerce-current-stock>6</span><span role="gridcell"><i class="status-dot warning"></i>待补货</span><span role="gridcell">12 分钟前</span></div>
           <div class="commerce-row" role="row" tabindex="0"><span role="gridcell"><label class="checkbox-target"><input type="checkbox" aria-label="选择 Canvas Tote" /></label></span><strong role="gridcell">Canvas Tote<br /><small>SKU CT-102</small></strong><span class="money" role="gridcell">CNY 329.00</span><span class="quantity" role="gridcell">128</span><span role="gridcell"><i class="status-dot positive"></i>3 个渠道</span><span role="gridcell">19 分钟前</span></div>
           <div class="commerce-row" role="row" tabindex="0"><span role="gridcell"><label class="checkbox-target"><input type="checkbox" aria-label="选择 Wool Cap" /></label></span><strong role="gridcell">Wool Cap<br /><small>SKU WC-033</small></strong><span class="money" role="gridcell">CNY 269.00</span><span class="quantity" role="gridcell">0</span><span role="gridcell"><i class="status-dot negative"></i>已售罄</span><span role="gridcell">24 分钟前</span></div>
         </div>
       </main>
 
-      <aside class="commerce-inspector" aria-labelledby="product-title">
-        <header><p class="object-id">SKU FJ-018</p><h2 id="product-title">Field Jacket</h2></header>
-        <section><h3>销售状态</h3><dl><div><dt>内部状态</dt><dd>已启用</dd></div><div><dt>渠道发布</dt><dd>2 / 3</dd></div><div><dt>售价</dt><dd>CNY 1,299.00</dd></div><div><dt>可售库存</dt><dd>6</dd></div><div><dt>已预留</dt><dd>4</dd></div></dl></section>
-        <section><h3>库存位置</h3><dl><div><dt>上海</dt><dd>4 可售</dd></div><div><dt>深圳</dt><dd>2 可售</dd></div><div><dt>在途</dt><dd>24 · 7 月 15 日</dd></div></dl></section>
-        <section><h3>审批</h3><div class="approval"><strong>价格调整等待审批</strong><span>建议从 CNY 1,399.00 调整为 CNY 1,299.00；尚未发布到任何渠道。</span></div></section>
+      <div class="commerce-inspector-scrim" data-commerce-inspector-scrim data-state="closed" aria-hidden="true" hidden></div>
+
+      <aside id="commerce-inspector" class="commerce-inspector" data-state="persistent" aria-labelledby="product-title" aria-hidden="false" tabindex="-1">
+        <header id="product-context" class="commerce-inspector-header"><div><p class="object-id">SKU FJ-018</p><h2 id="product-title">Field Jacket</h2></div><div class="commerce-inspector-header-actions"><span class="commerce-edit-chip" data-commerce-edit-state-label>无待保存</span><button type="button" class="commerce-inspector-close" data-commerce-inspector-close aria-label="关闭 Field Jacket 商品属性">关闭</button></div></header>
+        <section id="product-edit" class="commerce-edit-section" aria-labelledby="product-edit-title">
+          <div class="commerce-section-heading"><h3 id="product-edit-title">商品编辑</h3><span>本地参考</span></div>
+          <p class="commerce-edit-context">编辑基础售价与可售库存。渠道发布保持为独立状态，不会随此表单自动改变。</p>
+          <form data-commerce-edit-form data-state="normal" aria-busy="false" novalidate>
+            <fieldset data-commerce-edit-fields>
+              <legend class="visually-hidden">Field Jacket 可编辑商品字段</legend>
+              <div class="commerce-field">
+                <label for="commerce-price">基础售价</label>
+                <div class="commerce-money-input"><span aria-hidden="true">CNY</span><input id="commerce-price" name="price" type="number" min="0.01" step="0.01" inputmode="decimal" value="1299.00" aria-describedby="commerce-price-help commerce-price-error" aria-invalid="false" required /></div>
+                <p id="commerce-price-help" class="commerce-field-help" data-commerce-price-help>含币种；当前记录值 CNY 1,299.00。</p>
+                <p id="commerce-price-error" class="commerce-field-error" data-commerce-price-error hidden></p>
+              </div>
+              <div class="commerce-field">
+                <label for="commerce-stock">可售库存</label>
+                <input id="commerce-stock" name="stock" type="number" min="0" step="1" inputmode="numeric" value="6" aria-describedby="commerce-stock-help commerce-stock-error" aria-invalid="false" required />
+                <p id="commerce-stock-help" class="commerce-field-help">此本地参考只保存商品级可售总量；不推算仓库分配，预留和在途记录不会随此表单改变。</p>
+                <p id="commerce-stock-error" class="commerce-field-error" data-commerce-stock-error hidden></p>
+              </div>
+            </fieldset>
+            <div class="commerce-edit-impact"><span>变更范围</span><strong data-commerce-edit-impact>无待保存更改</strong></div>
+            <div class="commerce-edit-notice permission" data-commerce-permission hidden role="note"><strong>没有编辑权限</strong><span>当前角色仅可查看定价与库存；请联系商品管理员。</span></div>
+            <div class="commerce-edit-notice failure" data-commerce-save-failure hidden role="alert"><strong>保存未完成</strong><span>当前记录值保持不变，可重试或放弃本地更改。</span></div>
+            <div class="commerce-edit-actions">
+              <button type="button" data-commerce-discard disabled>放弃更改</button>
+              <button type="button" data-commerce-retry hidden>重试保存</button>
+              <button type="submit" class="primary-action" data-commerce-save disabled>保存商品</button>
+            </div>
+            <p class="commerce-edit-status" data-commerce-edit-status role="status" aria-live="polite">商品数据已加载，没有待保存更改。</p>
+          </form>
+        </section>
+        <section><h3>销售状态</h3><dl><div><dt>内部状态</dt><dd>已启用</dd></div><div><dt>渠道发布</dt><dd>2 / 3</dd></div><div><dt>售价</dt><dd data-commerce-current-price>CNY 1,299.00</dd></div><div><dt>可售库存</dt><dd data-commerce-current-stock>6</dd></div><div><dt>已预留</dt><dd>4</dd></div></dl></section>
+        <section><h3>库存边界</h3><dl><div><dt>分仓分配</dt><dd data-commerce-stock-allocation>未在此参考建模</dd></div><div><dt>已预留</dt><dd>4 · 只读 fixture</dd></div><div><dt>在途</dt><dd>24 · 7 月 15 日 · 只读 fixture</dd></div></dl></section>
+        <section><h3>审批</h3><div class="approval"><strong data-commerce-approval-title>价格调整等待审批</strong><span data-commerce-approval-copy>建议从 CNY 1,399.00 调整为 CNY 1,299.00；尚未发布到任何渠道。</span></div></section>
+        <section><h3>最近活动</h3><ol class="commerce-activity" aria-label="Field Jacket 最近活动"><li data-commerce-edit-activity><time datetime="2026-07-17T14:42:00+08:00">14:42</time><span>商品数据已加载，记录值未改变。</span></li><li><time datetime="2026-07-17T14:30:00+08:00">14:30</time><span>林澄提交价格调整，等待审批。</span></li></ol></section>
         <section class="pattern-theme-actions"><div class="kin-preference-controls" data-preference-controls><button type="button" class="kin-theme-switch" role="switch" data-theme-switch aria-checked="false" aria-label="切换为夜间模式"><span class="kin-theme-switch-icon"><i data-lucide="sun"></i></span><span class="kin-theme-switch-track" aria-hidden="true"><span class="kin-theme-switch-thumb"></span></span><span class="kin-theme-switch-icon"><i data-lucide="moon"></i></span></button><div class="kin-theme-menu-control"><button type="button" class="kin-theme-menu-trigger" data-theme-menu-trigger aria-haspopup="menu" aria-expanded="false" aria-label="外观选项"><i data-lucide="chevron-down"></i></button><div class="kin-theme-menu" data-theme-menu data-state="closed" role="menu" aria-label="外观选项" hidden><button type="button" role="menuitemradio" aria-checked="false" data-theme-preference="light"><i class="kin-theme-menu-item-icon" data-lucide="sun"></i><span>日间</span><i class="kin-theme-menu-check" data-lucide="check"></i></button><button type="button" role="menuitemradio" aria-checked="false" data-theme-preference="dark"><i class="kin-theme-menu-item-icon" data-lucide="moon"></i><span>夜间</span><i class="kin-theme-menu-check" data-lucide="check"></i></button><button type="button" role="menuitemradio" aria-checked="true" data-theme-preference="system"><i class="kin-theme-menu-item-icon" data-lucide="monitor"></i><span>跟随系统</span><i class="kin-theme-menu-check" data-lucide="check"></i></button></div></div></div><button type="button" data-contrast-toggle aria-pressed="false">高对比</button></section>
       </aside>
     </div>
