@@ -1,6 +1,6 @@
 # OpenAI Build Week submission draft
 
-Verified against the official OpenAI Build Week page, Devpost rules, and Devpost FAQ on 2026-07-19.
+Verified against the official OpenAI Build Week page, Devpost rules, and Devpost FAQ on 2026-07-20.
 
 - Submission deadline: July 21, 2026 at 5:00 PM PDT / July 22, 2026 at 8:00 AM China Standard Time
 - Track: **Developer Tools**
@@ -42,7 +42,9 @@ It:
 - checks responsive layout, focus, themes, localization, hover and touch targets, loading and error states, and Reduced Motion where the environment allows;
 - returns a Before / After / Why report with commands, browser evidence, rollback, and unverified claims.
 
-The Build Week case study uses AgentOS, a working multi-agent commerce brief, as the target. The plugin found two real keyboard-focus failures, rejected valid pill candidates, helped remove decorative chrome that competed with the task, and verified the repaired bilingual light/dark product in deterministic replay.
+The primary Build Week case study uses AgentOS, a working multi-agent commerce brief, as the target. The plugin found two real keyboard-focus failures, rejected valid pill candidates, helped remove decorative chrome that competed with the task, and verified the repaired bilingual light/dark product in deterministic replay.
+
+A second trial on kin3.net checks that the workflow generalizes to a different brand and stack. It found a production-only Windows failure where the document loaded but generated CSS and JavaScript returned 404, converted that failure into a regression test, repaired undersized touch targets and JavaScript-driven Reduced Motion behavior, and preserved valid brand gradients and rounded controls.
 
 ## How it uses Codex and GPT-5.6
 
@@ -61,7 +63,7 @@ The plugin package contains:
 - runtime-boundary and report-format references;
 - a read-only Node.js evidence collector;
 - deterministic candidate-scan helpers and unit tests;
-- installation, judge-testing, and AgentOS case-study documentation.
+- installation, judge-testing, AgentOS case-study, and independent kin3.net trial documentation.
 
 The existing KIN design system predates Build Week. The installable plugin, collector, tests, runtime boundary, report contract, and AgentOS repair case were created or meaningfully extended with Codex and GPT-5.6 during the submission period. The final repository must preserve timestamped commits that make this distinction clear.
 
@@ -75,9 +77,10 @@ The second challenge was making a design system useful without forcing one visua
 
 - Packaged the KIN workflow as a real installable Codex plugin rather than a simulated chat interface.
 - Built a deterministic collector with passing unit and package validation.
-- Demonstrated the complete audit → confirm → authorize → repair → verify loop on a real Next.js product.
+- Demonstrated the complete audit → confirm → authorize → repair → verify loop on two visually distinct Next.js products.
 - Reduced the AgentOS scan from 20 candidates, including 2 confirmed P1 focus failures, to 4 reviewed P2 exceptions.
 - Added bilingual UI, light/dark/system preferences, transparent provider labeling, localized replay fixtures, and improved responsive controls to the case-study target.
+- Found and repaired a production CSS/JavaScript 404 outside the static candidate list, then locked it down with a clean-worktree regression test.
 - Kept replay, compatible-endpoint configuration, official OpenAI usage, and model provenance visibly distinct.
 
 ## What I learned
@@ -99,16 +102,17 @@ The most useful AI design tool is not the one that produces the most screens. It
 3. Invoke `$kin-design-engineer Audit this frontend; confirm candidates in the rendered UI and do not edit.`
 4. Run the deterministic collector directly if desired; it requires Node.js 20.11+ and no credentials.
 5. Invoke repair mode only on a disposable checkout or after reviewing the proposed scope.
-6. Run the included plugin tests and validators from the repository README.
+6. Review the independent kin3.net trial to see which scanner candidates were preserved and which browser-discovered failure became a regression test.
+7. Run the included plugin tests and validators from the repository README.
 
 ## Required links and evidence
 
 - Live/demo testing path: repository-local plugin install; public instructions pending
-- Repository URL: `TODO`
+- Repository URL: `TODO — publish or grant both judging accounts access`
 - Public YouTube video under three minutes: `TODO`
 - Primary Codex `/feedback` Session ID: `TODO`
-- Final local screenshots: `../agentos/artifacts/build-week/agentos-desktop-en-light-initial.jpg`, `agentos-desktop-en-light-complete.jpg`, `agentos-desktop-zh-dark-complete.jpg`, and `agentos-mobile-zh-dark.jpg`; upload still required
-- Fresh-install result on a clean checkout: `TODO`
+- Final local screenshots: AgentOS commit `6e32403`, under `artifacts/build-week/`; upload still required
+- Clean-checkout result: KIN plugin commit `f5d94c1`, AgentOS commit `6e32403`, and kin3.net commit `e3c75a7` all passed their recorded clean-worktree checks. Exact repository-marketplace CLI installation remains unverified because the local Codex CLI returned Windows `Access is denied`.
 
 ## Final submission checklist
 
@@ -120,8 +124,9 @@ The most useful AI design tool is not the one that produces the most screens. It
 - [x] Capture and visually inspect final English/light, Chinese/dark, and mobile evidence images.
 - [x] Confirm the package appears in the desktop app's personal marketplace.
 - [x] Install the package after action-time confirmation and verify the cached `0.1.0` plugin plus enabled configuration entry.
-- [ ] Commit the final KIN and AgentOS changes with timestamped history.
-- [ ] Test installation from a clean clone or disposable worktree.
+- [x] Commit the plugin package, AgentOS case, and kin3.net repair with timestamped history.
+- [x] Validate the plugin package and both targets from clean disposable worktrees.
+- [ ] Exercise the exact repository-marketplace CLI installation in an environment where the Codex CLI is not access-blocked.
 - [ ] Record the demo with audio and visible GPT-5.6 model selection.
 - [ ] Upload the video publicly to YouTube.
 - [ ] Publish the repository with licensing, or share the private repository with both judging addresses in the rules.
