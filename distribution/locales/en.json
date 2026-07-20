@@ -1,0 +1,121 @@
+{
+  "$schema": "../schemas/locale-source.schema.json",
+  "schema_version": "1.0.0",
+  "kind": "kin-agent-locale-source",
+  "artifact_status": "informative-translation-input",
+  "normative": false,
+  "locale": "en",
+  "direction": "ltr",
+  "rules": [
+    {
+      "id": "snapshot-source-boundary",
+      "heading": "Status and source",
+      "summary": "This compact file is generated from the current KIN contract. It is non-normative, must not be edited, and does not replace the linked source documents.",
+      "do": ["Use it to select a mode, product profile, and first-read constraints before opening the detailed contract."],
+      "do_not": ["Do not treat generated guidance, a passing check, or a themed component lab as proof of product adoption."],
+      "labels": {
+        "title": "KIN Agent design snapshot",
+        "generated_warning": "Generated derivative. Read the complete contract when changing normative behavior or delivery boundaries.",
+        "do_heading": "Do",
+        "do_not_heading": "Do not",
+        "token_role": "Role",
+        "token_value": "Resolved value",
+        "profile": "Profile",
+        "task_intents": "Task intents",
+        "contract": "Detailed contract",
+        "source_checksum": "Contract checksum",
+        "mode": "Resolved mode",
+        "locale_review": "Locale copy review",
+        "publication_state": "Publication state",
+        "publication_notice": "public locators are reserved and are not live in Phase 1",
+        "color_scheme_guidance": "Set color-scheme to the resolved theme and preserve light, dark, system, and higher-contrast behavior in the product."
+      },
+      "review": {
+        "status": "unreviewed",
+        "reviewers": [],
+        "normative_source_checksum": null,
+        "localized_content_checksum": null
+      }
+    },
+    {
+      "id": "task-before-explanation",
+      "heading": "Visual register",
+      "summary": "Put the subject, current task, search, list, document, object, or action in the first meaningful view.",
+      "do": ["Let real content and the user's job establish the composition."],
+      "do_not": ["Do not place a marketing Hero, generic value proposition, or decorative graph before the working task."],
+      "review": {"status": "unreviewed", "reviewers": [], "normative_source_checksum": null, "localized_content_checksum": null}
+    },
+    {
+      "id": "one-dominant-region",
+      "heading": "Visual register",
+      "summary": "Give each state one dominant work or reading region; navigation, metadata, and secondary chrome recede after orientation.",
+      "do": ["Use visual weight to make the next useful action obvious."],
+      "do_not": ["Do not give unrelated panels equal weight merely because a grid is available."],
+      "review": {"status": "unreviewed", "reviewers": [], "normative_source_checksum": null, "localized_content_checksum": null}
+    },
+    {
+      "id": "neutral-precise-emphasis",
+      "heading": "Theme usage",
+      "summary": "Keep most structure neutral and use one primary interaction accent for focus, selection, links, and primary actions.",
+      "do": ["Keep semantic colors tied to distinct product meanings."],
+      "do_not": ["Do not use color, badges, icons, or motion to compensate for weak order or alignment."],
+      "review": {"status": "unreviewed", "reviewers": [], "normative_source_checksum": null, "localized_content_checksum": null}
+    },
+    {
+      "id": "typography-supports-hierarchy",
+      "heading": "Typography roles",
+      "summary": "Use typography roles to express hierarchy; keep interface text compact and body text readable, and use tabular numerals where comparison matters.",
+      "do": ["Map the named roles to the product's available font stack without redistributing private fonts."],
+      "do_not": ["Do not enlarge headings or tighten Chinese tracking merely to imitate another product."],
+      "review": {"status": "unreviewed", "reviewers": [], "normative_source_checksum": null, "localized_content_checksum": null}
+    },
+    {
+      "id": "density-removes-repetition",
+      "heading": "Layout and density",
+      "summary": "Align repeated values and actions, carry shared meaning in columns or group controls, and use empty space to clarify priority.",
+      "do": ["Keep comparison rows compact while preserving required hit areas."],
+      "do_not": ["Do not repeat labels and helper text in every row or use large empty regions as unresolved composition."],
+      "review": {"status": "unreviewed", "reviewers": [], "normative_source_checksum": null, "localized_content_checksum": null}
+    },
+    {
+      "id": "continuous-structure",
+      "heading": "Surface and elevation",
+      "summary": "Create hierarchy with alignment, rhythm, columns, property rows, dividers, and small surface steps before adding containers.",
+      "do": ["Use a Surface only for a real object, overlay, selected context, or task-mode boundary."],
+      "do_not": ["Do not turn prose, metadata, activity, property groups, filters, or table regions into nested cards by default."],
+      "review": {"status": "unreviewed", "reviewers": [], "normative_source_checksum": null, "localized_content_checksum": null}
+    },
+    {
+      "id": "motion-explains-change",
+      "heading": "Motion",
+      "summary": "Use motion to preserve origin, direction, state continuity, and committed results; reversible interactions begin from their current visual state.",
+      "do": ["Keep motion interruptible and preserve the same final hierarchy under Reduced Motion."],
+      "do_not": ["Do not use repeated lifts, automatic counting, generic page fades, or decorative entrances to manufacture polish."],
+      "review": {"status": "unreviewed", "reviewers": [], "normative_source_checksum": null, "localized_content_checksum": null}
+    },
+    {
+      "id": "semantics-remain-separate",
+      "heading": "Content rules",
+      "summary": "Keep status, risk, confidence, completeness, availability, permission, and progress separate whenever the product distinguishes them.",
+      "do": ["Make meaning readable with language or symbols as well as color, and show source and time for consequential data."],
+      "do_not": ["Do not collapse independent judgments into one attractive score, badge, or unsupported claim."],
+      "review": {"status": "unreviewed", "reviewers": [], "normative_source_checksum": null, "localized_content_checksum": null}
+    },
+    {
+      "id": "route-by-product-profile",
+      "heading": "Task and product-profile routing",
+      "summary": "Choose the product profile from the real route and task, then open the matching detailed pattern before changing composition.",
+      "do": ["Use route-level profiles for hybrid products and preserve the user's stated request and product truth."],
+      "do_not": ["Do not apply one workspace layout to every route or let task-intent hints override local requirements."],
+      "review": {"status": "unreviewed", "reviewers": [], "normative_source_checksum": null, "localized_content_checksum": null}
+    },
+    {
+      "id": "delivery-is-not-adoption",
+      "heading": "Verification and adoption boundary",
+      "summary": "Generated snapshots, Token parity, builds, and component references are delivery evidence, not proof that a product is visibly or fully KIN.",
+      "do": ["Record scoped mappings, realistic states, comparable screenshots, human review, exceptions, owners, and rollback before making an adoption claim."],
+      "do_not": ["Do not infer production adoption from this snapshot, a passing generator, or isolated styled components."],
+      "review": {"status": "unreviewed", "reviewers": [], "normative_source_checksum": null, "localized_content_checksum": null}
+    }
+  ]
+}

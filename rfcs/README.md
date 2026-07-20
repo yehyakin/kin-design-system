@@ -22,5 +22,5 @@ RFC implementation MUST remain separately reviewable. A proposal MAY include imp
 
 | RFC | Title | Status |
 |---|---|---|
-| [001](./001-agent-distribution-layer.md) | Agent Distribution Layer | proposed |
+| [001](./001-agent-distribution-layer.md) | Agent Distribution Layer | accepted; Phase 1 implemented |
 | [002](./002-scenario-atlas.md) | Scenario Atlas and Showcase Coverage | accepted |

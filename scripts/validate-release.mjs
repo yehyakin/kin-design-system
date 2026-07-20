@@ -1,8 +1,18 @@
-import { execFileSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 import process from "node:process";
 import { contractChecksum } from "./contract-checksum.mjs";
+import { exactTagState, gitCommitExists, readRevisionFile, runGit } from "./lib/git-state.mjs";
+import { collectReleaseTagFindings, parseReleaseValidationArgs } from "./lib/release-policy.mjs";
+import { validateAgentDistribution } from "./validate-agent-distribution.mjs";
+
+let validationPhase;
+try {
+  validationPhase = parseReleaseValidationArgs(process.argv.slice(2));
+} catch (error) {
+  console.error(error.message);
+  process.exit(2);
+}
 
 const root = process.cwd();
 const failures = [];
@@ -31,21 +41,8 @@ function compareSemver(left, right) {
   return 0;
 }
 
-function git(args, { trim = true } = {}) {
-  try {
-    const output = execFileSync("git", args, { cwd: root, encoding: "utf8", stdio: ["ignore", "pipe", "pipe"] });
-    return trim ? output.trim() : output;
-  } catch {
-    return null;
-  }
-}
-
-function gitRevisionExists(revision) {
-  return git(["cat-file", "-e", `${revision}^{commit}`]) !== null;
-}
-
 function designAt(revision) {
-  return git(["show", `${revision}:DESIGN.md`], { trim: false });
+  return readRevisionFile(root, revision, "DESIGN.md");
 }
 
 function sourcePinsRevision(source, revision) {
@@ -103,15 +100,33 @@ if (!latestStable || !semverPattern.test(latestStable)) {
   if (releaseStatus === "development" && compareSemver(latestStable, version) > 0) {
     fail(`development latest_stable ${latestStable} cannot be newer than kin_version ${version}`);
   }
-  if (!gitRevisionExists(`v${latestStable}`)) {
-    fail(`latest_stable v${latestStable} does not exist as a local Git tag`);
-  }
 }
+
+const releaseRevision = `v${version}`;
+const currentTag = exactTagState(root, releaseRevision);
+const latestStableTag = latestStable ? exactTagState(root, `v${latestStable}`) : null;
+const taggedDesign = currentTag.exists ? designAt(currentTag.reference) : null;
+for (const finding of collectReleaseTagFindings({
+  mode: validationPhase,
+  releaseStatus,
+  version,
+  latestStable,
+  latestStableExists: Boolean(latestStableTag?.exists && latestStableTag.objectType === "tag" && latestStableTag.commit),
+  currentTagExists: currentTag.exists,
+  currentTagType: currentTag.objectType,
+  currentTagCommit: currentTag.commit,
+  headCommit: runGit(root, ["rev-parse", "HEAD"]),
+  currentTagDesignChecksum: taggedDesign === null ? null : contractChecksum(taggedDesign),
+  currentDesignChecksum: currentChecksum,
+})) fail(finding);
 
 if (packageLock.version !== version) fail(`package-lock.json version ${packageLock.version} differs from package version ${version}`);
 if (packageLock.packages?.[""]?.version !== version) fail("package-lock.json root package version is out of date");
 for (const term of ["contract-first", "variables-only", "project-owned"]) {
   if (!delivery.includes(term)) fail(`DELIVERY.md does not define the ${term} boundary`);
+}
+if (releaseStatus === "released") {
+  for (const finding of validateAgentDistribution({ root })) fail(`Agent distribution: ${finding}`);
 }
 
 for (const file of ["README.md", "READMEs/README.zh-CN.md"]) {
@@ -144,17 +159,11 @@ if (adoption.kinVersion !== version) fail("adoption/kin.config.example.json has 
 if (adoption.contract?.checksum !== currentChecksum) fail("adoption example contract checksum does not match canonical DESIGN.md");
 
 if (releaseStatus === "released") {
-  const releaseRevision = `v${version}`;
   if (adoption.contract?.revision !== releaseRevision) fail("released adoption example revision must match the release tag");
   if (!sourcePinsRevision(adoption.contract?.source, releaseRevision)) fail("released adoption example source must pin the matching release tag");
-  if (!gitRevisionExists(releaseRevision)) {
-    fail(`released KIN ${version} requires the Git tag ${releaseRevision}`);
-  } else {
-    const taggedDesign = designAt(releaseRevision);
-    if (taggedDesign === null || contractChecksum(taggedDesign) !== currentChecksum) {
-      fail(`${releaseRevision} DESIGN.md checksum does not match the current contract`);
-    }
-  }
+  const workingTree = runGit(root, ["status", "--porcelain"]);
+  if (workingTree === null) fail("released KIN requires an available Git working tree");
+  else if (workingTree !== "") fail("released KIN validation requires a clean Git working tree");
   if (!new RegExp(`^## ${escapeRegExp(version)} —`, "m").test(changelog)) {
     fail(`CHANGELOG.md does not contain a ${version} release section`);
   }
@@ -173,7 +182,7 @@ if (releaseStatus === "released") {
     if (!sourcePinsRevision(adoption.contract?.source, revision)) {
       fail("development adoption example source must pin the same full Git commit SHA");
     }
-    if (!gitRevisionExists(revision)) {
+    if (!gitCommitExists(root, revision)) {
       fail(`development adoption revision ${revision} is not a local Git commit`);
     } else {
       const committedDesign = designAt(revision);
@@ -195,7 +204,7 @@ if (releaseStatus === "released") {
   }
   if (!socialCard.includes(`${version} development`)) fail(`development social card must display ${version} development`);
 
-  if (!gitRevisionExists(`v${version}`)) {
+  if (!currentTag.exists) {
     const currentTagUrl = new RegExp(
       `https://(?:github\\.com/yehyakin/kin-design-system/(?:tree|blob|releases/tag)/|raw\\.githubusercontent\\.com/yehyakin/kin-design-system/)v${escapeRegExp(version)}(?:[/"'#?]|$)`,
       "i",
@@ -234,5 +243,11 @@ if (failures.length > 0) {
   process.exit(1);
 }
 
-const lifecycle = releaseStatus === "released" ? `released as v${version}` : `development at ${adoption.contract.revision}; latest stable v${latestStable}`;
+const lifecycle = releaseStatus === "released"
+  ? validationPhase === "pre-tag" && !currentTag.exists
+    ? `release candidate v${version}; tag pending`
+    : validationPhase === "pre-tag"
+      ? `release candidate v${version}; existing annotated tag verified`
+      : `released as v${version}; annotated tag verified`
+  : `development at ${adoption.contract.revision}; latest stable v${latestStable}`;
 console.log(`Release validation passed: KIN ${version} (${lifecycle})`);

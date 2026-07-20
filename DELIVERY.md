@@ -17,7 +17,7 @@ The machine-readable adoption values are `mode: contract-first`, `figma: variabl
 | Product contract | `VISION.md`, `DESIGN.md`, the visual signature, principles, component contracts, product patterns, terminology, and maturity catalogs | One copied layout or visual treatment suitable for every product |
 | Tokens | Normative source values plus generated CSS, DTCG, Tailwind-compatible, and Figma Variables interoperability files | Automatic synchronization with an existing design library |
 | Reference interfaces | Framework-free deterministic examples and browser tests | Production-ready application components |
-| Agent support | KIN Skill, repository instructions, audit candidates, adoption checks, and evidence templates | Autonomous product redesign without project context or review |
+| Agent support | KIN Skill, repository instructions, compact generated snapshots, audit candidates, adoption checks, and evidence templates | Autonomous product redesign without project context or review |
 | Figma | A create-only Variables payload and documented interoperability boundary | Published component sets, library ownership, update/delete operations, credentials, or stable Figma node IDs |
 | Runtime code | Reference HTML, CSS, JavaScript, optional integration contracts, and the isolated private `@kin-design/react` pre-release laboratory | A published universal React package, Vue/Web Components/native SDKs, or framework support commitments |
 
@@ -42,6 +42,22 @@ Consuming projects MAY use:
 They MUST record the exact reviewed contract revision, local contract checksum, local mappings, verification results, exceptions, and owners. The revision and checksum remain optional for compatibility with earlier 2.0 configuration files, but new adoption records SHOULD supply them. Contract checksums MUST use KIN's canonical UTF-8 text form: remove an optional BOM and normalize CRLF or CR line endings to LF while preserving all other content. The machine-readable adoption evidence format is defined in [`adoption/kin.evidence.schema.json`](./adoption/kin.evidence.schema.json).
 
 New adoptions MUST select the primary product profile explicitly and SHOULD record route-level profiles for hybrid products. They MUST complete the project-owned implementation brief defined in [`adoption/implementation-brief.md`](./adoption/implementation-brief.md) before moving evidence to `mapped`.
+
+## Generated Agent distribution
+
+The Agent Distribution Layer is a compact delivery surface compiled from the existing contract. It does not create a second design system.
+
+- `DESIGN.md` remains the normative design source.
+- `generated/agent/next/` is a committed, deterministic, non-normative derivative of current `main` inputs.
+- Phase 1 MUST keep the generated `next` tree out of the GitHub Pages build. A repository path is not a public stable endpoint.
+- Phase 1 Snapshots and Manifests MUST expose `publication.state: repository-only` and `publication.published: false`; consumers MUST treat every embedded public URL as a reserved Phase 2 locator while that flag is false.
+- Phase 1 MUST expose all four KIN theme and contrast modes in English and Simplified Chinese, while preserving explicit locale-review state.
+- A locale marked `unreviewed` MAY appear only in `next`; it MUST block any later versioned bundle or stable alias until checksum-bound human review is recorded.
+- `component_recipes` MUST remain `unavailable` and `component-recipes.json` MUST remain absent until the separate Recipe phase defines reviewed source mappings.
+- Generated Snapshots MUST identify themselves as generated, non-normative, non-editable, compact, and mutable. They MUST point back to the complete contract, visual signature, delivery contract, product profiles, and source checksums.
+- Export and validation MUST use local repository inputs only, produce deterministic UTF-8/LF output, and fail on drift without rewriting files in check mode.
+
+Reading or generating a Snapshot does not establish Token compatibility, component mapping, visible KIN quality, verified adoption, or production observation. Those claims continue to require the evidence stages below.
 
 ## Figma boundary
 

@@ -13,6 +13,7 @@ These instructions apply to the entire repository.
 7. Read `CONTRIBUTING.md` before changing normative rules.
 8. Read `principles/verification.md` before claiming accessibility, cross-browser, motion, zoom or RTL completion.
 9. Read `integrations/catalog.md` and `packages/react/RFC.md` before changing official runtime integrations, adapter APIs, package exports, dependency boundaries or upstream motion behavior.
+10. Read `rfcs/001-agent-distribution-layer.md` and `distribution/README.md` before changing Agent snapshots, Manifests, locale review, generated distribution artifacts, or their release lifecycle.
 
 ## Editing rules
 
@@ -26,6 +27,8 @@ These instructions apply to the entire repository.
 - Preserve reviewed upstream interaction and animation engines. KIN adapters MAY configure and style them, but MUST NOT replace mature behavior with a lookalike without a documented defect, test, owner and removal condition.
 - Do not turn framework-free references into a runtime package or claim a Figma Library without satisfying `DELIVERY.md`.
 - Update `CHANGELOG.md` for user-visible normative changes.
+- Do not edit `generated/agent/next/` directly. Change its governed inputs and run the deterministic exporter.
+- Phase 1 Agent artifacts MUST remain outside the Pages build. Do not add stable aliases, immutable archives, component Recipes, or Skill-routing changes before their RFC phase is separately approved.
 
 ## Verification
 
@@ -38,13 +41,16 @@ node scripts/validate-components.mjs
 node scripts/validate-pages.mjs
 node scripts/validate-scenarios.mjs
 node scripts/validate-integrations.mjs
-node scripts/validate-release.mjs
+npm run release:check:pre-tag
 node scripts/export-tokens.mjs --check
 node scripts/export-figma-variables.mjs --check
+npm run agent:check:generated
 npm run test:tooling
 npm run runtime:check
 npm run site:check
 ```
+
+Ordinary pull-request and `main` checks use the pre-Tag release gate. Only a release Tag checkout uses `npm run release:check:post-tag`; that command MUST NOT be replaced by the pre-Tag route after a Tag exists.
 
 When a change affects tokens, run `node scripts/report-token-changes.mjs HEAD`. When it affects component states or reference interfaces, also run `npm run test:reference` and inspect the generated screenshots.
 

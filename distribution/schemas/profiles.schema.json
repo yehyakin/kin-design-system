@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "KIN Agent product profile routing source",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "schema_version", "kind", "normative", "profiles"],
+  "properties": {
+    "$schema": {"const": "schemas/profiles.schema.json"},
+    "schema_version": {"const": "1.0.0"},
+    "kind": {"const": "kin-agent-profiles"},
+    "normative": {"const": false},
+    "profiles": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "contract_path", "task_intents"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$"},
+          "contract_path": {"type": "string", "pattern": "^patterns/[A-Za-z0-9._-]+\\.md$"},
+          "task_intents": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {"type": "string", "pattern": "^[a-z][a-z0-9-]*$"}
+          }
+        }
+      }
+    }
+  }
+}

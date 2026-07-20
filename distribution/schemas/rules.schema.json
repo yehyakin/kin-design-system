@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "KIN Agent compact rules source",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "schema_version", "kind", "normative", "rules"],
+  "properties": {
+    "$schema": {"const": "schemas/rules.schema.json"},
+    "schema_version": {"const": "1.0.0"},
+    "kind": {"const": "kin-agent-rules"},
+    "normative": {"const": false},
+    "rules": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "level", "source_path", "source_heading", "snapshot_section", "order"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$"},
+          "level": {"enum": ["must", "must-not", "should", "may"]},
+          "source_path": {"type": "string", "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))[A-Za-z0-9._/-]+\\.md$"},
+          "source_heading": {"type": "string", "minLength": 1},
+          "snapshot_section": {"enum": ["status-and-source", "visual-register", "theme-usage", "typography-roles", "layout-and-density", "surface-and-elevation", "motion", "content-rules", "task-and-product-routing", "verification-and-adoption"]},
+          "order": {"type": "integer"}
+        }
+      }
+    }
+  }
+}

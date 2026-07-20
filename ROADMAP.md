@@ -60,6 +60,14 @@ Pixel-difference gating remains deferred until cross-platform font and rendering
 
 The Figma exporter deliberately does not manage credentials or update existing library IDs. The audit deliberately does not auto-fix heuristic findings. These boundaries prevent tooling convenience from becoming destructive product behavior.
 
+## 3.0 development — Agent distribution staging
+
+- Accepted RFC 001 while preserving `DESIGN.md` as the only normative design source.
+- Added deterministic compact Snapshots for Light, Dark, Light High Contrast, and Dark High Contrast in English and Simplified Chinese.
+- Added a machine Manifest, source-input checksums, locale-review gates, Schema validation, and byte-for-byte drift checks.
+- Added separate release-candidate and post-Tag validation paths so protected-branch validation does not require a Tag that cannot yet exist.
+- Kept the Phase 1 `next` tree repository-only. Pages publication, immutable archives, a Version Registry, stable aliases, component Recipes, Skill-routing changes, and consuming-product trials remain separate reviewed phases.
+
 ## Next
 
 1. Test the implementation brief, route/profile map, composition checkpoint, and visual-signature criteria against representative production workflows in real consuming products. Use comparable baseline and candidate screenshots to refine the contracts before expanding optional variants.
@@ -69,6 +77,7 @@ The Figma exporter deliberately does not manage credentials or update existing l
 5. Add ID-aware Figma library synchronization only if an eligible team can test update and rollback behavior.
 6. Evaluate cross-platform screenshot baselines after font and renderer variance is measured.
 7. Validate the private `@kin-design/react` integration laboratory in two materially different production workflows before deciding whether it should be published, retained internally, or removed.
+8. Review the exact English and Simplified Chinese Agent Snapshot copy, then implement RFC 001 Phase 2 publication and immutable-version gates without exposing an unreviewed locale or mutable `next` as stable.
 
 ## Verification baseline
 
