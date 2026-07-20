@@ -38,7 +38,7 @@ test("scenario lab verifies every catalog-backed showcased state", async ({ page
   expect(response.ok()).toBe(true);
   const catalog = await response.json();
   const showcased = catalog.scenarios.filter((scenario) => scenario.presentation_status === "showcased");
-  expect(showcased).toHaveLength(16);
+  expect(showcased).toHaveLength(17);
 
   for (const scenario of showcased) {
     await page.goto("/scenarios/lab.html?scenario=" + scenario.id + "&viewport=narrow&theme=light-high-contrast");
@@ -71,6 +71,10 @@ test("scenario lab verifies every catalog-backed showcased state", async ({ page
     if (scenario.id === "INT-03") {
       await expect(page.frameLocator("[data-lab-frame]").locator("[data-risk-error]")).toBeVisible();
       await page.screenshot({ path: testInfo.outputPath("scenario-lab-risk-queue-error.png") });
+    }
+    if (scenario.id === "INT-02") {
+      await expect(page.frameLocator("[data-lab-frame]").locator("[data-investigation-error]")).toBeVisible();
+      await page.screenshot({ path: testInfo.outputPath("scenario-lab-investigation-error.png") });
     }
   }
 

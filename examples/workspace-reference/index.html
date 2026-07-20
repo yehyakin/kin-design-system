@@ -17,7 +17,8 @@
         document.documentElement.dataset.locale = locale;
         document.documentElement.lang = locale === "zh" ? "zh-CN" : "en";
         document.documentElement.dataset.contrast = localStorage.getItem("kin-reference-contrast") === "more" ? "more" : "normal";
-        document.documentElement.dataset.workspaceView = new URLSearchParams(location.search).get("view") === "risk-queue" ? "risk-queue" : "entity";
+        const requestedView = new URLSearchParams(location.search).get("view");
+        document.documentElement.dataset.workspaceView = ["risk-queue", "investigation"].includes(requestedView) ? requestedView : "entity";
       })();
     </script>
     <link rel="stylesheet" href="../../assets/sonner.css" />
@@ -40,6 +41,7 @@
         <nav class="primary-nav" data-i18n-aria="workspaceNav">
           <a href="#summary"><i data-lucide="layout-dashboard"></i><span data-i18n="overview">情报概览</span></a>
           <a href="./" aria-current="page" data-nav-view="entity"><i data-lucide="database"></i><span data-i18n="database">对象数据库</span></a>
+          <a href="?view=investigation" data-nav-view="investigation"><i data-lucide="file-search"></i><span data-i18n="investigations">调查记录</span></a>
           <a href="?view=risk-queue" data-nav-view="risk-queue"><i data-lucide="triangle-alert"></i><span data-i18n="signals">风险信号</span></a>
           <a href="#activity"><i data-lucide="activity"></i><span data-i18n="monitoring">监测任务</span></a>
         </nav>
@@ -63,6 +65,7 @@
         <header class="workspace-bar">
           <div class="location-identity" data-i18n-aria="breadcrumb">
             <span data-view="entity" data-i18n="database">对象数据库</span><span data-view="entity" aria-hidden="true">/</span><strong data-view="entity" aria-current="page" title="Alpha Network">Alpha Network</strong>
+            <span data-view="investigation" data-i18n="investigations">调查记录</span><span data-view="investigation" aria-hidden="true">/</span><strong data-view="investigation" aria-current="page">INV-028</strong>
             <span data-view="risk-queue" data-i18n="signals">风险信号</span><span data-view="risk-queue" aria-hidden="true">/</span><strong data-view="risk-queue" aria-current="page" data-i18n="riskSavedView">高优先级待复核</strong>
           </div>
           <div class="workspace-actions">
@@ -70,7 +73,7 @@
               <i data-lucide="search"></i><span data-i18n="search">搜索</span><kbd>⌘ K</kbd>
             </button>
             <button type="button" class="icon-label-button" data-inspector-open aria-controls="inspector" aria-expanded="true" data-i18n-aria="properties">
-              <i data-lucide="panel-right"></i><span data-view="entity" data-i18n="properties">属性</span><span data-view="risk-queue" data-i18n="riskReview">审核</span>
+              <i data-lucide="panel-right"></i><span data-view="entity" data-i18n="properties">属性</span><span data-view="investigation" data-i18n="investigationEvidence">证据</span><span data-view="risk-queue" data-i18n="riskReview">审核</span>
             </button>
 
             <div class="language-control" data-language-control>
@@ -122,6 +125,12 @@
           <a href="?view=risk-queue&amp;scope=unassigned" data-risk-scope="unassigned" data-i18n="riskScopeUnassigned">未指派</a>
           <a href="?view=risk-queue&amp;scope=conflicting" data-risk-scope="conflicting" data-i18n="riskScopeConflicting">证据冲突</a>
           <a href="?view=risk-queue&amp;scope=resolved" data-risk-scope="resolved" data-i18n="riskScopeResolved">已解决</a>
+        </nav>
+
+        <nav class="view-bar" data-view="investigation" data-i18n-aria="investigationViews">
+          <a href="?view=investigation&amp;scope=all" aria-current="page" data-investigation-scope="all" data-i18n="investigationScopeAll">全部证据</a>
+          <a href="?view=investigation&amp;scope=conflicting" data-investigation-scope="conflicting" data-i18n="investigationScopeConflicting">冲突与缺口</a>
+          <a href="?view=investigation&amp;scope=unverified" data-investigation-scope="unverified" data-i18n="investigationScopeUnverified">待核验</a>
         </nav>
 
         <article class="entity-content" data-view="entity">
@@ -315,6 +324,89 @@
             </div>
           </section>
         </article>
+
+        <article class="investigation-content" data-view="investigation" data-investigation data-investigation-state="normal">
+          <header class="investigation-header">
+            <div>
+              <p class="object-id">INV-028 · PRX-1027</p>
+              <h1 data-i18n="investigationTitle">Alpha Network 证书变更调查</h1>
+              <p data-i18n="investigationDescription">按发生时间比较事件、来源和核验状态，再记录可归因的人工判断。</p>
+            </div>
+            <button type="button" class="investigation-refresh" data-investigation-refresh><i data-lucide="refresh-cw"></i><span data-i18n="investigationRefresh">刷新本地证据</span></button>
+          </header>
+
+          <p class="fixture-note" role="note" data-i18n="investigationFixtureNote">确定性本地参考，基准时间为 2026-07-20 09:18 +08:00；未连接实时来源、权限服务或持久化存储。</p>
+
+          <dl class="investigation-context" data-i18n-aria="investigationContextLabel">
+            <div><dt data-i18n="investigationRangeLabel">时间范围</dt><dd data-i18n="investigationRangeValue">过去 30 天 · Asia/Shanghai</dd></div>
+            <div><dt data-i18n="investigationSourceSetLabel">来源集合</dt><dd data-i18n="investigationSourceSetValue">4 个已归因来源</dd></div>
+            <div><dt data-i18n="investigationFindingLabel">当前调查结论</dt><dd data-investigation-finding-status data-i18n="investigationFindingOpen">尚未记录</dd></div>
+          </dl>
+
+          <div class="investigation-state-messages" aria-live="polite" data-investigation-live>
+            <div class="investigation-state-message" data-investigation-state-panel="loading" data-investigation-loading hidden><strong data-i18n="investigationLoadingTitle">正在刷新本地证据</strong><span data-i18n="investigationLoadingBody">当前证据时间线、筛选和选择保持可见，等待固定样例完成。</span></div>
+            <div class="investigation-state-message" data-investigation-state-panel="partial" data-investigation-partial hidden><strong data-i18n="investigationPartialTitle">来源集合不完整</strong><span data-i18n="investigationPartialBody">变更日志暂不可用；已捕获事件与其他来源不会被移除。</span></div>
+            <div class="investigation-state-message" data-investigation-state-panel="conflict" data-investigation-conflict hidden><strong data-i18n="investigationConflictTitle">来源结论存在冲突</strong><span data-i18n="investigationConflictBody">维护通知支持预期轮换，但变更日志缺少对应记录；需要人工结论。</span></div>
+            <div class="investigation-state-message" data-investigation-state-panel="stale" data-investigation-stale hidden><strong data-i18n="investigationStaleTitle">证据快照已过核验窗口</strong><span data-i18n="investigationStaleBody">最后一次独立核验距基准时间 2 小时；不会自动改写当前结论。</span></div>
+            <div class="investigation-state-message" data-investigation-state-panel="pending" data-investigation-pending hidden><strong data-i18n="investigationPendingTitle">正在记录调查结论</strong><span data-i18n="investigationPendingBody">固定样例暂时锁定表单，同时保留选择、来源映射和理由草稿。</span></div>
+            <div class="investigation-state-message positive-message" data-investigation-state-panel="committed" data-investigation-committed hidden><strong data-i18n="investigationCommittedTitle">调查结论已记录</strong><span data-i18n="investigationCommittedBody">人工判断与支持证据保持可追溯，并可在当前样例中撤销。</span></div>
+            <div class="investigation-state-message" data-investigation-state-panel="undo" data-investigation-undo hidden><strong data-i18n="investigationUndoTitle">调查结论已撤销</strong><span data-i18n="investigationUndoBody">调查回到未记录状态；理由与证据选择仍保留为本地草稿。</span></div>
+            <div class="investigation-state-message" data-investigation-state-panel="permission" data-investigation-permission hidden><strong data-i18n="investigationPermissionTitle">仅可查看调查</strong><span data-i18n="investigationPermissionBody">当前样例模拟缺少记录权限；证据时间线与来源详情仍可读取。</span></div>
+            <div class="investigation-state-message error-message" data-investigation-state-panel="error" data-investigation-error hidden><strong data-i18n="investigationErrorTitle">调查结论记录失败</strong><span data-i18n="investigationErrorBody">理由、证据选择和当前事件均已保留，可以重试。</span><button type="button" data-investigation-retry data-i18n="retry">重试</button></div>
+          </div>
+
+          <section class="investigation-region" aria-labelledby="investigation-chronology-title">
+            <div class="section-heading investigation-heading">
+              <div><h2 id="investigation-chronology-title" data-i18n="investigationChronologyTitle">证据时间线</h2><p data-i18n="investigationChronologyDescription">发生时间、观察时间、来源可用性与核验状态分别显示。</p></div>
+              <span class="investigation-count" data-investigation-count>4 条本地事件</span>
+            </div>
+
+            <div class="investigation-empty" data-investigation-state-panel="empty" data-investigation-empty hidden>
+              <strong data-i18n="investigationEmptyTitle">当前范围没有证据事件</strong>
+              <p data-i18n="investigationEmptyBody">可以切换范围；本地样例不会扩大时间窗口或补造来源。</p>
+            </div>
+
+            <div class="investigation-chronology" data-investigation-chronology>
+              <section class="investigation-day" aria-labelledby="investigation-day-title">
+                <h3 id="investigation-day-title" data-i18n="investigationDayTitle">2026 年 7 月 20 日</h3>
+                <ol>
+                  <li data-investigation-event-row="EVT-320" data-investigation-scope-tags="all conflicting unverified" data-selected="false">
+                    <button type="button" data-investigation-event="EVT-320">
+                      <span class="investigation-time"><time datetime="2026-07-20T09:11:00+08:00">09:11</time><small data-i18n="investigationObserved0916">观察于 09:16</small></span>
+                      <span class="investigation-event-copy"><strong data-i18n="investigationEvent320Title">变更日志来源不可用</strong><small data-i18n="investigationEvent320Body">归档入口返回不可用状态，未能核对轮换记录。</small></span>
+                      <span class="investigation-source"><strong data-i18n="investigationSourceChangeLog">变更日志</strong><small class="source-unavailable" data-i18n="investigationSourceUnavailable">来源不可用</small></span>
+                      <span class="semantic-status evidence-pending"><i></i><span data-i18n="investigationVerificationPending">待核验</span></span>
+                    </button>
+                  </li>
+                  <li data-investigation-event-row="EVT-311" data-investigation-scope-tags="all" data-selected="false">
+                    <button type="button" data-investigation-event="EVT-311">
+                      <span class="investigation-time"><time datetime="2026-07-20T09:07:00+08:00">09:07</time><small data-i18n="investigationObserved0908">观察于 09:08</small></span>
+                      <span class="investigation-event-copy"><strong data-i18n="investigationEvent311Title">公开入口基线未变化</strong><small data-i18n="investigationEvent311Body">主机、路由与可访问性和上一次独立检查一致。</small></span>
+                      <span class="investigation-source"><strong data-i18n="investigationSourceEndpoint">入口扫描</strong><small data-i18n="investigationSourceAvailable">来源可用</small></span>
+                      <span class="semantic-status evidence-confirmed"><i></i><span data-i18n="investigationVerificationConfirmed">已确认</span></span>
+                    </button>
+                  </li>
+                  <li data-investigation-event-row="EVT-318" data-investigation-scope-tags="all conflicting" data-selected="true">
+                    <button type="button" data-investigation-event="EVT-318" aria-current="true">
+                      <span class="investigation-time"><time datetime="2026-07-20T09:02:00+08:00">09:02</time><small data-i18n="investigationObserved0904">观察于 09:04</small></span>
+                      <span class="investigation-event-copy"><strong data-i18n="investigationEvent318Title">证书签发者发生变化</strong><small data-i18n="investigationEvent318Body">签发者从 North CA 4 变更为 North CA 5。</small></span>
+                      <span class="investigation-source"><strong data-i18n="investigationSourceCertificate">证书观察器</strong><small data-i18n="investigationSourceAvailable">来源可用</small></span>
+                      <span class="semantic-status evidence-conflict"><i></i><span data-i18n="investigationVerificationConflicting">冲突</span></span>
+                    </button>
+                  </li>
+                  <li data-investigation-event-row="EVT-314" data-investigation-scope-tags="all" data-selected="false">
+                    <button type="button" data-investigation-event="EVT-314">
+                      <span class="investigation-time"><time datetime="2026-07-20T08:40:00+08:00">08:40</time><small data-i18n="investigationObserved0841">观察于 08:41</small></span>
+                      <span class="investigation-event-copy"><strong data-i18n="investigationEvent314Title">发布证书轮换维护通知</strong><small data-i18n="investigationEvent314Body">公告窗口为 09:00–09:30，并注明公开入口不中断。</small></span>
+                      <span class="investigation-source"><strong data-i18n="investigationSourceNotice">公开维护通知</strong><small data-i18n="investigationSourceAvailable">来源可用</small></span>
+                      <span class="semantic-status evidence-confirmed"><i></i><span data-i18n="investigationVerificationConfirmed">已确认</span></span>
+                    </button>
+                  </li>
+                </ol>
+              </section>
+            </div>
+          </section>
+        </article>
       </main>
 
       <div class="inspector-scrim" data-inspector-scrim aria-hidden="true"></div>
@@ -322,6 +414,7 @@
       <aside id="inspector" class="inspector" aria-labelledby="inspector-title" aria-hidden="false">
         <header>
           <div data-view="entity"><span data-i18n="currentObject">当前对象</span><h2 id="inspector-title">Alpha Network</h2></div>
+          <div data-view="investigation"><span data-i18n="investigationSelectedEvidence">选中证据</span><h2 id="investigation-inspector-title" data-investigation-inspector-title>EVT-318 · 证书签发者发生变化</h2></div>
           <div data-view="risk-queue"><span data-i18n="riskSelectedSignal">选中信号</span><h2 id="risk-inspector-title" data-risk-inspector-title>RSK-204 · Alpha Network</h2></div>
           <button type="button" class="icon-button" data-inspector-close data-i18n-aria="closeInspector"><i data-lucide="x"></i></button>
         </header>
@@ -354,6 +447,63 @@
           </dl>
           <p class="definition" data-i18n="confidenceDefinition">该分数表示当前证据来源的可信程度，不代表对象整体安全等级。</p>
         </section>
+        </div>
+
+        <div class="investigation-inspector" data-view="investigation">
+          <section>
+            <h3 data-i18n="investigationEventContext">事件上下文</h3>
+            <dl>
+              <div><dt data-i18n="investigationOccurredLabel">发生时间</dt><dd data-investigation-detail-occurred>2026-07-20 09:02</dd></div>
+              <div><dt data-i18n="investigationObservedLabel">观察时间</dt><dd data-investigation-detail-observed>2026-07-20 09:04</dd></div>
+              <div><dt data-i18n="investigationSourceLabel">来源</dt><dd data-investigation-detail-source>证书观察器</dd></div>
+              <div><dt data-i18n="investigationAvailabilityLabel">来源可用性</dt><dd data-investigation-detail-availability>可用</dd></div>
+              <div><dt data-i18n="investigationVerificationLabel">核验状态</dt><dd data-investigation-detail-verification>冲突</dd></div>
+            </dl>
+          </section>
+
+          <section>
+            <h3 data-i18n="investigationCapturedEvidence">已捕获证据</h3>
+            <p class="investigation-excerpt" data-investigation-detail-excerpt>签发者从 North CA 4 变更为 North CA 5；证书主体与公开入口保持一致。</p>
+            <dl class="investigation-provenance">
+              <div><dt data-i18n="investigationCaptureId">捕获 ID</dt><dd data-investigation-detail-capture>CAP-7821</dd></div>
+              <div><dt data-i18n="investigationSourceTime">来源时间</dt><dd data-investigation-detail-source-time>2026-07-20 09:02 +08:00</dd></div>
+            </dl>
+          </section>
+
+          <section class="investigation-finding-section">
+            <h3 data-i18n="investigationRecordFinding">记录调查结论</h3>
+            <form data-investigation-finding-form novalidate>
+              <fieldset data-investigation-fields>
+                <fieldset class="investigation-decision-group">
+                  <legend data-i18n="investigationDecisionLabel">人工判断</legend>
+                  <label><input type="radio" name="finding-decision" value="expected" checked><span data-i18n="investigationDecisionExpected">符合已公告轮换</span></label>
+                  <label><input type="radio" name="finding-decision" value="escalate"><span data-i18n="investigationDecisionEscalate">需要升级核验</span></label>
+                  <label><input type="radio" name="finding-decision" value="inconclusive"><span data-i18n="investigationDecisionInconclusive">证据不足</span></label>
+                </fieldset>
+                <fieldset class="investigation-support-group" aria-describedby="investigation-evidence-error">
+                  <legend data-i18n="investigationSupportingEvidence">支持证据</legend>
+                  <label><input type="checkbox" name="finding-evidence" value="EVT-318" checked><span>EVT-318 · <span data-i18n="investigationSourceCertificate">证书观察器</span></span></label>
+                  <label><input type="checkbox" name="finding-evidence" value="EVT-314" checked><span>EVT-314 · <span data-i18n="investigationSourceNotice">公开维护通知</span></span></label>
+                  <label><input type="checkbox" name="finding-evidence" value="EVT-311"><span>EVT-311 · <span data-i18n="investigationSourceEndpoint">入口扫描</span></span></label>
+                  <span id="investigation-evidence-error" class="investigation-field-error" data-investigation-evidence-error data-i18n="investigationEvidenceError" hidden>至少选择一条支持证据。</span>
+                </fieldset>
+                <label class="investigation-field"><span data-i18n="investigationReasonLabel">判断理由</span><textarea name="finding-reason" rows="4" required data-investigation-reason aria-describedby="investigation-reason-error" data-i18n-placeholder="investigationReasonPlaceholder" placeholder="说明来源如何支持或限制该判断"></textarea><span id="investigation-reason-error" class="investigation-field-error" data-investigation-reason-error data-i18n="investigationReasonError" hidden>请记录来源如何支持或限制该判断。</span></label>
+                <button type="submit" class="primary-action investigation-submit" data-investigation-submit data-i18n="investigationSubmit">记录调查结论</button>
+              </fieldset>
+            </form>
+
+            <div class="investigation-commit-record" data-investigation-commit-record hidden>
+              <strong data-i18n="investigationRecordedFinding">已记录的调查结论</strong>
+              <dl>
+                <div><dt>ID</dt><dd>FND-028-01</dd></div>
+                <div><dt data-i18n="investigationDecisionLabel">人工判断</dt><dd data-investigation-commit-decision>符合已公告轮换</dd></div>
+                <div><dt data-i18n="investigationSupportingEvidence">支持证据</dt><dd data-investigation-commit-evidence>EVT-318, EVT-314</dd></div>
+                <div><dt data-i18n="investigationReasonLabel">判断理由</dt><dd data-investigation-commit-reason>维护通知与观察到的签发者变更时间一致；入口基线未变化。</dd></div>
+                <div><dt data-i18n="riskRecordedAt">记录时间</dt><dd>2026-07-20 09:18 +08:00</dd></div>
+              </dl>
+              <button type="button" data-investigation-undo-action><i data-lucide="refresh-cw"></i><span data-i18n="undo">撤销</span></button>
+            </div>
+          </section>
         </div>
 
         <div class="risk-inspector" data-view="risk-queue">

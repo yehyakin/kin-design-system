@@ -215,8 +215,8 @@ if (fs.existsSync(scenarioCatalogPath) && fs.existsSync(scenarioHtmlPath)) {
     const showcasedRows = scenarioEntries.filter((entry) => entry.attributes.includes('data-presentation-status="showcased"')).length;
     const plannedRows = scenarioEntries.filter((entry) => entry.attributes.includes('data-presentation-status="planned"')).length;
     if (linkedRows !== 0) failures.push("scenarios/index.html: Phase 3 expects no linked-only rows");
-    if (showcasedRows !== 16) failures.push("scenarios/index.html: expected 16 showcased scenario rows");
-    if (plannedRows !== 14) failures.push("scenarios/index.html: expected 14 planned rows");
+    if (showcasedRows !== 17) failures.push("scenarios/index.html: expected 17 showcased scenario rows");
+    if (plannedRows !== 13) failures.push("scenarios/index.html: expected 13 planned rows");
   }
 }
 
