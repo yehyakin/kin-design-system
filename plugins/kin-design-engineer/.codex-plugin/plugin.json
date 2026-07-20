@@ -1,0 +1,31 @@
+{
+  "name": "kin-design-engineer",
+  "version": "0.1.0",
+  "description": "Audit, repair, and verify frontend interfaces with the KIN contract in Codex.",
+  "author": {
+    "name": "KiN3",
+    "url": "https://github.com/yehyakin"
+  },
+  "homepage": "https://yehyakin.github.io/kin-design-system/",
+  "repository": "https://github.com/yehyakin/kin-design-system",
+  "license": "MIT",
+  "keywords": ["design-system", "frontend", "accessibility", "codex", "kin"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "KIN Design Engineer",
+    "shortDescription": "Audit and repair frontends with KIN evidence.",
+    "longDescription": "Turns the active Codex model into a KIN-aware design engineer: collect deterministic code candidates, confirm them against the rendered product and authoritative KIN contracts, apply authorized repairs, and report verification limits honestly.",
+    "developerName": "KiN3",
+    "category": "Productivity",
+    "capabilities": ["Interactive", "Write"],
+    "websiteURL": "https://yehyakin.github.io/kin-design-system/",
+    "defaultPrompt": [
+      "Audit this frontend with KIN and show the evidence.",
+      "Fix the confirmed KIN issues and verify the result.",
+      "Review this page in light, dark, mobile, and Reduced Motion."
+    ],
+    "brandColor": "#5E6AD2",
+    "composerIcon": "./skills/kin-design-engineer/assets/mark.svg",
+    "logo": "./skills/kin-design-engineer/assets/mark.svg"
+  }
+}
