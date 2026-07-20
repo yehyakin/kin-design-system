@@ -27,6 +27,13 @@ The plugin does not declare a project KIN-compliant from a scan, build, screensh
 
 No separate OpenAI API key is required because the host Codex session supplies the model.
 
+## Supported platforms and verification boundary
+
+- Verified in this Build Week pass: the personal plugin cache in the Windows desktop app, plus the collector and package checks on Windows with Node.js 22.12.0.
+- Intended host: Codex or the ChatGPT desktop app on a platform that exposes local plugin support. macOS and Linux installation were not exercised in this pass.
+- The collector itself requires Node.js 20.11 or newer, uses no credentials, and does not access the network or execute target-project code.
+- The repository marketplace and source package validate, but the exact `codex plugin marketplace add` and `codex plugin add` commands remain unverified in this WindowsApps environment because its packaged `codex.exe` returns `Access is denied`.
+
 ## Local installation
 
 This repository includes a local marketplace at `.agents/plugins/marketplace.json`. From a clone of the KIN repository, add that marketplace and install the plugin:
@@ -62,6 +69,18 @@ The marketplace entry points to `./plugins/kin-design-engineer`:
 ```
 
 Restart the Codex or ChatGPT desktop app after installation, then start a new task before invoking the Skill. The app installs a cached copy; restart and reinstall after replacing or updating the local plugin source.
+
+### Credential-free judge test
+
+From a clean checkout, judges can verify the package and run the deterministic evidence path without an API key or rebuilding a target product:
+
+```bash
+npm ci
+npm run test:plugin
+node plugins/kin-design-engineer/skills/kin-design-engineer/scripts/collect-evidence.mjs . --kin-root . --format markdown
+```
+
+This verifies the package, marketplace metadata, and read-only collector. The model-led audit, repair, and browser-verification workflow runs inside Codex against a disposable frontend checkout and remains subject to the evidence boundaries below.
 
 ## Run the deterministic preflight
 

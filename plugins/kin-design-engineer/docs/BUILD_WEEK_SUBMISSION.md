@@ -1,6 +1,6 @@
 # OpenAI Build Week submission draft
 
-Verified against the official OpenAI Build Week page, Devpost rules, and Devpost FAQ on 2026-07-20.
+Verified against the official OpenAI Build Week page, Devpost rules, and Devpost FAQ on 2026-07-21.
 
 - Submission deadline: July 21, 2026 at 5:00 PM PDT / July 22, 2026 at 8:00 AM China Standard Time
 - Track: **Developer Tools**
@@ -97,7 +97,7 @@ The most useful AI design tool is not the one that produces the most screens. It
 
 ## Judge testing path
 
-1. Install `plugins/kin-design-engineer` from the repository's local marketplace.
+1. Clone the public submission branch and follow the plugin README: <https://github.com/yehyakin/kin-design-system/tree/codex/build-week-kin-plugin-pr>.
 2. Open a runnable frontend in Codex with GPT-5.6 selected.
 3. Invoke `$kin-design-engineer Audit this frontend; confirm candidates in the rendered UI and do not edit.`
 4. Run the deterministic collector directly if desired; it requires Node.js 20.11+ and no credentials.
@@ -107,10 +107,11 @@ The most useful AI design tool is not the one that produces the most screens. It
 
 ## Required links and evidence
 
-- Live/demo testing path: repository-local plugin install; public instructions pending
-- Repository URL: `TODO — publish or grant both judging accounts access`
+- Live/demo testing path: <https://github.com/yehyakin/kin-design-system/blob/codex/build-week-kin-plugin-pr/plugins/kin-design-engineer/README.md>
+- Repository URL: <https://github.com/yehyakin/kin-design-system/tree/codex/build-week-kin-plugin-pr> (public, MIT)
+- Draft pull request: <https://github.com/yehyakin/kin-design-system/pull/16>
 - Public YouTube video under three minutes: `TODO`
-- Primary Codex `/feedback` Session ID: `TODO`
+- Primary Codex `/feedback` Session ID: obtained; enter only in the Devpost submission form and do not publish it in this repository
 - Final local screenshots: AgentOS commit `6e32403`, under `artifacts/build-week/`; upload still required
 - Clean-checkout result: KIN plugin commit `f5d94c1`, AgentOS commit `6e32403`, and kin3.net commit `e3c75a7` all passed their recorded clean-worktree checks. Exact repository-marketplace CLI installation remains unverified because the local Codex CLI returned Windows `Access is denied`.
 
@@ -129,7 +130,7 @@ The most useful AI design tool is not the one that produces the most screens. It
 - [ ] Exercise the exact repository-marketplace CLI installation in an environment where the Codex CLI is not access-blocked.
 - [ ] Record the demo with audio and visible GPT-5.6 model selection.
 - [ ] Upload the video publicly to YouTube.
-- [ ] Publish the repository with licensing, or share the private repository with both judging addresses in the rules.
-- [ ] Run `/feedback` in the primary Codex build task and add the Session ID.
+- [x] Publish the submission branch in the MIT-licensed public repository.
+- [x] Run `/feedback` in the primary Codex build task; keep the Session ID private and add it directly to Devpost.
 - [ ] Add final screenshots and recheck every link without relying on a logged-in session.
 - [ ] Review and submit on Devpost before the deadline; do not edit after it closes.
