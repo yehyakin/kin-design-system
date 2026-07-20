@@ -4,12 +4,15 @@ on:
   workflow_run:
     workflows:
       - Validate documentation
-      - Validate release tag
     types:
       - completed
+  release:
+    types:
+      - published
   workflow_dispatch:
 
 permissions:
+  actions: read
   contents: read
 
 concurrency:
@@ -20,8 +23,12 @@ jobs:
   build:
     if: >-
       github.event_name == 'workflow_dispatch' ||
-      (github.event.workflow_run.conclusion == 'success' &&
-      (github.event.workflow_run.name == 'Validate release tag' || github.event.workflow_run.head_branch == 'main'))
+      github.event_name == 'release' ||
+      (github.event_name == 'workflow_run' &&
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.event == 'push' &&
+      github.event.workflow_run.head_branch == 'main' &&
+      github.event.workflow_run.head_repository.full_name == github.repository)
     runs-on: ubuntu-latest
     timeout-minutes: 10
     outputs:
@@ -30,7 +37,7 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
         with:
-          ref: ${{ github.event.workflow_run.head_sha || 'main' }}
+          ref: ${{ github.event.release.tag_name || github.event.workflow_run.head_sha || 'main' }}
           fetch-depth: 0
           persist-credentials: false
 
@@ -48,12 +55,35 @@ jobs:
         shell: bash
         run: |
           trigger="manual"
-          if [[ "${{ github.event.workflow_run.name }}" == "Validate documentation" ]]; then
+          if [[ "${{ github.event_name }}" == "release" ]]; then
+            trigger="release"
+          elif [[ "${{ github.event.workflow_run.name }}" == "Validate documentation" ]]; then
             trigger="documentation"
-          elif [[ "${{ github.event.workflow_run.name }}" == "Validate release tag" ]]; then
-            trigger="tag"
           fi
           node scripts/check-pages-publication.mjs --trigger "$trigger" >> "$GITHUB_OUTPUT"
+
+      - name: Verify released publication provenance
+        if: steps.lifecycle.outputs.eligible == 'true' && steps.lifecycle.outputs.release_status == 'released'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          expected_tag="v$(node -p "require('./package.json').version")"
+          if [[ "${{ github.event_name }}" == "release" && "${{ github.event.release.tag_name }}" != "$expected_tag" ]]; then
+            echo "Published Release tag does not match package.json" >&2
+            exit 1
+          fi
+          git fetch --no-tags origin main:refs/remotes/origin/main
+          git merge-base --is-ancestor HEAD origin/main
+          validated_runs="$(gh run list --repo "$GITHUB_REPOSITORY" --workflow "Validate documentation" \
+            --commit "$(git rev-parse HEAD)" --event push --status completed --limit 20 \
+            --json conclusion --jq '[.[] | select(.conclusion == "success")] | length')"
+          if [[ "$validated_runs" -lt 1 ]]; then
+            echo "No successful Validate documentation push run exists for the release commit" >&2
+            exit 1
+          fi
+          gh release view "$expected_tag" --repo "$GITHUB_REPOSITORY" --json isDraft,isPrerelease,tagName --jq \
+            'select(.isDraft == false and .isPrerelease == false and .tagName == "'"$expected_tag"'") | .tagName' | grep -Fx "$expected_tag"
 
       - name: Build and validate showcase
         if: steps.lifecycle.outputs.eligible == 'true'

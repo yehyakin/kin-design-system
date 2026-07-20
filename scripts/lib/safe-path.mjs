@@ -27,5 +27,6 @@ export function resolveExistingPathWithin(root, repositoryPath) {
   }
   const realTarget = fs.realpathSync(current);
   if (!inside(realRoot, realTarget)) throw new Error(`Path resolves outside its governed root: ${repositoryPath}`);
+  if (!fs.statSync(realTarget).isFile()) throw new Error(`Governed path must resolve to a regular file: ${repositoryPath}`);
   return realTarget;
 }

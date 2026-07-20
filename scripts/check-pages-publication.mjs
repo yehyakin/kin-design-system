@@ -6,7 +6,7 @@ import { pagesPublicationDecision } from "./lib/release-policy.mjs";
 
 function parseArguments(args) {
   if (args.length === 2 && args[0] === "--trigger") return args[1];
-  throw new Error("Usage: node scripts/check-pages-publication.mjs --trigger <documentation|tag|manual>");
+  throw new Error("Usage: node scripts/check-pages-publication.mjs --trigger <documentation|release|manual>");
 }
 
 try {
@@ -22,6 +22,7 @@ try {
     if (output.trim()) console.error(output.trim());
   }
   console.log(`eligible=${decision === "defer" ? "false" : "true"}`);
+  console.log(`release_status=${releaseStatus}`);
 } catch (error) {
   console.error(error.message);
   process.exit(1);

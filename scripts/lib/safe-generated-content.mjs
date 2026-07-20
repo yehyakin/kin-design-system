@@ -1,6 +1,6 @@
 const RAW_HTML = /(?:<\s*\/?\s*[A-Za-z][^>]*>|<!--|-->)/u;
 const DANGEROUS_URI = /(?:\]\(|<)\s*(?:javascript|data|vbscript|file):/iu;
-const EXECUTABLE_COMMAND = /(?:^|[;&|]\s*|\s)(?:npm|pnpm|yarn|npx|bun|pip3?|python3?|node|bash|zsh|pwsh|powershell|cmd|curl|wget)\s+(?:install|add|exec|run|dlx|x|eval|invoke|download|fetch)\b/iu;
+const EXECUTABLE_COMMAND = /\b(?:npm|pnpm|yarn|npx|bun|pip3?|python3?|node|bash|zsh|pwsh|powershell|cmd|curl|wget)\s+(?:i|install|add|exec|run|dlx|x|eval|invoke|download|fetch)\b/iu;
 const PROMPT_OVERRIDE = /(?:ignore|disregard|override)\s+(?:all\s+)?(?:previous|prior|system|developer)(?:\s+(?:system|developer))?\s+(?:instructions?|rules?|prompts?)|(?:忽略|覆盖|绕过).{0,20}(?:之前|系统|开发者|规则|指令|提示)/iu;
 const SECRET = /(?:AKIA[0-9A-Z]{16}|gh[pousr]_[A-Za-z0-9]{20,}|-----BEGIN [A-Z ]*PRIVATE KEY-----|\$\{\{\s*secrets\.|process\.env\.|\$env:|(?:password|passwd|secret|token)\s*[:=]\s*[^\s"']+)/iu;
 const LOCAL_PATH = /(?:[A-Za-z]:\\{1,2}[A-Za-z0-9._ -]+\\{1,2}|file:\/\/|(?:^|["'\s])\\{2,4}[A-Za-z0-9][A-Za-z0-9._-]*\\{1,2}[A-Za-z0-9._-]+)/u;

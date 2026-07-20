@@ -48,9 +48,9 @@ Run candidate validation only after committing all release files: released-candi
 4. Wait for the `Validate documentation` workflow to pass on that exact `main` commit. The Pages workflow deliberately defers a `released` candidate at this point, so it cannot publish formal-release copy before the matching Tag exists.
 5. Create an annotated version Tag, for example `v3.0.0`, on that exact commit.
 6. Run `npm run release:check:post-tag` locally. It requires the annotated Tag, exact `HEAD` commit, and matching tagged `DESIGN.md` bytes.
-7. Push the Tag and wait for `Validate release tag` to pass. That workflow also requires the tagged commit to be reachable from `origin/main`; only then may the Pages workflow deploy the released showcase.
-8. Create the GitHub Release from the matching `CHANGELOG.md` section.
-9. Verify the pinned contract URL in `adoption/kin.config.example.json` resolves.
+7. Push the Tag and wait for `Validate release tag` to pass. That workflow also requires the tagged commit to be reachable from `origin/main`.
+8. Create and publish the GitHub Release from the matching `CHANGELOG.md` section. The `release.published` event is the formal-release Pages trigger; the deploy job revalidates the Tag, Release, and `main` ancestry before upload.
+9. Wait for the Pages deployment to pass, then verify the pinned contract URL in `adoption/kin.config.example.json` and the GitHub Release link resolve.
 
 Do not create the Tag before the release commit reaches validated `main`. Do not move, reuse, or replace a published version Tag. RFC 001 Phase 2 adds separate immutable Agent Archive and promotion gates; Phase 1 does not imply them.
 

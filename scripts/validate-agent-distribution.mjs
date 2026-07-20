@@ -63,15 +63,17 @@ export function validateAgentDistribution({ root = process.cwd(), bundleDirector
     const lexical = path.resolve(bundleDirectory, ...artifact.bundle_path.split("/"));
     if (!fs.existsSync(lexical)) continue;
     let absolute;
+    let bytes;
     try {
       absolute = resolveExistingPathWithin(bundleDirectory, artifact.bundle_path);
+      bytes = fs.readFileSync(absolute);
     } catch (error) {
       findings.push(`${artifact.bundle_path}: ${error.message}`);
       continue;
     }
-    const checksum = sha256ExactBytes(fs.readFileSync(absolute));
+    const checksum = sha256ExactBytes(bytes);
     if (checksum !== artifact.sha256) findings.push(`${artifact.bundle_path}: checksum differs from manifest`);
-    findings.push(...scanGeneratedArtifact(artifact.bundle_path, fs.readFileSync(absolute)));
+    findings.push(...scanGeneratedArtifact(artifact.bundle_path, bytes));
   }
 
   const snapshots = [];

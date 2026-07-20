@@ -5,9 +5,9 @@ export function parseReleaseValidationArgs(args) {
 }
 
 export function pagesPublicationDecision({ releaseStatus, trigger }) {
-  if (!new Set(["documentation", "tag", "manual"]).has(trigger)) throw new Error(`Unsupported Pages trigger: ${trigger}`);
+  if (!new Set(["documentation", "release", "manual"]).has(trigger)) throw new Error(`Unsupported Pages trigger: ${trigger}`);
   if (releaseStatus === "development") {
-    if (trigger === "tag") throw new Error("A successful release-tag workflow cannot publish a development contract");
+    if (trigger === "release") throw new Error("A published GitHub Release cannot publish a development contract");
     return "deploy";
   }
   if (releaseStatus === "released") return trigger === "documentation" ? "defer" : "verify-tag";
@@ -29,7 +29,7 @@ export function collectReleaseTagFindings({
 }) {
   const findings = [];
   if (releaseStatus === "development") {
-    if (!latestStableExists) findings.push(`latest_stable v${latestStable} does not exist as a local Git tag`);
+    if (!latestStableExists) findings.push(`latest_stable v${latestStable} does not exist as a local annotated commit tag`);
     if (mode === "post-tag") findings.push("post-tag validation requires DESIGN.md release_status: released");
     return findings;
   }

@@ -4,7 +4,7 @@
   "$defs": {
     "hash": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
     "url": {"type": "string", "pattern": "^https://"},
-    "path": {"type": "string", "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))[A-Za-z0-9._/-]+$"},
+    "path": {"type": "string", "pattern": "^(?!/)(?!.*//)(?!.*(?:^|/)\\.{1,2}(?:/|$))(?!.*\\/$)[A-Za-z0-9._/-]+$"},
     "catalog": {
       "type": "object",
       "additionalProperties": false,

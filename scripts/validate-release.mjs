@@ -111,7 +111,7 @@ for (const finding of collectReleaseTagFindings({
   releaseStatus,
   version,
   latestStable,
-  latestStableExists: latestStableTag?.exists ?? false,
+  latestStableExists: Boolean(latestStableTag?.exists && latestStableTag.objectType === "tag" && latestStableTag.commit),
   currentTagExists: currentTag.exists,
   currentTagType: currentTag.objectType,
   currentTagCommit: currentTag.commit,
