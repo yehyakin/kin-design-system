@@ -52,11 +52,10 @@ function canonicalLocalizedProse(record) {
   };
 }
 
-export function computeLocaleReview(rules, locale, sourceSections) {
+export function computeLocaleReviewCandidates(rules, locale, sourceSections) {
   const copyById = new Map(locale.rules.map((record) => [record.id, record]));
   const records = [];
   const reviewers = new Set();
-  let complete = true;
 
   for (const rule of [...rules].sort((left, right) => compareCodePoints(left.id, right.id))) {
     const localized = copyById.get(rule.id);
@@ -74,14 +73,24 @@ export function computeLocaleReview(rules, locale, sourceSections) {
       localized_prose: canonicalLocalizedProse(localized),
     }));
 
+    const normativeMatches = localized.review.status === "reviewed" && localized.review.normative_source_checksum === normativeSourceChecksum;
+    const localizedMatches = localized.review.status === "reviewed" && localized.review.localized_content_checksum === localizedContentChecksum;
+    const attestationState = localized.review.status === "unreviewed"
+      ? "unreviewed"
+      : normativeMatches && localizedMatches
+        ? "valid-attestation"
+        : "stale-attestation";
     if (localized.review.status === "reviewed") {
-      if (localized.review.normative_source_checksum !== normativeSourceChecksum) throw new Error(`${locale.locale}:${rule.id}: stale normative source review checksum`);
-      if (localized.review.localized_content_checksum !== localizedContentChecksum) throw new Error(`${locale.locale}:${rule.id}: stale localized content review checksum`);
       for (const reviewer of localized.review.reviewers) reviewers.add(reviewer);
-    } else {
-      complete = false;
     }
-    records.push({ id: rule.id, normativeSourceChecksum, localizedContentChecksum });
+    records.push({
+      id: rule.id,
+      normativeSourceChecksum,
+      localizedContentChecksum,
+      normativeMatches,
+      localizedMatches,
+      attestationState,
+    });
   }
 
   const normativeAggregate = sha256CanonicalText(compactJson(records.map((record) => ({
@@ -93,13 +102,26 @@ export function computeLocaleReview(rules, locale, sourceSections) {
     localized_content_checksum: record.localizedContentChecksum,
   }))));
 
+  const complete = records.every((record) => record.attestationState === "valid-attestation");
+  const stale = records.some((record) => record.attestationState === "stale-attestation");
   return {
     complete,
-    status: complete ? "reviewed" : "unreviewed",
+    status: complete ? "reviewed" : stale ? "stale-attestation" : "unreviewed",
     reviewers: [...reviewers].sort(compareCodePoints),
     normative_source_checksum: normativeAggregate,
     localized_content_checksum: localizedAggregate,
+    records,
   };
+}
+
+export function computeLocaleReview(rules, locale, sourceSections) {
+  const review = computeLocaleReviewCandidates(rules, locale, sourceSections);
+  for (const record of review.records) {
+    if (record.attestationState !== "stale-attestation") continue;
+    if (!record.normativeMatches) throw new Error(`${locale.locale}:${record.id}: stale normative source review checksum`);
+    throw new Error(`${locale.locale}:${record.id}: stale localized content review checksum`);
+  }
+  return review;
 }
 
 function inputRole(file) {
@@ -120,7 +142,7 @@ function validateInputSchema(value, schema, file) {
   if (findings.length > 0) throw new Error(`${file} does not match its Schema:\n- ${findings.join("\n- ")}`);
 }
 
-export function loadAgentDistributionContext(root) {
+export function loadAgentDistributionContext(root, { allowStaleLocaleReview = false } = {}) {
   const registry = new InputRegistry(root);
   const designSource = registry.readText("DESIGN.md", inputRole("DESIGN.md"));
   const design = parseDesignContract(designSource);
@@ -184,7 +206,12 @@ export function loadAgentDistributionContext(root) {
       if (existing && existing !== copy.heading) throw new Error(`${locale.source}: rules in ${rule.snapshot_section} must use one section heading`);
       sectionHeadings.set(`${locale.id}:${rule.snapshot_section}`, copy.heading);
     }
-    localeReviews.set(locale.id, computeLocaleReview(rules, locale.value, sourceSections));
+    localeReviews.set(
+      locale.id,
+      allowStaleLocaleReview
+        ? computeLocaleReviewCandidates(rules, locale.value, sourceSections)
+        : computeLocaleReview(rules, locale.value, sourceSections),
+    );
   }
 
   const inputSetChecksum = registry.checksum();
@@ -201,6 +228,7 @@ export function loadAgentDistributionContext(root) {
     profiles,
     locales,
     localeReviews,
+    sourceSections,
     inputSetChecksum,
   };
 }

@@ -18,7 +18,7 @@
     "contract_path": "DESIGN.md",
     "checksum_algorithm": "sha256",
     "checksum": "75e62f81a34d95dd9efbb36a32ad672c9d13e413ca8910992a3ea9de286c3a6d",
-    "input_set_checksum": "4762b422a910fa772de56a0fbc8d14660f870c947510714d68af1f6f38b5867a",
+    "input_set_checksum": "76eb84c5342fe5d730ff0950894af4e869adefbf1f48446843330d70c95fc254",
     "ref": "main",
     "revision_status": "mutable",
     "inputs": [
@@ -60,7 +60,7 @@
       {
         "path": "distribution/schemas/locale-source.schema.json",
         "role": "distribution-schema",
-        "sha256": "3b173bfd94ae3b2698eecd0e4270210366077de545c126b2919a22dbacc7ff7a"
+        "sha256": "3b0ec86b17a420b26782503c21ed2956721508d48fc1ae27f54fc05162c802f1"
       },
       {
         "path": "distribution/schemas/manifest.schema.json",
@@ -90,7 +90,7 @@
       {
         "path": "package.json",
         "role": "lifecycle-metadata",
-        "sha256": "639f01434ce795543c1bf5f6eafcc5afa5ebd338dbb7fe75e0f10f567183e713"
+        "sha256": "2a586bafbe245ded3e4431cb2815a3eb6c8cd594f718ab396f4df8a2106710f6"
       },
       {
         "path": "pages/catalog.json",
@@ -305,7 +305,7 @@
       "public_url": "https://yehyakin.github.io/kin-design-system/next/design.dark.high-contrast.md",
       "media_type": "text/markdown; charset=utf-8",
       "normative": false,
-      "sha256": "005eac936615c6cc4cd4dc04c68ea7a1a4467ab18ba81f6121082e97dee40c8e"
+      "sha256": "6802ec8927f8a8856e45a54ea2a0ff18816c4888f837f37ec4468acdda511da2"
     },
     {
       "id": "design-en-dark",
@@ -318,7 +318,7 @@
       "public_url": "https://yehyakin.github.io/kin-design-system/next/design.dark.md",
       "media_type": "text/markdown; charset=utf-8",
       "normative": false,
-      "sha256": "ddb3066bad87187ed6894a245360bd3f442379d35ff6c1bde5d45f1e62865cae"
+      "sha256": "a5eb624bb7cc67afd7417330e45b1c71cf5ba9065331ec0b1e8b3f04e8241df6"
     },
     {
       "id": "design-en-light-high-contrast",
@@ -331,7 +331,7 @@
       "public_url": "https://yehyakin.github.io/kin-design-system/next/design.high-contrast.md",
       "media_type": "text/markdown; charset=utf-8",
       "normative": false,
-      "sha256": "317ec7f5593923d18491e51e1fb3d09808bae1b78fec3c964a0d0dd53254ab63"
+      "sha256": "d851efcbae6be8306c4d9e8c830e324c6a07386482c309629881c639746d3611"
     },
     {
       "id": "design-en-light",
@@ -344,7 +344,7 @@
       "public_url": "https://yehyakin.github.io/kin-design-system/next/design.md",
       "media_type": "text/markdown; charset=utf-8",
       "normative": false,
-      "sha256": "fbefd63ad4aeed3eef7071a9afd16c272b1cdab8b90d095bbf39aa72719d3159"
+      "sha256": "d132bf1e554b7fd1aafa0c740a60e633ba204a62bb6372f7f7a4ea98062822af"
     },
     {
       "id": "schema-locale_source",
@@ -354,7 +354,7 @@
       "public_url": "https://yehyakin.github.io/kin-design-system/next/schemas/locale-source.schema.json",
       "media_type": "application/schema+json; charset=utf-8",
       "normative": false,
-      "sha256": "4131b8bcf0eada4635c5b5037148a44140e718cfd48f9eb3caed15ed042a5bb2"
+      "sha256": "31e0155620c642eb4c01a4a2a581afb17251716cd9b79b908aa116734f526960"
     },
     {
       "id": "schema-manifest",
@@ -407,7 +407,7 @@
       "public_url": "https://yehyakin.github.io/kin-design-system/next/zh/design.dark.high-contrast.md",
       "media_type": "text/markdown; charset=utf-8",
       "normative": false,
-      "sha256": "ac123a2f5de82ad69fb99781dd55de5d087c048ead75f65f4f7286b1d5425f08"
+      "sha256": "c1aca0872f2d6432012c558ba522a251d7291aabf19683dfb3bbcbd5d3410727"
     },
     {
       "id": "design-zh-cn-dark",
@@ -420,7 +420,7 @@
       "public_url": "https://yehyakin.github.io/kin-design-system/next/zh/design.dark.md",
       "media_type": "text/markdown; charset=utf-8",
       "normative": false,
-      "sha256": "f9aa1039c1de7cc3eb12f4e65a8bfc58fd6fe21a40c7d5bf043f33dbf7cf2019"
+      "sha256": "e9f864f778f022e0a672ed714682f26abf4717b99f20989ea7913ac3215dec0e"
     },
     {
       "id": "design-zh-cn-light-high-contrast",
@@ -433,7 +433,7 @@
       "public_url": "https://yehyakin.github.io/kin-design-system/next/zh/design.high-contrast.md",
       "media_type": "text/markdown; charset=utf-8",
       "normative": false,
-      "sha256": "9625043233acd9282cfd7e681c86dbfc012c1730d5b0441ed52c8bb9e5393de7"
+      "sha256": "7153ad23478dce45a40ee4b996873f1ac207ac49a44b33f6f25c9d70083cb7a3"
     },
     {
       "id": "design-zh-cn-light",
@@ -446,7 +446,7 @@
       "public_url": "https://yehyakin.github.io/kin-design-system/next/zh/design.md",
       "media_type": "text/markdown; charset=utf-8",
       "normative": false,
-      "sha256": "e5a8d161d3ab618fc1a02e567b4ae947907541b2fc4e3398dfbb88e972a9c0e6"
+      "sha256": "a93d6c38ace334ac43cdf5bb8cc8701c3156df286e6fc8c3e075c94a4a3ec5be"
     }
   ]
 }

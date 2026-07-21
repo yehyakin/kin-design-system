@@ -27,6 +27,8 @@ const required = [
   "distribution/schemas/locale-source.schema.json",
   "distribution/schemas/snapshot.schema.json",
   "distribution/schemas/manifest.schema.json",
+  "reviews/README.md",
+  "reviews/agent-locales.md",
   "generated/agent/README.md",
   "generated/agent/next/design-manifest.json",
   "LICENSE",
@@ -62,6 +64,10 @@ const required = [
   "adoption/kin.config.schema.json",
   "adoption/kin.evidence.example.json",
   "adoption/kin.evidence.schema.json",
+  "adoption/pilots/README.md",
+  "adoption/pilots/pilot-report-template.md",
+  "adoption/pilots/52mk-intelligence-workspace.md",
+  "adoption/pilots/dd-ai-os-ecommerce-operations.md",
   "examples/workspace-reference/index.html",
   "examples/workspace-reference/core-components.html",
   "examples/workspace-reference/core-components.css",
@@ -91,9 +97,11 @@ const required = [
   "scripts/validate-integrations.mjs",
   "scripts/validate-release.mjs",
   "scripts/export-agent-distribution.mjs",
+  "scripts/export-agent-locale-review.mjs",
   "scripts/check-pages-publication.mjs",
   "scripts/validate-agent-distribution.mjs",
   "scripts/lib/agent-distribution.mjs",
+  "scripts/lib/agent-locale-review.mjs",
   "scripts/lib/canonical-content.mjs",
   "scripts/lib/design-contract.mjs",
   "scripts/lib/frontmatter.mjs",
@@ -137,6 +145,31 @@ function relative(file) {
   return path.relative(root, file).split(path.sep).join("/");
 }
 
+function markdownOutsideFences(source) {
+  const visible = [];
+  let fence = null;
+
+  for (const line of source.split(/\r?\n/u)) {
+    if (fence) {
+      const closing = line.match(/^ {0,3}(`{3,}|~{3,})\s*$/u);
+      if (closing && closing[1][0] === fence.marker && closing[1].length >= fence.length) fence = null;
+      visible.push("");
+      continue;
+    }
+
+    const opening = line.match(/^ {0,3}(`{3,}|~{3,})(.*)$/u);
+    if (opening && (opening[1][0] === "~" || !opening[2].includes("`"))) {
+      fence = { marker: opening[1][0], length: opening[1].length };
+      visible.push("");
+      continue;
+    }
+
+    visible.push(line);
+  }
+
+  return { content: visible.join("\n"), unclosed: fence !== null };
+}
+
 const failures = [];
 
 for (const file of required) {
@@ -149,13 +182,13 @@ const linkPattern = /\[[^\]]*\]\(([^)]+)\)/g;
 for (const file of markdownFiles) {
   const content = fs.readFileSync(file, "utf8");
   const name = relative(file);
-  const fenceCount = content.match(/```/g)?.length ?? 0;
+  const visibleMarkdown = markdownOutsideFences(content);
 
-  if (fenceCount % 2 !== 0) failures.push(`${name}: unpaired fenced code block`);
+  if (visibleMarkdown.unclosed) failures.push(`${name}: unpaired fenced code block`);
   if (/^(<<<<<<<|=======|>>>>>>>) /m.test(content)) failures.push(`${name}: unresolved merge marker`);
   if (/<!--\s*(TODO|TBD|PLACEHOLDER)\b/i.test(content)) failures.push(`${name}: unresolved placeholder comment`);
 
-  for (const match of content.matchAll(linkPattern)) {
+  for (const match of visibleMarkdown.content.matchAll(linkPattern)) {
     const rawTarget = match[1].trim();
     if (
       rawTarget.startsWith("http://") ||

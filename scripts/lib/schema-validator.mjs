@@ -39,6 +39,7 @@ export function validateSchemaValue(value, schema, { rootSchema = schema, path =
 
   if (typeof value === "string") {
     if (resolved.minLength !== undefined && value.length < resolved.minLength) findings.push(`${path}: string is shorter than ${resolved.minLength}`);
+    if (resolved.maxLength !== undefined && value.length > resolved.maxLength) findings.push(`${path}: string is longer than ${resolved.maxLength}`);
     if (resolved.pattern && !new RegExp(resolved.pattern, "u").test(value)) findings.push(`${path}: string does not match ${resolved.pattern}`);
   }
 
