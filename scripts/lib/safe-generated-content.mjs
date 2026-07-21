@@ -2,7 +2,7 @@ const DANGEROUS_URI = /(?:\]\(|<)\s*(?:javascript|data|vbscript|file):/iu;
 const EXECUTABLE_COMMAND = /\b(?:npm|pnpm|yarn|npx|bun|pip3?|python3?|node|bash|zsh|pwsh|powershell|cmd|curl|wget)\s+(?:i|install|add|exec|run|dlx|x|eval|invoke|download|fetch)\b/iu;
 const PROMPT_OVERRIDE = /(?:ignore|disregard|override)\s+(?:all\s+)?(?:previous|prior|system|developer)(?:\s+(?:system|developer))?\s+(?:instructions?|rules?|prompts?)|(?:忽略|覆盖|绕过).{0,20}(?:之前|系统|开发者|规则|指令|提示)/iu;
 const SECRET = /(?:AKIA[0-9A-Z]{16}|gh[pousr]_[A-Za-z0-9]{20,}|-----BEGIN [A-Z ]*PRIVATE KEY-----|\$\{\{\s*secrets\.|process\.env\.|\$env:|(?:password|passwd|secret|token)\s*[:=]\s*[^\s"']+)/iu;
-const LOCAL_PATH = /(?:[A-Za-z]:\\{1,2}[A-Za-z0-9._ -]+\\{1,2}|file:\/\/|(?:^|["'\s])\\{2,4}[A-Za-z0-9][A-Za-z0-9._-]*\\{1,2}[A-Za-z0-9._-]+)/u;
+const LOCAL_PATH = /(?:[A-Za-z]:\\{1,2}[A-Za-z0-9._ -]+\\{1,2}|file:\/\/|(?:^|["'\s])\\{2,4}[A-Za-z0-9][A-Za-z0-9._-]*\\{1,2}[A-Za-z0-9._-]+|(?:^|["'\s])\/(?:Users|home|tmp|var|etc|opt|root)\/[A-Za-z0-9._~/-]+)/u;
 
 function containsRawHtml(value) {
   // Generated Markdown uses `>` for blockquotes, so reject opening angle
@@ -31,6 +31,7 @@ export function validateLocaleRecord(record, locale) {
     ...record.do.map((value, index) => [`do[${index}]`, value]),
     ...record.do_not.map((value, index) => [`do_not[${index}]`, value]),
     ...Object.entries(record.labels ?? {}).map(([key, value]) => [`labels.${key}`, value]),
+    ...(record.review.reviewed_ref ? [["review.reviewed_ref", record.review.reviewed_ref]] : []),
   ];
   for (const [field, value] of values) findings.push(...findUnsafeLocaleText(value, `${locale}:${record.id}.${field}`));
   return findings;

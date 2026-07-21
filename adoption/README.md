@@ -93,6 +93,12 @@ A component gallery, Storybook, design lab, static fixture, or isolated migrated
 
 Older evidence records without `visualReview` remain readable for migration. The checker warns while they are below `verified` and rejects a `verified` or `production-observed` claim until the visual review is recorded.
 
+## Controlled product pilots
+
+The non-normative [`adoption/pilots/`](./pilots/README.md) pack prepares comparable trials for one 52.mk intelligence workflow and one materially different DD AI OS ecommerce-operations workflow. It provides product-specific audit boundaries and one common evidence template; it does not modify either product, approve an implementation brief, or manufacture adoption evidence.
+
+Run each pilot in the consuming product repository against its current revision. Pin the exact reviewed KIN commit, capture the baseline before implementation, keep product data and private artifacts local, and record missing-contract lookups and correction rounds as trial results rather than hiding them.
+
 ## Run the candidate audit
 
 ```bash

@@ -93,7 +93,9 @@
             },
             "reviewed_ref": {
               "type": "string",
-              "minLength": 1
+              "minLength": 1,
+              "maxLength": 512,
+              "pattern": "^[^\\r\\n\\u0000-\\u001f\\u007f`<>]+$"
             }
           }
         },
