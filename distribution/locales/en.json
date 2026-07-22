@@ -31,10 +31,11 @@
         "color_scheme_guidance": "Set color-scheme to the resolved theme and preserve light, dark, system, and higher-contrast behavior in the product."
       },
       "review": {
-        "status": "unreviewed",
-        "reviewers": [],
-        "normative_source_checksum": null,
-        "localized_content_checksum": null
+        "status": "reviewed",
+        "reviewers": ["@yehyakin"],
+        "normative_source_checksum": "eabafbe562561ccd54adfb34eb1ae3c41225829535ef7463a78081f18f567b0a",
+        "localized_content_checksum": "0ed34826c85aae29855cb8c9e8b1cd270d676c9d5ce62fc611819513acb05e46",
+        "reviewed_ref": "1b880a128046a45c25d5fadb9d61ff07af31f6e8"
       }
     },
     {
@@ -43,7 +44,7 @@
       "summary": "Put the subject, current task, search, list, document, object, or action in the first meaningful view.",
       "do": ["Let real content and the user's job establish the composition."],
       "do_not": ["Do not place a marketing Hero, generic value proposition, or decorative graph before the working task."],
-      "review": {"status": "unreviewed", "reviewers": [], "normative_source_checksum": null, "localized_content_checksum": null}
+      "review": {"status": "reviewed", "reviewers": ["@yehyakin"], "normative_source_checksum": "acb2433cce6a12cf440dd28f5c651ab6ed4872f4f70ed72dc7779a2ef2f9e502", "localized_content_checksum": "5ebde1269d8997f0915502a1b5c8a6e0b03a2e57c4ddd9901656717efdf429f6", "reviewed_ref": "1b880a128046a45c25d5fadb9d61ff07af31f6e8"}
     },
     {
       "id": "one-dominant-region",
@@ -51,7 +52,7 @@
       "summary": "Give each state one dominant work or reading region; navigation, metadata, and secondary chrome recede after orientation.",
       "do": ["Use visual weight to make the next useful action obvious."],
       "do_not": ["Do not give unrelated panels equal weight merely because a grid is available."],
-      "review": {"status": "unreviewed", "reviewers": [], "normative_source_checksum": null, "localized_content_checksum": null}
+      "review": {"status": "reviewed", "reviewers": ["@yehyakin"], "normative_source_checksum": "690002ce0929ab1cf3807c762311b933fde603e3167559353e27e5f4698d6eff", "localized_content_checksum": "a977c0c118dfdcc6f60112e6f104dc73c23c30effa0faf72be37137b2e906178", "reviewed_ref": "1b880a128046a45c25d5fadb9d61ff07af31f6e8"}
     },
     {
       "id": "neutral-precise-emphasis",
@@ -59,7 +60,7 @@
       "summary": "Keep most structure neutral and use one primary interaction accent for focus, selection, links, and primary actions.",
       "do": ["Keep semantic colors tied to distinct product meanings."],
       "do_not": ["Do not use color, badges, icons, or motion to compensate for weak order or alignment."],
-      "review": {"status": "unreviewed", "reviewers": [], "normative_source_checksum": null, "localized_content_checksum": null}
+      "review": {"status": "reviewed", "reviewers": ["@yehyakin"], "normative_source_checksum": "defe2d9ef31a39445a1da58fb1dc1b79bac8f5b1c4b96c16de11f239bb364e1f", "localized_content_checksum": "8e9be44a8e921e6bba8505b990a53223734fc08b3a11e718f5f6bf8684124224", "reviewed_ref": "1b880a128046a45c25d5fadb9d61ff07af31f6e8"}
     },
     {
       "id": "typography-supports-hierarchy",
@@ -67,7 +68,7 @@
       "summary": "Use typography roles to express hierarchy; keep interface text compact and body text readable, and use tabular numerals where comparison matters.",
       "do": ["Map the named roles to the product's available font stack without redistributing private fonts."],
       "do_not": ["Do not enlarge headings or tighten Chinese tracking merely to imitate another product."],
-      "review": {"status": "unreviewed", "reviewers": [], "normative_source_checksum": null, "localized_content_checksum": null}
+      "review": {"status": "reviewed", "reviewers": ["@yehyakin"], "normative_source_checksum": "0f4bd78864fbdc085b334e63efcbf09c7bce5dfe00f78a2121a95c38e2afd176", "localized_content_checksum": "6cec8281a7fd2c594b5b1901978325961812a47c28a2d0ac73c3034c697e317d", "reviewed_ref": "1b880a128046a45c25d5fadb9d61ff07af31f6e8"}
     },
     {
       "id": "density-removes-repetition",
@@ -75,7 +76,7 @@
       "summary": "Align repeated values and actions, carry shared meaning in columns or group controls, and use empty space to clarify priority.",
       "do": ["Keep comparison rows compact while preserving required hit areas."],
       "do_not": ["Do not repeat labels and helper text in every row or use large empty regions as unresolved composition."],
-      "review": {"status": "unreviewed", "reviewers": [], "normative_source_checksum": null, "localized_content_checksum": null}
+      "review": {"status": "reviewed", "reviewers": ["@yehyakin"], "normative_source_checksum": "d7bfa46e58fa9ea7b27b24199764e4ec1854e1cf983e377e790f3c2130d689ff", "localized_content_checksum": "a56f7b27a99f5fa3a32ffe6202d2b59f30ce79343ff6fdd5cd8704e21facf1a4", "reviewed_ref": "1b880a128046a45c25d5fadb9d61ff07af31f6e8"}
     },
     {
       "id": "continuous-structure",
@@ -83,7 +84,7 @@
       "summary": "Create hierarchy with alignment, rhythm, columns, property rows, dividers, and small surface steps before adding containers.",
       "do": ["Use a Surface only for a real object, overlay, selected context, or task-mode boundary."],
       "do_not": ["Do not turn prose, metadata, activity, property groups, filters, or table regions into nested cards by default."],
-      "review": {"status": "unreviewed", "reviewers": [], "normative_source_checksum": null, "localized_content_checksum": null}
+      "review": {"status": "reviewed", "reviewers": ["@yehyakin"], "normative_source_checksum": "5e56024106003b42656023cc8f66bedbce4992f013ec169aee3f6649abb4d899", "localized_content_checksum": "a1c07676cc96ea194fba3ad4d680d45d67b0df7edb747eba6321634e9ce3794d", "reviewed_ref": "1b880a128046a45c25d5fadb9d61ff07af31f6e8"}
     },
     {
       "id": "motion-explains-change",
@@ -91,7 +92,7 @@
       "summary": "Use motion to preserve origin, direction, state continuity, and committed results; reversible interactions begin from their current visual state.",
       "do": ["Keep motion interruptible and preserve the same final hierarchy under Reduced Motion."],
       "do_not": ["Do not use repeated lifts, automatic counting, generic page fades, or decorative entrances to manufacture polish."],
-      "review": {"status": "unreviewed", "reviewers": [], "normative_source_checksum": null, "localized_content_checksum": null}
+      "review": {"status": "reviewed", "reviewers": ["@yehyakin"], "normative_source_checksum": "00225edbd1d165d0513aad5c21703ff30fc5a7e9fe4eba16842baa28643a82c9", "localized_content_checksum": "ec021ae21dacff5918082c7e52fdc84b688bd882e010bc482bbfe1a1348246a1", "reviewed_ref": "1b880a128046a45c25d5fadb9d61ff07af31f6e8"}
     },
     {
       "id": "semantics-remain-separate",
@@ -99,7 +100,7 @@
       "summary": "Keep status, risk, confidence, completeness, availability, permission, and progress separate whenever the product distinguishes them.",
       "do": ["Make meaning readable with language or symbols as well as color, and show source and time for consequential data."],
       "do_not": ["Do not collapse independent judgments into one attractive score, badge, or unsupported claim."],
-      "review": {"status": "unreviewed", "reviewers": [], "normative_source_checksum": null, "localized_content_checksum": null}
+      "review": {"status": "reviewed", "reviewers": ["@yehyakin"], "normative_source_checksum": "3af9316ce0f8bc180e98107be72c6c4204a92fecddc0f2632da7bd95456e7c61", "localized_content_checksum": "8dfbe622d9a3965298674c5edc4095e027aec54e3f67de1f53bfc223a5ac9863", "reviewed_ref": "1b880a128046a45c25d5fadb9d61ff07af31f6e8"}
     },
     {
       "id": "route-by-product-profile",
@@ -107,7 +108,7 @@
       "summary": "Choose the product profile from the real route and task, then open the matching detailed pattern before changing composition.",
       "do": ["Use route-level profiles for hybrid products and preserve the user's stated request and product truth."],
       "do_not": ["Do not apply one workspace layout to every route or let task-intent hints override local requirements."],
-      "review": {"status": "unreviewed", "reviewers": [], "normative_source_checksum": null, "localized_content_checksum": null}
+      "review": {"status": "reviewed", "reviewers": ["@yehyakin"], "normative_source_checksum": "0d389a1e361072bad1c4c02488136a32aef78504fa8ac09d62896dd0b8047cf8", "localized_content_checksum": "fc72715a505a325e1e2b03b83487f952470be7bbccd4426215fee4cddbdf766f", "reviewed_ref": "1b880a128046a45c25d5fadb9d61ff07af31f6e8"}
     },
     {
       "id": "delivery-is-not-adoption",
@@ -115,7 +116,7 @@
       "summary": "Generated snapshots, Token parity, builds, and component references are delivery evidence, not proof that a product is visibly or fully KIN.",
       "do": ["Record scoped mappings, realistic states, comparable screenshots, human review, exceptions, owners, and rollback before making an adoption claim."],
       "do_not": ["Do not infer production adoption from this snapshot, a passing generator, or isolated styled components."],
-      "review": {"status": "unreviewed", "reviewers": [], "normative_source_checksum": null, "localized_content_checksum": null}
+      "review": {"status": "reviewed", "reviewers": ["@yehyakin"], "normative_source_checksum": "54f23d7fa69a9bc0df91219322adb933f91c4e1fdc401fb31ade570eb9ae81df", "localized_content_checksum": "67b6df7fbd3397685a228b8971ea49d7149ed8a5a2765139c04446c612560ce3", "reviewed_ref": "1b880a128046a45c25d5fadb9d61ff07af31f6e8"}
     }
   ]
 }

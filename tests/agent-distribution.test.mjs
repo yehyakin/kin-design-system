@@ -166,7 +166,11 @@ test("locale Schema and semantic checksum gate agree on review state", () => {
   assert.ok(validateSchemaValue("x".repeat(513), { type: "string", maxLength: 512 }).some((finding) => finding.includes("longer than 512")));
 });
 
-test("locale review packet is deterministic and does not manufacture an attestation", () => {
+test("locale review packet is deterministic and reflects the committed attestation", () => {
+  const localeInputsBefore = new Map(["en", "zh-CN"].map((locale) => {
+    const localePath = path.join(root, "distribution", "locales", `${locale}.json`);
+    return [locale, fs.readFileSync(localePath, "utf8")];
+  }));
   const first = buildAgentLocaleReviewPacket(root);
   const second = buildAgentLocaleReviewPacket(root);
   assert.equal(first, second);
@@ -174,13 +178,17 @@ test("locale review packet is deterministic and does not manufacture an attestat
   assert.match(first, /## `snapshot-source-boundary`/);
   assert.match(first, /### en/);
   assert.match(first, /### zh-CN/);
-  assert.match(first, /Recorded reviewed ref: `null`/);
+  assert.match(first, /Recorded reviewed ref: `1b880a128046a45c25d5fadb9d61ff07af31f6e8`/);
+  assert.match(first, /Attestation state: `valid-attestation`/);
   const delivery = fs.readFileSync(path.join(root, "DELIVERY.md"), "utf8");
   const exactSource = extractExactSection(delivery, "Current decision");
   assert.ok(first.includes(JSON.stringify(exactSource)));
   assert.ok(first.includes(`UTF-8 byte length: \`${Buffer.byteLength(exactSource, "utf8")}\``));
   for (const locale of ["en", "zh-CN"]) {
-    const source = JSON.parse(fs.readFileSync(path.join(root, "distribution", "locales", `${locale}.json`), "utf8"));
+    const localePath = path.join(root, "distribution", "locales", `${locale}.json`);
+    const currentInput = fs.readFileSync(localePath, "utf8");
+    assert.equal(currentInput, localeInputsBefore.get(locale));
+    const source = JSON.parse(currentInput);
     for (const record of source.rules) assert.ok(first.includes(`Locale-source state: \`${record.review.status}\``));
   }
   assert.match(first, /Human decision record/);
@@ -209,6 +217,10 @@ test("stale locale attestations remain reviewable while strict distribution gene
 test("locale review exporter check reports missing and drift without creating review state", () => {
   const directory = createAgentInputFixture();
   const exporter = path.join(root, "scripts", "export-agent-locale-review.mjs");
+  const localeInputsBefore = new Map(AGENT_LOCALES.map((locale) => {
+    const localePath = path.join(directory, ...locale.source.split("/"));
+    return [locale.source, fs.readFileSync(localePath, "utf8")];
+  }));
   const missing = spawnSync(process.execPath, [exporter, "--check"], { cwd: directory, encoding: "utf8" });
   assert.equal(missing.status, 1);
   assert.match(missing.stderr, /review packet is missing/i);
@@ -220,21 +232,20 @@ test("locale review exporter check reports missing and drift without creating re
   assert.equal(drift.status, 1);
   assert.match(drift.stderr, /review packet drift detected/i);
   for (const locale of AGENT_LOCALES) {
-    const source = JSON.parse(fs.readFileSync(path.join(directory, ...locale.source.split("/")), "utf8"));
-    assert.ok(source.rules.every((record) => record.review.status === "unreviewed"));
+    const source = fs.readFileSync(path.join(directory, ...locale.source.split("/")), "utf8");
+    assert.equal(source, localeInputsBefore.get(locale.source));
   }
 });
 
-test("committed locale inputs remain review-pending until a separate attestation change", () => {
+test("committed locale inputs carry the separately approved checksum-bound attestation", () => {
   for (const locale of ["en", "zh-CN"]) {
     const source = JSON.parse(fs.readFileSync(path.join(root, "distribution", "locales", `${locale}.json`), "utf8"));
     for (const record of source.rules) {
-      assert.deepEqual(record.review, {
-        status: "unreviewed",
-        reviewers: [],
-        normative_source_checksum: null,
-        localized_content_checksum: null,
-      });
+      assert.equal(record.review.status, "reviewed");
+      assert.deepEqual(record.review.reviewers, ["@yehyakin"]);
+      assert.match(record.review.normative_source_checksum, /^[a-f0-9]{64}$/u);
+      assert.match(record.review.localized_content_checksum, /^[a-f0-9]{64}$/u);
+      assert.equal(record.review.reviewed_ref, "1b880a128046a45c25d5fadb9d61ff07af31f6e8");
     }
   }
 });

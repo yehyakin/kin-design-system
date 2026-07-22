@@ -31,10 +31,11 @@
         "color_scheme_guidance": "将 color-scheme 设置为当前主题，并在产品中保留亮色、暗色、跟随系统和高对比度行为。"
       },
       "review": {
-        "status": "unreviewed",
-        "reviewers": [],
-        "normative_source_checksum": null,
-        "localized_content_checksum": null
+        "status": "reviewed",
+        "reviewers": ["@yehyakin"],
+        "normative_source_checksum": "eabafbe562561ccd54adfb34eb1ae3c41225829535ef7463a78081f18f567b0a",
+        "localized_content_checksum": "b5b0685b9550efb9aaecfc8cd2e214d5ea5f871c9e1a0258974c0741046c75e8",
+        "reviewed_ref": "1b880a128046a45c25d5fadb9d61ff07af31f6e8"
       }
     },
     {
@@ -43,7 +44,7 @@
       "summary": "第一有效视图先呈现用户要使用的对象、任务、搜索、列表、文档或操作。",
       "do": ["让真实内容和用户任务决定构图。"],
       "do_not": ["不要在工作任务之前放营销 Hero、泛化价值主张或装饰图表。"],
-      "review": {"status": "unreviewed", "reviewers": [], "normative_source_checksum": null, "localized_content_checksum": null}
+      "review": {"status": "reviewed", "reviewers": ["@yehyakin"], "normative_source_checksum": "acb2433cce6a12cf440dd28f5c651ab6ed4872f4f70ed72dc7779a2ef2f9e502", "localized_content_checksum": "279bf17132501070ece3c95847561c28335ea5eed7dc19f9f5ece74f55e7f32d", "reviewed_ref": "1b880a128046a45c25d5fadb9d61ff07af31f6e8"}
     },
     {
       "id": "one-dominant-region",
@@ -51,7 +52,7 @@
       "summary": "每个状态只有一个主导工作或阅读区域；完成定位后，导航、元数据和次要界面应退后。",
       "do": ["用视觉权重让下一项有用操作清楚可见。"],
       "do_not": ["不要因为有网格，就让无关面板拥有相同视觉权重。"],
-      "review": {"status": "unreviewed", "reviewers": [], "normative_source_checksum": null, "localized_content_checksum": null}
+      "review": {"status": "reviewed", "reviewers": ["@yehyakin"], "normative_source_checksum": "690002ce0929ab1cf3807c762311b933fde603e3167559353e27e5f4698d6eff", "localized_content_checksum": "f36834345f0b31778da627e1316d8112753714c44b8f9f3c1a71a8708ced4586", "reviewed_ref": "1b880a128046a45c25d5fadb9d61ff07af31f6e8"}
     },
     {
       "id": "neutral-precise-emphasis",
@@ -59,7 +60,7 @@
       "summary": "大部分结构保持中性，只用一个主要交互强调色表达焦点、选择、链接和主要操作。",
       "do": ["让语义颜色始终对应各自独立的产品含义。"],
       "do_not": ["不要用颜色、徽标、图标或动效弥补内容顺序和对齐问题。"],
-      "review": {"status": "unreviewed", "reviewers": [], "normative_source_checksum": null, "localized_content_checksum": null}
+      "review": {"status": "reviewed", "reviewers": ["@yehyakin"], "normative_source_checksum": "defe2d9ef31a39445a1da58fb1dc1b79bac8f5b1c4b96c16de11f239bb364e1f", "localized_content_checksum": "35bf55b87e797630ae487f82148c405b1d13eeb107150af40c56b6744120e355", "reviewed_ref": "1b880a128046a45c25d5fadb9d61ff07af31f6e8"}
     },
     {
       "id": "typography-supports-hierarchy",
@@ -67,7 +68,7 @@
       "summary": "用字体角色建立层级；界面文字保持紧凑，正文保持可读，需要比较的数字使用等宽数字。",
       "do": ["把命名角色映射到产品可用字体，不分发私有字体。"],
       "do_not": ["不要为了模仿其他产品而放大标题或过度压缩中文字符间距。"],
-      "review": {"status": "unreviewed", "reviewers": [], "normative_source_checksum": null, "localized_content_checksum": null}
+      "review": {"status": "reviewed", "reviewers": ["@yehyakin"], "normative_source_checksum": "0f4bd78864fbdc085b334e63efcbf09c7bce5dfe00f78a2121a95c38e2afd176", "localized_content_checksum": "f930262f146ca2ed9202a8afd0f2799c5152b745bdc85eaafcfcb68c73fd3fdb", "reviewed_ref": "1b880a128046a45c25d5fadb9d61ff07af31f6e8"}
     },
     {
       "id": "density-removes-repetition",
@@ -75,7 +76,7 @@
       "summary": "对齐重复值和操作，用共享列或分组控件承载共同含义，用留白说明优先级。",
       "do": ["比较型数据行保持紧凑，同时保留要求的命中区域。"],
       "do_not": ["不要在每一行重复标签和帮助文字，也不要用大片空白掩盖未解决的构图。"],
-      "review": {"status": "unreviewed", "reviewers": [], "normative_source_checksum": null, "localized_content_checksum": null}
+      "review": {"status": "reviewed", "reviewers": ["@yehyakin"], "normative_source_checksum": "d7bfa46e58fa9ea7b27b24199764e4ec1854e1cf983e377e790f3c2130d689ff", "localized_content_checksum": "1e05453f76c1719ee87f974c588cf6fb5bb13130408aed08a69f3736bf59d4f8", "reviewed_ref": "1b880a128046a45c25d5fadb9d61ff07af31f6e8"}
     },
     {
       "id": "continuous-structure",
@@ -83,7 +84,7 @@
       "summary": "先用对齐、节奏、列、属性行、分隔线和细微表面差建立层级，再考虑增加容器。",
       "do": ["只有独立对象、浮层、选中上下文或任务模式等真实边界才使用 Surface。"],
       "do_not": ["不要默认把正文、元数据、活动、属性组、筛选器和表格区域做成嵌套卡片。"],
-      "review": {"status": "unreviewed", "reviewers": [], "normative_source_checksum": null, "localized_content_checksum": null}
+      "review": {"status": "reviewed", "reviewers": ["@yehyakin"], "normative_source_checksum": "5e56024106003b42656023cc8f66bedbce4992f013ec169aee3f6649abb4d899", "localized_content_checksum": "4f40715ee21fe15c820158feb7cd344373de299930b6bf0586848f0d2abf790f", "reviewed_ref": "1b880a128046a45c25d5fadb9d61ff07af31f6e8"}
     },
     {
       "id": "motion-explains-change",
@@ -91,7 +92,7 @@
       "summary": "动效用于保留来源、方向、状态连续性和提交结果；可逆交互从当前视觉状态继续。",
       "do": ["动效保持可中断；减少动态效果时仍保留相同终态和层级。"],
       "do_not": ["不要用反复抬升、自动计数、整页淡入或装饰性入场制造完成感。"],
-      "review": {"status": "unreviewed", "reviewers": [], "normative_source_checksum": null, "localized_content_checksum": null}
+      "review": {"status": "reviewed", "reviewers": ["@yehyakin"], "normative_source_checksum": "00225edbd1d165d0513aad5c21703ff30fc5a7e9fe4eba16842baa28643a82c9", "localized_content_checksum": "078904be412c570a3f4422e2b0f8f36e746dd0b9ab6f471a02adecabe3272cb9", "reviewed_ref": "1b880a128046a45c25d5fadb9d61ff07af31f6e8"}
     },
     {
       "id": "semantics-remain-separate",
@@ -99,7 +100,7 @@
       "summary": "只要产品有所区分，状态、风险、置信度、完整度、可用性、权限和进度就必须保持独立。",
       "do": ["除了颜色，还要用文字或符号表达含义；关键数据要显示来源和时间。"],
       "do_not": ["不要把不同判断折叠成一个好看的分数、徽标或缺乏依据的结论。"],
-      "review": {"status": "unreviewed", "reviewers": [], "normative_source_checksum": null, "localized_content_checksum": null}
+      "review": {"status": "reviewed", "reviewers": ["@yehyakin"], "normative_source_checksum": "3af9316ce0f8bc180e98107be72c6c4204a92fecddc0f2632da7bd95456e7c61", "localized_content_checksum": "59d7e82c65b5d6d2d8c7d5d153c27a4919f9325337a17e59e3fd84dfdaead91e", "reviewed_ref": "1b880a128046a45c25d5fadb9d61ff07af31f6e8"}
     },
     {
       "id": "route-by-product-profile",
@@ -107,7 +108,7 @@
       "summary": "根据真实路由和任务选择产品类型，修改构图前打开对应的详细模式合同。",
       "do": ["混合产品按路由族选择类型，并保留用户要求与产品事实。"],
       "do_not": ["不要把一种工作台布局套给所有路由，也不要让任务意图提示覆盖本地要求。"],
-      "review": {"status": "unreviewed", "reviewers": [], "normative_source_checksum": null, "localized_content_checksum": null}
+      "review": {"status": "reviewed", "reviewers": ["@yehyakin"], "normative_source_checksum": "0d389a1e361072bad1c4c02488136a32aef78504fa8ac09d62896dd0b8047cf8", "localized_content_checksum": "84c89f8a09496f18aff497f7a0013e012b9ee5e088796757e670d90a9f413ed2", "reviewed_ref": "1b880a128046a45c25d5fadb9d61ff07af31f6e8"}
     },
     {
       "id": "delivery-is-not-adoption",
@@ -115,7 +116,7 @@
       "summary": "生成快照、Token 一致、构建通过和组件参考都只是交付证据，不能证明产品已经具备可见或完整的 KIN 接入。",
       "do": ["声明接入前，记录明确范围、真实状态、可比截图、人工评审、例外、责任人和回滚。"],
       "do_not": ["不要根据这份快照、通过的生成器或孤立的样式组件推断生产接入。"],
-      "review": {"status": "unreviewed", "reviewers": [], "normative_source_checksum": null, "localized_content_checksum": null}
+      "review": {"status": "reviewed", "reviewers": ["@yehyakin"], "normative_source_checksum": "54f23d7fa69a9bc0df91219322adb933f91c4e1fdc401fb31ade570eb9ae81df", "localized_content_checksum": "3e6a7162c5fb1ae9c2c9a8e341b8750076c37727a54a682e19ef4537ffefa046", "reviewed_ref": "1b880a128046a45c25d5fadb9d61ff07af31f6e8"}
     }
   ]
 }

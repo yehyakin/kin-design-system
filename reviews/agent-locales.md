@@ -7,7 +7,7 @@ Status: generated, non-normative, review state derived from locale inputs
 ## Review boundary
 
 - KIN contract: `3.0.0` (`development`)
-- Bundle input-set checksum: `76eb84c5342fe5d730ff0950894af4e869adefbf1f48446843330d70c95fc254`
+- Bundle input-set checksum: `05db3c5c48bd20f74bd1b2b82063359f079bbf9c72aba6bc2836fe0918409455`
 - Scope: exact English and Simplified Chinese copy used by the repository-only Agent Snapshot matrix.
 - This packet does not publish `/next/`, create a versioned bundle, advance a stable alias, or prove product adoption.
 - A human reviewer must compare every localized record with its exact normative source before a separate attestation change updates `distribution/locales/*.json`.
@@ -16,8 +16,8 @@ Status: generated, non-normative, review state derived from locale inputs
 
 | Locale | Current state | Candidate normative-source aggregate | Candidate localized-content aggregate |
 | --- | --- | --- | --- |
-| `en` | `unreviewed` | `28d428a4429c45b5bcc6dc4cfddfd97682ef2f6a2b0297852954be1c247c4fe2` | `8cbc0ee2535f738266c73e9f80419076c0da5afad2212a6049408902706f412a` |
-| `zh-CN` | `unreviewed` | `28d428a4429c45b5bcc6dc4cfddfd97682ef2f6a2b0297852954be1c247c4fe2` | `5ce67d168f77941fa5cf023d00f72ffcbc0235a0fcf13c2af5a34fcf93cd2bc2` |
+| `en` | `reviewed` | `28d428a4429c45b5bcc6dc4cfddfd97682ef2f6a2b0297852954be1c247c4fe2` | `8cbc0ee2535f738266c73e9f80419076c0da5afad2212a6049408902706f412a` |
+| `zh-CN` | `reviewed` | `28d428a4429c45b5bcc6dc4cfddfd97682ef2f6a2b0297852954be1c247c4fe2` | `5ce67d168f77941fa5cf023d00f72ffcbc0235a0fcf13c2af5a34fcf93cd2bc2` |
 
 ## `snapshot-source-boundary`
 
@@ -61,12 +61,12 @@ The machine-readable adoption values are `mode: contract-first`, `figma: variabl
 
 ### en
 
-- Locale-source state: `unreviewed`
-- Attestation state: `unreviewed`
-- Recorded reviewers: none
-- Recorded reviewed ref: `null`
-- Recorded normative-source checksum: `null`
-- Recorded localized-content checksum: `null`
+- Locale-source state: `reviewed`
+- Attestation state: `valid-attestation`
+- Recorded reviewers: `@yehyakin`
+- Recorded reviewed ref: `1b880a128046a45c25d5fadb9d61ff07af31f6e8`
+- Recorded normative-source checksum: `eabafbe562561ccd54adfb34eb1ae3c41225829535ef7463a78081f18f567b0a`
+- Recorded localized-content checksum: `0ed34826c85aae29855cb8c9e8b1cd270d676c9d5ce62fc611819513acb05e46`
 - Candidate localized-content checksum: `0ed34826c85aae29855cb8c9e8b1cd270d676c9d5ce62fc611819513acb05e46`
 
 **Heading:** Status and source
@@ -103,12 +103,12 @@ The machine-readable adoption values are `mode: contract-first`, `figma: variabl
 
 ### zh-CN
 
-- Locale-source state: `unreviewed`
-- Attestation state: `unreviewed`
-- Recorded reviewers: none
-- Recorded reviewed ref: `null`
-- Recorded normative-source checksum: `null`
-- Recorded localized-content checksum: `null`
+- Locale-source state: `reviewed`
+- Attestation state: `valid-attestation`
+- Recorded reviewers: `@yehyakin`
+- Recorded reviewed ref: `1b880a128046a45c25d5fadb9d61ff07af31f6e8`
+- Recorded normative-source checksum: `eabafbe562561ccd54adfb34eb1ae3c41225829535ef7463a78081f18f567b0a`
+- Recorded localized-content checksum: `b5b0685b9550efb9aaecfc8cd2e214d5ea5f871c9e1a0258974c0741046c75e8`
 - Candidate localized-content checksum: `b5b0685b9550efb9aaecfc8cd2e214d5ea5f871c9e1a0258974c0741046c75e8`
 
 **Heading:** 状态与来源
@@ -172,12 +172,12 @@ The machine-readable adoption values are `mode: contract-first`, `figma: variabl
 
 ### en
 
-- Locale-source state: `unreviewed`
-- Attestation state: `unreviewed`
-- Recorded reviewers: none
-- Recorded reviewed ref: `null`
-- Recorded normative-source checksum: `null`
-- Recorded localized-content checksum: `null`
+- Locale-source state: `reviewed`
+- Attestation state: `valid-attestation`
+- Recorded reviewers: `@yehyakin`
+- Recorded reviewed ref: `1b880a128046a45c25d5fadb9d61ff07af31f6e8`
+- Recorded normative-source checksum: `acb2433cce6a12cf440dd28f5c651ab6ed4872f4f70ed72dc7779a2ef2f9e502`
+- Recorded localized-content checksum: `5ebde1269d8997f0915502a1b5c8a6e0b03a2e57c4ddd9901656717efdf429f6`
 - Candidate localized-content checksum: `5ebde1269d8997f0915502a1b5c8a6e0b03a2e57c4ddd9901656717efdf429f6`
 
 **Heading:** Visual register
@@ -194,12 +194,12 @@ The machine-readable adoption values are `mode: contract-first`, `figma: variabl
 
 ### zh-CN
 
-- Locale-source state: `unreviewed`
-- Attestation state: `unreviewed`
-- Recorded reviewers: none
-- Recorded reviewed ref: `null`
-- Recorded normative-source checksum: `null`
-- Recorded localized-content checksum: `null`
+- Locale-source state: `reviewed`
+- Attestation state: `valid-attestation`
+- Recorded reviewers: `@yehyakin`
+- Recorded reviewed ref: `1b880a128046a45c25d5fadb9d61ff07af31f6e8`
+- Recorded normative-source checksum: `acb2433cce6a12cf440dd28f5c651ab6ed4872f4f70ed72dc7779a2ef2f9e502`
+- Recorded localized-content checksum: `279bf17132501070ece3c95847561c28335ea5eed7dc19f9f5ece74f55e7f32d`
 - Candidate localized-content checksum: `279bf17132501070ece3c95847561c28335ea5eed7dc19f9f5ece74f55e7f32d`
 
 **Heading:** 视觉基调
@@ -243,12 +243,12 @@ The machine-readable adoption values are `mode: contract-first`, `figma: variabl
 
 ### en
 
-- Locale-source state: `unreviewed`
-- Attestation state: `unreviewed`
-- Recorded reviewers: none
-- Recorded reviewed ref: `null`
-- Recorded normative-source checksum: `null`
-- Recorded localized-content checksum: `null`
+- Locale-source state: `reviewed`
+- Attestation state: `valid-attestation`
+- Recorded reviewers: `@yehyakin`
+- Recorded reviewed ref: `1b880a128046a45c25d5fadb9d61ff07af31f6e8`
+- Recorded normative-source checksum: `690002ce0929ab1cf3807c762311b933fde603e3167559353e27e5f4698d6eff`
+- Recorded localized-content checksum: `a977c0c118dfdcc6f60112e6f104dc73c23c30effa0faf72be37137b2e906178`
 - Candidate localized-content checksum: `a977c0c118dfdcc6f60112e6f104dc73c23c30effa0faf72be37137b2e906178`
 
 **Heading:** Visual register
@@ -265,12 +265,12 @@ The machine-readable adoption values are `mode: contract-first`, `figma: variabl
 
 ### zh-CN
 
-- Locale-source state: `unreviewed`
-- Attestation state: `unreviewed`
-- Recorded reviewers: none
-- Recorded reviewed ref: `null`
-- Recorded normative-source checksum: `null`
-- Recorded localized-content checksum: `null`
+- Locale-source state: `reviewed`
+- Attestation state: `valid-attestation`
+- Recorded reviewers: `@yehyakin`
+- Recorded reviewed ref: `1b880a128046a45c25d5fadb9d61ff07af31f6e8`
+- Recorded normative-source checksum: `690002ce0929ab1cf3807c762311b933fde603e3167559353e27e5f4698d6eff`
+- Recorded localized-content checksum: `f36834345f0b31778da627e1316d8112753714c44b8f9f3c1a71a8708ced4586`
 - Candidate localized-content checksum: `f36834345f0b31778da627e1316d8112753714c44b8f9f3c1a71a8708ced4586`
 
 **Heading:** 视觉基调
@@ -315,12 +315,12 @@ The machine-readable adoption values are `mode: contract-first`, `figma: variabl
 
 ### en
 
-- Locale-source state: `unreviewed`
-- Attestation state: `unreviewed`
-- Recorded reviewers: none
-- Recorded reviewed ref: `null`
-- Recorded normative-source checksum: `null`
-- Recorded localized-content checksum: `null`
+- Locale-source state: `reviewed`
+- Attestation state: `valid-attestation`
+- Recorded reviewers: `@yehyakin`
+- Recorded reviewed ref: `1b880a128046a45c25d5fadb9d61ff07af31f6e8`
+- Recorded normative-source checksum: `defe2d9ef31a39445a1da58fb1dc1b79bac8f5b1c4b96c16de11f239bb364e1f`
+- Recorded localized-content checksum: `8e9be44a8e921e6bba8505b990a53223734fc08b3a11e718f5f6bf8684124224`
 - Candidate localized-content checksum: `8e9be44a8e921e6bba8505b990a53223734fc08b3a11e718f5f6bf8684124224`
 
 **Heading:** Theme usage
@@ -337,12 +337,12 @@ The machine-readable adoption values are `mode: contract-first`, `figma: variabl
 
 ### zh-CN
 
-- Locale-source state: `unreviewed`
-- Attestation state: `unreviewed`
-- Recorded reviewers: none
-- Recorded reviewed ref: `null`
-- Recorded normative-source checksum: `null`
-- Recorded localized-content checksum: `null`
+- Locale-source state: `reviewed`
+- Attestation state: `valid-attestation`
+- Recorded reviewers: `@yehyakin`
+- Recorded reviewed ref: `1b880a128046a45c25d5fadb9d61ff07af31f6e8`
+- Recorded normative-source checksum: `defe2d9ef31a39445a1da58fb1dc1b79bac8f5b1c4b96c16de11f239bb364e1f`
+- Recorded localized-content checksum: `35bf55b87e797630ae487f82148c405b1d13eeb107150af40c56b6744120e355`
 - Candidate localized-content checksum: `35bf55b87e797630ae487f82148c405b1d13eeb107150af40c56b6744120e355`
 
 **Heading:** 主题使用
@@ -394,12 +394,12 @@ The machine-readable adoption values are `mode: contract-first`, `figma: variabl
 
 ### en
 
-- Locale-source state: `unreviewed`
-- Attestation state: `unreviewed`
-- Recorded reviewers: none
-- Recorded reviewed ref: `null`
-- Recorded normative-source checksum: `null`
-- Recorded localized-content checksum: `null`
+- Locale-source state: `reviewed`
+- Attestation state: `valid-attestation`
+- Recorded reviewers: `@yehyakin`
+- Recorded reviewed ref: `1b880a128046a45c25d5fadb9d61ff07af31f6e8`
+- Recorded normative-source checksum: `0f4bd78864fbdc085b334e63efcbf09c7bce5dfe00f78a2121a95c38e2afd176`
+- Recorded localized-content checksum: `6cec8281a7fd2c594b5b1901978325961812a47c28a2d0ac73c3034c697e317d`
 - Candidate localized-content checksum: `6cec8281a7fd2c594b5b1901978325961812a47c28a2d0ac73c3034c697e317d`
 
 **Heading:** Typography roles
@@ -416,12 +416,12 @@ The machine-readable adoption values are `mode: contract-first`, `figma: variabl
 
 ### zh-CN
 
-- Locale-source state: `unreviewed`
-- Attestation state: `unreviewed`
-- Recorded reviewers: none
-- Recorded reviewed ref: `null`
-- Recorded normative-source checksum: `null`
-- Recorded localized-content checksum: `null`
+- Locale-source state: `reviewed`
+- Attestation state: `valid-attestation`
+- Recorded reviewers: `@yehyakin`
+- Recorded reviewed ref: `1b880a128046a45c25d5fadb9d61ff07af31f6e8`
+- Recorded normative-source checksum: `0f4bd78864fbdc085b334e63efcbf09c7bce5dfe00f78a2121a95c38e2afd176`
+- Recorded localized-content checksum: `f930262f146ca2ed9202a8afd0f2799c5152b745bdc85eaafcfcb68c73fd3fdb`
 - Candidate localized-content checksum: `f930262f146ca2ed9202a8afd0f2799c5152b745bdc85eaafcfcb68c73fd3fdb`
 
 **Heading:** 字体角色
@@ -466,12 +466,12 @@ The machine-readable adoption values are `mode: contract-first`, `figma: variabl
 
 ### en
 
-- Locale-source state: `unreviewed`
-- Attestation state: `unreviewed`
-- Recorded reviewers: none
-- Recorded reviewed ref: `null`
-- Recorded normative-source checksum: `null`
-- Recorded localized-content checksum: `null`
+- Locale-source state: `reviewed`
+- Attestation state: `valid-attestation`
+- Recorded reviewers: `@yehyakin`
+- Recorded reviewed ref: `1b880a128046a45c25d5fadb9d61ff07af31f6e8`
+- Recorded normative-source checksum: `d7bfa46e58fa9ea7b27b24199764e4ec1854e1cf983e377e790f3c2130d689ff`
+- Recorded localized-content checksum: `a56f7b27a99f5fa3a32ffe6202d2b59f30ce79343ff6fdd5cd8704e21facf1a4`
 - Candidate localized-content checksum: `a56f7b27a99f5fa3a32ffe6202d2b59f30ce79343ff6fdd5cd8704e21facf1a4`
 
 **Heading:** Layout and density
@@ -488,12 +488,12 @@ The machine-readable adoption values are `mode: contract-first`, `figma: variabl
 
 ### zh-CN
 
-- Locale-source state: `unreviewed`
-- Attestation state: `unreviewed`
-- Recorded reviewers: none
-- Recorded reviewed ref: `null`
-- Recorded normative-source checksum: `null`
-- Recorded localized-content checksum: `null`
+- Locale-source state: `reviewed`
+- Attestation state: `valid-attestation`
+- Recorded reviewers: `@yehyakin`
+- Recorded reviewed ref: `1b880a128046a45c25d5fadb9d61ff07af31f6e8`
+- Recorded normative-source checksum: `d7bfa46e58fa9ea7b27b24199764e4ec1854e1cf983e377e790f3c2130d689ff`
+- Recorded localized-content checksum: `1e05453f76c1719ee87f974c588cf6fb5bb13130408aed08a69f3736bf59d4f8`
 - Candidate localized-content checksum: `1e05453f76c1719ee87f974c588cf6fb5bb13130408aed08a69f3736bf59d4f8`
 
 **Heading:** 布局与密度
@@ -538,12 +538,12 @@ The machine-readable adoption values are `mode: contract-first`, `figma: variabl
 
 ### en
 
-- Locale-source state: `unreviewed`
-- Attestation state: `unreviewed`
-- Recorded reviewers: none
-- Recorded reviewed ref: `null`
-- Recorded normative-source checksum: `null`
-- Recorded localized-content checksum: `null`
+- Locale-source state: `reviewed`
+- Attestation state: `valid-attestation`
+- Recorded reviewers: `@yehyakin`
+- Recorded reviewed ref: `1b880a128046a45c25d5fadb9d61ff07af31f6e8`
+- Recorded normative-source checksum: `5e56024106003b42656023cc8f66bedbce4992f013ec169aee3f6649abb4d899`
+- Recorded localized-content checksum: `a1c07676cc96ea194fba3ad4d680d45d67b0df7edb747eba6321634e9ce3794d`
 - Candidate localized-content checksum: `a1c07676cc96ea194fba3ad4d680d45d67b0df7edb747eba6321634e9ce3794d`
 
 **Heading:** Surface and elevation
@@ -560,12 +560,12 @@ The machine-readable adoption values are `mode: contract-first`, `figma: variabl
 
 ### zh-CN
 
-- Locale-source state: `unreviewed`
-- Attestation state: `unreviewed`
-- Recorded reviewers: none
-- Recorded reviewed ref: `null`
-- Recorded normative-source checksum: `null`
-- Recorded localized-content checksum: `null`
+- Locale-source state: `reviewed`
+- Attestation state: `valid-attestation`
+- Recorded reviewers: `@yehyakin`
+- Recorded reviewed ref: `1b880a128046a45c25d5fadb9d61ff07af31f6e8`
+- Recorded normative-source checksum: `5e56024106003b42656023cc8f66bedbce4992f013ec169aee3f6649abb4d899`
+- Recorded localized-content checksum: `4f40715ee21fe15c820158feb7cd344373de299930b6bf0586848f0d2abf790f`
 - Candidate localized-content checksum: `4f40715ee21fe15c820158feb7cd344373de299930b6bf0586848f0d2abf790f`
 
 **Heading:** 表面与层级
@@ -610,12 +610,12 @@ The machine-readable adoption values are `mode: contract-first`, `figma: variabl
 
 ### en
 
-- Locale-source state: `unreviewed`
-- Attestation state: `unreviewed`
-- Recorded reviewers: none
-- Recorded reviewed ref: `null`
-- Recorded normative-source checksum: `null`
-- Recorded localized-content checksum: `null`
+- Locale-source state: `reviewed`
+- Attestation state: `valid-attestation`
+- Recorded reviewers: `@yehyakin`
+- Recorded reviewed ref: `1b880a128046a45c25d5fadb9d61ff07af31f6e8`
+- Recorded normative-source checksum: `00225edbd1d165d0513aad5c21703ff30fc5a7e9fe4eba16842baa28643a82c9`
+- Recorded localized-content checksum: `ec021ae21dacff5918082c7e52fdc84b688bd882e010bc482bbfe1a1348246a1`
 - Candidate localized-content checksum: `ec021ae21dacff5918082c7e52fdc84b688bd882e010bc482bbfe1a1348246a1`
 
 **Heading:** Motion
@@ -632,12 +632,12 @@ The machine-readable adoption values are `mode: contract-first`, `figma: variabl
 
 ### zh-CN
 
-- Locale-source state: `unreviewed`
-- Attestation state: `unreviewed`
-- Recorded reviewers: none
-- Recorded reviewed ref: `null`
-- Recorded normative-source checksum: `null`
-- Recorded localized-content checksum: `null`
+- Locale-source state: `reviewed`
+- Attestation state: `valid-attestation`
+- Recorded reviewers: `@yehyakin`
+- Recorded reviewed ref: `1b880a128046a45c25d5fadb9d61ff07af31f6e8`
+- Recorded normative-source checksum: `00225edbd1d165d0513aad5c21703ff30fc5a7e9fe4eba16842baa28643a82c9`
+- Recorded localized-content checksum: `078904be412c570a3f4422e2b0f8f36e746dd0b9ab6f471a02adecabe3272cb9`
 - Candidate localized-content checksum: `078904be412c570a3f4422e2b0f8f36e746dd0b9ab6f471a02adecabe3272cb9`
 
 **Heading:** 动效
@@ -681,12 +681,12 @@ The machine-readable adoption values are `mode: contract-first`, `figma: variabl
 
 ### en
 
-- Locale-source state: `unreviewed`
-- Attestation state: `unreviewed`
-- Recorded reviewers: none
-- Recorded reviewed ref: `null`
-- Recorded normative-source checksum: `null`
-- Recorded localized-content checksum: `null`
+- Locale-source state: `reviewed`
+- Attestation state: `valid-attestation`
+- Recorded reviewers: `@yehyakin`
+- Recorded reviewed ref: `1b880a128046a45c25d5fadb9d61ff07af31f6e8`
+- Recorded normative-source checksum: `3af9316ce0f8bc180e98107be72c6c4204a92fecddc0f2632da7bd95456e7c61`
+- Recorded localized-content checksum: `8dfbe622d9a3965298674c5edc4095e027aec54e3f67de1f53bfc223a5ac9863`
 - Candidate localized-content checksum: `8dfbe622d9a3965298674c5edc4095e027aec54e3f67de1f53bfc223a5ac9863`
 
 **Heading:** Content rules
@@ -703,12 +703,12 @@ The machine-readable adoption values are `mode: contract-first`, `figma: variabl
 
 ### zh-CN
 
-- Locale-source state: `unreviewed`
-- Attestation state: `unreviewed`
-- Recorded reviewers: none
-- Recorded reviewed ref: `null`
-- Recorded normative-source checksum: `null`
-- Recorded localized-content checksum: `null`
+- Locale-source state: `reviewed`
+- Attestation state: `valid-attestation`
+- Recorded reviewers: `@yehyakin`
+- Recorded reviewed ref: `1b880a128046a45c25d5fadb9d61ff07af31f6e8`
+- Recorded normative-source checksum: `3af9316ce0f8bc180e98107be72c6c4204a92fecddc0f2632da7bd95456e7c61`
+- Recorded localized-content checksum: `59d7e82c65b5d6d2d8c7d5d153c27a4919f9325337a17e59e3fd84dfdaead91e`
 - Candidate localized-content checksum: `59d7e82c65b5d6d2d8c7d5d153c27a4919f9325337a17e59e3fd84dfdaead91e`
 
 **Heading:** 内容规则
@@ -763,12 +763,12 @@ New adoptions MUST select the primary product profile explicitly and SHOULD reco
 
 ### en
 
-- Locale-source state: `unreviewed`
-- Attestation state: `unreviewed`
-- Recorded reviewers: none
-- Recorded reviewed ref: `null`
-- Recorded normative-source checksum: `null`
-- Recorded localized-content checksum: `null`
+- Locale-source state: `reviewed`
+- Attestation state: `valid-attestation`
+- Recorded reviewers: `@yehyakin`
+- Recorded reviewed ref: `1b880a128046a45c25d5fadb9d61ff07af31f6e8`
+- Recorded normative-source checksum: `0d389a1e361072bad1c4c02488136a32aef78504fa8ac09d62896dd0b8047cf8`
+- Recorded localized-content checksum: `fc72715a505a325e1e2b03b83487f952470be7bbccd4426215fee4cddbdf766f`
 - Candidate localized-content checksum: `fc72715a505a325e1e2b03b83487f952470be7bbccd4426215fee4cddbdf766f`
 
 **Heading:** Task and product-profile routing
@@ -785,12 +785,12 @@ New adoptions MUST select the primary product profile explicitly and SHOULD reco
 
 ### zh-CN
 
-- Locale-source state: `unreviewed`
-- Attestation state: `unreviewed`
-- Recorded reviewers: none
-- Recorded reviewed ref: `null`
-- Recorded normative-source checksum: `null`
-- Recorded localized-content checksum: `null`
+- Locale-source state: `reviewed`
+- Attestation state: `valid-attestation`
+- Recorded reviewers: `@yehyakin`
+- Recorded reviewed ref: `1b880a128046a45c25d5fadb9d61ff07af31f6e8`
+- Recorded normative-source checksum: `0d389a1e361072bad1c4c02488136a32aef78504fa8ac09d62896dd0b8047cf8`
+- Recorded localized-content checksum: `84c89f8a09496f18aff497f7a0013e012b9ee5e088796757e670d90a9f413ed2`
 - Candidate localized-content checksum: `84c89f8a09496f18aff497f7a0013e012b9ee5e088796757e670d90a9f413ed2`
 
 **Heading:** 任务与产品类型路由
@@ -845,12 +845,12 @@ Use these terms precisely.
 
 ### en
 
-- Locale-source state: `unreviewed`
-- Attestation state: `unreviewed`
-- Recorded reviewers: none
-- Recorded reviewed ref: `null`
-- Recorded normative-source checksum: `null`
-- Recorded localized-content checksum: `null`
+- Locale-source state: `reviewed`
+- Attestation state: `valid-attestation`
+- Recorded reviewers: `@yehyakin`
+- Recorded reviewed ref: `1b880a128046a45c25d5fadb9d61ff07af31f6e8`
+- Recorded normative-source checksum: `54f23d7fa69a9bc0df91219322adb933f91c4e1fdc401fb31ade570eb9ae81df`
+- Recorded localized-content checksum: `67b6df7fbd3397685a228b8971ea49d7149ed8a5a2765139c04446c612560ce3`
 - Candidate localized-content checksum: `67b6df7fbd3397685a228b8971ea49d7149ed8a5a2765139c04446c612560ce3`
 
 **Heading:** Verification and adoption boundary
@@ -867,12 +867,12 @@ Use these terms precisely.
 
 ### zh-CN
 
-- Locale-source state: `unreviewed`
-- Attestation state: `unreviewed`
-- Recorded reviewers: none
-- Recorded reviewed ref: `null`
-- Recorded normative-source checksum: `null`
-- Recorded localized-content checksum: `null`
+- Locale-source state: `reviewed`
+- Attestation state: `valid-attestation`
+- Recorded reviewers: `@yehyakin`
+- Recorded reviewed ref: `1b880a128046a45c25d5fadb9d61ff07af31f6e8`
+- Recorded normative-source checksum: `54f23d7fa69a9bc0df91219322adb933f91c4e1fdc401fb31ade570eb9ae81df`
+- Recorded localized-content checksum: `3e6a7162c5fb1ae9c2c9a8e341b8750076c37727a54a682e19ef4537ffefa046`
 - Candidate localized-content checksum: `3e6a7162c5fb1ae9c2c9a8e341b8750076c37727a54a682e19ef4537ffefa046`
 
 **Heading:** 验证与接入边界
