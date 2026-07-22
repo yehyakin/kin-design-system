@@ -8,6 +8,7 @@ import {
   Database,
   Ellipsis,
   ExternalLink,
+  FileSearch,
   Languages,
   LayoutDashboard,
   Link,
@@ -54,7 +55,7 @@ const languageMenu = document.querySelector("[data-language-menu]");
 const localeButtons = [...document.querySelectorAll("[data-locale-value]")];
 const overlayLayout = matchMedia("(max-width: 1180px)");
 const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
-const workspaceView = root.dataset.workspaceView === "risk-queue" ? "risk-queue" : "entity";
+const workspaceView = ["risk-queue", "investigation"].includes(root.dataset.workspaceView) ? root.dataset.workspaceView : "entity";
 const riskQueue = document.querySelector("[data-risk-queue]");
 const riskTableWrap = document.querySelector("[data-risk-table-wrap]");
 const riskCount = document.querySelector("[data-risk-count]");
@@ -169,6 +170,7 @@ const copy = {
     savedTitle: "视图已保存", savedDescription: "筛选条件和列顺序已保存。",
     exportLoading: "正在创建导出任务", exportSuccess: "导出任务已创建", exportDescription: "任务完成后可在下载中心查看。",
     errorTitle: "请求失败", errorToastDescription: "监测服务暂时没有响应。", retry: "重试", retryQueued: "已重新提交请求",
+    investigations: "调查记录",
     riskSavedView: "高优先级待复核", riskReview: "审核", riskQueueViews: "风险队列视图", riskScopeElevated: "高优先级", riskScopeUnassigned: "未指派", riskScopeConflicting: "证据冲突", riskScopeResolved: "已解决",
     riskSavedViewLabel: "保存视图 · 过去 24 小时", riskQueueTitle: "高优先级待复核", riskQueueDescription: "先核对严重度与证据状态，再指派负责人或记录可撤销结论。", riskRefresh: "刷新本地范围", riskFixtureNote: "确定性本地参考，基准时间为 2026-07-19 10:32 +08:00；相对时间均以该时刻计算。未连接实时监测、权限服务或持久化存储。",
     riskScopeSummary: "保存范围摘要", riskScopeLabel: "范围", riskScopeValue: "高或严重 · 未解决", riskSortLabel: "排序", riskSortValue: "严重度 → 观察时间", riskCoverageLabel: "证据要求", riskCoverageValue: "至少 2 个可归因来源",
@@ -215,6 +217,7 @@ const copy = {
     savedTitle: "View saved", savedDescription: "Filters and column order have been saved.",
     exportLoading: "Creating export task", exportSuccess: "Export task created", exportDescription: "The result will appear in Downloads when ready.",
     errorTitle: "Request failed", errorToastDescription: "The monitoring service did not respond.", retry: "Retry", retryQueued: "Request submitted again",
+    investigations: "Investigations",
     riskSavedView: "Elevated signals", riskReview: "Review", riskQueueViews: "Risk queue views", riskScopeElevated: "Elevated", riskScopeUnassigned: "Unassigned", riskScopeConflicting: "Conflicting evidence", riskScopeResolved: "Resolved",
     riskSavedViewLabel: "Saved view · Last 24 hours", riskQueueTitle: "Elevated signals", riskQueueDescription: "Check severity and evidence state before assigning an owner or recording a reversible decision.", riskRefresh: "Refresh local scope", riskFixtureNote: "Deterministic local reference as of 2026-07-19 10:32 +08:00; relative times are anchored to that instant. No live monitoring, permission service, or persistent storage is connected.",
     riskScopeSummary: "Saved scope summary", riskScopeLabel: "Scope", riskScopeValue: "High or critical · Unresolved", riskSortLabel: "Sort", riskSortValue: "Severity → Observed time", riskCoverageLabel: "Evidence requirement", riskCoverageValue: "At least 2 attributable sources",
@@ -307,6 +310,23 @@ function currentLocale() {
   return root.dataset.locale === "en" ? "en" : "zh";
 }
 
+let investigationController;
+if (workspaceView === "investigation") {
+  const module = await import("./investigation-reference.js");
+  Object.assign(copy.zh, module.investigationCopy.zh);
+  Object.assign(copy.en, module.investigationCopy.en);
+  investigationController = module.createInvestigationController({
+    root,
+    copy,
+    currentLocale,
+    overlayLayout,
+    appShell,
+    inspectorOpen,
+    inspectorIsOpen,
+    setInspector,
+  });
+}
+
 function translate(locale, persist = true) {
   const messages = copy[locale];
   root.dataset.locale = locale;
@@ -352,6 +372,8 @@ function translate(locale, persist = true) {
     renderRiskScope();
     renderRiskSignal({ syncForm: false });
     renderRiskState();
+  } else if (workspaceView === "investigation") {
+    investigationController.translate(messages);
   }
 }
 
@@ -365,7 +387,11 @@ function syncWorkspaceView() {
     if (link.dataset.riskScope === currentRiskScope) link.setAttribute("aria-current", "page");
     else link.removeAttribute("aria-current");
   }
-  inspector.setAttribute("aria-labelledby", workspaceView === "risk-queue" ? "risk-inspector-title" : "inspector-title");
+  inspector.setAttribute("aria-labelledby", workspaceView === "risk-queue"
+    ? "risk-inspector-title"
+    : workspaceView === "investigation"
+        ? "investigation-inspector-title"
+        : "inspector-title");
 }
 
 function writeRiskUrl({ mode = "replace", panel = overlayLayout.matches && appShell.classList.contains("inspector-open") } = {}) {
@@ -850,14 +876,23 @@ function closeInspectorFromUser() {
     history.back();
     return;
   }
+  if (workspaceView === "investigation" && investigationController.shouldGoBackOnClose()) {
+    history.back();
+    return;
+  }
   setInspector(false);
   if (workspaceView === "risk-queue") writeRiskUrl({ panel: false });
+  if (workspaceView === "investigation") investigationController.writeUrl({ panel: false });
 }
 
 inspectorOpen.addEventListener("click", () => {
   if (workspaceView === "risk-queue" && overlayLayout.matches) {
     inspectorReturnTarget = inspectorOpen;
     writeRiskUrl({ mode: "push", panel: true });
+  }
+  if (workspaceView === "investigation" && overlayLayout.matches) {
+    inspectorReturnTarget = inspectorOpen;
+    investigationController.openFromToolbar();
   }
   setInspector(true, true, inspectorOpen);
 });
@@ -1059,36 +1094,45 @@ riskRefresh.addEventListener("click", () => {
 });
 
 overlayLayout.addEventListener("change", (event) => {
+  if (workspaceView === "investigation") {
+    investigationController.handleOverlayChange(event.matches);
+    return;
+  }
   const emptyRiskQueue = workspaceView === "risk-queue" && currentRiskState === "empty";
   setInspector(!event.matches && !emptyRiskQueue, false);
   if (workspaceView === "risk-queue") writeRiskUrl({ panel: false });
 });
 
 window.addEventListener("popstate", () => {
-  if (workspaceView !== "risk-queue") return;
-  window.clearTimeout(riskStateTimer);
-  pendingRiskSubmission = null;
-  saveRiskDraft();
-  const params = new URLSearchParams(window.location.search);
-  const nextScope = allowedRiskScopes.has(params.get("scope")) ? params.get("scope") : "elevated";
-  const requestedSignal = riskSignals[params.get("signal")] ? params.get("signal") : riskScopeSignals[nextScope][0];
-  const nextSignal = riskScopeSignals[nextScope].includes(requestedSignal) ? requestedSignal : riskScopeSignals[nextScope][0];
-  const changed = selectedRiskId !== nextSignal;
-  currentRiskScope = nextScope;
-  selectedRiskId = nextSignal;
-  currentRiskState = allowedRiskStates.has(params.get("state")) ? params.get("state") : "normal";
-  riskSubmissionFailed = currentRiskState === "error";
-  clearRiskFormErrors();
-  renderRiskScope();
-  renderRiskSignal({ syncForm: changed });
-  renderRiskState();
-  const shouldOpen = !overlayLayout.matches
-    ? currentRiskState !== "empty"
-    : params.get("panel") === "review" && currentRiskState !== "empty";
-  const wasOpen = inspectorIsOpen();
-  const selectedButton = document.querySelector(`[data-risk-signal="${selectedRiskId}"]`);
-  inspectorReturnTarget = selectedButton || inspectorOpen;
-  setInspector(shouldOpen, shouldOpen !== wasOpen, inspectorReturnTarget);
+  if (workspaceView === "risk-queue") {
+    window.clearTimeout(riskStateTimer);
+    pendingRiskSubmission = null;
+    saveRiskDraft();
+    const params = new URLSearchParams(window.location.search);
+    const nextScope = allowedRiskScopes.has(params.get("scope")) ? params.get("scope") : "elevated";
+    const requestedSignal = riskSignals[params.get("signal")] ? params.get("signal") : riskScopeSignals[nextScope][0];
+    const nextSignal = riskScopeSignals[nextScope].includes(requestedSignal) ? requestedSignal : riskScopeSignals[nextScope][0];
+    const changed = selectedRiskId !== nextSignal;
+    currentRiskScope = nextScope;
+    selectedRiskId = nextSignal;
+    currentRiskState = allowedRiskStates.has(params.get("state")) ? params.get("state") : "normal";
+    riskSubmissionFailed = currentRiskState === "error";
+    clearRiskFormErrors();
+    renderRiskScope();
+    renderRiskSignal({ syncForm: changed });
+    renderRiskState();
+    const shouldOpen = !overlayLayout.matches
+      ? currentRiskState !== "empty"
+      : params.get("panel") === "review" && currentRiskState !== "empty";
+    const wasOpen = inspectorIsOpen();
+    const selectedButton = document.querySelector(`[data-risk-signal="${selectedRiskId}"]`);
+    inspectorReturnTarget = selectedButton || inspectorOpen;
+    setInspector(shouldOpen, shouldOpen !== wasOpen, inspectorReturnTarget);
+    return;
+  }
+  if (workspaceView === "investigation") {
+    investigationController.handlePopState();
+  }
 });
 syncWorkspaceView();
 applyTheme(root.dataset.themePreference || "system", false);
@@ -1098,20 +1142,28 @@ const initialLocale = requestedLocale === "en" ? "en" : requestedLocale === "zh-
 if (workspaceView === "risk-queue") {
   renderRiskScope();
   renderRiskSignal({ syncForm: true });
+} else if (workspaceView === "investigation") {
+  investigationController.initialize();
 }
 const initialRiskPanelOpen = workspaceView === "risk-queue"
   && overlayLayout.matches
   && initialRiskPanelRequested
   && currentRiskState !== "empty";
+const initialInvestigationPanelOpen = workspaceView === "investigation" && investigationController.initialPanelOpen();
 const initialInspectorOpen = workspaceView === "risk-queue"
   ? currentRiskState !== "empty" && (!overlayLayout.matches || initialRiskPanelRequested)
-  : !overlayLayout.matches;
-const initialRiskReturnTarget = workspaceView === "risk-queue"
+  : workspaceView === "investigation"
+      ? investigationController.initialInspectorOpen()
+      : !overlayLayout.matches;
+const initialInspectorReturnTarget = workspaceView === "risk-queue"
   ? document.querySelector(`[data-risk-signal="${selectedRiskId}"]`) || inspectorOpen
-  : inspectorOpen;
-setInspector(initialInspectorOpen, initialRiskPanelOpen, initialRiskReturnTarget);
+  : workspaceView === "investigation"
+      ? investigationController.initialReturnTarget()
+      : inspectorOpen;
+setInspector(initialInspectorOpen, initialRiskPanelOpen || initialInvestigationPanelOpen, initialInspectorReturnTarget);
 translate(initialLocale, false);
 if (workspaceView === "risk-queue") writeRiskUrl({ panel: initialRiskPanelOpen });
+if (workspaceView === "investigation") investigationController.writeUrl({ panel: initialInvestigationPanelOpen });
 
 createIcons({
   icons: {
@@ -1123,6 +1175,7 @@ createIcons({
     Database,
     Ellipsis,
     ExternalLink,
+    FileSearch,
     Languages,
     LayoutDashboard,
     Link,

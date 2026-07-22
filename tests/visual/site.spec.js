@@ -24,7 +24,7 @@ test("showcase exposes the English contract and live foundations", async ({ page
   expect(consoleWarnings).toEqual([]);
 });
 
-test("scenario atlas exposes honest coverage and sixteen inspectable scenarios", async ({ page }) => {
+test("scenario atlas exposes honest coverage and seventeen inspectable scenarios", async ({ page }) => {
   const consoleWarnings = [];
   page.on("console", (message) => {
     if (["warning", "error"].includes(message.type())) consoleWarnings.push(message.text());
@@ -34,11 +34,12 @@ test("scenario atlas exposes honest coverage and sixteen inspectable scenarios",
   await expect(page).toHaveTitle("Scenario Atlas - KIN Design System");
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("Inspect KIN across product tasks.");
   await expect(page.locator("[data-scenario-id]")).toHaveCount(30);
-  await expect(page.locator('[data-scenario-id][data-presentation-status="showcased"]')).toHaveCount(16);
+  await expect(page.locator('[data-scenario-id][data-presentation-status="showcased"]')).toHaveCount(17);
   await expect(page.locator('[data-scenario-id][data-presentation-status="linked"]')).toHaveCount(0);
-  await expect(page.locator('[data-scenario-id][data-presentation-status="planned"]')).toHaveCount(14);
+  await expect(page.locator('[data-scenario-id][data-presentation-status="planned"]')).toHaveCount(13);
   await expect(page.getByRole("heading", { name: "Entity Database Review" })).toBeVisible();
   await expect(page.locator('[data-scenario-id="INT-01"]').getByRole("link", { name: "Inspect scenario" })).toHaveAttribute("href", "lab.html?scenario=INT-01");
+  await expect(page.locator('[data-scenario-id="INT-02"]').getByRole("link", { name: "Inspect scenario" })).toHaveAttribute("href", "lab.html?scenario=INT-02");
   await expect(page.locator('[data-scenario-id="INT-03"]').getByRole("link", { name: "Inspect scenario" })).toHaveAttribute("href", "lab.html?scenario=INT-03");
   await expect(page.locator('[data-scenario-id="CORE-03"]').getByRole("link", { name: "Inspect scenario" })).toHaveAttribute("href", "lab.html?scenario=CORE-03");
   await expect(page.locator('[data-scenario-id="INF-02"]').getByRole("link", { name: "Inspect scenario" })).toHaveAttribute("href", "lab.html?scenario=INF-02");

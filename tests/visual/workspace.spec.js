@@ -289,6 +289,123 @@ test("workspace mobile and inspector behavior", async ({ page }, testInfo) => {
   await expect(close).toBeFocused();
 });
 
+test("investigation keeps chronology source state and attributable finding separate", async ({ page }, testInfo) => {
+  await seedPreferences(page, "dark", "normal", "en");
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/examples/workspace-reference/?view=investigation&state=normal&lang=en");
+
+  await expect(page.locator("html")).toHaveAttribute("data-workspace-view", "investigation");
+  await expect(page.getByRole("heading", { name: "Alpha Network certificate change investigation", level: 1 })).toBeVisible();
+  await expect(page.locator('[data-nav-view="investigation"]')).toHaveAttribute("aria-current", "page");
+  await expect(page.locator("[data-investigation-event-row]:visible")).toHaveCount(4);
+  await expect(page.locator("[data-investigation-count]")).toHaveText("4 local events");
+  await expect(page.locator("[data-investigation] .fixture-note")).toContainText("as of 2026-07-20 09:18 +08:00");
+  await expect(page.locator("[data-investigation-detail-occurred]")).toHaveText("2026-07-20 09:02");
+  await expect(page.locator("[data-investigation-detail-observed]")).toHaveText("2026-07-20 09:04");
+  await expect(page.locator("[data-investigation-detail-source]")).toHaveText("Certificate observer");
+  await expect(page.locator("[data-investigation-detail-availability]")).toHaveText("Available");
+  await expect(page.locator("[data-investigation-detail-verification]")).toHaveText("Conflicting");
+
+  await page.locator('[data-investigation-scope="conflicting"]').click();
+  await expect(page).toHaveURL(/scope=conflicting/);
+  await expect(page.locator("[data-investigation-event-row]:visible")).toHaveCount(2);
+  await expect(page.locator("[data-investigation-count]")).toHaveText("2 local events");
+  await page.goBack();
+  await expect(page.locator('[data-investigation-scope="all"]')).toHaveAttribute("aria-current", "page");
+  await expect(page.locator("[data-investigation-event-row]:visible")).toHaveCount(4);
+
+  await page.locator('input[name="finding-evidence"][value="EVT-318"]').uncheck();
+  await page.locator('input[name="finding-evidence"][value="EVT-314"]').uncheck();
+  await page.getByRole("button", { name: "Record finding" }).click();
+  await expect(page.locator("[data-investigation-evidence-error]")).toBeVisible();
+  await expect(page.locator('input[name="finding-evidence"]').first()).toBeFocused();
+  await page.locator('input[name="finding-evidence"][value="EVT-318"]').check();
+  await page.getByRole("button", { name: "Record finding" }).click();
+  await expect(page.locator("[data-investigation-reason]")).toHaveAttribute("aria-invalid", "true");
+  await expect(page.locator("[data-investigation-reason]")).toBeFocused();
+
+  await page.locator('input[name="finding-evidence"][value="EVT-314"]').check();
+  await page.locator("[data-investigation-reason]").fill("The notice aligns with the issuer-change time while the endpoint baseline remains unchanged.");
+  await page.getByRole("button", { name: "Record finding" }).click();
+  await expect(page.locator("[data-investigation-pending]")).toBeVisible();
+  await expect(page.locator("[data-investigation-fields]")).toHaveAttribute("disabled", "");
+  await expect(page.locator('[data-investigation-event="EVT-320"]')).toBeDisabled();
+  await expect(page.locator("[data-investigation-committed]")).toBeVisible({ timeout: 2_000 });
+  await expect(page.locator("[data-investigation-commit-evidence]")).toHaveText("EVT-318, EVT-314");
+  await expect(page.locator("[data-investigation-commit-reason]")).toHaveText("The notice aligns with the issuer-change time while the endpoint baseline remains unchanged.");
+  await expect(page.locator("[data-investigation-finding-status]")).toHaveText("FND-028-01 · Recorded");
+  await expect(page.locator("[data-investigation-undo-action]")).toBeFocused();
+  await expect(page).toHaveURL(/state=committed/);
+
+  await page.locator("[data-investigation-undo-action]").click();
+  await expect(page.locator("[data-investigation-undo]")).toBeVisible();
+  await expect(page.locator("[data-investigation-reason]")).toHaveValue("The notice aligns with the issuer-change time while the endpoint baseline remains unchanged.");
+  await expect(page.locator("[data-investigation-finding-status]")).toHaveText("Not recorded");
+  await expect(page.locator("[data-investigation-submit]")).toBeFocused();
+  await capture(page, testInfo, "investigation-undo-dark.png");
+
+  await page.goto("/examples/workspace-reference/?view=investigation&state=normal&outcome=error&lang=en");
+  await page.locator("[data-investigation-reason]").fill("Preserve this exact finding draft after the simulated failure.");
+  await page.getByRole("button", { name: "Record finding" }).click();
+  await expect(page.locator("[data-investigation-error]")).toBeVisible({ timeout: 2_000 });
+  await expect(page.locator("[data-investigation-retry]")).toBeFocused();
+  await expect(page.locator("[data-investigation-reason]")).toHaveValue("Preserve this exact finding draft after the simulated failure.");
+  await page.locator("[data-investigation-retry]").click();
+  await expect(page.locator("[data-investigation-committed]")).toBeVisible({ timeout: 2_000 });
+});
+
+test("investigation exposes honest evidence states and a mobile evidence drawer", async ({ page }, testInfo) => {
+  await seedPreferences(page, "light", "more", "en");
+  await page.emulateMedia({ reducedMotion: "reduce" });
+
+  await page.goto("/examples/workspace-reference/?view=investigation&state=partial&lang=en");
+  await expect(page.locator("[data-investigation-partial]")).toBeVisible();
+  await expect(page.locator("[data-investigation-event-row]:visible")).toHaveCount(4);
+  await page.goto("/examples/workspace-reference/?view=investigation&state=stale&lang=en");
+  await expect(page.locator("[data-investigation-stale]")).toBeVisible();
+  await page.goto("/examples/workspace-reference/?view=investigation&state=permission&lang=en");
+  await expect(page.locator("[data-investigation-permission]")).toBeVisible();
+  await expect(page.locator("[data-investigation-fields]")).toHaveAttribute("disabled", "");
+  await expect(page.locator("[data-investigation-chronology]")).toBeVisible();
+  await page.goto("/examples/workspace-reference/?view=investigation&state=empty&lang=en");
+  await expect(page.locator("[data-investigation-empty]")).toBeVisible();
+  await expect(page.locator("[data-investigation-chronology]")).toBeHidden();
+  await expect(page.locator(".inspector")).toBeHidden();
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/examples/workspace-reference/?view=investigation&scope=all&state=normal&event=EVT-320&panel=evidence&lang=en");
+  await expect(page.locator(".inspector")).toBeVisible();
+  await expect(page.locator("[data-investigation-inspector-title]")).toHaveText("EVT-320 · Change log source unavailable");
+  await expect(page.locator("[data-inspector-close]")).toBeFocused();
+  await expect(page).toHaveURL(/panel=evidence/);
+  await expect(page.locator(".inspector")).toHaveCSS("background-color", "rgb(255, 255, 255)");
+  await expect(page.locator(".inspector")).toHaveCSS("opacity", "1");
+  await expect(page.locator(".inspector").evaluate((element) => getComputedStyle(element).transform)).resolves.toBe("none");
+  await page.locator("[data-investigation-submit]").focus();
+  await page.keyboard.press("Tab");
+  await expect(page.locator("[data-inspector-close]")).toBeFocused();
+  await page.keyboard.press("Escape");
+  await expect(page.locator(".inspector")).toBeHidden();
+  await expect(page.locator('[data-investigation-event="EVT-320"]')).toBeFocused();
+  await expect(page).not.toHaveURL(/panel=evidence/);
+
+  await page.goto("/examples/workspace-reference/?view=investigation&state=normal&lang=en");
+  await expect(page.locator(".inspector")).toBeHidden();
+  await assertMinimumTouchTargets(page, "[data-investigation-refresh], [data-investigation-event]");
+  await assertNoHorizontalOverflow(page);
+  await page.locator('[data-investigation-event="EVT-318"]').click();
+  await expect(page.locator(".inspector")).toBeVisible();
+  await expect(page.locator(".inspector")).toHaveCSS("opacity", "1");
+  await expect(page.locator("[data-inspector-close]")).toBeFocused();
+  await expect(page).toHaveURL(/panel=evidence/);
+  await capture(page, testInfo, "investigation-evidence-light-mobile.png", false);
+  await page.keyboard.press("Escape");
+  await expect(page.locator('[data-investigation-event="EVT-318"]')).toBeFocused();
+  await page.goForward();
+  await expect(page.locator(".inspector")).toBeVisible();
+  await expect(page.locator("[data-inspector-close]")).toBeFocused();
+});
+
 test("risk queue keeps severity evidence and review separate through a reversible decision", async ({ page }, testInfo) => {
   await seedPreferences(page, "dark", "normal", "en");
   await page.setViewportSize({ width: 1440, height: 900 });

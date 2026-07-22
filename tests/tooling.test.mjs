@@ -327,25 +327,26 @@ test("scenario catalog passes source-maturity and presentation validation", () =
   assert.equal(result.summary.scenarioEntries, 30);
   assert.equal(result.summary.pilots, 6);
   assert.equal(result.summary.linked, 0);
-  assert.equal(result.summary.showcased, 16);
-  assert.equal(result.summary.planned, 14);
+  assert.equal(result.summary.showcased, 17);
+  assert.equal(result.summary.planned, 13);
   assert.equal(result.summary.errors, 0);
 
   const catalog = JSON.parse(fs.readFileSync(path.join(root, "scenarios", "catalog.json"), "utf8"));
   assert.equal(catalog.schema_version, "1.1.0");
-  assert.equal(catalog.catalog_version, "1.5.0");
+  assert.equal(catalog.catalog_version, "1.6.0");
   const showcased = catalog.scenarios.filter((scenario) => scenario.presentation_status === "showcased");
   assert.ok(showcased.every((scenario) => scenario.states.length === scenario.state_controls.length));
   assert.deepEqual(showcased.find((scenario) => scenario.id === "CORE-01").states, ["normal", "rate-limit", "permission", "error", "offline", "recovery"]);
   assert.deepEqual(showcased.find((scenario) => scenario.id === "CORE-03").states, ["normal", "partial", "stale", "empty", "error"]);
   assert.deepEqual(showcased.find((scenario) => scenario.id === "CORE-05").states, ["recovery", "permission", "conflict", "offline", "rate-limit", "error"]);
+  assert.deepEqual(showcased.find((scenario) => scenario.id === "INT-02").states, ["normal", "loading", "partial", "conflict", "stale", "empty", "pending", "committed", "undo", "permission", "error"]);
   assert.deepEqual(showcased.find((scenario) => scenario.id === "INT-03").states, ["normal", "loading", "empty", "conflict", "pending", "committed", "undo", "permission", "error"]);
   assert.deepEqual(showcased.find((scenario) => scenario.id === "WORK-01").states, ["normal", "partial", "conflict", "empty"]);
   assert.deepEqual(showcased.find((scenario) => scenario.id === "INF-02").states, ["normal"]);
   assert.deepEqual(showcased.find((scenario) => scenario.id === "INF-03").states, ["normal"]);
   assert.deepEqual(showcased.find((scenario) => scenario.id === "COM-02").states, ["normal", "pending", "error", "loading", "committed", "permission", "failed"]);
   assert.deepEqual(showcased.find((scenario) => scenario.id === "ENG-02").states, ["normal"]);
-  assert.equal(showcased.reduce((total, scenario) => total + scenario.state_controls.length, 0), 47);
+  assert.equal(showcased.reduce((total, scenario) => total + scenario.state_controls.length, 0), 58);
 });
 
 test("scenario validator rejects unsupported catalog and presentation-status fields", () => {

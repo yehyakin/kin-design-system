@@ -83,6 +83,15 @@ test("cross-browser smoke preserves navigation focus and advanced states", async
   await expect(riskFrame.locator("html")).toHaveAttribute("data-theme", "dark");
   await expect(riskFrame.locator("html")).toHaveAttribute("data-contrast", "more");
 
+  await page.goto("/scenarios/lab.html?scenario=INT-02&state=error&viewport=narrow&theme=dark-high-contrast", { waitUntil: "domcontentloaded" });
+  await expect(page.locator("[data-lab-verification]")).toHaveAttribute("data-state", "pass");
+  const investigationFrame = page.frameLocator("[data-lab-frame]");
+  await expect(investigationFrame.locator("[data-investigation-error]")).toBeVisible();
+  await expect(investigationFrame.locator("[data-investigation-reason]")).not.toHaveValue("");
+  await expect(investigationFrame.locator("[data-investigation-chronology]")).toBeVisible();
+  await expect(investigationFrame.locator("html")).toHaveAttribute("data-theme", "dark");
+  await expect(investigationFrame.locator("html")).toHaveAttribute("data-contrast", "more");
+
   await page.goto("/scenarios/lab.html?scenario=ENG-02&state=normal&viewport=narrow&theme=light-high-contrast", { waitUntil: "domcontentloaded" });
   await expect(page.locator("[data-lab-verification]")).toHaveAttribute("data-state", "pass");
   const engineeringFrame = page.frameLocator("[data-lab-frame]");
