@@ -18,7 +18,7 @@
     "contract_path": "DESIGN.md",
     "checksum_algorithm": "sha256",
     "checksum": "75e62f81a34d95dd9efbb36a32ad672c9d13e413ca8910992a3ea9de286c3a6d",
-    "input_set_checksum": "76eb84c5342fe5d730ff0950894af4e869adefbf1f48446843330d70c95fc254",
+    "input_set_checksum": "05db3c5c48bd20f74bd1b2b82063359f079bbf9c72aba6bc2836fe0918409455",
     "ref": "main",
     "revision_status": "mutable",
     "inputs": [
@@ -40,12 +40,12 @@
       {
         "path": "distribution/locales/en.json",
         "role": "informative-translation-input",
-        "sha256": "6a5c7ae53f6a1aa7e1da69e328eabf41522b1debe2adb37f2953957e90373685"
+        "sha256": "e67b6929c02dcbb6f49b899a952b12dbaf4934f39051216174a8584cdd6717fd"
       },
       {
         "path": "distribution/locales/zh-CN.json",
         "role": "informative-translation-input",
-        "sha256": "aad303ed744473441bdc2baaaedd33fa40a57c63b19a2757af34aec82a6f1756"
+        "sha256": "a056f50748c6cb4b68b999be8a19686e63b494e83b1bb779504bd131af2187ee"
       },
       {
         "path": "distribution/profiles.json",
@@ -172,20 +172,24 @@
   "locales": [
     {
       "id": "en",
-      "complete": false,
+      "complete": true,
       "review": {
-        "status": "unreviewed",
-        "reviewers": [],
+        "status": "reviewed",
+        "reviewers": [
+          "@yehyakin"
+        ],
         "normative_source_checksum": "28d428a4429c45b5bcc6dc4cfddfd97682ef2f6a2b0297852954be1c247c4fe2",
         "localized_content_checksum": "8cbc0ee2535f738266c73e9f80419076c0da5afad2212a6049408902706f412a"
       }
     },
     {
       "id": "zh-CN",
-      "complete": false,
+      "complete": true,
       "review": {
-        "status": "unreviewed",
-        "reviewers": [],
+        "status": "reviewed",
+        "reviewers": [
+          "@yehyakin"
+        ],
         "normative_source_checksum": "28d428a4429c45b5bcc6dc4cfddfd97682ef2f6a2b0297852954be1c247c4fe2",
         "localized_content_checksum": "5ce67d168f77941fa5cf023d00f72ffcbc0235a0fcf13c2af5a34fcf93cd2bc2"
       }
@@ -305,7 +309,7 @@
       "public_url": "https://yehyakin.github.io/kin-design-system/next/design.dark.high-contrast.md",
       "media_type": "text/markdown; charset=utf-8",
       "normative": false,
-      "sha256": "6802ec8927f8a8856e45a54ea2a0ff18816c4888f837f37ec4468acdda511da2"
+      "sha256": "d872f641bac7fe619ea7590ea43e9caffa0ca0a7a22842e9bec2260ca6eb83f7"
     },
     {
       "id": "design-en-dark",
@@ -318,7 +322,7 @@
       "public_url": "https://yehyakin.github.io/kin-design-system/next/design.dark.md",
       "media_type": "text/markdown; charset=utf-8",
       "normative": false,
-      "sha256": "a5eb624bb7cc67afd7417330e45b1c71cf5ba9065331ec0b1e8b3f04e8241df6"
+      "sha256": "bb9b6de5f06163454f6e9f03433110e7b535b23daf68470e3ed0f557145d432a"
     },
     {
       "id": "design-en-light-high-contrast",
@@ -331,7 +335,7 @@
       "public_url": "https://yehyakin.github.io/kin-design-system/next/design.high-contrast.md",
       "media_type": "text/markdown; charset=utf-8",
       "normative": false,
-      "sha256": "d851efcbae6be8306c4d9e8c830e324c6a07386482c309629881c639746d3611"
+      "sha256": "b6fe0c0ba163beb246979920b5d188b002e1adf7fc489cd84a910a00fec46475"
     },
     {
       "id": "design-en-light",
@@ -344,7 +348,7 @@
       "public_url": "https://yehyakin.github.io/kin-design-system/next/design.md",
       "media_type": "text/markdown; charset=utf-8",
       "normative": false,
-      "sha256": "d132bf1e554b7fd1aafa0c740a60e633ba204a62bb6372f7f7a4ea98062822af"
+      "sha256": "9d1f2ad065455044621986de22462318d070f1f33dea4b7d6500b84b681234c8"
     },
     {
       "id": "schema-locale_source",
@@ -407,7 +411,7 @@
       "public_url": "https://yehyakin.github.io/kin-design-system/next/zh/design.dark.high-contrast.md",
       "media_type": "text/markdown; charset=utf-8",
       "normative": false,
-      "sha256": "c1aca0872f2d6432012c558ba522a251d7291aabf19683dfb3bbcbd5d3410727"
+      "sha256": "f9a2be1e7cb464bdbe916719fa0f8ba56152c76d3385bfe7f97724a6f2d27622"
     },
     {
       "id": "design-zh-cn-dark",
@@ -420,7 +424,7 @@
       "public_url": "https://yehyakin.github.io/kin-design-system/next/zh/design.dark.md",
       "media_type": "text/markdown; charset=utf-8",
       "normative": false,
-      "sha256": "e9f864f778f022e0a672ed714682f26abf4717b99f20989ea7913ac3215dec0e"
+      "sha256": "edad8117e7343f19bf229c19e00147f6505c648d9c2f26f20b78ecf8bc204dbc"
     },
     {
       "id": "design-zh-cn-light-high-contrast",
@@ -433,7 +437,7 @@
       "public_url": "https://yehyakin.github.io/kin-design-system/next/zh/design.high-contrast.md",
       "media_type": "text/markdown; charset=utf-8",
       "normative": false,
-      "sha256": "7153ad23478dce45a40ee4b996873f1ac207ac49a44b33f6f25c9d70083cb7a3"
+      "sha256": "95d03f257d6e419ec0740642f655b98c6d130db1e898a75f36c0cda21a6427c5"
     },
     {
       "id": "design-zh-cn-light",
@@ -446,7 +450,7 @@
       "public_url": "https://yehyakin.github.io/kin-design-system/next/zh/design.md",
       "media_type": "text/markdown; charset=utf-8",
       "normative": false,
-      "sha256": "a93d6c38ace334ac43cdf5bb8cc8701c3156df286e6fc8c3e075c94a4a3ec5be"
+      "sha256": "88b1c6f73d430c1e3b7f7cd667e723c7a62b134933c8e3a4024049f86fc91183"
     }
   ]
 }

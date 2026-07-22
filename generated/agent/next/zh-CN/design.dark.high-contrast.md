@@ -22,15 +22,16 @@ coverage: "compact-foundations-and-routing"
 features:
   component_recipes: "unavailable"
 locale_review:
-  status: "unreviewed"
-  reviewers: []
+  status: "reviewed"
+  reviewers:
+    - "@yehyakin"
   normative_source_checksum: "28d428a4429c45b5bcc6dc4cfddfd97682ef2f6a2b0297852954be1c247c4fe2"
   localized_content_checksum: "5ce67d168f77941fa5cf023d00f72ffcbc0235a0fcf13c2af5a34fcf93cd2bc2"
 source:
   contract_path: "DESIGN.md"
   checksum_algorithm: "sha256"
   checksum: "75e62f81a34d95dd9efbb36a32ad672c9d13e413ca8910992a3ea9de286c3a6d"
-  input_set_checksum: "76eb84c5342fe5d730ff0950894af4e869adefbf1f48446843330d70c95fc254"
+  input_set_checksum: "05db3c5c48bd20f74bd1b2b82063359f079bbf9c72aba6bc2836fe0918409455"
   ref: "main"
   revision_status: "mutable"
 manifest_locator: "design-manifest.json"
@@ -225,7 +226,7 @@ component_recipes: null
 - 这份精简文件由当前 KIN 合同生成。它不是规范来源、不得直接编辑，也不能替代所链接的完整文档。
 - 合同校验和: `75e62f81a34d95dd9efbb36a32ad672c9d13e413ca8910992a3ea9de286c3a6d`
 - 已解析模式: `dark` / `more`
-- 本地化文案审核: `unreviewed`
+- 本地化文案审核: `reviewed`
 - 发布状态: `repository-only`; 公开地址仅为预留，Phase 1 尚未上线
 
 ## 视觉基调
