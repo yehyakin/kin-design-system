@@ -3,40 +3,127 @@
   "title": "KIN Agent design snapshot frontmatter",
   "$defs": {
     "hash": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "semver": {"type": "string", "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$"},
     "tokenObject": {"type": "object", "minProperties": 1, "additionalProperties": true},
+    "publication": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["state", "published", "public_locators"],
+          "properties": {
+            "state": {"const": "repository-only"},
+            "published": {"const": false},
+            "public_locators": {"const": "unavailable"}
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["state", "published", "public_locators"],
+          "properties": {
+            "state": {"const": "published-development"},
+            "published": {"const": true},
+            "public_locators": {"const": "active"}
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["state", "public_locators"],
+          "properties": {
+            "state": {"const": "registry-controlled"},
+            "public_locators": {"const": "registry-authoritative"}
+          }
+        }
+      ]
+    },
     "review": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["status", "reviewers", "normative_source_checksum", "localized_content_checksum"],
-      "properties": {
-        "status": {"enum": ["reviewed", "unreviewed"]},
-        "reviewers": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
-        "normative_source_checksum": {"$ref": "#/$defs/hash"},
-        "localized_content_checksum": {"$ref": "#/$defs/hash"}
-      }
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["status", "reviewers", "normative_source_checksum", "localized_content_checksum"],
+          "properties": {
+            "status": {"const": "reviewed"},
+            "reviewers": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "pattern": "^(?:@[A-Za-z0-9][A-Za-z0-9-]{0,38}|[a-z0-9][a-z0-9._-]{2,63})$"}},
+            "normative_source_checksum": {"$ref": "#/$defs/hash"},
+            "localized_content_checksum": {"$ref": "#/$defs/hash"}
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["status", "reviewers", "normative_source_checksum", "localized_content_checksum"],
+          "properties": {
+            "status": {"const": "unreviewed"},
+            "reviewers": {"type": "array", "maxItems": 0},
+            "normative_source_checksum": {"$ref": "#/$defs/hash"},
+            "localized_content_checksum": {"$ref": "#/$defs/hash"}
+          }
+        }
+      ]
     }
   },
   "type": "object",
   "additionalProperties": false,
   "required": ["kind", "schema_version", "schema_locator", "generated", "normative", "artifact_status", "editable", "publication", "kin_version", "release_status", "latest_stable_contract", "channel", "locale", "direction", "theme", "contrast", "coverage", "features", "locale_review", "source", "manifest_locator", "full_contract_path", "visual_signature_path", "delivery_contract_path", "product_profiles", "rules", "colors", "typography", "spacing", "rounded", "motion", "component_recipes"],
+  "allOf": [
+    {
+      "oneOf": [
+        {
+          "properties": {
+            "channel": {"const": "next"},
+            "publication": {
+              "type": "object",
+              "required": ["state"],
+              "properties": {"state": {"enum": ["repository-only", "published-development"]}}
+            },
+            "source": {
+              "type": "object",
+              "required": ["ref", "revision_status"],
+              "properties": {
+                "ref": {"const": "main"},
+                "revision_status": {"const": "mutable"}
+              }
+            }
+          }
+        },
+        {
+          "properties": {
+            "channel": {"const": "versioned"},
+            "release_status": {"const": "released"},
+            "publication": {
+              "type": "object",
+              "required": ["state"],
+              "properties": {"state": {"const": "registry-controlled"}}
+            },
+            "source": {
+              "type": "object",
+              "required": ["ref", "revision_status"],
+              "properties": {
+                "ref": {"type": "string", "pattern": "^v[0-9]+\\.[0-9]+\\.[0-9]+$"},
+                "revision_status": {"const": "immutable"}
+              }
+            }
+          }
+        }
+      ]
+    }
+  ],
   "properties": {
     "kind": {"const": "kin-agent-design"},
-    "schema_version": {"const": "1.0.0"},
+    "schema_version": {"const": "2.0.0"},
     "schema_locator": {"const": "schemas/snapshot.schema.json"},
     "generated": {"const": true},
     "normative": {"const": false},
     "artifact_status": {"const": "generated-derivative"},
     "editable": {"const": false},
-    "publication": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["state", "published", "public_locators"],
-      "properties": {"state": {"const": "repository-only"}, "published": {"const": false}, "public_locators": {"const": "reserved-for-phase-2"}}
-    },
-    "kin_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+    "publication": {"$ref": "#/$defs/publication"},
+    "kin_version": {"$ref": "#/$defs/semver"},
     "release_status": {"enum": ["development", "released"]},
-    "latest_stable_contract": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
-    "channel": {"const": "next"},
+    "latest_stable_contract": {"$ref": "#/$defs/semver"},
+    "channel": {"enum": ["next", "versioned"]},
     "locale": {"enum": ["en", "zh-CN"]},
     "direction": {"const": "ltr"},
     "theme": {"enum": ["light", "dark"]},
@@ -58,8 +145,8 @@
         "checksum_algorithm": {"const": "sha256"},
         "checksum": {"$ref": "#/$defs/hash"},
         "input_set_checksum": {"$ref": "#/$defs/hash"},
-        "ref": {"const": "main"},
-        "revision_status": {"const": "mutable"}
+        "ref": {"type": "string", "pattern": "^(?:main|v[0-9]+\\.[0-9]+\\.[0-9]+)$"},
+        "revision_status": {"enum": ["mutable", "immutable"]}
       }
     },
     "manifest_locator": {"const": "design-manifest.json"},
@@ -87,15 +174,37 @@
       "additionalProperties": false,
       "required": ["canvas", "sidebar", "surface-1", "surface-2", "surface-3", "surface-4", "surface-hover", "surface-selected", "surface-overlay", "text-primary", "text-secondary", "text-muted", "text-disabled", "text-inverse", "icon-primary", "icon-muted", "line-subtle", "line-default", "line-strong", "accent", "accent-hover", "accent-active", "accent-soft", "focus-ring", "monitor", "monitor-soft", "positive", "warning", "negative", "critical", "offline"],
       "properties": {
-        "canvas": {"type": "string"}, "sidebar": {"type": "string"},
-        "surface-1": {"type": "string"}, "surface-2": {"type": "string"}, "surface-3": {"type": "string"}, "surface-4": {"type": "string"},
-        "surface-hover": {"type": "string"}, "surface-selected": {"type": "string"}, "surface-overlay": {"type": "string"},
-        "text-primary": {"type": "string"}, "text-secondary": {"type": "string"}, "text-muted": {"type": "string"}, "text-disabled": {"type": "string"}, "text-inverse": {"type": "string"},
-        "icon-primary": {"type": "string"}, "icon-muted": {"type": "string"},
-        "line-subtle": {"type": "string"}, "line-default": {"type": "string"}, "line-strong": {"type": "string"},
-        "accent": {"type": "string"}, "accent-hover": {"type": "string"}, "accent-active": {"type": "string"}, "accent-soft": {"type": "string"},
-        "focus-ring": {"type": "string"}, "monitor": {"type": "string"}, "monitor-soft": {"type": "string"},
-        "positive": {"type": "string"}, "warning": {"type": "string"}, "negative": {"type": "string"}, "critical": {"type": "string"}, "offline": {"type": "string"}
+        "canvas": {"type": "string"},
+        "sidebar": {"type": "string"},
+        "surface-1": {"type": "string"},
+        "surface-2": {"type": "string"},
+        "surface-3": {"type": "string"},
+        "surface-4": {"type": "string"},
+        "surface-hover": {"type": "string"},
+        "surface-selected": {"type": "string"},
+        "surface-overlay": {"type": "string"},
+        "text-primary": {"type": "string"},
+        "text-secondary": {"type": "string"},
+        "text-muted": {"type": "string"},
+        "text-disabled": {"type": "string"},
+        "text-inverse": {"type": "string"},
+        "icon-primary": {"type": "string"},
+        "icon-muted": {"type": "string"},
+        "line-subtle": {"type": "string"},
+        "line-default": {"type": "string"},
+        "line-strong": {"type": "string"},
+        "accent": {"type": "string"},
+        "accent-hover": {"type": "string"},
+        "accent-active": {"type": "string"},
+        "accent-soft": {"type": "string"},
+        "focus-ring": {"type": "string"},
+        "monitor": {"type": "string"},
+        "monitor-soft": {"type": "string"},
+        "positive": {"type": "string"},
+        "warning": {"type": "string"},
+        "negative": {"type": "string"},
+        "critical": {"type": "string"},
+        "offline": {"type": "string"}
       }
     },
     "typography": {"$ref": "#/$defs/tokenObject"},

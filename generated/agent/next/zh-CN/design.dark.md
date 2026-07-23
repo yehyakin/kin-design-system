@@ -1,15 +1,15 @@
 ---
 kind: "kin-agent-design"
-schema_version: "1.0.0"
+schema_version: "2.0.0"
 schema_locator: "schemas/snapshot.schema.json"
 generated: true
 normative: false
 artifact_status: "generated-derivative"
 editable: false
 publication:
-  state: "repository-only"
-  published: false
-  public_locators: "reserved-for-phase-2"
+  state: "published-development"
+  published: true
+  public_locators: "active"
 kin_version: "3.0.0"
 release_status: "development"
 latest_stable_contract: "2.3.0"
@@ -30,8 +30,8 @@ locale_review:
 source:
   contract_path: "DESIGN.md"
   checksum_algorithm: "sha256"
-  checksum: "75e62f81a34d95dd9efbb36a32ad672c9d13e413ca8910992a3ea9de286c3a6d"
-  input_set_checksum: "05db3c5c48bd20f74bd1b2b82063359f079bbf9c72aba6bc2836fe0918409455"
+  checksum: "c1fbae50d28cfdb37285a8ec4ba9e89f1c121a86e8589d750c0a88a581c6bda3"
+  input_set_checksum: "a3908427eaba69bc5656710dd250420bef89d9c96e0212f30de7683a2eedabca"
   ref: "main"
   revision_status: "mutable"
 manifest_locator: "design-manifest.json"
@@ -224,10 +224,10 @@ component_recipes: null
 ## 状态与来源
 
 - 这份精简文件由当前 KIN 合同生成。它不是规范来源、不得直接编辑，也不能替代所链接的完整文档。
-- 合同校验和: `75e62f81a34d95dd9efbb36a32ad672c9d13e413ca8910992a3ea9de286c3a6d`
+- 合同校验和: `c1fbae50d28cfdb37285a8ec4ba9e89f1c121a86e8589d750c0a88a581c6bda3`
 - 已解析模式: `dark` / `normal`
 - 本地化文案审核: `reviewed`
-- 发布状态: `repository-only`; 公开地址仅为预留，Phase 1 尚未上线
+- 发布状态: `published-development`
 
 ## 视觉基调
 

@@ -1,0 +1,126 @@
+name: Validate Agent release
+run-name: Validate Agent v${{ inputs.version }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Agent distribution version without the v prefix
+        required: true
+        type: string
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  promotion-eligibility:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    outputs:
+      promotion_eligible: ${{ steps.eligible.outputs.promotion_eligible || 'false' }}
+    steps:
+      - name: Check out complete main history
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+        with:
+          ref: main
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Validate version input
+        shell: bash
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          [[ "$VERSION" =~ ^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$ ]]
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate current Agent distribution
+        run: npm run agent:check
+
+      - name: Validate immutable Agent history
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          npm run agent:check:history -- --version "$VERSION"
+          node scripts/validate-agent-distribution.mjs \
+            --bundle "generated/agent/versions/v$VERSION" \
+            --channel versioned \
+            --version "$VERSION" \
+            --detached
+
+      - name: Verify local and remote immutable Tag
+        shell: bash
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          tag="v$VERSION"
+          test "$(git cat-file -t "refs/tags/$tag")" = "tag"
+          local_object="$(git rev-parse "refs/tags/$tag")"
+          local_commit="$(git rev-parse "refs/tags/$tag^{commit}")"
+          git merge-base --is-ancestor "$local_commit" HEAD
+          remote_refs="$(git ls-remote --tags origin "refs/tags/$tag" "refs/tags/$tag^{}")"
+          remote_object="$(printf '%s\n' "$remote_refs" | awk -v ref="refs/tags/$tag" '$2 == ref { print $1 }')"
+          remote_commit="$(printf '%s\n' "$remote_refs" | awk -v ref="refs/tags/$tag^{}" '$2 == ref { print $1 }')"
+          test "$remote_object" = "$local_object"
+          test -n "$remote_commit"
+          test "$remote_commit" = "$local_commit"
+
+      - name: Verify final GitHub Release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ inputs.version }}
+        run: |
+          tag="v$VERSION"
+          gh release view "$tag" --repo "$GITHUB_REPOSITORY" --json isDraft,isPrerelease,tagName --jq \
+            'select(.isDraft == false and .isPrerelease == false and .tagName == "'"$tag"'") | .tagName' | grep -Fx "$tag"
+          successful_tag_runs="$(gh run list --repo "$GITHUB_REPOSITORY" --workflow "validate-release-tag.yml" \
+            --commit "$(git rev-parse "refs/tags/$tag^{commit}")" --event push --status completed --limit 100 \
+            --json conclusion,headBranch,headSha --jq \
+            '[.[] | select(.conclusion == "success" and .headBranch == "'"$tag"'")] | length')"
+          test "$successful_tag_runs" -ge 1
+
+      - name: Verify Registry is staged
+        shell: bash
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          node --input-type=module -e '
+            import fs from "node:fs";
+            import { promotionEligibilityFindings } from "./scripts/lib/agent-release.mjs";
+            const registry = JSON.parse(fs.readFileSync("generated/agent/versions.json", "utf8"));
+            const entry = registry.versions.find((candidate) => candidate.version === process.env.VERSION);
+            if (!entry || entry.publication_state !== "staged" || entry.support_status !== null || entry.manifest_url !== null) {
+              throw new Error(`Agent ${process.env.VERSION} is not a staged promotion candidate`);
+            }
+            const findings = promotionEligibilityFindings(registry, process.env.VERSION);
+            if (findings.length > 0) throw new Error(findings.join("; "));
+          '
+
+      - name: Mark promotion eligible
+        id: eligible
+        run: echo "promotion_eligible=true" >> "$GITHUB_OUTPUT"
+
+      - name: Report promotion eligibility
+        if: always()
+        shell: bash
+        env:
+          VERSION: ${{ inputs.version }}
+          ELIGIBLE: ${{ steps.eligible.outputs.promotion_eligible }}
+        run: |
+          if [[ "$ELIGIBLE" == "true" ]]; then
+            echo "## Agent v$VERSION promotion eligibility: eligible" >> "$GITHUB_STEP_SUMMARY"
+            echo "The archive, complete history, local and remote annotated Tag, final GitHub Release, and staged Registry entry passed read-only verification." >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "## Agent v$VERSION promotion eligibility: not eligible" >> "$GITHUB_STEP_SUMMARY"
+            echo "At least one required read-only verification did not complete successfully. No Registry or repository state was changed." >> "$GITHUB_STEP_SUMMARY"
+          fi

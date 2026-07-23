@@ -76,7 +76,8 @@ test("normal motion authentication dialogs retain an explicit exit phase", async
   await page.goto("/examples/workspace-reference/core-components.html#authentication");
   const trigger = page.getByRole("button", { name: "打开登录弹窗" });
   await trigger.click();
-  const dialog = page.getByRole("dialog", { name: "登录后保存筛选视图" });
+  const dialog = page.locator("[data-auth-dialog]");
+  await expect(page.getByRole("dialog", { name: "登录后保存筛选视图" })).toBeVisible();
   await expect(dialog).toHaveAttribute("data-state", "open");
   const duration = await dialog.evaluate((element) => getComputedStyle(element).transitionDuration);
   expect(duration.split(",").some((value) => value.trim() !== "0s")).toBe(true);

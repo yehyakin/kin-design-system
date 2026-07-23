@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://yehyakin.github.io/kin-design-system/next/schemas/alias-manifest.schema.json",
+  "$comment": "Generated non-normative copy. Edit distribution/schemas/alias-manifest.schema.json, not this file.",
+  "title": "KIN Agent stable alias manifest",
+  "$defs": {
+    "hash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "semver": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$"
+    },
+    "url": {
+      "type": "string",
+      "pattern": "^https://"
+    }
+  },
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "schema_version",
+    "kind",
+    "generated",
+    "normative",
+    "channel",
+    "resolves_to_version",
+    "target_manifest_url",
+    "target_manifest_sha256",
+    "registry_url"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "pattern": "^https://yehyakin\\.github\\.io/kin-design-system/versions/v[0-9]+\\.[0-9]+\\.[0-9]+/schemas/alias-manifest\\.schema\\.json$"
+    },
+    "schema_version": {
+      "const": "2.0.0"
+    },
+    "kind": {
+      "const": "kin-agent-distribution-alias"
+    },
+    "generated": {
+      "const": true
+    },
+    "normative": {
+      "const": false
+    },
+    "channel": {
+      "const": "stable-alias"
+    },
+    "resolves_to_version": {
+      "$ref": "#/$defs/semver"
+    },
+    "target_manifest_url": {
+      "$ref": "#/$defs/url"
+    },
+    "target_manifest_sha256": {
+      "$ref": "#/$defs/hash"
+    },
+    "registry_url": {
+      "const": "https://yehyakin.github.io/kin-design-system/versions.json"
+    }
+  }
+}

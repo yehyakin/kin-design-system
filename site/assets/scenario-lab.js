@@ -39,6 +39,9 @@ let themes = [];
 let current = null;
 let frameObserver = null;
 let frameResizeVerification = null;
+let verificationObserver = null;
+let verificationTimer = null;
+let inspectionRevision = 0;
 
 function option(value, label) {
   const item = document.createElement("option");
@@ -66,6 +69,40 @@ function selectedTheme() {
 
 function referenceUrl(referencePath) {
   return new URL("../" + referencePath, window.location.href);
+}
+
+function beginInspection() {
+  inspectionRevision += 1;
+  verificationObserver?.disconnect();
+  verificationObserver = null;
+  if (verificationTimer) {
+    clearTimeout(verificationTimer);
+    verificationTimer = null;
+  }
+  if (frameResizeVerification) {
+    cancelAnimationFrame(frameResizeVerification);
+    frameResizeVerification = null;
+  }
+  return inspectionRevision;
+}
+
+function frameMatchesCurrentReference() {
+  const frameWindow = elements.frame.contentWindow;
+  if (!frameWindow) return false;
+
+  try {
+    const actual = new URL(frameWindow.location.href);
+    const expected = referenceUrl(selectedControl().reference_path);
+    if (actual.origin !== expected.origin || actual.pathname !== expected.pathname) return false;
+    for (const key of new Set(expected.searchParams.keys())) {
+      const actualValues = actual.searchParams.getAll(key);
+      const expectedValues = expected.searchParams.getAll(key);
+      if (actualValues.length !== expectedValues.length || actualValues.some((value, index) => value !== expectedValues[index])) return false;
+    }
+    return !expected.hash || actual.hash === expected.hash;
+  } catch {
+    return false;
+  }
 }
 
 function setVerification(state, message, detail) {
@@ -208,7 +245,8 @@ function visibleInFrame(target, frameWindow) {
   return target.getClientRects().length > 0;
 }
 
-function verifyCurrentState() {
+function verifyCurrentState(revision = inspectionRevision, { reportFailure = true } = {}) {
+  if (revision !== inspectionRevision || !frameMatchesCurrentReference()) return false;
   const control = selectedControl();
   const assertion = control.assertion;
   const frameDocument = elements.frame.contentDocument;
@@ -222,7 +260,7 @@ function verifyCurrentState() {
   try {
     target = frameDocument.querySelector(assertion.selector);
   } catch (error) {
-    setVerification("fail", "Invalid fixture selector", error.message);
+    if (reportFailure) setVerification("fail", "Invalid fixture selector", error.message);
     return false;
   }
 
@@ -241,28 +279,86 @@ function verifyCurrentState() {
     detail = assertion.selector + " must include \"" + assertion.value + "\".";
   }
 
-  if (passed) clearError();
-  setVerification(passed ? "pass" : "fail", passed ? "Verified local fixture" : "Fixture check failed", detail);
-  lab.dataset.loadState = passed ? "ready" : "mismatch";
-  elements.frameShell.dataset.loading = "false";
+  if (passed) {
+    clearError();
+    setVerification("pass", "Verified local fixture", detail);
+    lab.dataset.loadState = "ready";
+    elements.frameShell.dataset.loading = "false";
+  } else if (reportFailure) {
+    setVerification("fail", "Fixture check failed", detail);
+    lab.dataset.loadState = "mismatch";
+    elements.frameShell.dataset.loading = "false";
+  }
   return passed;
 }
 
-function afterLayout(callback) {
-  requestAnimationFrame(() => requestAnimationFrame(callback));
+function afterLayout(callback, revision = inspectionRevision) {
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    if (revision === inspectionRevision) callback();
+  }));
 }
 
-function inspectReference() {
-  clearError();
+function clearPendingVerification() {
+  verificationObserver?.disconnect();
+  verificationObserver = null;
+  if (verificationTimer) {
+    clearTimeout(verificationTimer);
+    verificationTimer = null;
+  }
+}
+
+function scheduleVerification(revision = inspectionRevision) {
+  clearPendingVerification();
+  afterLayout(() => {
+    if (verifyCurrentState(revision, { reportFailure: false })) return;
+    const frameDocument = elements.frame.contentDocument;
+    if (!frameDocument?.documentElement || revision !== inspectionRevision || !frameMatchesCurrentReference()) return;
+
+    const verifyAfterMutation = () => {
+      if (revision !== inspectionRevision) {
+        clearPendingVerification();
+        return;
+      }
+      if (verifyCurrentState(revision, { reportFailure: false })) clearPendingVerification();
+    };
+
+    verificationObserver = new MutationObserver(verifyAfterMutation);
+    verificationObserver.observe(frameDocument.documentElement, {
+      attributes: true,
+      characterData: true,
+      childList: true,
+      subtree: true
+    });
+
+    if (verifyCurrentState(revision, { reportFailure: false })) {
+      clearPendingVerification();
+      return;
+    }
+
+    verificationTimer = setTimeout(() => {
+      verificationTimer = null;
+      verificationObserver?.disconnect();
+      verificationObserver = null;
+      verifyCurrentState(revision);
+    }, 3000);
+  }, revision);
+}
+
+function inspectReference(revision = inspectionRevision) {
+  if (revision !== inspectionRevision) return;
   try {
+    if (!elements.frame.contentDocument) throw new Error("The reference document is unavailable.");
+    if (!frameMatchesCurrentReference()) return;
+    clearError();
     applyAppearance();
-    afterLayout(verifyCurrentState);
+    scheduleVerification(revision);
   } catch (error) {
-    showError("The reference could not be inspected: " + error.message);
+    if (revision === inspectionRevision) showError("The reference could not be inspected: " + error.message);
   }
 }
 
 function loadReference() {
+  const revision = beginInspection();
   const control = selectedControl();
   const nextUrl = referenceUrl(control.reference_path);
   clearError();
@@ -273,7 +369,7 @@ function loadReference() {
   elements.frameShell.dataset.loading = "true";
 
   if (elements.frame.src === nextUrl.href) {
-    inspectReference();
+    inspectReference(revision);
     return;
   }
 
@@ -282,7 +378,11 @@ function loadReference() {
     && currentUrl.pathname === nextUrl.pathname
     && currentUrl.search === nextUrl.search;
   if (sameDocument && currentUrl.hash !== nextUrl.hash) {
-    elements.frame.contentWindow?.addEventListener("hashchange", inspectReference, { once: true });
+    try {
+      elements.frame.contentWindow?.addEventListener("hashchange", () => inspectReference(revision), { once: true });
+    } catch {
+      // A temporarily isolated fixture cannot expose its Window. Assigning src below restores the requested same-origin reference.
+    }
   }
   elements.frame.src = nextUrl.href;
 }
@@ -318,27 +418,31 @@ function chooseState(state) {
 
 function chooseViewport(id) {
   if (!viewports.some((viewport) => viewport.id === id)) return;
+  const revision = beginInspection();
   clearError();
   current.viewport = id;
   renderViewport();
   syncPressedControls();
   writeUrl();
   setVerification("loading", "Checking fixture", selectedControl().label);
-  afterLayout(verifyCurrentState);
+  scheduleVerification(revision);
 }
 
 function chooseTheme(id) {
   if (!themes.some((theme) => theme.id === id)) return;
+  const revision = beginInspection();
   clearError();
   current.theme = id;
   syncPressedControls();
   writeUrl();
   setVerification("loading", "Checking fixture", selectedControl().label);
   try {
-    applyAppearance();
-    afterLayout(verifyCurrentState);
+    if (frameMatchesCurrentReference()) {
+      applyAppearance();
+      scheduleVerification(revision);
+    }
   } catch (error) {
-    showError("The theme could not be applied: " + error.message);
+    if (revision === inspectionRevision) showError("The theme could not be applied: " + error.message);
   }
 }
 
@@ -374,16 +478,17 @@ function clearError() {
 
 elements.frame.addEventListener("load", () => {
   if (!current || !elements.frame.dataset.referencePath) return;
-  inspectReference();
+  inspectReference(inspectionRevision);
 });
 
 const frameResizeObserver = new ResizeObserver(() => {
   const frameDocument = elements.frame.contentDocument;
   if (!current || !elements.frame.dataset.referencePath || frameDocument?.readyState !== "complete") return;
   if (frameResizeVerification) cancelAnimationFrame(frameResizeVerification);
+  const revision = inspectionRevision;
   frameResizeVerification = requestAnimationFrame(() => {
     frameResizeVerification = null;
-    afterLayout(verifyCurrentState);
+    scheduleVerification(revision);
   });
 });
 frameResizeObserver.observe(elements.frame);

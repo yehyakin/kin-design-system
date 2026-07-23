@@ -4,6 +4,11 @@ import { compareCodePoints } from "./canonical-content.mjs";
 
 function walkTree(directory, prefix = "") {
   if (!fs.existsSync(directory)) return { files: [], invalid: [] };
+  const absolute = path.resolve(directory);
+  const stat = fs.lstatSync(absolute);
+  if (stat.isSymbolicLink() || !stat.isDirectory()) {
+    return { files: [], invalid: [`${prefix || "."}: generated tree root must be a real directory`] };
+  }
   const files = [];
   const invalid = [];
   for (const entry of fs.readdirSync(directory, { withFileTypes: true }).sort((left, right) => compareCodePoints(left.name, right.name))) {
@@ -30,8 +35,29 @@ export function writeArtifactTree(directory, artifacts) {
   }
 }
 
-export function compareArtifactTree(directory, artifacts) {
+function linkedPathFinding(governedRoot, directory) {
+  if (!governedRoot) return null;
+  const absoluteRoot = path.resolve(governedRoot);
+  const absoluteDirectory = path.resolve(directory);
+  const relative = path.relative(absoluteRoot, absoluteDirectory);
+  if (relative === ".." || relative.startsWith(`..${path.sep}`) || path.isAbsolute(relative)) {
+    return ".: generated tree must stay within its governed root";
+  }
+  let current = absoluteRoot;
+  for (const segment of relative.split(path.sep).filter(Boolean)) {
+    current = path.join(current, segment);
+    if (!fs.existsSync(current)) return null;
+    if (fs.lstatSync(current).isSymbolicLink()) {
+      return `${path.relative(absoluteRoot, current).replaceAll(path.sep, "/")}: generated tree path must not traverse a symbolic link`;
+    }
+  }
+  return null;
+}
+
+export function compareArtifactTree(directory, artifacts, { governedRoot = null } = {}) {
   const expected = [...artifacts.keys()].sort();
+  const linked = linkedPathFinding(governedRoot, directory);
+  if (linked) return [linked];
   const { files: actual, invalid } = walkTree(directory);
   const findings = [...invalid];
   for (const file of expected.filter((item) => !actual.includes(item))) findings.push(`${file}: missing generated artifact`);
@@ -69,6 +95,10 @@ export function replaceDirectorySafely(target, temporary) {
   }
 }
 
-export function listArtifactFiles(directory) {
-  return walkTree(directory).files;
+export function listArtifactFiles(directory, { governedRoot = null } = {}) {
+  const linked = linkedPathFinding(governedRoot, directory);
+  if (linked) throw new Error(linked);
+  const result = walkTree(directory);
+  if (result.invalid.length > 0) throw new Error(result.invalid.join("; "));
+  return result.files;
 }

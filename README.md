@@ -104,7 +104,7 @@ gallery, invent data, or claim KIN adoption from Tokens or a passing build.
 
 The Skill is one way to apply KIN, not the direction of the system.
 
-The accepted Agent Distribution Layer also stages compact, theme-resolved files under [`generated/agent/next/`](./generated/agent/next/). They cover four theme/contrast modes and both repository locales, but are still mutable development artifacts: the copy is explicitly unreviewed, the files are not published to Pages, and no stable Agent endpoint exists yet. For production work, use the [complete v2.3.0 contract](https://github.com/yehyakin/kin-design-system/blob/v2.3.0/DESIGN.md) and [Skill from the same pinned checkout](https://github.com/yehyakin/kin-design-system/tree/v2.3.0/skills/kin-design) until a later release completes the review and immutable-publication gates.
+The Agent Distribution Layer can publish the reviewed current contract as raw Markdown and JSON under the mutable [`/next/`](https://yehyakin.github.io/kin-design-system/next/design.md) channel after the matching `main` deployment passes exact-response verification. It covers four theme/contrast modes and both repository locales, normally follows validated `main`, and is not a production pin. During the bounded interval between a staged release candidate reaching `main` and its final GitHub Release, the complete Pages deployment is deferred; the public showcase and `/next/` remain at the preceding verified deployment so no dead Release link or premature release claim is published. [`versions.json`](https://yehyakin.github.io/kin-design-system/versions.json) is the release authority once its declared Schema is publicly addressable; immutable `/versions/vX.Y.Z/` bundles and root stable aliases appear only after a matching KIN release passes archive, Tag, GitHub Release, and focused promotion gates. No stable Agent bundle exists yet, and v2.3.0 is not backfilled. Until the new endpoints pass their `main` Pages gate, treat the links as reserved locators. For production work today, use the [complete v2.3.0 contract](https://github.com/yehyakin/kin-design-system/blob/v2.3.0/DESIGN.md) and [Skill from the same pinned checkout](https://github.com/yehyakin/kin-design-system/tree/v2.3.0/skills/kin-design).
 
 ### Contribute to KIN 3.0
 
@@ -200,8 +200,8 @@ Automated checks, screenshots, browser smoke tests, real zoom, touch, and screen
 | [`tokens/`](./tokens/) | Generated CSS, DTCG, Tailwind-compatible, and Figma Variables output |
 | [`adoption/`](./adoption/) | Project configuration, implementation brief, evidence, and migration guide |
 | [`skills/kin-design/`](./skills/kin-design/) | Agent task routing and review workflow |
-| [`distribution/`](./distribution/) | Non-normative Agent routing, locale inputs, and Phase 1 Schemas |
-| [`generated/agent/next/`](./generated/agent/next/) | Generated mutable development Snapshots and Manifest; not a stable public endpoint |
+| [`distribution/`](./distribution/) | Non-normative Agent routing, locale inputs, publication Schemas, and release interfaces |
+| [`generated/agent/`](./generated/agent/) | Mutable `next`, the Version Registry, and create-once release archives |
 | [`DELIVERY.md`](./DELIVERY.md) | Figma, runtime, ownership, and release boundaries |
 | [`rfcs/`](./rfcs/) | RFC proposals, decisions, and status; an accepted RFC remains non-normative until its outcomes are incorporated into the governing contracts |
 
