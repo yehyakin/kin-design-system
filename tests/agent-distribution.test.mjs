@@ -12,7 +12,13 @@ import { checksumInputEntries } from "../scripts/lib/input-registry.mjs";
 import { createMarkdownWithFrontmatter, parseFrontmatter } from "../scripts/lib/frontmatter.mjs";
 import { exactTagState } from "../scripts/lib/git-state.mjs";
 import { extractExactSection } from "../scripts/lib/markdown-sections.mjs";
-import { collectReleaseTagFindings, pagesPublicationDecision, parseReleaseValidationArgs } from "../scripts/lib/release-policy.mjs";
+import {
+  collectReleaseTagFindings,
+  formatPagesPublicationOutputs,
+  pagesPublicationDecision,
+  pagesPublicationOutputs,
+  parseReleaseValidationArgs,
+} from "../scripts/lib/release-policy.mjs";
 import { validateSchemaValue } from "../scripts/lib/schema-validator.mjs";
 import { findUnsafeLocaleText, scanGeneratedArtifact, validateLocaleRecord } from "../scripts/lib/safe-generated-content.mjs";
 import { resolveExistingPathWithin, resolveOutputFileWithin, writeFileSafelyWithin } from "../scripts/lib/safe-path.mjs";
@@ -302,13 +308,58 @@ test("release validation mode skips only a missing current release tag", () => {
   assert.ok(collectReleaseTagFindings({ ...development, mode: "post-tag", latestStableExists: true }).some((finding) => finding.includes("release_status: released")));
 });
 
-test("Pages deploys development, defers released candidates, and verifies published releases", () => {
+test("Pages defers staged release candidates and verifies every public release state", () => {
   assert.equal(pagesPublicationDecision({ releaseStatus: "development", trigger: "documentation" }), "deploy");
   assert.equal(pagesPublicationDecision({ releaseStatus: "development", trigger: "manual" }), "deploy");
   assert.throws(() => pagesPublicationDecision({ releaseStatus: "development", trigger: "release" }), /cannot publish/);
-  assert.equal(pagesPublicationDecision({ releaseStatus: "released", trigger: "documentation" }), "defer");
-  assert.equal(pagesPublicationDecision({ releaseStatus: "released", trigger: "release" }), "verify-tag");
-  assert.equal(pagesPublicationDecision({ releaseStatus: "released", trigger: "manual" }), "verify-tag");
+  assert.throws(
+    () => pagesPublicationDecision({ releaseStatus: "released", trigger: "documentation", agentPublicationState: "none" }),
+    /requires a staged or released Agent Registry entry/,
+  );
+  assert.equal(pagesPublicationDecision({ releaseStatus: "released", trigger: "documentation", agentPublicationState: "staged" }), "defer");
+  assert.equal(pagesPublicationDecision({ releaseStatus: "released", trigger: "documentation", agentPublicationState: "released" }), "verify-tag");
+  assert.equal(pagesPublicationDecision({ releaseStatus: "released", trigger: "release", agentPublicationState: "staged" }), "verify-tag");
+  assert.equal(pagesPublicationDecision({ releaseStatus: "released", trigger: "manual", agentPublicationState: "staged" }), "verify-tag");
+  assert.deepEqual(pagesPublicationOutputs("deploy"), { eligible: true, verificationRequired: false });
+  assert.deepEqual(pagesPublicationOutputs("defer"), { eligible: false, verificationRequired: false });
+  assert.deepEqual(pagesPublicationOutputs("verify-tag"), { eligible: true, verificationRequired: true });
+  assert.throws(() => pagesPublicationOutputs("unknown"), /Unsupported Pages publication decision/);
+  assert.deepEqual(
+    formatPagesPublicationOutputs({ decision: "defer", releaseStatus: "released", agentPublicationState: "staged" }),
+    [
+      "eligible=false",
+      "verification_required=false",
+      "publication_mode=defer",
+      "release_status=released",
+      "agent_publication_state=staged",
+    ],
+  );
+  assert.deepEqual(
+    formatPagesPublicationOutputs({ decision: "verify-tag", releaseStatus: "released", agentPublicationState: "staged" }).slice(0, 2),
+    ["eligible=true", "verification_required=true"],
+  );
+  const publicationScript = fs.readFileSync(path.join(root, "scripts", "check-pages-publication.mjs"), "utf8");
+  assert.match(publicationScript, /formatPagesPublicationOutputs/u);
+  const workflow = fs.readFileSync(path.join(root, ".github", "workflows", "deploy-pages.yml"), "utf8");
+  assert.match(workflow, /steps\.lifecycle\.outputs\.verification_required == 'true'/u);
+  assert.match(workflow, /Build and validate showcase[\s\S]*steps\.lifecycle\.outputs\.eligible == 'true'/u);
+  assert.match(workflow, /Upload Pages artifact[\s\S]*steps\.lifecycle\.outputs\.eligible == 'true'/u);
+  assert.match(workflow, /deploy:\s+if: needs\.build\.outputs\.eligible == 'true'/u);
+  assert.match(workflow, /verify:\s+if: needs\.build\.outputs\.eligible == 'true'/u);
+});
+
+test("release documentation records the bounded staged Pages freeze", () => {
+  for (const [file, pattern] of [
+    ["DELIVERY.md", /preceding verified deployment/u],
+    ["RELEASING.md", /documentation-triggered Pages workflow MUST defer the complete deployment/u],
+    ["CONTRIBUTING.md", /complete Pages deployment MUST be deferred/u],
+    ["distribution/README.md", /public `next` temporarily remains at the preceding verified deployment/u],
+    ["generated/agent/README.md", /untagged release candidate intentionally defers the complete Pages deployment/u],
+    ["README.md", /complete Pages deployment is deferred/u],
+    ["rfcs/001-agent-distribution-layer.md", /documented untagged staged-release freeze/u],
+  ]) {
+    assert.match(fs.readFileSync(path.join(root, file), "utf8"), pattern, `${file} must document the staged release freeze`);
+  }
 });
 
 test("Pages publication waits for a final Release and trusts only main pushes from this repository", () => {
@@ -364,7 +415,7 @@ test("Agent distribution is deterministic, complete, and recipe-free", () => {
   const first = buildAgentDistribution(root);
   const second = buildAgentDistribution(root);
   assert.deepEqual([...first.artifacts], [...second.artifacts]);
-  assert.equal(first.artifacts.size, 14);
+  assert.equal(first.artifacts.size, 16);
   assert.ok(!first.artifacts.has("component-recipes.json"));
   assert.equal(first.manifest.modes.length, 8);
   assert.deepEqual(
@@ -387,7 +438,7 @@ test("Agent distribution is deterministic, complete, and recipe-free", () => {
     }),
   );
   assert.ok(!first.manifest.artifacts.some((artifact) => artifact.bundle_path === "design-manifest.json"));
-  assert.equal(first.manifest.artifacts.length, 13);
+  assert.equal(first.manifest.artifacts.length, 15);
   assert.equal(first.manifest.catalogs.components.entry_count, first.context.catalogs.components.components.length);
   assert.equal(first.manifest.catalogs.pages.entry_count, first.context.catalogs.pages.pages.length);
   assert.equal(first.manifest.catalogs.integrations.entry_count, first.context.catalogs.integrations.integrations.length);
@@ -420,7 +471,7 @@ test("Agent distribution is deterministic, complete, and recipe-free", () => {
       normative_source_checksum: expectedReview.normative_source_checksum,
       localized_content_checksum: expectedReview.localized_content_checksum,
     });
-    assert.deepEqual(metadata.publication, { state: "repository-only", published: false, public_locators: "reserved-for-phase-2" });
+    assert.deepEqual(metadata.publication, { state: "published-development", published: true, public_locators: "active" });
   }
   assert.equal(colorShapes.size, 1);
   for (const locale of ["en", "zh-CN"]) {

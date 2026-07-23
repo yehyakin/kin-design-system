@@ -9,8 +9,9 @@ import { validateSchemaValue } from "./schema-validator.mjs";
 import { scanGeneratedArtifact, validateLocaleRecord } from "./safe-generated-content.mjs";
 import { resolveSharedTokens, resolveThemeColors, THEME_MODES } from "./theme-tokens.mjs";
 
-export const AGENT_SCHEMA_VERSION = "1.0.0";
-export const AGENT_PUBLIC_BASE = "https://yehyakin.github.io/kin-design-system/next/";
+export const AGENT_SCHEMA_VERSION = "2.0.0";
+export const AGENT_SITE_BASE = "https://yehyakin.github.io/kin-design-system";
+export const AGENT_PUBLIC_BASE = `${AGENT_SITE_BASE}/next/`;
 export const AGENT_LOCALES = Object.freeze([
   { id: "en", source: "distribution/locales/en.json", bundleDirectory: "en", publicDirectory: "" },
   { id: "zh-CN", source: "distribution/locales/zh-CN.json", bundleDirectory: "zh-CN", publicDirectory: "zh/" },
@@ -18,6 +19,8 @@ export const AGENT_LOCALES = Object.freeze([
 export const AGENT_SCHEMAS = Object.freeze([
   "snapshot.schema.json",
   "manifest.schema.json",
+  "alias-manifest.schema.json",
+  "versions.schema.json",
   "rules.schema.json",
   "profiles.schema.json",
   "locale-source.schema.json",
@@ -107,7 +110,7 @@ export function computeLocaleReviewCandidates(rules, locale, sourceSections) {
   return {
     complete,
     status: complete ? "reviewed" : stale ? "stale-attestation" : "unreviewed",
-    reviewers: [...reviewers].sort(compareCodePoints),
+    reviewers: complete ? [...reviewers].sort(compareCodePoints) : [],
     normative_source_checksum: normativeAggregate,
     localized_content_checksum: localizedAggregate,
     records,
@@ -237,7 +240,39 @@ function snapshotRuleMetadata(rules) {
   return rules.map(({ id, level, source_path, source_heading }) => ({ id, level, source_path, source_heading }));
 }
 
-function bodyForSnapshot(context, localeDefinition, mode) {
+function distributionCoordinates(channel, version = null) {
+  if (channel === "next" && version === null) {
+    return {
+      channel,
+      version: null,
+      publicBase: AGENT_PUBLIC_BASE,
+      repositoryBase: "generated/agent/next",
+      sourceRef: "main",
+      revisionStatus: "mutable",
+      publication: { state: "published-development", published: true, public_locators: "active" },
+      publicationDescription: "published-development",
+      sourceRawBaseUrl: "https://raw.githubusercontent.com/yehyakin/kin-design-system/main/",
+      sourceHumanBaseUrl: "https://github.com/yehyakin/kin-design-system/blob/main/",
+    };
+  }
+  if (channel === "versioned" && typeof version === "string" && /^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$/.test(version)) {
+    return {
+      channel,
+      version,
+      publicBase: `${AGENT_SITE_BASE}/versions/v${version}/`,
+      repositoryBase: `generated/agent/versions/v${version}`,
+      sourceRef: `v${version}`,
+      revisionStatus: "immutable",
+      publication: { state: "registry-controlled", public_locators: "registry-authoritative" },
+      publicationDescription: "registry-controlled; consult versions.json",
+      sourceRawBaseUrl: `https://raw.githubusercontent.com/yehyakin/kin-design-system/v${version}/`,
+      sourceHumanBaseUrl: `https://github.com/yehyakin/kin-design-system/blob/v${version}/`,
+    };
+  }
+  throw new Error(`Unsupported Agent distribution channel: ${channel}${version === null ? "" : ` v${version}`}`);
+}
+
+function bodyForSnapshot(context, localeDefinition, mode, coordinates) {
   const locale = localeDefinition.value;
   const copyById = new Map(locale.rules.map((record) => [record.id, record]));
   const foundation = copyById.get("snapshot-source-boundary");
@@ -261,7 +296,7 @@ function bodyForSnapshot(context, localeDefinition, mode) {
     `- ${foundation.labels.source_checksum}: \`${context.design.checksum}\``,
     `- ${foundation.labels.mode}: \`${mode.theme}\` / \`${mode.contrast}\``,
     `- ${foundation.labels.locale_review}: \`${context.localeReviews.get(localeDefinition.id).status}\``,
-    `- ${foundation.labels.publication_state}: \`repository-only\`; ${foundation.labels.publication_notice}`,
+    `- ${foundation.labels.publication_state}: \`${coordinates.publicationDescription}\``,
   ]);
   section("visual-register");
   section("theme-usage", [`- ${foundation.labels.color_scheme_guidance}`]);
@@ -295,7 +330,7 @@ function bodyForSnapshot(context, localeDefinition, mode) {
   return lines.join("\n");
 }
 
-function createSnapshot(context, locale, mode) {
+function createSnapshot(context, locale, mode, coordinates) {
   const review = context.localeReviews.get(locale.id);
   const colors = resolveThemeColors(context.tokens, mode.theme, mode.contrast);
   const metadata = {
@@ -306,11 +341,11 @@ function createSnapshot(context, locale, mode) {
     normative: false,
     artifact_status: "generated-derivative",
     editable: false,
-    publication: { state: "repository-only", published: false, public_locators: "reserved-for-phase-2" },
+    publication: coordinates.publication,
     kin_version: context.design.kinVersion,
     release_status: context.design.releaseStatus,
     latest_stable_contract: context.design.latestStable,
-    channel: "next",
+    channel: coordinates.channel,
     locale: locale.id,
     direction: locale.value.direction,
     theme: mode.theme,
@@ -328,8 +363,8 @@ function createSnapshot(context, locale, mode) {
       checksum_algorithm: "sha256",
       checksum: context.design.checksum,
       input_set_checksum: context.inputSetChecksum,
-      ref: "main",
-      revision_status: "mutable",
+      ref: coordinates.sourceRef,
+      revision_status: coordinates.revisionStatus,
     },
     manifest_locator: "design-manifest.json",
     full_contract_path: "DESIGN.md",
@@ -344,28 +379,28 @@ function createSnapshot(context, locale, mode) {
     motion: context.sharedTokens.motion,
     component_recipes: null,
   };
-  return createMarkdownWithFrontmatter(metadata, bodyForSnapshot(context, locale, mode));
+  return createMarkdownWithFrontmatter(metadata, bodyForSnapshot(context, locale, mode, coordinates));
 }
 
-function publicSnapshotPath(locale, filename) {
-  return `${AGENT_PUBLIC_BASE}${locale.publicDirectory}${filename}`;
+function publicSnapshotPath(coordinates, locale, filename) {
+  return `${coordinates.publicBase}${locale.publicDirectory}${filename}`;
 }
 
 function artifactId(locale, mode) {
   return `design-${locale.id.toLowerCase()}-${mode.theme}${mode.contrast === "more" ? "-high-contrast" : ""}`;
 }
 
-function publishedSchema(source, name) {
+function publishedSchema(source, name, coordinates) {
   const { $schema, ...rest } = source;
   return {
     $schema,
-    $id: `${AGENT_PUBLIC_BASE}schemas/${name}`,
+    $id: `${coordinates.publicBase}schemas/${name}`,
     $comment: `Generated non-normative copy. Edit distribution/schemas/${name}, not this file.`,
     ...rest,
   };
 }
 
-function catalogLink(context, name, collectionKey) {
+function catalogLink(context, name, collectionKey, coordinates) {
   const repositoryPath = `${name}/catalog.json`;
   const catalog = context.catalogs[name];
   const entries = catalog[collectionKey];
@@ -379,8 +414,8 @@ function catalogLink(context, name, collectionKey) {
   if (!source) throw new Error(`${repositoryPath}: missing input registry record`);
   return {
     repository_path: repositoryPath,
-    raw_url: `https://raw.githubusercontent.com/yehyakin/kin-design-system/main/${repositoryPath}`,
-    human_url: `https://github.com/yehyakin/kin-design-system/blob/main/${repositoryPath}`,
+    raw_url: `${coordinates.sourceRawBaseUrl}${repositoryPath}`,
+    human_url: `${coordinates.sourceHumanBaseUrl}${repositoryPath}`,
     schema_version: catalog.schema_version,
     ...(catalog.catalog_version ? { catalog_version: catalog.catalog_version } : {}),
     reviewed_on: catalog.reviewed_on,
@@ -390,13 +425,37 @@ function catalogLink(context, name, collectionKey) {
   };
 }
 
-export function buildAgentDistribution(root) {
+export function buildAgentDistribution(root, { channel = "next", version = null } = {}) {
   const context = loadAgentDistributionContext(root);
+  let coordinates = distributionCoordinates(channel, version);
+  if (coordinates.channel === "next") {
+    const publishable = context.locales.every((locale) => {
+      const review = context.localeReviews.get(locale.id);
+      return review.complete && review.status === "reviewed";
+    });
+    if (!publishable) {
+      coordinates = {
+        ...coordinates,
+        publication: { state: "repository-only", published: false, public_locators: "unavailable" },
+        publicationDescription: "repository-only; locale review incomplete",
+      };
+    }
+  }
+  if (coordinates.channel === "versioned") {
+    if (context.design.releaseStatus !== "released") throw new Error("Versioned Agent export requires DESIGN.md release_status: released");
+    if (context.design.kinVersion !== coordinates.version || context.design.latestStable !== coordinates.version) {
+      throw new Error(`Versioned Agent export requires kin_version and latest_stable to equal ${coordinates.version}`);
+    }
+    for (const locale of context.locales) {
+      const review = context.localeReviews.get(locale.id);
+      if (!review.complete || review.status !== "reviewed") throw new Error(`Versioned Agent export requires a complete reviewed ${locale.id} locale`);
+    }
+  }
   const artifacts = new Map();
 
-  for (const name of AGENT_SCHEMAS) artifacts.set(`schemas/${name}`, prettyJson(publishedSchema(context.schemas[name], name)));
+  for (const name of AGENT_SCHEMAS) artifacts.set(`schemas/${name}`, prettyJson(publishedSchema(context.schemas[name], name, coordinates)));
   for (const locale of context.locales) {
-    for (const mode of THEME_MODES) artifacts.set(`${locale.bundleDirectory}/${mode.filename}`, createSnapshot(context, locale, mode));
+    for (const mode of THEME_MODES) artifacts.set(`${locale.bundleDirectory}/${mode.filename}`, createSnapshot(context, locale, mode, coordinates));
   }
 
   const artifactRecords = [];
@@ -408,9 +467,9 @@ export function buildAgentDistribution(root) {
       id: schema ? `schema-${schemaKey(path.posix.basename(bundlePath))}` : artifactId(snapshot, mode),
       kind: schema ? "json-schema" : "agent-markdown",
       ...(schema ? {} : { locale: snapshot.id, theme: mode.theme, contrast: mode.contrast }),
-      repository_path: `generated/agent/next/${bundlePath}`,
+      repository_path: `${coordinates.repositoryBase}/${bundlePath}`,
       bundle_path: bundlePath,
-      public_url: schema ? `${AGENT_PUBLIC_BASE}${bundlePath}` : publicSnapshotPath(snapshot, mode.filename),
+      public_url: schema ? `${coordinates.publicBase}${bundlePath}` : publicSnapshotPath(coordinates, snapshot, mode.filename),
       media_type: schema ? "application/schema+json; charset=utf-8" : "text/markdown; charset=utf-8",
       normative: false,
       sha256: sha256ExactBytes(Buffer.from(content, "utf8")),
@@ -420,7 +479,7 @@ export function buildAgentDistribution(root) {
   const schemas = Object.fromEntries(AGENT_SCHEMAS.map((name) => [schemaKey(name), {
     repository_source_path: `distribution/schemas/${name}`,
     bundle_path: `schemas/${name}`,
-    public_url: `${AGENT_PUBLIC_BASE}schemas/${name}`,
+    public_url: `${coordinates.publicBase}schemas/${name}`,
   }]));
   const modes = context.locales.flatMap((locale) => THEME_MODES.map((mode) => ({
     theme: mode.theme,
@@ -429,33 +488,33 @@ export function buildAgentDistribution(root) {
     artifact_id: artifactId(locale, mode),
   })));
   const manifest = {
-    $schema: `${AGENT_PUBLIC_BASE}schemas/manifest.schema.json`,
+    $schema: `${coordinates.publicBase}schemas/manifest.schema.json`,
     schema_version: AGENT_SCHEMA_VERSION,
     kind: "kin-agent-distribution",
     artifact_status: "generated-derivative",
     generated: true,
     normative: false,
-    publication: { state: "repository-only", published: false, public_locators: "reserved-for-phase-2" },
+    publication: coordinates.publication,
     kin_version: context.design.kinVersion,
     release_status: context.design.releaseStatus,
     latest_stable_contract: context.design.latestStable,
-    channel: "next",
+    channel: coordinates.channel,
     source: {
       contract_path: "DESIGN.md",
       checksum_algorithm: "sha256",
       checksum: context.design.checksum,
       input_set_checksum: context.inputSetChecksum,
-      ref: "main",
-      revision_status: "mutable",
+      ref: coordinates.sourceRef,
+      revision_status: coordinates.revisionStatus,
       inputs: context.registry.entries(),
     },
     coverage: { level: "compact", complete_contract: false },
     features: { component_recipes: "unavailable" },
     links: {
-      source_raw_base_url: "https://raw.githubusercontent.com/yehyakin/kin-design-system/main/",
-      source_human_base_url: "https://github.com/yehyakin/kin-design-system/blob/main/",
-      public_base_url: AGENT_PUBLIC_BASE,
-      versions_registry_url: "https://yehyakin.github.io/kin-design-system/versions.json",
+      source_raw_base_url: coordinates.sourceRawBaseUrl,
+      source_human_base_url: coordinates.sourceHumanBaseUrl,
+      public_base_url: coordinates.publicBase,
+      versions_registry_url: `${AGENT_SITE_BASE}/versions.json`,
     },
     schemas,
     locales: context.locales.map((locale) => {
@@ -473,9 +532,9 @@ export function buildAgentDistribution(root) {
     }),
     modes,
     catalogs: {
-      components: catalogLink(context, "components", "components"),
-      pages: catalogLink(context, "pages", "pages"),
-      integrations: catalogLink(context, "integrations", "integrations"),
+      components: catalogLink(context, "components", "components", coordinates),
+      pages: catalogLink(context, "pages", "pages", coordinates),
+      integrations: catalogLink(context, "integrations", "integrations", coordinates),
       recipes: null,
     },
     delivery: { mode: "contract-first", figma: "variables-only", runtime: "project-owned" },
@@ -484,7 +543,7 @@ export function buildAgentDistribution(root) {
   artifacts.set("design-manifest.json", prettyJson(manifest));
   const unsafeArtifacts = [...artifacts].flatMap(([name, source]) => scanGeneratedArtifact(name, source));
   if (unsafeArtifacts.length > 0) throw new Error(`Generated Agent artifacts failed security review:\n- ${unsafeArtifacts.join("\n- ")}`);
-  return { context, artifacts, manifest };
+  return { context, coordinates, artifacts, manifest };
 }
 
 export function artifactBytes(artifacts) {

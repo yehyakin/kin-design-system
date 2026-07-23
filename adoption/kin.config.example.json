@@ -3,10 +3,10 @@
   "kinVersion": "3.0.0",
   "profile": "information-site",
   "contract": {
-    "source": "https://github.com/yehyakin/kin-design-system/tree/22c1910223c661a542d1e781d503d252d99f81da",
+    "source": "https://github.com/yehyakin/kin-design-system/tree/80f9f21a46bb85ee0dc8ce24c8ceb96df5899ccb",
     "local": "docs/KIN-DESIGN.md",
-    "revision": "22c1910223c661a542d1e781d503d252d99f81da",
-    "checksum": "75e62f81a34d95dd9efbb36a32ad672c9d13e413ca8910992a3ea9de286c3a6d"
+    "revision": "80f9f21a46bb85ee0dc8ce24c8ceb96df5899ccb",
+    "checksum": "c1fbae50d28cfdb37285a8ec4ba9e89f1c121a86e8589d750c0a88a581c6bda3"
   },
   "tokens": {
     "source": "src/styles/tokens.css",

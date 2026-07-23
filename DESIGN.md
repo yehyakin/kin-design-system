@@ -1601,7 +1601,7 @@ human visual-signature review before claiming the workflow is verified.
 
 KIN 核心仓库采用 [`DELIVERY.md`](./DELIVERY.md) 定义的 `contract-first` 交付模式：Figma 仅提供 Variables 互操作文件，生产组件由接入项目拥有。私有预发布 `@kin-design/react` 只是一项经批准的集成实验室；不得把它描述成已发布、通用或已完成生产验证的运行时包。没有独立、经批准并可回滚的交付合同，不得声称 KIN 已提供 Figma Component Library、Code Connect 覆盖或稳定运行时组件包。
 
-KIN 的机器与接入输出包括以下八类：
+KIN 的机器与接入输出包括以下九类：
 
 1. `kin.tokens.json` 与 `kin.tailwind.css`：从规范 Token 生成的互操作文件。
 2. `kin.figma.variables.json`：面向 Figma Variables REST API 的 create-only 请求体；不包含凭据，不负责同步既有 ID。
@@ -1611,15 +1611,21 @@ KIN 的机器与接入输出包括以下八类：
 6. `scope.routeProfiles`：为混合产品记录路由族与 KIN 产品类型的映射，并标出一个代表性工作流。
 7. `kin-implementation-brief.md`：把真实任务、第一有效视图、主导区域、持续上下文、Surface、密度、移动优先级、状态、交互、禁止替代和回滚写成项目级构图合同。
 8. `generated/agent/next/`：从当前合同、Token、目录、产品类型和经过声明的本地化输入生成的精简快照与清单。它是不可编辑、非规范、可变的开发交付面，不是稳定版本、运行时组件、自动接入或视觉质量证明。
+9. `generated/agent/versions.json` 与 `generated/agent/versions/vX.Y.Z/`：记录经过门禁的不可变 Agent 版本、支持状态和稳定别名目标。归档只能在对应发布提交中创建一次；注册表晋升不得重写归档字节。
 
 Agent Distribution Layer 必须遵守以下边界：
 
 - `DESIGN.md` 始终是唯一规范性设计来源；生成快照不得补写、改写或推断规范。
-- Phase 1 只提交并校验 `generated/agent/next/`，不得发布到 Pages、创建稳定别名或伪造历史版本。
+- 经过当前 Schema、字节校验和完整本地化审核的 `next` MAY 作为明确标记的可变开发通道发布到 Pages；缺少任一门禁时必须保持 `publication.published: false`。
+- 版本归档必须先以 `staged` 写入注册表，并且在本地与远端注释 Tag、完整 Git 历史和正式 GitHub Release 均通过校验后，才可在独立晋升提交中改为 `released`。
+- Pages 只能发布注册表中 `released` 的版本目录。稳定根别名只能解析到 `latest_agent_distribution` 指向的 `supported` 版本；在首次合格 Agent 发布前必须保持不存在。
+- 根别名中的快照和 Schema 必须与目标不可变版本逐字节相同；只有根 `design-manifest.json` 是由注册表生成的小型解析器。
+- KIN 2.3.0 早于 Agent Distribution Layer，不得事后补造 Agent 归档或声称其包含这些文件。
 - 每个快照必须解析 Light / Dark 与 Normal / More Contrast 的完整 Token 命名空间，并保留相同键集。
 - 英文与简体中文必须保留相同规则 ID、产品类型 ID、主题键和来源路径。本地化内容未经逐字人工审核时必须明确标记 `unreviewed`。
 - `component_recipes` 在独立映射阶段完成前必须保持 `unavailable`，不得生成空文件或根据组件名称猜测实现。
 - `--check` 不得改写受跟踪文件；生成器不得访问网络、调用生成式服务、安装依赖或执行接入产品代码。
+- `next`、稳定别名和不可变版本必须使用不同 URL 语义。生产接入必须固定不可变版本及其校验和，不能用 `next` 或根别名作为稳定证据。
 - 生成文件与通过的校验仍然只是交付证据，不能替代代表性生产流程、可比截图和人工视觉评审。
 
 工具结果不得越过以下边界：

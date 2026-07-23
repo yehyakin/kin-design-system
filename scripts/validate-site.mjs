@@ -1,6 +1,8 @@
 import fs from "node:fs";
 import path from "node:path";
 import process from "node:process";
+import { expectedAgentResponses, validateAgentSiteOutput } from "./lib/agent-pages.mjs";
+import { validateSiteOutputAllowlist } from "./lib/site-artifacts.mjs";
 
 const root = process.cwd();
 const output = path.join(root, ".site-dist");
@@ -108,6 +110,16 @@ if (fs.existsSync(output)) {
         if (!new RegExp(`\\bid=["']${escaped}["']`).test(targetSource)) failures.push(`${relative}: missing fragment target -> ${raw}`);
       }
     }
+  }
+}
+
+if (fs.existsSync(output)) {
+  failures.push(...validateAgentSiteOutput({ root, output }));
+  try {
+    const agentPaths = [...expectedAgentResponses(root).responses.keys()];
+    failures.push(...validateSiteOutputAllowlist({ output, agentPaths }));
+  } catch (error) {
+    failures.push(`Agent output allowlist: ${error.message}`);
   }
 }
 

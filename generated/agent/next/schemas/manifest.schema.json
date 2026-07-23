@@ -8,6 +8,10 @@
       "type": "string",
       "pattern": "^[a-f0-9]{64}$"
     },
+    "semver": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$"
+    },
     "url": {
       "type": "string",
       "pattern": "^https://"
@@ -15,6 +19,66 @@
     "path": {
       "type": "string",
       "pattern": "^(?!/)(?!.*//)(?!.*(?:^|/)\\.{1,2}(?:/|$))(?!.*\\/$)[A-Za-z0-9._/-]+$"
+    },
+    "publication": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "state",
+            "published",
+            "public_locators"
+          ],
+          "properties": {
+            "state": {
+              "const": "repository-only"
+            },
+            "published": {
+              "const": false
+            },
+            "public_locators": {
+              "const": "unavailable"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "state",
+            "published",
+            "public_locators"
+          ],
+          "properties": {
+            "state": {
+              "const": "published-development"
+            },
+            "published": {
+              "const": true
+            },
+            "public_locators": {
+              "const": "active"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "state",
+            "public_locators"
+          ],
+          "properties": {
+            "state": {
+              "const": "registry-controlled"
+            },
+            "public_locators": {
+              "const": "registry-authoritative"
+            }
+          }
+        }
+      ]
     },
     "catalog": {
       "type": "object",
@@ -40,12 +104,10 @@
           "$ref": "#/$defs/url"
         },
         "schema_version": {
-          "type": "string",
-          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+          "$ref": "#/$defs/semver"
         },
         "catalog_version": {
-          "type": "string",
-          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+          "$ref": "#/$defs/semver"
         },
         "reviewed_on": {
           "type": "string",
@@ -92,12 +154,92 @@
     "delivery",
     "artifacts"
   ],
+  "allOf": [
+    {
+      "oneOf": [
+        {
+          "properties": {
+            "channel": {
+              "const": "next"
+            },
+            "publication": {
+              "type": "object",
+              "required": [
+                "state"
+              ],
+              "properties": {
+                "state": {
+                  "enum": [
+                    "repository-only",
+                    "published-development"
+                  ]
+                }
+              }
+            },
+            "source": {
+              "type": "object",
+              "required": [
+                "ref",
+                "revision_status"
+              ],
+              "properties": {
+                "ref": {
+                  "const": "main"
+                },
+                "revision_status": {
+                  "const": "mutable"
+                }
+              }
+            }
+          }
+        },
+        {
+          "properties": {
+            "channel": {
+              "const": "versioned"
+            },
+            "release_status": {
+              "const": "released"
+            },
+            "publication": {
+              "type": "object",
+              "required": [
+                "state"
+              ],
+              "properties": {
+                "state": {
+                  "const": "registry-controlled"
+                }
+              }
+            },
+            "source": {
+              "type": "object",
+              "required": [
+                "ref",
+                "revision_status"
+              ],
+              "properties": {
+                "ref": {
+                  "type": "string",
+                  "pattern": "^v[0-9]+\\.[0-9]+\\.[0-9]+$"
+                },
+                "revision_status": {
+                  "const": "immutable"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  ],
   "properties": {
     "$schema": {
-      "const": "https://yehyakin.github.io/kin-design-system/next/schemas/manifest.schema.json"
+      "type": "string",
+      "pattern": "^https://yehyakin\\.github\\.io/kin-design-system/(?:next|versions/v[0-9]+\\.[0-9]+\\.[0-9]+)/schemas/manifest\\.schema\\.json$"
     },
     "schema_version": {
-      "const": "1.0.0"
+      "const": "2.0.0"
     },
     "kind": {
       "const": "kin-agent-distribution"
@@ -112,28 +254,10 @@
       "const": false
     },
     "publication": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "state",
-        "published",
-        "public_locators"
-      ],
-      "properties": {
-        "state": {
-          "const": "repository-only"
-        },
-        "published": {
-          "const": false
-        },
-        "public_locators": {
-          "const": "reserved-for-phase-2"
-        }
-      }
+      "$ref": "#/$defs/publication"
     },
     "kin_version": {
-      "type": "string",
-      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+      "$ref": "#/$defs/semver"
     },
     "release_status": {
       "enum": [
@@ -142,11 +266,13 @@
       ]
     },
     "latest_stable_contract": {
-      "type": "string",
-      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+      "$ref": "#/$defs/semver"
     },
     "channel": {
-      "const": "next"
+      "enum": [
+        "next",
+        "versioned"
+      ]
     },
     "source": {
       "type": "object",
@@ -174,10 +300,14 @@
           "$ref": "#/$defs/hash"
         },
         "ref": {
-          "const": "main"
+          "type": "string",
+          "pattern": "^(?:main|v[0-9]+\\.[0-9]+\\.[0-9]+)$"
         },
         "revision_status": {
-          "const": "mutable"
+          "enum": [
+            "mutable",
+            "immutable"
+          ]
         },
         "inputs": {
           "type": "array",
@@ -276,6 +406,48 @@
           "complete",
           "review"
         ],
+        "allOf": [
+          {
+            "oneOf": [
+              {
+                "properties": {
+                  "complete": {
+                    "const": true
+                  },
+                  "review": {
+                    "type": "object",
+                    "required": [
+                      "status"
+                    ],
+                    "properties": {
+                      "status": {
+                        "const": "reviewed"
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "properties": {
+                  "complete": {
+                    "const": false
+                  },
+                  "review": {
+                    "type": "object",
+                    "required": [
+                      "status"
+                    ],
+                    "properties": {
+                      "status": {
+                        "const": "unreviewed"
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        ],
         "properties": {
           "id": {
             "enum": [
@@ -287,36 +459,63 @@
             "type": "boolean"
           },
           "review": {
-            "type": "object",
-            "additionalProperties": false,
-            "required": [
-              "status",
-              "reviewers",
-              "normative_source_checksum",
-              "localized_content_checksum"
-            ],
-            "properties": {
-              "status": {
-                "enum": [
-                  "reviewed",
-                  "unreviewed"
-                ]
-              },
-              "reviewers": {
-                "type": "array",
-                "uniqueItems": true,
-                "items": {
-                  "type": "string",
-                  "minLength": 1
+            "oneOf": [
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "status",
+                  "reviewers",
+                  "normative_source_checksum",
+                  "localized_content_checksum"
+                ],
+                "properties": {
+                  "status": {
+                    "const": "reviewed"
+                  },
+                  "reviewers": {
+                    "type": "array",
+                    "minItems": 1,
+                    "uniqueItems": true,
+                    "items": {
+                      "type": "string",
+                      "pattern": "^(?:@[A-Za-z0-9][A-Za-z0-9-]{0,38}|[a-z0-9][a-z0-9._-]{2,63})$"
+                    }
+                  },
+                  "normative_source_checksum": {
+                    "$ref": "#/$defs/hash"
+                  },
+                  "localized_content_checksum": {
+                    "$ref": "#/$defs/hash"
+                  }
                 }
               },
-              "normative_source_checksum": {
-                "$ref": "#/$defs/hash"
-              },
-              "localized_content_checksum": {
-                "$ref": "#/$defs/hash"
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "status",
+                  "reviewers",
+                  "normative_source_checksum",
+                  "localized_content_checksum"
+                ],
+                "properties": {
+                  "status": {
+                    "const": "unreviewed"
+                  },
+                  "reviewers": {
+                    "type": "array",
+                    "maxItems": 0
+                  },
+                  "normative_source_checksum": {
+                    "$ref": "#/$defs/hash"
+                  },
+                  "localized_content_checksum": {
+                    "$ref": "#/$defs/hash"
+                  }
+                }
               }
-            }
+            ]
           }
         }
       }

@@ -1,0 +1,11 @@
+{
+  "$schema": "https://yehyakin.github.io/kin-design-system/next/schemas/versions.schema.json",
+  "schema_version": "2.0.0",
+  "kind": "kin-agent-distribution-versions",
+  "artifact_status": "generated-derivative",
+  "generated": true,
+  "normative": false,
+  "editable": false,
+  "latest_agent_distribution": null,
+  "versions": []
+}

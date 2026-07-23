@@ -162,6 +162,23 @@ test("scenario lab snaps exact viewport sizes under normal motion and settles ra
   await expectVerified(page);
 });
 
+test("scenario lab ignores stale fixture callbacks during rapid state reversal", async ({ page }) => {
+  await page.goto("/scenarios/lab.html?scenario=INT-02&state=normal&viewport=narrow&theme=light-high-contrast");
+  await expectVerified(page);
+
+  const state = page.locator("[data-lab-state]");
+  await state.selectOption("permission");
+  await state.selectOption("error");
+  await state.selectOption("permission");
+
+  await expect(state).toHaveValue("permission");
+  await expectVerified(page);
+  const frame = page.frameLocator("[data-lab-frame]");
+  await expect(frame.locator("[data-investigation-permission]")).toBeVisible();
+  await expect(frame.locator("[data-investigation-error]")).toBeHidden();
+  expect(new URL(page.url()).searchParams.get("state")).toBe("permission");
+});
+
 test("scenario lab clears a surfaced inspection error when a valid reference loads", async ({ page }) => {
   await page.goto("/scenarios/lab.html?scenario=CORE-05&state=expired&viewport=narrow&theme=dark");
   await expectVerified(page);

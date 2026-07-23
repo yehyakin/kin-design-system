@@ -2,8 +2,18 @@ import fs from "node:fs";
 import path from "node:path";
 import process from "node:process";
 import { contractChecksum } from "./contract-checksum.mjs";
+import {
+  promotionDiffFindings,
+  readAgentVersionRegistry,
+  registryLifecycleCommitFindings,
+  validateAgentVersionRegistry,
+} from "./lib/agent-release.mjs";
 import { exactTagState, gitCommitExists, readRevisionFile, runGit } from "./lib/git-state.mjs";
-import { collectReleaseTagFindings, parseReleaseValidationArgs } from "./lib/release-policy.mjs";
+import {
+  collectAgentReleaseStateFindings,
+  collectReleaseTagFindings,
+  parseReleaseValidationArgs,
+} from "./lib/release-policy.mjs";
 import { validateAgentDistribution } from "./validate-agent-distribution.mjs";
 
 let validationPhase;
@@ -106,6 +116,38 @@ const releaseRevision = `v${version}`;
 const currentTag = exactTagState(root, releaseRevision);
 const latestStableTag = latestStable ? exactTagState(root, `v${latestStable}`) : null;
 const taggedDesign = currentTag.exists ? designAt(currentTag.reference) : null;
+let agentRegistry = null;
+let currentAgentEntry = null;
+try {
+  agentRegistry = readAgentVersionRegistry(root);
+  for (const finding of validateAgentVersionRegistry({ root, registry: agentRegistry })) fail(`Agent Registry: ${finding}`);
+  currentAgentEntry = agentRegistry.versions.find((entry) => entry.version === version) ?? null;
+} catch (error) {
+  fail(`Agent Registry: ${error.message}`);
+}
+const headCommit = runGit(root, ["rev-parse", "HEAD"]);
+if (agentRegistry) {
+  for (const finding of registryLifecycleCommitFindings({ root, headCommit, registry: agentRegistry })) fail(finding);
+}
+let allowPromotionCommit = false;
+if (
+  releaseStatus === "released"
+  && currentAgentEntry?.publication_state === "released"
+  && currentTag.exists
+  && currentTag.commit
+  && headCommit
+  && currentTag.commit !== headCommit
+) {
+  const promotionFindings = promotionDiffFindings({ root, version, tagCommit: currentTag.commit, headCommit });
+  for (const finding of promotionFindings) fail(finding);
+  allowPromotionCommit = promotionFindings.length === 0;
+}
+for (const finding of collectAgentReleaseStateFindings({
+  mode: validationPhase,
+  releaseStatus,
+  currentTagExists: currentTag.exists,
+  publicationState: currentAgentEntry?.publication_state ?? "none",
+})) fail(`Agent Registry: ${finding}`);
 for (const finding of collectReleaseTagFindings({
   mode: validationPhase,
   releaseStatus,
@@ -115,9 +157,10 @@ for (const finding of collectReleaseTagFindings({
   currentTagExists: currentTag.exists,
   currentTagType: currentTag.objectType,
   currentTagCommit: currentTag.commit,
-  headCommit: runGit(root, ["rev-parse", "HEAD"]),
+  headCommit,
   currentTagDesignChecksum: taggedDesign === null ? null : contractChecksum(taggedDesign),
   currentDesignChecksum: currentChecksum,
+  allowPromotionCommit,
 })) fail(finding);
 
 if (packageLock.version !== version) fail(`package-lock.json version ${packageLock.version} differs from package version ${version}`);
@@ -126,7 +169,16 @@ for (const term of ["contract-first", "variables-only", "project-owned"]) {
   if (!delivery.includes(term)) fail(`DELIVERY.md does not define the ${term} boundary`);
 }
 if (releaseStatus === "released") {
-  for (const finding of validateAgentDistribution({ root })) fail(`Agent distribution: ${finding}`);
+  if (!currentAgentEntry) fail(`released KIN ${version} requires a staged or released Agent Registry entry`);
+  for (const finding of validateAgentDistribution({ root, validateRegistry: false })) fail(`Agent distribution: ${finding}`);
+  if (currentAgentEntry) {
+    for (const finding of validateAgentDistribution({
+      root,
+      bundleDirectory: path.join(root, "generated", "agent", "versions", `v${version}`),
+      channel: "versioned",
+      version,
+    })) fail(`Agent archive: ${finding}`);
+  }
 }
 
 for (const file of ["README.md", "READMEs/README.zh-CN.md"]) {
