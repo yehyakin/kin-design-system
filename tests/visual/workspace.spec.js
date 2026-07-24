@@ -293,6 +293,7 @@ test("investigation keeps chronology source state and attributable finding separ
   await seedPreferences(page, "dark", "normal", "en");
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/examples/workspace-reference/?view=investigation&state=normal&lang=en");
+  await expect(page.locator("html")).toHaveAttribute("data-reference-ready", "true");
 
   await expect(page.locator("html")).toHaveAttribute("data-workspace-view", "investigation");
   await expect(page.getByRole("heading", { name: "Alpha Network certificate change investigation", level: 1 })).toBeVisible();
@@ -326,10 +327,39 @@ test("investigation keeps chronology source state and attributable finding separ
 
   await page.locator('input[name="finding-evidence"][value="EVT-314"]').check();
   await page.locator("[data-investigation-reason]").fill("The notice aligns with the issuer-change time while the endpoint baseline remains unchanged.");
+  await page.evaluate(() => {
+    const investigation = document.querySelector("[data-investigation]");
+    const fields = document.querySelector("[data-investigation-fields]");
+    const pending = document.querySelector("[data-investigation-pending]");
+    const selectedEvent = document.querySelector('[data-investigation-event][aria-current="true"]');
+    const otherEvent = document.querySelector('[data-investigation-event="EVT-320"]');
+    window.__kinInvestigationPendingObservation = null;
+    const observer = new MutationObserver(() => {
+      if (investigation?.dataset.investigationState !== "pending" || window.__kinInvestigationPendingObservation) return;
+      otherEvent?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+      window.__kinInvestigationPendingObservation = {
+        fieldsDisabled: Boolean(fields?.disabled),
+        otherEventDisabled: Boolean(otherEvent?.disabled),
+        pendingVisible: Boolean(pending && !pending.hidden),
+        selectedAfterBlockedClick: selectedEvent?.dataset.investigationEvent,
+      };
+      observer.disconnect();
+    });
+    observer.observe(investigation, {
+      attributes: true,
+      subtree: true,
+      attributeFilter: ["data-investigation-state", "disabled", "hidden"],
+    });
+  });
   await page.getByRole("button", { name: "Record finding" }).click();
-  await expect(page.locator("[data-investigation-pending]")).toBeVisible();
-  await expect(page.locator("[data-investigation-fields]")).toHaveAttribute("disabled", "");
-  await expect(page.locator('[data-investigation-event="EVT-320"]')).toBeDisabled();
+  await expect.poll(
+    () => page.evaluate(() => window.__kinInvestigationPendingObservation),
+  ).toEqual({
+    fieldsDisabled: true,
+    otherEventDisabled: true,
+    pendingVisible: true,
+    selectedAfterBlockedClick: "EVT-318",
+  });
   await expect(page.locator("[data-investigation-committed]")).toBeVisible({ timeout: 2_000 });
   await expect(page.locator("[data-investigation-commit-evidence]")).toHaveText("EVT-318, EVT-314");
   await expect(page.locator("[data-investigation-commit-reason]")).toHaveText("The notice aligns with the issuer-change time while the endpoint baseline remains unchanged.");
@@ -345,6 +375,7 @@ test("investigation keeps chronology source state and attributable finding separ
   await capture(page, testInfo, "investigation-undo-dark.png");
 
   await page.goto("/examples/workspace-reference/?view=investigation&state=normal&outcome=error&lang=en");
+  await expect(page.locator("html")).toHaveAttribute("data-reference-ready", "true");
   await page.locator("[data-investigation-reason]").fill("Preserve this exact finding draft after the simulated failure.");
   await page.getByRole("button", { name: "Record finding" }).click();
   await expect(page.locator("[data-investigation-error]")).toBeVisible({ timeout: 2_000 });
@@ -444,14 +475,38 @@ test("risk queue keeps severity evidence and review separate through a reversibl
   await page.locator("[data-risk-owner]").selectOption("Mina Chen");
   await page.getByRole("radio", { name: "Resolve as expected change" }).check();
   await page.locator("[data-risk-reason]").fill("The certificate rotation matches the verified endpoint state.");
+  await page.evaluate(() => {
+    const queue = document.querySelector("[data-risk-queue]");
+    const fields = document.querySelector("[data-risk-review-fields]");
+    const selectedRow = document.querySelector('[data-risk-row="RSK-204"]');
+    const otherSignal = document.querySelector('[data-risk-signal="RSK-198"]');
+    window.__kinRiskPendingObservation = null;
+    const observer = new MutationObserver(() => {
+      if (queue?.dataset.riskState !== "pending" || window.__kinRiskPendingObservation) return;
+      otherSignal?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+      window.__kinRiskPendingObservation = {
+        fieldsDisabled: Boolean(fields?.disabled),
+        otherSignalDisabled: Boolean(otherSignal?.disabled),
+        selectedAfterBlockedClick: selectedRow?.dataset.selected,
+      };
+      observer.disconnect();
+    });
+    observer.observe(queue, {
+      attributes: true,
+      subtree: true,
+      attributeFilter: ["data-risk-state", "disabled"],
+    });
+  });
   await page.getByRole("button", { name: "Record decision" }).click();
-  await expect(page.locator("[data-risk-pending]")).toBeVisible();
-  await expect(page.locator("[data-risk-review-fields]")).toHaveAttribute("disabled", "");
-  const otherSignal = page.locator('[data-risk-signal="RSK-198"]');
-  await expect(otherSignal).toBeDisabled();
-  await otherSignal.dispatchEvent("click");
-  await expect(selected).toHaveAttribute("data-selected", "true");
+  await expect.poll(
+    () => page.evaluate(() => window.__kinRiskPendingObservation),
+  ).toEqual({
+    fieldsDisabled: true,
+    otherSignalDisabled: true,
+    selectedAfterBlockedClick: "true",
+  });
   await expect(page.locator("[data-risk-committed]")).toBeVisible({ timeout: 2_000 });
+  await expect(selected).toHaveAttribute("data-selected", "true");
   await expect(page.locator("[data-risk-commit-record]")).toBeVisible();
   await expect(page.locator("[data-risk-commit-owner]")).toHaveText("Mina Chen");
   await expect(page.locator("[data-risk-commit-reason]")).toHaveText("The certificate rotation matches the verified endpoint state.");

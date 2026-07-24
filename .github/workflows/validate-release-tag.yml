@@ -19,6 +19,14 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
+      - name: Require the tagged commit on main before executing repository code
+        run: |
+          git fetch --no-tags origin main:refs/remotes/origin/main
+          git merge-base --is-ancestor HEAD refs/remotes/origin/main || {
+            echo "The tagged commit is not reachable from origin/main." >&2
+            exit 1
+          }
+
       - name: Set up Node.js
         uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
@@ -31,13 +39,8 @@ jobs:
       - name: Match tag to package version
         run: node --input-type=module -e "import fs from 'node:fs'; const version = JSON.parse(fs.readFileSync('package.json', 'utf8')).version; if (process.env.GITHUB_REF_NAME !== 'v' + version) { console.error('Tag ' + process.env.GITHUB_REF_NAME + ' does not match package version ' + version); process.exit(1); }"
 
-      - name: Require the tagged commit on main
-        run: |
-          git fetch --no-tags origin main:refs/remotes/origin/main
-          git merge-base --is-ancestor HEAD refs/remotes/origin/main || {
-            echo "The tagged commit is not reachable from origin/main." >&2
-            exit 1
-          }
-
       - name: Validate the tagged release
-        run: npm run validate && npm run release:check:post-tag
+        run: |
+          npm run validate
+          npm run release:check:post-tag
+          npm run agent:check:history -- --version "$(node -p "require('./package.json').version")"

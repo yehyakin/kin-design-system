@@ -60,13 +60,15 @@ Pixel-difference gating remains deferred until cross-platform font and rendering
 
 The Figma exporter deliberately does not manage credentials or update existing library IDs. The audit deliberately does not auto-fix heuristic findings. These boundaries prevent tooling convenience from becoming destructive product behavior.
 
-## 3.0 development — Agent distribution staging
+## 3.0 development — Agent distribution publication foundation
 
 - Accepted RFC 001 while preserving `DESIGN.md` as the only normative design source.
 - Added deterministic compact Snapshots for Light, Dark, Light High Contrast, and Dark High Contrast in English and Simplified Chinese.
 - Added a machine Manifest, source-input checksums, locale-review gates, Schema validation, and byte-for-byte drift checks.
 - Added separate release-candidate and post-Tag validation paths so protected-branch validation does not require a Tag that cannot yet exist.
-- Kept the Phase 1 `next` tree repository-only. Pages publication, immutable archives, a Version Registry, stable aliases, component Recipes, Skill-routing changes, and consuming-product trials remain separate reviewed phases.
+- Completed RFC 001 Phase 2 publication infrastructure: reviewed publication-capable Schemas, raw `/next/`, a Version Registry, create-once staged archives, full-history checks, read-only promotion eligibility, Registry-only promotion and rollback, exact-byte Pages allowlists, stable aliases, and a post-deploy response gate. Live endpoint evidence remains pending until this change reaches `main` and that gate passes.
+- Kept the current Registry empty because KIN 3.0.0 is still in development and v2.3.0 predates the Agent layer. No immutable Agent version or root stable alias is fabricated.
+- Component Recipes, Skill-routing changes, and consuming-product trials remain separate reviewed phases.
 
 ## Next
 
@@ -77,7 +79,7 @@ The Figma exporter deliberately does not manage credentials or update existing l
 5. Add ID-aware Figma library synchronization only if an eligible team can test update and rollback behavior.
 6. Evaluate cross-platform screenshot baselines after font and renderer variance is measured.
 7. Validate the private `@kin-design/react` integration laboratory in two materially different production workflows before deciding whether it should be published, retained internally, or removed.
-8. Review the exact English and Simplified Chinese Agent Snapshot copy, then implement RFC 001 Phase 2 publication and immutable-version gates without exposing an unreviewed locale or mutable `next` as stable.
+8. Exercise the complete Agent release and promotion runbook on the first eligible KIN release before considering RFC 001 Phase 3 component Recipes.
 
 ## Verification baseline
 

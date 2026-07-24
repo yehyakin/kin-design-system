@@ -3,7 +3,7 @@
 Status: accepted
 Decision scope: generated artifacts and Agent delivery
 Normative effect: none; accepted decisions become normative only when incorporated into the governing contracts
-Implementation status: Phase 1 implemented; Phases 2-5 remain pending
+Implementation status: Phases 1-2 implemented; Phases 3-5 remain pending
 Accountable owner: [@yehyakin](https://github.com/yehyakin)
 First eligible stable bundle: the earliest KIN release whose tagged commit contains the accepted generator and artifacts; expected v3.0.0 and never retroactive
 
@@ -284,7 +284,7 @@ Normal `agent:export` MUST write only `next`. `agent:release --version X.Y.Z` MU
 
 Release export runs pre-tag validation only: contract lifecycle, Tokens, locale attestations, Schemas, generated output, and working-tree checks. It MUST NOT require the release tag or GitHub Release. It creates the archive and a `publication_state: staged` registry entry without advancing `latest_agent_distribution`. After the archive and lifecycle fields are committed, the local annotated tag is created on that exact commit and full release/history validation runs. Remote tag and GitHub Release validation occurs before promotion.
 
-`agent:promote --version X.Y.Z` belongs to a focused post-release promotion commit and MUST run only after the local tag, remote immutable tag, and GitHub Release all resolve to the archived release commit. The local command verifies repository state and the exact local tag; the release workflow verifies remote tag and Release existence through the GitHub API. Normal `agent:check` MUST NOT regenerate historical bundles from the current contract.
+`agent:promote --version X.Y.Z` belongs to a focused post-release promotion commit and MUST run only after the local tag, remote immutable tag, successful Tag workflow, final GitHub Release, and version-specific read-only `Validate Agent release` run all resolve to an eligible main revision containing the archived release commit. The local command MUST independently query and verify that remote evidence immediately before mutation; the workflow is an auditable eligibility gate, not a substitute for command-side enforcement. Normal `agent:check` MUST NOT regenerate historical bundles from the current contract.
 
 The accepted implementation MUST add an explicit `validate-release.mjs --pre-tag` route. Pull-request and `main` validation of a release commit MUST use that route; it checks version parity, release Changelog, adoption locators, generated outputs, the staged Archive, and all non-Tag release conditions, and skips only the requirements that the Tag already exists and that Tag contents match. After the annotated Tag is created on the exact release commit, the dedicated release workflow MUST run the existing full `validate-release.mjs` path plus history validation. This split MUST be reflected in package scripts, `RELEASING.md`, `AGENTS.md`, and workflow commands without weakening the full post-Tag gate.
 
@@ -299,7 +299,7 @@ Each generated Markdown snapshot begins with machine-readable YAML Frontmatter a
 ~~~yaml
 ---
 kind: kin-agent-design
-schema_version: "1.0.0"
+schema_version: "2.0.0"
 schema_locator: schemas/snapshot.schema.json
 generated: true
 normative: false
@@ -308,7 +308,7 @@ editable: false
 publication:
   state: repository-only
   published: false
-  public_locators: reserved-for-phase-2
+  public_locators: unavailable
 kin_version: "<resolved KIN lifecycle version>"
 release_status: "<resolved from DESIGN.md>"
 latest_stable_contract: "<resolved from DESIGN.md.latest_stable>"
@@ -404,7 +404,7 @@ The final Schema MAY add fields, but it MUST retain:
 
 ### 9.2 Revision handling
 
-Embedding the commit that contains a committed generated file creates a circular build problem. Schema v1 therefore does not inject a deployment SHA into committed or published artifacts:
+Embedding the commit that contains a committed generated file creates a circular build problem. The initial Phase 1 Schema therefore does not inject a deployment SHA into committed or published artifacts:
 
 - `next` MUST use `source.ref: main` with `revision_status: mutable`;
 - a versioned bundle MUST use its exact release tag with `revision_status: immutable`;
@@ -567,7 +567,7 @@ Minimum structure:
 ~~~json
 {
   "$schema": "https://yehyakin.github.io/kin-design-system/next/schemas/manifest.schema.json",
-  "schema_version": "1.0.0",
+  "schema_version": "2.0.0",
   "kind": "kin-agent-distribution",
   "artifact_status": "generated-derivative",
   "generated": true,
@@ -575,7 +575,7 @@ Minimum structure:
   "publication": {
     "state": "repository-only",
     "published": false,
-    "public_locators": "reserved-for-phase-2"
+    "public_locators": "unavailable"
   },
   "kin_version": "<resolved KIN lifecycle version>",
   "release_status": "<resolved from DESIGN.md>",
@@ -707,7 +707,7 @@ The implementation MUST include all four modes and both locale entries, not only
 
 Phase 1 output is repository-only. Every Phase 1 Snapshot and Manifest MUST expose the machine-readable `publication` object shown above. `published: false` is authoritative: URLs carried in `links`, `schemas`, catalogs, or artifacts are reserved Phase 2 locators and MUST NOT be fetched or presented as live endpoints. Phase 2 MAY introduce published channels only with a new reviewed Schema contract and the publication gates defined later in this RFC.
 
-Schema v1 uses semantic-version strings. Additive optional fields MAY evolve within one Schema major. Required-field removal or incompatible meaning requires a Schema-major change. The implementation MUST use committed JSON Schemas plus a handwritten structural validator consistent with existing repository tooling. Tests MUST prove representative valid and invalid fixtures agree with the Schemas; adding a runtime validator dependency is out of scope.
+The Schema contract uses semantic-version strings. Additive optional fields MAY evolve within one Schema major. Required-field removal or incompatible meaning requires a Schema-major change. The implementation MUST use committed JSON Schemas plus a handwritten structural validator consistent with existing repository tooling. Tests MUST prove representative valid and invalid fixtures agree with the Schemas; adding a runtime validator dependency is out of scope.
 
 ### 12.1 Stable, development, and immutable URLs
 
@@ -716,7 +716,7 @@ The manifest MUST distinguish three channels:
 | Channel | Purpose | Mutability |
 |---|---|---|
 | `stable-alias` | Discover the latest released KIN Agent bundle | Mutable alias that advances only on a KIN release |
-| `next` | Evaluate the mutable, validated current `main` contract | Mutable and not suitable for production pinning |
+| `next` | Evaluate the mutable, validated current `main` contract outside the bounded staged release freeze | Mutable and not suitable for production pinning |
 | `versioned` | Adopt one released KIN Agent bundle | Immutable |
 
 The public policy is:
@@ -735,7 +735,7 @@ The root resolver conforms to `distribution/schemas/alias-manifest.schema.json`,
 ~~~json
 {
   "$schema": "https://yehyakin.github.io/kin-design-system/versions/v3.0.0/schemas/alias-manifest.schema.json",
-  "schema_version": "1.0.0",
+  "schema_version": "2.0.0",
   "kind": "kin-agent-distribution-alias",
   "generated": true,
   "normative": false,
@@ -755,12 +755,12 @@ The Pages build currently replaces `.site-dist` from `main`. Immutable bundles t
 
 ### 12.2 Version registry
 
-`generated/agent/versions.json` MUST conform to `distribution/schemas/versions.schema.json`. It MUST NOT claim that an Agent bundle is released before its archive, tag, and GitHub Release pass validation. Before the first stable Agent bundle, `latest_agent_distribution` is `null`; the list MAY contain a staged entry that is not publicly copied. After the expected first eligible release and promotion commit, an illustrative registry is:
+`generated/agent/versions.json` MUST conform to the Version Schema named by its `$schema`: before the first release this is the reviewed `/next/` copy of `distribution/schemas/versions.schema.json`; after release it is the pinned immutable copy from a released bundle. It MUST NOT claim that an Agent bundle is released before its archive, tag, and GitHub Release pass validation. Before the first stable Agent bundle, `latest_agent_distribution` is `null`; the list MAY contain a staged entry that is not publicly copied. After the expected first eligible release and promotion commit, an illustrative registry is:
 
 ~~~json
 {
-  "$schema": "https://yehyakin.github.io/kin-design-system/next/schemas/versions.schema.json",
-  "schema_version": "1.0.0",
+  "$schema": "https://yehyakin.github.io/kin-design-system/versions/v3.0.0/schemas/versions.schema.json",
+  "schema_version": "2.0.0",
   "kind": "kin-agent-distribution-versions",
   "artifact_status": "generated-derivative",
   "generated": true,
@@ -785,11 +785,13 @@ The Pages build currently replaces `.site-dist` from `main`. Immutable bundles t
 }
 ~~~
 
-`publication_state` is one of `staged` or `released`. A staged entry has no public Manifest URL or active support status and cannot be selected by `latest_agent_distribution`. Promotion changes only reviewed lifecycle metadata: it sets `released`, adds the immutable URL and support status, and advances the latest pointer. `support_status` is one of `supported`, `superseded`, or `unsupported` for released entries. Optional release dates MUST come from reviewed release metadata, never generation time. Current-tree checks verify the registry and recorded hashes. A full-history release workflow MUST compare every released directory and file list against the matching Git tag; later source generation MUST NOT participate in that comparison.
+`publication_state` is one of `staged` or `released`. A staged entry has no public Manifest URL or active support status and cannot be selected by `latest_agent_distribution`. Promotion changes only reviewed lifecycle metadata: it sets `released`, adds the immutable URL and support status, advances the latest pointer, and atomically adopts the target bundle's Registry Schema version when required. `support_status` is one of `supported`, `superseded`, or `unsupported` for released entries. A superseded entry MUST identify a supported released replacement. Optional release dates MUST come from reviewed release metadata, never generation time. Current-tree checks verify the Registry and recorded hashes against the Schema named by `$schema`; before the first release that is the reviewed `/next/` Schema, and afterwards it is an immutable released Schema. A full-history release workflow MUST compare every released directory and file list against the matching Git tag; later source generation MUST NOT participate in that comparison.
 
 `latest_agent_distribution` MUST be `null` or reference an entry whose `publication_state` is `released` and `support_status` is `supported`. Changing the pointed entry to `superseded` or `unsupported` MUST atomically move the pointer to a supported replacement or set it to `null` before Pages rebuilds root stable aliases. The Version Schema and site validation MUST enforce this invariant.
 
-Before the first released Agent bundle, the registry MAY reference the `/next/` Version Schema. Once `latest_agent_distribution` is non-null, `$schema` MUST use the immutable Version Schema URL contained in that released bundle. A distribution-Schema major upgrade advances that pointer only through another released bundle.
+Before the first released Agent bundle, the Registry MAY reference the `/next/` Version Schema and is public only while that reviewed `next` Schema is addressable. Once any Agent bundle is released, `$schema` MUST remain pinned to a Version Schema contained in a released immutable bundle even when rollback temporarily sets `latest_agent_distribution` to `null`. A distribution-Schema upgrade validates the pre-promotion Registry under the old pinned Schema and the post-promotion Registry under the target bundle's Schema, then advances `$schema` and `schema_version` atomically. The staged entry MUST remain representable under the previously pinned Schema until that promotion.
+
+Before the first release only, the mutable `/next/` Version Schema and `schema_version` MAY refresh in place without a promotion. Such a refresh MUST leave every staged entry byte-for-byte unchanged, keep `latest_agent_distribution` null, remain on the `/next/` Schema locator, and validate every staged entry under the refreshed Schema. It MAY be committed with the reviewed Schema and regenerated artifacts because there is no immutable public Registry contract yet. After the first release, this exception no longer applies.
 
 ## 13. Component recipe index
 
@@ -946,7 +948,7 @@ Rules:
 
 - English is the default locale within every channel; Simplified Chinese uses `/zh/` to match the current showcase.
 - Root aliases advance only when a stable release containing the artifacts is published.
-- `next` follows validated current `main`, mirrors its exact lifecycle, and carries no compatibility promise. It MAY temporarily equal the latest stable contract immediately after a release.
+- `next` normally follows validated current `main`, mirrors its exact lifecycle, and carries no compatibility promise. When `main` is an untagged release candidate with a staged Agent archive, the complete Pages deployment MUST be deferred because the same artifact contains root showcase release copy and links that are not yet externally true. During that bounded interval, public `next` remains at the preceding verified deployment; the final `release.published` trigger refreshes it. It MAY also temporarily equal the latest stable contract immediately after a release.
 - Mutable `next` source URLs are convenience locators. A consumer MUST verify fetched source bytes against the declared checksum and stop or use a stable versioned Bundle when they do not match.
 - Versioned bundles are immutable and MUST NOT be moved, reused, or rewritten.
 - The response body MUST be raw Markdown or JSON, not an HTML rendering.
@@ -1045,9 +1047,9 @@ Validation MUST cover:
 - URLs contain no local absolute paths;
 - stable-alias, mutable `next`, and immutable release URLs are not confused;
 - the stable root exists only when `latest_agent_distribution` is non-null and resolves to that released version rather than `next`;
-- `next` resolves to the current validated `main` lifecycle and checksum, even when `main` temporarily has `release_status: released`;
+- `next` resolves to the current validated `main` lifecycle and checksum except during the documented untagged staged-release freeze, when the complete Pages deployment remains at the preceding verified revision;
 - current published version files match `versions.json` checksums and staged directories are absent from `.site-dist`;
-- Pages-published `next` and versioned Snapshot and Manifest bytes match committed output in Schema v1; the root alias Manifest validates as a registry-derived resolver;
+- Pages-published `next` and versioned Snapshot and Manifest bytes match committed output under their declared Schema version; the root alias Manifest validates as a registry-derived resolver;
 - cross-channel links satisfy the immutable and mutable rules in Section 15;
 - required headers or MIME limitations are recorded.
 
@@ -1057,6 +1059,7 @@ Validation MUST cover:
 - every released archive's file list and bytes match the matching immutable Git tag;
 - a promotion target's local and remote tags resolve to the archived release commit;
 - a promotion target has a matching GitHub Release before the focused promotion commit may advance `latest_agent_distribution`;
+- a promotion target has successful Tag CI and a successful version-specific read-only eligibility run on the exact pre-promotion `main` revision;
 - staged entries cannot be selected by a stable alias or support claim.
 
 ### Determinism and security
@@ -1148,6 +1151,7 @@ For rollback and migration language, the supported deprecation period is the int
 ### Phase 2 — Pages, Version Registry, and Stable Alias
 
 - Publish raw Markdown and JSON through the existing validated Pages build under the correct channel.
+- Defer the complete Pages deployment for an untagged staged release candidate so neither the root showcase nor `/next/` advances before the formal Release trigger.
 - Add site-output and response verification.
 - Add retained staged/released version-bundle and `versions.json` support.
 - Add post-tag promotion and stable-alias publication gates.
@@ -1242,7 +1246,7 @@ The recommended decisions are:
 3. Publish English at root and Simplified Chinese under `/zh/`.
 4. Reserve root aliases for latest stable, use `/next/` for mutable current `main`, and retain immutable `/versions/vX.Y.Z/` bundles.
 5. Do not backfill KIN 2.3.0 as though the distribution shipped with that release.
-6. Keep Schema v1 committed and published bytes identical; identify `next` by `main` plus checksums and released bundles by exact tag plus checksums.
+6. Keep each declared Schema version's committed and published bytes identical; identify `next` by `main` plus checksums and released bundles by exact tag plus checksums.
 7. Generate all four existing KIN theme/contrast modes.
 8. Keep component Recipe work separate from the first manifest implementation.
 9. Store released bundles only as immutable committed version directories and build root aliases from the registry.

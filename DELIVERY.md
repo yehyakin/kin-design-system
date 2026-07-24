@@ -49,13 +49,18 @@ The Agent Distribution Layer is a compact delivery surface compiled from the exi
 
 - `DESIGN.md` remains the normative design source.
 - `generated/agent/next/` is a committed, deterministic, non-normative derivative of current `main` inputs.
-- Phase 1 MUST keep the generated `next` tree out of the GitHub Pages build. A repository path is not a public stable endpoint.
-- Phase 1 Snapshots and Manifests MUST expose `publication.state: repository-only` and `publication.published: false`; consumers MUST treat every embedded public URL as a reserved Phase 2 locator while that flag is false.
-- Phase 1 MUST expose all four KIN theme and contrast modes in English and Simplified Chinese, while preserving explicit locale-review state.
+- A fully reviewed `next` Manifest MAY expose `publication.state: published-development` and publish raw Markdown and JSON to `/next/`. It remains mutable, normally follows validated `main`, and MUST NOT serve as a production pin. When `main` is an untagged release candidate with a staged Agent archive, the complete Pages deployment MUST be deferred so the root showcase cannot claim a nonexistent Release; public `/next/` therefore remains at the preceding verified deployment until the formal `release.published` trigger.
+- If any required locale review is incomplete or stale, `next` MUST remain `repository-only` with `publication.published: false` and Pages MUST omit the channel.
+- `generated/agent/versions/vX.Y.Z/` is a create-once archive. Release export MUST fail on overwrite and stage the matching entry in `generated/agent/versions.json` without advancing the stable alias.
+- A staged archive MAY become `released` only after its local and remote annotated Tag, complete history, successful Tag CI, final GitHub Release, and version-specific read-only eligibility run resolve to an eligible pre-promotion `main` revision containing the archive commit. The promotion command MUST independently verify this evidence immediately before mutation. Promotion MUST be a focused Registry-only commit and MUST NOT rewrite archived bytes.
+- Pages MUST publish only Registry entries marked `released`. Root stable Snapshot and Schema aliases MUST be byte-identical copies of the supported version selected by `latest_agent_distribution`; the root Manifest is a small Registry-derived resolver.
+- Before the first eligible Agent release, `latest_agent_distribution` MUST remain `null` and root stable aliases MUST remain absent. KIN 2.3.0 predates this layer and MUST NOT be backfilled.
+- The distribution MUST expose all four KIN theme and contrast modes in English and Simplified Chinese while preserving explicit locale-review state.
 - A locale marked `unreviewed` MAY appear only in `next`; it MUST block any later versioned bundle or stable alias until checksum-bound human review is recorded.
 - `component_recipes` MUST remain `unavailable` and `component-recipes.json` MUST remain absent until the separate Recipe phase defines reviewed source mappings.
-- Generated Snapshots MUST identify themselves as generated, non-normative, non-editable, compact, and mutable. They MUST point back to the complete contract, visual signature, delivery contract, product profiles, and source checksums.
+- Generated Snapshots MUST identify themselves as generated, non-normative, non-editable, and compact. `next` MUST identify mutable `main`; versioned bundles MUST identify the exact immutable Tag and delegate live publication state to the Registry.
 - Export and validation MUST use local repository inputs only, produce deterministic UTF-8/LF output, and fail on drift without rewriting files in check mode.
+- Production use MUST pin an immutable versioned URL and verify declared checksums. The mutable root alias and `/next/` are discovery and evaluation surfaces, not stable-adoption evidence.
 
 Reading or generating a Snapshot does not establish Token compatibility, component mapping, visible KIN quality, verified adoption, or production observation. Those claims continue to require the evidence stages below.
 

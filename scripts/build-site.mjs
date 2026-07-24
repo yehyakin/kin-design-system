@@ -2,25 +2,17 @@ import fs from "node:fs";
 import path from "node:path";
 import process from "node:process";
 import { build } from "esbuild";
+import { buildAgentPages } from "./lib/agent-pages.mjs";
+import { copySiteArtifacts } from "./lib/site-artifacts.mjs";
 
 const root = process.cwd();
 const output = path.join(root, ".site-dist");
-const sources = [
-  ["site", "."],
-  ["examples", "examples"],
-  ["scenarios", "scenarios"],
-  ["tokens", "tokens"],
-];
 
 fs.rmSync(output, { recursive: true, force: true });
 fs.mkdirSync(output, { recursive: true });
+copySiteArtifacts({ root, output });
 
-for (const [source, destination] of sources) {
-  const from = path.join(root, source);
-  const to = path.join(output, destination);
-  if (!fs.existsSync(from)) throw new Error(`Site source is missing: ${source}`);
-  fs.cpSync(from, to, { recursive: true, force: true });
-}
+buildAgentPages({ root, output });
 
 fs.copyFileSync(
   path.join(root, "node_modules", "sonner", "dist", "styles.css"),
@@ -49,8 +41,6 @@ await build({
   target: ["es2022"],
   minify: true,
 });
-
-fs.rmSync(path.join(output, "assets", "sonner-island.js"), { force: true });
 
 await build({
   entryPoints: [

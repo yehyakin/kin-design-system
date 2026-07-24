@@ -1,0 +1,207 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://yehyakin.github.io/kin-design-system/next/schemas/versions.schema.json",
+  "$comment": "Generated non-normative copy. Edit distribution/schemas/versions.schema.json, not this file.",
+  "title": "KIN Agent distribution version registry",
+  "$defs": {
+    "hash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "semver": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$"
+    },
+    "url": {
+      "type": "string",
+      "pattern": "^https://(?![^/?#]*@)"
+    },
+    "staged": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "version",
+        "publication_state",
+        "support_status",
+        "repository_directory",
+        "manifest_url",
+        "manifest_sha256",
+        "kin_tag",
+        "design_checksum",
+        "input_set_checksum",
+        "replacement",
+        "advisory_url"
+      ],
+      "properties": {
+        "version": {
+          "$ref": "#/$defs/semver"
+        },
+        "publication_state": {
+          "const": "staged"
+        },
+        "support_status": {
+          "type": "null"
+        },
+        "repository_directory": {
+          "type": "string",
+          "pattern": "^generated/agent/versions/v[0-9]+\\.[0-9]+\\.[0-9]+$"
+        },
+        "manifest_url": {
+          "type": "null"
+        },
+        "manifest_sha256": {
+          "$ref": "#/$defs/hash"
+        },
+        "kin_tag": {
+          "type": "string",
+          "pattern": "^v[0-9]+\\.[0-9]+\\.[0-9]+$"
+        },
+        "design_checksum": {
+          "$ref": "#/$defs/hash"
+        },
+        "input_set_checksum": {
+          "$ref": "#/$defs/hash"
+        },
+        "replacement": {
+          "type": "null"
+        },
+        "advisory_url": {
+          "type": "null"
+        }
+      }
+    },
+    "released": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "version",
+        "publication_state",
+        "support_status",
+        "repository_directory",
+        "manifest_url",
+        "manifest_sha256",
+        "kin_tag",
+        "design_checksum",
+        "input_set_checksum",
+        "replacement",
+        "advisory_url"
+      ],
+      "properties": {
+        "version": {
+          "$ref": "#/$defs/semver"
+        },
+        "publication_state": {
+          "const": "released"
+        },
+        "support_status": {
+          "enum": [
+            "supported",
+            "superseded",
+            "unsupported"
+          ]
+        },
+        "repository_directory": {
+          "type": "string",
+          "pattern": "^generated/agent/versions/v[0-9]+\\.[0-9]+\\.[0-9]+$"
+        },
+        "manifest_url": {
+          "$ref": "#/$defs/url"
+        },
+        "manifest_sha256": {
+          "$ref": "#/$defs/hash"
+        },
+        "kin_tag": {
+          "type": "string",
+          "pattern": "^v[0-9]+\\.[0-9]+\\.[0-9]+$"
+        },
+        "design_checksum": {
+          "$ref": "#/$defs/hash"
+        },
+        "input_set_checksum": {
+          "$ref": "#/$defs/hash"
+        },
+        "replacement": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/$defs/semver"
+            }
+          ]
+        },
+        "advisory_url": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/$defs/url"
+            }
+          ]
+        }
+      }
+    }
+  },
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "schema_version",
+    "kind",
+    "artifact_status",
+    "generated",
+    "normative",
+    "editable",
+    "latest_agent_distribution",
+    "versions"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "pattern": "^https://yehyakin\\.github\\.io/kin-design-system/(?:next|versions/v[0-9]+\\.[0-9]+\\.[0-9]+)/schemas/versions\\.schema\\.json$"
+    },
+    "schema_version": {
+      "const": "2.0.0"
+    },
+    "kind": {
+      "const": "kin-agent-distribution-versions"
+    },
+    "artifact_status": {
+      "const": "generated-derivative"
+    },
+    "generated": {
+      "const": true
+    },
+    "normative": {
+      "const": false
+    },
+    "editable": {
+      "const": false
+    },
+    "latest_agent_distribution": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/$defs/semver"
+        }
+      ]
+    },
+    "versions": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "oneOf": [
+          {
+            "$ref": "#/$defs/staged"
+          },
+          {
+            "$ref": "#/$defs/released"
+          }
+        ]
+      }
+    }
+  }
+}

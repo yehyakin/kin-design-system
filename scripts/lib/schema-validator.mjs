@@ -24,10 +24,15 @@ export function validateSchemaValue(value, schema, { rootSchema = schema, path =
   const findings = [];
   const resolved = resolveReference(schema, rootSchema);
 
+  if (resolved.allOf) {
+    for (const candidate of resolved.allOf) {
+      findings.push(...validateSchemaValue(value, candidate, { rootSchema, path }));
+    }
+  }
+
   if (resolved.oneOf) {
     const matches = resolved.oneOf.filter((candidate) => validateSchemaValue(value, candidate, { rootSchema, path }).length === 0);
     if (matches.length !== 1) findings.push(`${path}: must match exactly one oneOf branch`);
-    return findings;
   }
 
   if (resolved.const !== undefined && !Object.is(value, resolved.const)) findings.push(`${path}: must equal ${JSON.stringify(resolved.const)}`);

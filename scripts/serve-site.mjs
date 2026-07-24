@@ -11,6 +11,7 @@ const types = new Map([
   [".css", "text/css; charset=utf-8"],
   [".js", "text/javascript; charset=utf-8"],
   [".json", "application/json; charset=utf-8"],
+  [".md", "text/markdown; charset=utf-8"],
   [".webmanifest", "application/manifest+json; charset=utf-8"],
   [".xml", "application/xml; charset=utf-8"],
   [".txt", "text/plain; charset=utf-8"],
@@ -45,9 +46,13 @@ const server = http.createServer((request, response) => {
     fs.createReadStream(notFound).pipe(response);
     return;
   }
+  const relative = path.relative(root, file).replaceAll(path.sep, "/");
+  const contentType = (relative.startsWith("schemas/") || relative.includes("/schemas/")) && path.extname(file) === ".json"
+    ? "application/schema+json; charset=utf-8"
+    : types.get(path.extname(file)) ?? "application/octet-stream";
   response.writeHead(200, {
     "cache-control": "no-store",
-    "content-type": types.get(path.extname(file)) ?? "application/octet-stream",
+    "content-type": contentType,
     "x-content-type-options": "nosniff",
   });
   fs.createReadStream(file).pipe(response);

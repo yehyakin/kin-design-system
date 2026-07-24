@@ -28,7 +28,11 @@ These instructions apply to the entire repository.
 - Do not turn framework-free references into a runtime package or claim a Figma Library without satisfying `DELIVERY.md`.
 - Update `CHANGELOG.md` for user-visible normative changes.
 - Do not edit `generated/agent/next/` directly. Change its governed inputs and run the deterministic exporter.
-- Phase 1 Agent artifacts MUST remain outside the Pages build. Do not add stable aliases, immutable archives, component Recipes, or Skill-routing changes before their RFC phase is separately approved.
+- Do not edit `generated/agent/versions/vX.Y.Z/` directly or regenerate it from later sources. Release export creates each archive once; promotion changes only `generated/agent/versions.json`.
+- Stable-alias rollback MUST use `npm run agent:rollback -- ...`; it changes only `generated/agent/versions.json`, preserves immutable Schema pinning, and requires a focused reviewed commit.
+- Non-current release support changes MUST use `npm run agent:support -- ...`; changing the current stable target to unsupported or superseded requires `agent:rollback`.
+- Pages MUST publish Agent files only through the Registry-aware allowlist. Staged versions and root aliases without a supported released target MUST remain absent.
+- Component Recipes, Skill-routing changes, and consuming-product trials remain outside Phase 2 until their RFC phases are separately approved.
 
 ## Verification
 
@@ -45,12 +49,15 @@ npm run release:check:pre-tag
 node scripts/export-tokens.mjs --check
 node scripts/export-figma-variables.mjs --check
 npm run agent:check:generated
+npm run agent:review:check
 npm run test:tooling
 npm run runtime:check
 npm run site:check
 ```
 
 Ordinary pull-request and `main` checks use the pre-Tag release gate. Only a release Tag checkout uses `npm run release:check:post-tag`; that command MUST NOT be replaced by the pre-Tag route after a Tag exists.
+
+Release, promotion, pull-request, `main`, and Pages publication gates use a complete checkout and `npm run agent:check:history`. The targeted release gate adds `--version X.Y.Z`.
 
 When a change affects tokens, run `node scripts/report-token-changes.mjs HEAD`. When it affects component states or reference interfaces, also run `npm run test:reference` and inspect the generated screenshots.
 
