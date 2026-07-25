@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="680" height="560" viewBox="0 0 680 560" role="img" aria-labelledby="title desc">
+  <title id="title">窄屏上的 KIN 证书变更调查界面重绘</title>
+  <desc id="desc">调查标题、当前结论、证据时间线、所选来源和下一步操作按优先级排列。</desc>
+
+  <rect width="680" height="560" rx="14" fill="#08090a"/>
+  <rect x="0.5" y="0.5" width="679" height="559" rx="13.5" fill="none" stroke="#2a2c30"/>
+  <rect x="1" y="1" width="678" height="52" rx="13" fill="#0d0e10"/>
+  <path d="M1 40h678v13H1z" fill="#0d0e10"/>
+  <line x1="1" y1="53" x2="679" y2="53" stroke="#24262a"/>
+  <text x="24" y="33" fill="#f4f5f7" font-family="Inter,PingFang SC,Microsoft YaHei,Arial,sans-serif" font-size="18" font-weight="650" letter-spacing="0.08em">KIN 参考界面</text>
+  <text x="650" y="33" fill="#777b84" font-family="ui-monospace,SFMono-Regular,Consolas,monospace" font-size="14" text-anchor="end">INT-02</text>
+
+  <g transform="translate(28 83)" font-family="Inter,PingFang SC,Microsoft YaHei,Arial,sans-serif">
+    <text x="0" y="0" fill="#777b84" font-size="14" font-weight="600" letter-spacing="0.07em">调查记录 / INV-028</text>
+    <text x="0" y="47" fill="#f4f5f7" font-size="36" font-weight="620" letter-spacing="-0.4">证书变更调查</text>
+    <text x="0" y="78" fill="#a4a8b1" font-size="19">记录结论前，先比较时间顺序与来源。</text>
+
+    <rect x="0" y="104" width="624" height="62" rx="8" fill="#131417" stroke="#292b30"/>
+    <text x="18" y="130" fill="#777b84" font-size="13">4 个可归因来源</text>
+    <circle cx="492" cy="135" r="5" fill="#d6a84a"/>
+    <text x="506" y="141" fill="#d9b459" font-size="17" font-weight="550">结论尚未记录</text>
+
+    <text x="0" y="204" fill="#f4f5f7" font-size="20" font-weight="600">证据时间线</text>
+    <text x="624" y="204" fill="#777b84" font-size="14" text-anchor="end">过去 30 天</text>
+    <line x1="0" y1="221" x2="624" y2="221" stroke="#2a2c30"/>
+
+    <g transform="translate(0 238)">
+      <text x="0" y="19" fill="#8b8f98" font-family="ui-monospace,SFMono-Regular,Consolas,monospace" font-size="15">09:11</text>
+      <text x="74" y="18" fill="#e7e8eb" font-size="18" font-weight="560">变更日志来源不可用</text>
+      <circle cx="552" cy="15" r="4" fill="#d6a84a"/>
+      <text x="565" y="20" fill="#c8a558" font-size="14">待核验</text>
+      <line x1="0" y1="48" x2="624" y2="48" stroke="#24262a"/>
+    </g>
+
+    <g transform="translate(0 298)">
+      <rect x="-10" y="-7" width="644" height="48" rx="6" fill="#17191d"/>
+      <text x="0" y="19" fill="#aeb1b8" font-family="ui-monospace,SFMono-Regular,Consolas,monospace" font-size="15">09:02</text>
+      <text x="74" y="18" fill="#ffffff" font-size="18" font-weight="580">证书签发者发生变化</text>
+      <circle cx="552" cy="15" r="4" fill="#d85b68"/>
+      <text x="565" y="20" fill="#df7883" font-size="14">冲突</text>
+    </g>
+
+    <g transform="translate(0 358)">
+      <text x="0" y="19" fill="#8b8f98" font-family="ui-monospace,SFMono-Regular,Consolas,monospace" font-size="15">08:40</text>
+      <text x="74" y="18" fill="#e7e8eb" font-size="18" font-weight="560">发布维护通知</text>
+      <circle cx="552" cy="15" r="4" fill="#4fae7b"/>
+      <text x="565" y="20" fill="#68bd91" font-size="14">已确认</text>
+    </g>
+
+    <rect x="0" y="387" width="624" height="82" rx="8" fill="#111214" stroke="#292b30"/>
+    <text x="18" y="416" fill="#777b84" font-size="13">所选证据</text>
+    <text x="18" y="445" fill="#f4f5f7" font-size="18" font-weight="580">签发者变化 · 证书观察器</text>
+    <rect x="442" y="406" width="164" height="44" rx="6" fill="#5e6ad2"/>
+    <text x="524" y="434" fill="#ffffff" font-size="15" font-weight="600" text-anchor="middle">记录复核结论</text>
+  </g>
+</svg>
