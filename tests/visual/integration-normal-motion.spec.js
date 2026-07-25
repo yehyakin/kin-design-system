@@ -94,7 +94,7 @@ test("main showcase menus and command surface keep a reversible exit phase", asy
   await expect(languageMenu).toHaveAttribute("data-state", "closed");
   await expect(languageMenu).toBeHidden();
 
-  const commandTrigger = page.getByRole("button", { name: /Search sections/ });
+  const commandTrigger = page.getByRole("button", { name: /Search KIN/ });
   const command = page.locator("[data-command-dialog]");
   await commandTrigger.click();
   await page.clock.runFor(20);

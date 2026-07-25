@@ -59,7 +59,11 @@ function createReleaseFixture() {
     recursive: true,
     filter: (source) => {
       const relative = path.relative(root, source);
-      return !relative.startsWith(".git") && !relative.startsWith("node_modules") && !relative.startsWith(".site-dist");
+      return !relative.startsWith(".git")
+        && !relative.startsWith("node_modules")
+        && !relative.startsWith(".site-dist")
+        && !relative.startsWith("test-results")
+        && !relative.startsWith("playwright-report");
     },
   });
   const designPath = path.join(directory, "DESIGN.md");
@@ -726,6 +730,7 @@ test("release eligibility and Pages workflows preserve read-only verification bo
   assert.match(pages, /Refusing to replace Pages from a stale main revision or an older Release/u);
   assert.match(pages, /agent:check:published/u);
   assert.match(pages, /Refuse stale success after deployment/u);
+  assert.match(pages, /verify-showcase-responses\.mjs --base-url/u);
   assert.match(pages, /verify-agent-responses\.mjs --base-url/u);
 
   const validation = fs.readFileSync(path.join(root, ".github", "workflows", "validate-docs.yml"), "utf8");

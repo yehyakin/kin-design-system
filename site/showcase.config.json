@@ -1,0 +1,638 @@
+{
+  "schema_version": "1.0.0",
+  "status": "non-normative",
+  "copy": {
+    "en": {
+      "shared": {
+        "site_name": "KIN Design System",
+        "skip_link": "Skip to content",
+        "search_trigger": "Search pages and sources",
+        "open_navigation": "Open navigation",
+        "choose_language": "Choose language",
+        "switch_to_light": "Switch to light mode",
+        "increase_contrast": "Increase contrast",
+        "github_label": "KIN on GitHub",
+        "nav_label": "Showcase navigation",
+        "nav_start": "Explore",
+        "nav_sources": "Sources",
+        "nav_showcase": "Showcase",
+        "nav_components": "Components",
+        "nav_patterns": "Patterns",
+        "nav_scenarios": "Scenarios",
+        "nav_lab": "Lab",
+        "nav_documentation": "Documentation",
+        "command_label": "Search KIN",
+        "command_placeholder": "Search pages and sources",
+        "command_pages": "Pages",
+        "command_sources": "Canonical sources",
+        "command_empty": "No matching page or source.",
+        "command_system_theme": "Use system theme",
+        "appearance": "Appearance",
+        "source_boundary_title": "Source boundary",
+        "source_boundary_body": "This is a non-normative discovery view generated from canonical repository facts. It does not change maturity, create a runtime package, or establish production adoption.",
+        "catalog_record": "Catalog record",
+        "open": "Open",
+        "status": "Status",
+        "tier": "Tier",
+        "stable": "Stable",
+        "candidate": "Candidate",
+        "draft": "Draft",
+        "deprecated": "Deprecated",
+        "core": "Core",
+        "workspace": "Workspace",
+        "product_specific": "Product-specific",
+        "conditional": "Conditional",
+        "showcased": "Showcased",
+        "linked": "Linked",
+        "planned": "Planned",
+        "footer_line": "Non-normative discovery · canonical facts remain in the repository"
+      },
+      "components": {
+        "page": {
+          "eyebrow": "COMPONENT DISCOVERY / NON-NORMATIVE",
+          "title": "Find a component by task and evidence.",
+          "lead": "Browse stable KIN components by catalog tier, then open one of eight bounded Explorers when a deep reference is available.",
+          "stable_heading": "Stable components by catalog tier",
+          "stable_intro": "Names, tiers, maturity, support, references, tests, and gaps are read from the canonical Component catalog at build time.",
+          "other_heading": "Candidate and draft records",
+          "other_intro": "These records remain discoverable but are not presented as complete components and do not receive deep Explorer routes.",
+          "explorer_available": "Open Explorer",
+          "catalog_only": "Catalog only",
+          "empty_group": "No records in this group.",
+          "catalog_link": "Open the canonical Component catalog"
+        },
+        "explorer": {
+          "eyebrow": "COMPONENT EXPLORER / BOUNDED REFERENCE",
+          "back": "All components",
+          "user_job": "User job",
+          "reference_heading": "Live deterministic reference",
+          "reference_intro": "The frame opens one supported reference state. Use the separate link when the embedded reference is too narrow or unavailable.",
+          "reference_language": "Reference language",
+          "reference_language_mismatch": "This canonical fixture is currently Chinese-only; the surrounding English Explorer does not imply an English runtime reference.",
+          "inspected_state": "Inspected state",
+          "state_coverage": "State coverage boundary",
+          "states_boundary": "The runnable frame shows only the inspected state above. A generated applicable-state inventory is deferred until canonical machine-readable state sources exist; the core and component-specific contracts remain authoritative.",
+          "states_contract": "Open the core state contract",
+          "open_reference": "Open reference separately",
+          "evidence_heading": "Canonical evidence",
+          "contracts": "Governing contracts",
+          "tests": "Automated checks",
+          "manual_checks": "Named manual checks",
+          "support": "Catalog support",
+          "known_gaps": "Known gaps",
+          "no_known_gaps": "No gap is recorded for this component in the canonical catalog.",
+          "reference_boundary": "Reference boundary",
+          "accessibility_boundary": "Accessibility boundary",
+          "accessibility_boundary_body": "The reference exposes catalog support and automated checks. Named manual checks remain explicit and do not establish assistive-technology or adopting-product completion.",
+          "themes": "Themes",
+          "responsive": "Responsive",
+          "keyboard": "Keyboard",
+          "touch": "Touch",
+          "reduced_motion": "Reduced Motion",
+          "supported": "Recorded",
+          "not_recorded": "Not recorded"
+        },
+        "items": {
+          "app-shell": {
+            "job": "Keep navigation, the current workspace, contextual properties, and command surfaces in a stable relationship.",
+            "boundary": "The reference demonstrates deterministic shell structure. Product routes, permissions, data, and adoption evidence remain product-owned.",
+            "state_label": "Default workspace shell"
+          },
+          "evidence-list": {
+            "job": "Map a claim or decision to supporting, missing, stale, or conflicting sources without collapsing them into one score.",
+            "boundary": "The sources are deterministic fixture content. They do not establish live provenance or authoritative verification.",
+            "state_label": "Evidence with a recorded conflict"
+          },
+          "suggested-change-review": {
+            "job": "Compare current and proposed values before a person accepts, rejects, or edits a change.",
+            "boundary": "The review is local and reversible inside the reference. It does not persist a product change or grant approval authority.",
+            "state_label": "Pending suggested change"
+          },
+          "execution-preview": {
+            "job": "Expose targets, writes, external effects, permissions, irreversibility, and rollback before execution.",
+            "boundary": "The reference creates no external side effect. Authorization, scope validation, execution, and rollback remain product-owned.",
+            "state_label": "Confirmation required"
+          },
+          "background-task-queue": {
+            "job": "Keep accepted long-running work identifiable through progress, cancellation, failure, recovery, and result access.",
+            "boundary": "The queue uses deterministic local tasks. It does not prove backend persistence, idempotency, cancellation, or retry.",
+            "state_label": "Mixed running, failed, and completed tasks"
+          },
+          "command-menu": {
+            "job": "Launch navigation and actions from an immediately usable, keyboard-first searchable surface.",
+            "boundary": "The reference demonstrates invocation, filtering, focus, and return behavior over fixture commands, not a product-wide search service.",
+            "state_label": "Closed with an available invocation control"
+          },
+          "authentication-dialog": {
+            "job": "Restore one blocked action through a modal sign-in task while preserving the underlying workflow.",
+            "boundary": "The dialog is an interface reference only. It does not authenticate, manage credentials, enforce sessions, or authorize the resumed action.",
+            "state_label": "Open authentication dialog"
+          },
+          "data-table": {
+            "job": "Compare related records through named columns, stable row semantics, selection, and keyboard-accessible actions.",
+            "boundary": "The fixture is bounded. Real datasets, virtualization, authorization, responsive priority, and assistive-technology evidence remain product responsibilities.",
+            "state_label": "Default comparable-record table"
+          }
+        }
+      },
+      "patterns": {
+        "page": {
+          "eyebrow": "PATTERN DISCOVERY / NON-NORMATIVE",
+          "title": "Choose composition from the work.",
+          "lead": "Four KIN product patterns connect a governing Pattern document to one Page-family record and one showcased Scenario. A joined Page status never becomes Pattern maturity.",
+          "page_record": "Joined Page record",
+          "scenario_record": "Showcased Scenario",
+          "page_status": "Page status",
+          "scenario_presentation": "Scenario presentation",
+          "primary_job": "Primary user job",
+          "first_view": "First meaningful view",
+          "dominant_region": "Dominant region",
+          "persistent_context": "Persistent context",
+          "prohibited": "Prohibited substitutions",
+          "governing_contract": "Governing Pattern contract",
+          "open_reference": "Open deterministic reference",
+          "open_chinese_reference": "Open Chinese reference",
+          "reference_language": "Reference language",
+          "reference_language_mismatch": "This canonical fixture is currently Chinese-only; the English Pattern record remains a discovery layer rather than an English runtime reference.",
+          "open_lab": "Inspect in Scenario Lab",
+          "maturity_note": "Pattern documents have no independent machine maturity. The status shown here belongs only to the joined Page record.",
+          "catalog_link": "Open the canonical Page catalog"
+        },
+        "items": {
+          "information-site": {
+            "label": "Information Site",
+            "summary": "Search, subject identity, reading order, provenance, revision, and stable location lead before explanation.",
+            "blueprint": [
+              "Search or subject",
+              "Record list or reading content",
+              "Source and revision",
+              "Related navigation"
+            ],
+            "prohibited_substitutions": [
+              "A marketing Hero before search, the subject, or reading content",
+              "Equal cards replacing records, citations, or reading order",
+              "An unsourced generated summary replacing provenance"
+            ]
+          },
+          "intelligence-workspace": {
+            "label": "Intelligence Workspace",
+            "summary": "Entity identity, evidence, history, and reversible review stay visible while list selection changes.",
+            "blueprint": [
+              "Saved scope and filters",
+              "Entity list",
+              "Evidence and chronology",
+              "Selection properties"
+            ],
+            "prohibited_substitutions": [
+              "A glowing monitoring dashboard replacing the analyst task",
+              "One score combining risk, evidence, completeness, and health",
+              "A Sidebar and Inspector wrapped around a landing-page interior"
+            ]
+          },
+          "ecommerce-operations": {
+            "label": "Ecommerce Operations",
+            "summary": "Queues and selected records keep money, quantity, channel, ownership, approval, and safe action comparable.",
+            "blueprint": [
+              "Operating scope",
+              "Actionable queue",
+              "Selected record",
+              "Approval and activity"
+            ],
+            "prohibited_substitutions": [
+              "A KPI card wall replacing an actionable queue",
+              "Direction-only red and green treatment",
+              "One AI status combining generation, approval, publication, and result"
+            ]
+          },
+          "engineering-canvas": {
+            "label": "Engineering Canvas",
+            "summary": "The document or model dominates while tools, structure, selection properties, units, and revision stay precise.",
+            "blueprint": [
+              "Tools and object structure",
+              "Precision canvas",
+              "Selection properties",
+              "Units, save state, and revision"
+            ],
+            "prohibited_substitutions": [
+              "Workspace cards placed inside the canvas",
+              "Decorative grids or nodes with no spatial meaning",
+              "Generated changes committed without preview, decision, and undo"
+            ]
+          }
+        }
+      }
+    },
+    "zh-CN": {
+      "shared": {
+        "site_name": "KIN Design System",
+        "skip_link": "跳到正文",
+        "search_trigger": "搜索页面与来源",
+        "open_navigation": "打开导航",
+        "choose_language": "选择语言",
+        "switch_to_light": "切换为日间模式",
+        "increase_contrast": "增强对比度",
+        "github_label": "在 GitHub 查看 KIN",
+        "nav_label": "Showcase 导航",
+        "nav_start": "浏览",
+        "nav_sources": "事实来源",
+        "nav_showcase": "Showcase",
+        "nav_components": "组件",
+        "nav_patterns": "产品模式",
+        "nav_scenarios": "场景",
+        "nav_lab": "实验室",
+        "nav_documentation": "文档",
+        "command_label": "搜索 KIN",
+        "command_placeholder": "搜索页面与来源",
+        "command_pages": "页面",
+        "command_sources": "规范来源",
+        "command_empty": "没有匹配的页面或来源。",
+        "command_system_theme": "跟随系统主题",
+        "appearance": "外观",
+        "source_boundary_title": "来源边界",
+        "source_boundary_body": "这是根据代码仓库规范事实生成的非规范发现视图。它不会改变成熟度、创建运行时组件包，也不能建立生产接入证据。",
+        "catalog_record": "目录记录",
+        "open": "打开",
+        "status": "状态",
+        "tier": "层级",
+        "stable": "稳定",
+        "candidate": "候选",
+        "draft": "草稿",
+        "deprecated": "已弃用",
+        "core": "核心",
+        "workspace": "工作台",
+        "product_specific": "产品专用",
+        "conditional": "条件采用",
+        "showcased": "已展示",
+        "linked": "已链接",
+        "planned": "计划中",
+        "footer_line": "非规范发现视图 · 规范事实仍以代码仓库为准"
+      },
+      "components": {
+        "page": {
+          "eyebrow": "组件发现 / 非规范",
+          "title": "按任务与证据查找组件。",
+          "lead": "先按目录层级浏览稳定 KIN 组件；存在深层参考时，再打开首批八个边界明确的 Explorer。",
+          "stable_heading": "按目录层级排列的稳定组件",
+          "stable_intro": "名称、层级、成熟度、支持范围、参考、测试与缺口都在构建时读取自规范组件目录。",
+          "other_heading": "候选与草稿记录",
+          "other_intro": "这些记录可以被发现，但不会被描述为完整组件，也不会获得深层 Explorer 路由。",
+          "explorer_available": "打开 Explorer",
+          "catalog_only": "仅目录记录",
+          "empty_group": "该分组暂无记录。",
+          "catalog_link": "打开规范组件目录"
+        },
+        "explorer": {
+          "eyebrow": "组件 EXPLORER / 有边界的参考",
+          "back": "全部组件",
+          "user_job": "用户任务",
+          "reference_heading": "可运行的确定性参考",
+          "reference_intro": "框架只打开一个受支持的参考状态。嵌入区域过窄或不可用时，请使用独立打开链接。",
+          "reference_language": "参考语言",
+          "reference_language_mismatch": "该规范 fixture 目前仅提供中文；外围中文 Explorer 不会扩大其运行时证据。",
+          "inspected_state": "检查状态",
+          "state_coverage": "状态覆盖边界",
+          "states_boundary": "可运行框架只展示上方检查状态。在规范的机器可读状态来源建立之前，不生成适用状态清单；核心与组件专用合同仍是权威来源。",
+          "states_contract": "打开核心状态合同",
+          "open_reference": "独立打开参考",
+          "evidence_heading": "规范证据",
+          "contracts": "治理合同",
+          "tests": "自动检查",
+          "manual_checks": "具名人工检查",
+          "support": "目录支持范围",
+          "known_gaps": "已知缺口",
+          "no_known_gaps": "规范目录没有为这个组件记录缺口。",
+          "reference_boundary": "参考边界",
+          "accessibility_boundary": "无障碍边界",
+          "accessibility_boundary_body": "该参考呈现目录支持范围与自动检查。具名人工检查仍被明确列出，不能据此宣称辅助技术或采用产品已经完成验收。",
+          "themes": "主题",
+          "responsive": "响应式",
+          "keyboard": "键盘",
+          "touch": "触控",
+          "reduced_motion": "减弱动效",
+          "supported": "已记录",
+          "not_recorded": "未记录"
+        },
+        "items": {
+          "app-shell": {
+            "job": "让导航、当前工作区、上下文属性与命令层保持稳定关系。",
+            "boundary": "参考展示确定性的 Shell 结构。产品路由、权限、数据和接入证据仍由产品负责。",
+            "state_label": "默认工作台 Shell"
+          },
+          "evidence-list": {
+            "job": "把结论或决定映射到支持、缺失、过期或冲突来源，不压缩成一个分数。",
+            "boundary": "来源是确定性 fixture 内容，不能建立实时来源链或权威核验结论。",
+            "state_label": "包含已记录冲突的证据"
+          },
+          "suggested-change-review": {
+            "job": "在人接受、拒绝或编辑变更以前，对比当前值和建议值。",
+            "boundary": "审核只在本地参考内可逆，不会持久化产品变更，也不会授予审批权限。",
+            "state_label": "等待审核的建议变更"
+          },
+          "execution-preview": {
+            "job": "在执行前展示目标、写入、外部影响、权限、不可逆性与回滚。",
+            "boundary": "参考不会产生外部副作用。授权、范围校验、执行与回滚仍由产品负责。",
+            "state_label": "需要确认"
+          },
+          "background-task-queue": {
+            "job": "让已接受的长任务在进度、取消、失败、恢复和结果访问期间保持可识别。",
+            "boundary": "队列使用确定性本地任务，不能证明后端持久化、幂等、取消或重试。",
+            "state_label": "同时包含运行、失败与完成任务"
+          },
+          "command-menu": {
+            "job": "通过立即可用、键盘优先的可搜索界面启动导航与操作。",
+            "boundary": "参考针对 fixture 命令展示调用、筛选、焦点与返回行为，不是产品级搜索服务。",
+            "state_label": "关闭状态，调用控件可用"
+          },
+          "authentication-dialog": {
+            "job": "在保留底层工作流的同时，通过模态登录任务恢复一个被阻断的操作。",
+            "boundary": "该 Dialog 只是界面参考；它不会认证、处理凭据、执行会话策略或授权恢复后的操作。",
+            "state_label": "已打开的身份验证 Dialog"
+          },
+          "data-table": {
+            "job": "通过具名列、稳定行语义、选择与键盘操作比较相关记录。",
+            "boundary": "该 fixture 范围有限。真实数据、虚拟化、授权、响应式优先级和辅助技术证据仍由产品负责。",
+            "state_label": "默认可比较记录表格"
+          }
+        }
+      },
+      "patterns": {
+        "page": {
+          "eyebrow": "产品模式发现 / 非规范",
+          "title": "从真实工作选择构图。",
+          "lead": "四种 KIN 产品模式把治理 Pattern 文档、一个页面族记录与一个已展示场景连接起来。关联页面的状态永远不会变成 Pattern 成熟度。",
+          "page_record": "关联页面记录",
+          "scenario_record": "已展示场景",
+          "page_status": "页面状态",
+          "scenario_presentation": "场景展示状态",
+          "primary_job": "主要用户任务",
+          "first_view": "第一有效视图",
+          "dominant_region": "主导区域",
+          "persistent_context": "持续上下文",
+          "prohibited": "禁止替代",
+          "governing_contract": "治理 Pattern 合同",
+          "open_reference": "打开确定性参考",
+          "open_chinese_reference": "打开中文参考",
+          "reference_language": "参考语言",
+          "reference_language_mismatch": "该规范 fixture 目前仅提供中文；外围 Pattern 记录不会扩大其运行时证据。",
+          "open_lab": "在英语优先的 Scenario Lab 中检查",
+          "maturity_note": "Pattern 文档没有独立机器成熟度。这里显示的状态只属于关联页面记录。",
+          "catalog_link": "打开规范页面目录"
+        },
+        "items": {
+          "information-site": {
+            "label": "信息网站",
+            "summary": "搜索、主题身份、阅读顺序、来源、修订与稳定地址先于说明出现。",
+            "blueprint": [
+              "搜索或主题",
+              "记录列表或阅读内容",
+              "来源与修订",
+              "相关导航"
+            ],
+            "prohibited_substitutions": [
+              "在搜索、主题或阅读内容之前放置营销 Hero",
+              "用等宽卡片替代记录、引用或阅读顺序",
+              "用无来源的生成摘要替代来源信息"
+            ]
+          },
+          "intelligence-workspace": {
+            "label": "情报工作台",
+            "summary": "列表选择变化时，对象身份、证据、历史与可逆审核仍保持可见。",
+            "blueprint": [
+              "保存范围与筛选",
+              "对象列表",
+              "证据与事件",
+              "选择属性"
+            ],
+            "prohibited_substitutions": [
+              "用发光监控大屏替代分析任务",
+              "用一个分数合并风险、证据、完整度与健康状态",
+              "在 Landing Page 内部套入 Sidebar 与 Inspector"
+            ]
+          },
+          "ecommerce-operations": {
+            "label": "电商运营",
+            "summary": "队列与当前记录让金额、数量、渠道、负责人、审批与安全操作保持可比较。",
+            "blueprint": [
+              "运营范围",
+              "可操作队列",
+              "当前记录",
+              "审批与活动"
+            ],
+            "prohibited_substitutions": [
+              "用 KPI 卡片墙替代可操作队列",
+              "只按数值方向使用红色和绿色",
+              "用一个 AI 状态合并生成、审批、发布与结果"
+            ]
+          },
+          "engineering-canvas": {
+            "label": "工程画布",
+            "summary": "文档或模型占据主导，工具、结构、选择属性、单位与版本保持精确。",
+            "blueprint": [
+              "工具与对象结构",
+              "精确画布",
+              "选择属性",
+              "单位、保存状态与版本"
+            ],
+            "prohibited_substitutions": [
+              "在画布内部放置工作台卡片",
+              "使用没有空间含义的装饰网格或节点",
+              "在没有预览、决定和撤销时提交生成变更"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "catalog_translations": {
+    "zh-CN": {
+      "Common interaction or content primitive.": "通用交互或内容基础组件。",
+      "Structure for dense applications and object-based work.": "用于高密度应用与对象式工作的结构组件。",
+      "Domain component for AI, ecommerce, information, or engineering work.": "用于 AI、电商、信息或工程工作的领域组件。",
+      "Adopt only when real product requirements justify it.": "仅在真实产品需求能够说明采用理由时使用。",
+      "Normative contract, runnable reference, and applicable automated acceptance checks exist.": "已有规范合同、可运行参考和适用的自动验收检查。",
+      "Useful contract or reference exists, but at least one completion dimension remains open.": "已有可用合同或参考，但至少一个完成维度仍未关闭。",
+      "Planned or partially described; consuming products must document missing decisions.": "处于计划或部分描述阶段；采用产品必须记录尚未完成的决定。",
+      "Retained only for migration and unavailable to new implementations.": "仅为迁移保留，不允许用于新的实现。",
+      "screen-reader landmarks": "屏幕阅读器地标",
+      "200% zoom": "200% 缩放",
+      "source reading order": "来源阅读顺序",
+      "conflicting evidence": "冲突证据",
+      "diff comprehension": "差异理解",
+      "rollback": "回滚",
+      "backend authorization, scope drift, side effects, and rollback": "后端授权、范围漂移、副作用与回滚",
+      "real backend persistence, idempotency, cancellation, and retry": "真实后端持久化、幂等、取消与重试",
+      "screen-reader result announcements": "屏幕阅读器结果播报",
+      "real identity-provider integration": "真实身份提供方接入",
+      "underlying draft preservation": "底层草稿保留",
+      "screen-reader modal behavior and mobile reflow": "屏幕阅读器模态行为与移动端重排",
+      "production identity-provider and task-resume evidence": "生产身份提供方与任务恢复证据",
+      "screen-reader table navigation": "屏幕阅读器表格导航",
+      "large dataset": "大数据集"
+    }
+  },
+  "display_order": {
+    "component_explorers": [
+      "app-shell",
+      "evidence-list",
+      "suggested-change-review",
+      "execution-preview",
+      "background-task-queue",
+      "command-menu",
+      "authentication-dialog",
+      "data-table"
+    ],
+    "component_tiers": [
+      "core",
+      "workspace",
+      "product-specific",
+      "conditional"
+    ],
+    "component_secondary_statuses": [
+      "candidate",
+      "draft",
+      "deprecated"
+    ],
+    "patterns": [
+      "information-site",
+      "intelligence-workspace",
+      "ecommerce-operations",
+      "engineering-canvas"
+    ]
+  },
+  "locators": {
+    "components": {
+      "app-shell": {
+        "path": "examples/workspace-reference/index.html",
+        "query": {
+          "en": {
+            "lang": "en"
+          },
+          "zh-CN": {
+            "lang": "zh-CN"
+          }
+        },
+        "fragment": "workspace",
+        "state_id": "default"
+      },
+      "evidence-list": {
+        "path": "examples/workspace-reference/advanced-components.html",
+        "query": {
+          "en": {
+            "lang": "zh-CN"
+          },
+          "zh-CN": {
+            "lang": "zh-CN"
+          }
+        },
+        "fragment": "evidence-title",
+        "state_id": "conflict"
+      },
+      "suggested-change-review": {
+        "path": "examples/workspace-reference/advanced-components.html",
+        "query": {
+          "en": {
+            "lang": "zh-CN"
+          },
+          "zh-CN": {
+            "lang": "zh-CN"
+          }
+        },
+        "fragment": "review",
+        "state_id": "pending"
+      },
+      "execution-preview": {
+        "path": "examples/workspace-reference/advanced-components.html",
+        "query": {
+          "en": {
+            "lang": "zh-CN"
+          },
+          "zh-CN": {
+            "lang": "zh-CN"
+          }
+        },
+        "fragment": "execution-title",
+        "state_id": "confirmation-required"
+      },
+      "background-task-queue": {
+        "path": "examples/workspace-reference/advanced-components.html",
+        "query": {
+          "en": {
+            "lang": "zh-CN"
+          },
+          "zh-CN": {
+            "lang": "zh-CN"
+          }
+        },
+        "fragment": "background-work",
+        "state_id": "mixed"
+      },
+      "command-menu": {
+        "path": "examples/workspace-reference/states.html",
+        "query": {
+          "en": {
+            "lang": "zh-CN"
+          },
+          "zh-CN": {
+            "lang": "zh-CN"
+          }
+        },
+        "fragment": "state-reference",
+        "state_id": "closed"
+      },
+      "authentication-dialog": {
+        "path": "examples/workspace-reference/core-components.html",
+        "query": {
+          "en": {
+            "lang": "zh-CN",
+            "dialog": "authentication"
+          },
+          "zh-CN": {
+            "lang": "zh-CN",
+            "dialog": "authentication"
+          }
+        },
+        "fragment": "authentication",
+        "state_id": "open"
+      },
+      "data-table": {
+        "path": "examples/workspace-reference/core-components.html",
+        "query": {
+          "en": {
+            "lang": "zh-CN"
+          },
+          "zh-CN": {
+            "lang": "zh-CN"
+          }
+        },
+        "fragment": "data-display",
+        "state_id": "default"
+      }
+    },
+    "patterns": {
+      "information-site": {
+        "document_path": "patterns/information-site.md",
+        "page_id": "information-record",
+        "scenario_id": "INF-01",
+        "reference_language": "zh-CN"
+      },
+      "intelligence-workspace": {
+        "document_path": "patterns/intelligence-workspace.md",
+        "page_id": "intelligence-workspace",
+        "scenario_id": "INT-02",
+        "reference_language": "localized"
+      },
+      "ecommerce-operations": {
+        "document_path": "patterns/ecommerce-operations.md",
+        "page_id": "ecommerce-operations",
+        "scenario_id": "COM-01",
+        "reference_language": "zh-CN"
+      },
+      "engineering-canvas": {
+        "document_path": "patterns/engineering-canvas.md",
+        "page_id": "engineering-canvas",
+        "scenario_id": "ENG-01",
+        "reference_language": "zh-CN"
+      }
+    }
+  }
+}

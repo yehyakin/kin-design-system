@@ -186,6 +186,11 @@ jobs:
             exit 1
           }
 
+      - name: Verify deployed showcase
+        env:
+          PAGE_URL: ${{ needs.deploy.outputs.page_url }}
+        run: node scripts/verify-showcase-responses.mjs --base-url "$PAGE_URL"
+
       - name: Verify deployed Agent responses
         env:
           PAGE_URL: ${{ needs.deploy.outputs.page_url }}

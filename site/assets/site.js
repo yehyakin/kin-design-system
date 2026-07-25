@@ -1,4 +1,5 @@
 import {
+  Accessibility,
   Bell,
   BookOpen,
   Bot,
@@ -43,6 +44,9 @@ const systemThemeActions = [...document.querySelectorAll("[data-theme-system]")]
 const contrastToggle = document.querySelector("[data-contrast-toggle]");
 const navToggle = document.querySelector("[data-nav-toggle]");
 const docsNav = document.querySelector(".docs-nav");
+const docsMain = document.querySelector(".docs-main");
+const siteHeader = document.querySelector(".site-header");
+const skipLink = document.querySelector(".skip-link");
 const languageControl = document.querySelector("[data-language-control]");
 const languageTrigger = document.querySelector("[data-language-trigger]");
 const languageMenu = document.querySelector("[data-language-menu]");
@@ -52,6 +56,31 @@ const commandSearch = document.querySelector("[data-command-search]");
 const commandItems = [...document.querySelectorAll("[data-command-item]")];
 const commandEmpty = document.querySelector("[data-command-empty]");
 let sonnerModulePromise;
+let navCloseTimer;
+
+const navScrim = docsNav ? document.createElement("div") : null;
+if (navScrim) {
+  navScrim.className = "nav-scrim";
+  navScrim.setAttribute("aria-hidden", "true");
+  document.body.append(navScrim);
+}
+
+function syncLanguageFragment() {
+  if (!languageMenu) return;
+  let fragment = "";
+  if (location.hash.length > 1) {
+    try {
+      const id = decodeURIComponent(location.hash.slice(1));
+      if (document.getElementById(id)) fragment = location.hash;
+    } catch {}
+  }
+
+  for (const link of languageMenu.querySelectorAll('a[hreflang], a[role="menuitem"]')) {
+    link.dataset.localeBaseHref ??= link.getAttribute("href");
+    const base = link.dataset.localeBaseHref.split("#", 1)[0];
+    link.setAttribute("href", `${base}${fragment}`);
+  }
+}
 
 function resolveTheme(preference) {
   return preference === "system" ? (colorScheme.matches ? "dark" : "light") : preference;
@@ -101,21 +130,102 @@ addEventListener("storage", (event) => {
   if (event.key === "kin-site-contrast") applyContrast(event.newValue === "more", false);
 });
 
+function setNavigationBackgroundInert(inert) {
+  if (docsMain) docsMain.inert = inert;
+  if (skipLink) skipLink.inert = inert;
+  if (siteHeader) {
+    for (const child of siteHeader.children) {
+      if (child === navToggle || child.contains(navToggle)) {
+        for (const descendant of child.children) {
+          if (descendant !== navToggle && !descendant.contains(navToggle)) descendant.inert = inert;
+        }
+      } else {
+        child.inert = inert;
+      }
+    }
+  }
+}
+
+function finishNavigationClose() {
+  document.body.classList.remove("nav-closing");
+  setNavigationBackgroundInert(false);
+}
+
 function setNavigation(open, moveFocus = true) {
-  document.body.classList.toggle("nav-open", open);
+  if (!docsNav || !navToggle) return;
+  if (navCloseTimer !== undefined) window.clearTimeout(navCloseTimer);
+  navCloseTimer = undefined;
   navToggle?.setAttribute("aria-expanded", String(open));
-  if (!moveFocus) return;
-  if (open) docsNav?.querySelector("a")?.focus();
-  else navToggle?.focus();
+  navToggle.setAttribute("aria-label", locale === "zh"
+    ? `${open ? "关闭" : "打开"}导航`
+    : `${open ? "Close" : "Open"} navigation`);
+
+  if (open) {
+    document.body.classList.remove("nav-closing");
+    document.body.classList.add("nav-open");
+    docsNav.inert = false;
+    docsNav.removeAttribute("aria-hidden");
+    docsNav.setAttribute("role", "dialog");
+    docsNav.setAttribute("aria-modal", "true");
+    setNavigationBackgroundInert(true);
+    navToggle.inert = false;
+    if (moveFocus) docsNav.querySelector("a")?.focus();
+    return;
+  }
+
+  const wasOpen = document.body.classList.contains("nav-open");
+  document.body.classList.remove("nav-open");
+  docsNav.inert = compactLayout.matches;
+  if (compactLayout.matches) docsNav.setAttribute("aria-hidden", "true");
+  else docsNav.removeAttribute("aria-hidden");
+  docsNav.removeAttribute("role");
+  docsNav.removeAttribute("aria-modal");
+  if (moveFocus && wasOpen) navToggle.focus();
+
+  if (!wasOpen || !compactLayout.matches) {
+    finishNavigationClose();
+    return;
+  }
+
+  document.body.classList.add("nav-closing");
+  navCloseTimer = window.setTimeout(() => {
+    navCloseTimer = undefined;
+    finishNavigationClose();
+  }, reducedMotion.matches ? 80 : 180);
 }
 
 navToggle?.addEventListener("click", () => setNavigation(!document.body.classList.contains("nav-open")));
 docsNav?.addEventListener("click", (event) => {
-  if (compactLayout.matches && event.target.closest("a")) setNavigation(false, false);
+  if (compactLayout.matches && event.target.closest("a")) setNavigation(false);
 });
+navScrim?.addEventListener("click", () => setNavigation(false));
 addEventListener("resize", () => {
   if (!compactLayout.matches) setNavigation(false, false);
+  else if (!document.body.classList.contains("nav-open")) setNavigation(false, false);
 });
+
+addEventListener("keydown", (event) => {
+  if (
+    event.key !== "Tab"
+    || !compactLayout.matches
+    || !document.body.classList.contains("nav-open")
+    || !docsNav
+    || !navToggle
+  ) return;
+  const focusable = [
+    navToggle,
+    ...docsNav.querySelectorAll('a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'),
+  ].filter((element) => !element.inert && !element.hidden);
+  if (focusable.length === 0) return;
+  const currentIndex = focusable.indexOf(document.activeElement);
+  const nextIndex = event.shiftKey
+    ? (currentIndex <= 0 ? focusable.length - 1 : currentIndex - 1)
+    : (currentIndex < 0 || currentIndex === focusable.length - 1 ? 0 : currentIndex + 1);
+  event.preventDefault();
+  focusable[nextIndex].focus();
+});
+
+if (docsNav && compactLayout.matches) setNavigation(false, false);
 
 let languageOpenFrame;
 let languageCloseTimer;
@@ -167,10 +277,36 @@ languageTrigger?.addEventListener("click", () => {
   const open = languageMenu?.dataset.state === "open" || languageMenu?.dataset.state === "opening";
   setLanguageMenu(!open);
 });
+languageTrigger?.addEventListener("keydown", (event) => {
+  if (!["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key) || !languageMenu) return;
+  event.preventDefault();
+  setLanguageMenu(true, false);
+  const items = [...languageMenu.querySelectorAll('[role="menuitem"]')];
+  const target = ["ArrowUp", "End"].includes(event.key) ? items.at(-1) : items[0];
+  target?.focus();
+});
+languageMenu?.addEventListener("keydown", (event) => {
+  if (!["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)) return;
+  const items = [...languageMenu.querySelectorAll('[role="menuitem"]')];
+  const currentIndex = items.indexOf(document.activeElement);
+  if (items.length === 0 || currentIndex < 0) return;
+  event.preventDefault();
+  let nextIndex = currentIndex;
+  if (event.key === "ArrowDown") nextIndex = (currentIndex + 1) % items.length;
+  if (event.key === "ArrowUp") nextIndex = (currentIndex - 1 + items.length) % items.length;
+  if (event.key === "Home") nextIndex = 0;
+  if (event.key === "End") nextIndex = items.length - 1;
+  items[nextIndex].focus();
+});
 document.addEventListener("click", (event) => {
   const open = languageMenu?.dataset.state === "open" || languageMenu?.dataset.state === "opening";
   if (open && !languageControl?.contains(event.target)) setLanguageMenu(false, false);
 });
+document.addEventListener("focusin", (event) => {
+  const open = languageMenu?.dataset.state === "open" || languageMenu?.dataset.state === "opening";
+  if (open && !languageControl?.contains(event.target)) setLanguageMenu(false, false);
+});
+addEventListener("hashchange", syncLanguageFragment);
 
 for (const tablist of document.querySelectorAll("[data-pattern-tabs]")) {
   const tabs = [...tablist.querySelectorAll('[role="tab"]')];
@@ -202,17 +338,27 @@ for (const tablist of document.querySelectorAll("[data-pattern-tabs]")) {
 
 let commandOpenFrame;
 let commandCloseTimer;
+let commandFocusTimer;
+let commandReturnFocus;
 
 function cancelCommandWork() {
   if (commandOpenFrame !== undefined) cancelAnimationFrame(commandOpenFrame);
   if (commandCloseTimer !== undefined) clearTimeout(commandCloseTimer);
+  if (commandFocusTimer !== undefined) clearTimeout(commandFocusTimer);
   commandOpenFrame = undefined;
   commandCloseTimer = undefined;
+  commandFocusTimer = undefined;
 }
 
 function openCommand(invocation = "pointer") {
   if (!commandDialog) return;
   cancelCommandWork();
+  const activeElement = document.activeElement;
+  commandReturnFocus = activeElement instanceof HTMLElement
+    && activeElement !== document.body
+    && activeElement !== document.documentElement
+    ? activeElement
+    : commandTrigger;
   if (!commandDialog.open) commandDialog.showModal();
   commandDialog.inert = false;
   commandDialog.dataset.invocation = invocation;
@@ -220,6 +366,10 @@ function openCommand(invocation = "pointer") {
   commandSearch.value = "";
   filterCommands("");
   commandSearch?.focus({ preventScroll: true });
+  if (invocation === "keyboard" || reducedMotion.matches) {
+    commandDialog.dataset.state = "open";
+    return;
+  }
   commandOpenFrame = requestAnimationFrame(() => {
     commandOpenFrame = undefined;
     if (commandDialog.dataset.state !== "opening") return;
@@ -232,14 +382,31 @@ function closeCommand() {
   cancelCommandWork();
   commandDialog.inert = true;
   commandDialog.dataset.state = "closing";
-  commandCloseTimer = window.setTimeout(() => {
+  const finish = () => {
     commandCloseTimer = undefined;
     if (commandDialog.dataset.state !== "closing") return;
     commandDialog.close();
     commandDialog.inert = false;
     commandDialog.dataset.state = "closed";
-    commandTrigger?.focus();
-  }, reducedMotion.matches ? 90 : 210);
+    const target = commandReturnFocus?.isConnected ? commandReturnFocus : commandTrigger;
+    commandReturnFocus = undefined;
+    let focusAttempts = 0;
+    const restoreFocus = () => {
+      commandFocusTimer = undefined;
+      if (commandDialog.dataset.state !== "closed" || !target?.isConnected) return;
+      target.focus({ preventScroll: true });
+      if (document.activeElement !== target && focusAttempts < 2) {
+        focusAttempts += 1;
+        commandFocusTimer = window.setTimeout(restoreFocus, 16);
+      }
+    };
+    commandFocusTimer = window.setTimeout(restoreFocus, 0);
+  };
+  if (commandDialog.dataset.invocation === "keyboard" || reducedMotion.matches) {
+    finish();
+    return;
+  }
+  commandCloseTimer = window.setTimeout(finish, 180);
 }
 
 function filterCommands(query) {
@@ -330,9 +497,11 @@ if ("IntersectionObserver" in window) {
 
 applyTheme(root.dataset.themePreference || localStorage.getItem("kin-site-theme") || "system", false);
 applyContrast(root.dataset.contrast === "more" || localStorage.getItem("kin-site-contrast") === "more", false);
+syncLanguageFragment();
 
 createIcons({
   icons: {
+    Accessibility,
     Bell,
     BookOpen,
     Bot,

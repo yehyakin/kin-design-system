@@ -4,9 +4,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#08090a">
-  <meta name="description" content="KIN 是一套用于清楚、专注的网站、应用和专业工作台的开放界面设计系统。">
-  <meta property="og:title" content="KIN Design System 中文版">
-  <meta property="og:description" content="一套用于清楚、专注的网站与应用界面的实用设计系统。">
+  <meta name="description" content="为清晰、信息密集型产品提供设计规则和可运行参考。查看 KIN 场景、组件、模式与证据。">
+  <meta property="og:title" content="KIN Design System 展示">
+  <meta property="og:description" content="为清晰、信息密集型产品提供设计规则和可运行参考。">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://yehyakin.github.io/kin-design-system/zh/">
   <meta property="og:image" content="https://yehyakin.github.io/kin-design-system/assets/og-card.svg">
@@ -17,8 +17,8 @@
   <link rel="alternate" hreflang="x-default" href="https://yehyakin.github.io/kin-design-system/">
   <link rel="icon" href="../assets/mark.svg" type="image/svg+xml">
   <link rel="manifest" href="../manifest.webmanifest">
-  <link rel="stylesheet" href="../assets/sonner.css">
   <link rel="stylesheet" href="../assets/site.css">
+  <link rel="stylesheet" href="../assets/showcase.css">
   <script>
     (() => {
       let storedTheme;
@@ -36,124 +36,279 @@
       document.querySelector('meta[name="theme-color"]').content = theme === "dark" ? "#08090a" : "#f6f7f8";
     })();
   </script>
-  <title>KIN Design System 中文版</title>
+  <title>KIN 展示 — 设计规则与可运行参考</title>
 </head>
-<body>
+<body class="showcase-page">
   <a class="skip-link" href="#main">跳到正文</a>
-  <header class="site-header">
-    <a class="brand" href="#overview" aria-label="KIN Design System 首页">
+
+  <header class="showcase-header">
+    <a class="brand" href="./" aria-label="KIN 展示首页">
       <span class="brand-mark" aria-hidden="true">KIN</span>
       <span class="brand-copy"><strong>KIN</strong><small>Design System</small></span>
     </a>
-    <div class="header-center"><button class="command-trigger" type="button" data-command-trigger aria-haspopup="dialog"><i data-lucide="search"></i><span>搜索章节和资源</span><kbd>Ctrl K</kbd></button></div>
+
+    <nav class="showcase-nav" aria-label="主导航">
+      <a href="./" aria-current="page">展示</a>
+      <a href="components/">组件</a>
+      <a href="patterns/">模式</a>
+      <a href="../scenarios/">场景</a>
+      <a href="../lab/">Lab</a>
+      <a href="docs/">文档</a>
+      <a href="https://github.com/yehyakin/kin-design-system">GitHub</a>
+    </nav>
+
     <div class="header-actions">
-      <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="docs-nav" aria-label="打开导航"><i data-lucide="menu"></i></button>
-      <div class="language-control" data-language-control><button class="language-trigger" type="button" data-language-trigger aria-haspopup="menu" aria-expanded="false" aria-label="选择语言"><i data-lucide="languages"></i></button><div class="language-menu" data-language-menu role="menu" data-state="closed" hidden><a href="../" role="menuitem" lang="en" hreflang="en"><span>English</span></a><a href="./" role="menuitem" lang="zh-CN" aria-current="page"><span>中文</span><i data-lucide="check"></i></a></div></div>
+      <button class="command-trigger showcase-command-trigger" type="button" data-command-trigger aria-haspopup="dialog" aria-label="搜索 KIN">
+        <i data-lucide="search"></i><span class="visually-hidden">搜索 KIN</span>
+      </button>
+      <div class="language-control" data-language-control>
+        <button class="language-trigger" type="button" data-language-trigger aria-haspopup="menu" aria-expanded="false" aria-label="选择语言"><i data-lucide="languages"></i></button>
+        <div class="language-menu" data-language-menu role="menu" data-state="closed" hidden>
+          <a href="../" role="menuitem" lang="en" hreflang="en"><span>English</span></a>
+          <a href="./" role="menuitem" lang="zh-CN" aria-current="page"><span>中文</span><i data-lucide="check"></i></a>
+        </div>
+      </div>
       <button class="theme-switch" type="button" role="switch" data-theme-switch aria-checked="true" aria-label="切换为日间模式"><i class="theme-sun" data-lucide="sun"></i><i class="theme-moon" data-lucide="moon"></i></button>
-      <button class="contrast-toggle" type="button" data-contrast-toggle aria-pressed="false" aria-label="增强对比度"><i data-lucide="contrast"></i></button>
-      <a class="github-link" href="https://github.com/yehyakin/kin-design-system" aria-label="在 GitHub 查看 KIN"><i data-lucide="code-2"></i><span>GitHub</span></a>
+      <button class="contrast-toggle" type="button" data-contrast-toggle aria-pressed="false" aria-label="切换高对比度"><i data-lucide="contrast"></i></button>
     </div>
   </header>
 
-  <div class="docs-shell">
-    <nav class="docs-nav" id="docs-nav" aria-label="文档导航">
-      <div class="nav-group"><h2>开始</h2><a href="#overview" aria-current="location"><i data-lucide="layout-dashboard"></i>概览</a><a href="#principles"><i data-lucide="list-checks"></i>原则</a></div>
-      <div class="nav-group"><h2>系统</h2><a href="#foundations"><i data-lucide="palette"></i>基础</a><a href="#components"><i data-lucide="blocks"></i>组件</a><a href="#patterns"><i data-lucide="panels-top-left"></i>产品模式 <span class="nav-count">4</span></a><a href="#ai-contract"><i data-lucide="bot"></i>AI 行为</a></div>
-      <div class="nav-group"><h2>使用 KIN</h2><a href="#agents"><i data-lucide="terminal"></i>编码工具</a><a href="#resources"><i data-lucide="folder-down"></i>资源</a></div>
-      <p class="nav-footer">开放源代码 · MIT<br>设计合同 3.0.0 · 开发中</p>
-    </nav>
-
-    <main class="docs-main" id="main">
-      <div class="content">
-        <section id="overview" aria-labelledby="overview-title">
-          <p class="eyebrow">KIN DESIGN SYSTEM / 3.0.0 DEVELOPMENT</p>
-          <h1 id="overview-title">为需要认真处理的工作，建立清楚的界面。</h1>
-          <p class="lead">KIN 是一套开放的设计系统，适用于需要让用户阅读、比较、判断或执行操作的网站和应用。它为结构、主题、交互、无障碍、数据和 AI 辅助工作提供共用规则。</p>
-          <div class="intro-actions"><a class="button primary" href="https://github.com/yehyakin/kin-design-system/blob/main/DESIGN.md">阅读开发中合同</a><a class="button" href="#patterns">查看产品模式</a><a class="button" href="../examples/workspace-reference/">打开参考界面</a></div>
-          <dl class="intro-meta"><div><dt>许可</dt><dd>MIT</dd></div><div><dt>主题</dt><dd>日间 · 夜间 · 跟随系统</dd></div><div><dt>无障碍</dt><dd>AA 对比度与状态目标</dd></div><div><dt>输出</dt><dd>DTCG · Tailwind · Figma Variables</dd></div></dl>
-        </section>
-
-        <hr class="section-rule">
-        <section class="content-section" id="principles" aria-labelledby="principles-title">
-          <div class="section-heading"><h2 id="principles-title">原则先于组件</h2><p>KIN 让决策保持一致，但不强迫每种产品使用相同布局或视觉模板。</p></div>
-          <div class="principle-list">
-            <article class="principle"><span>01</span><h3>内容获得注意力</h3><p>视觉权重服从用户任务。完成定位以后，导航和装饰应主动退后。</p></article>
-            <article class="principle"><span>02</span><h3>让结构被感知</h3><p>通过对齐、间距、表面层级和克制的边界解释关系，而不是堆叠卡片。</p></article>
-            <article class="principle"><span>03</span><h3>数据带有上下文</h3><p>重要数值必须有定义、单位、时间范围、来源，以及诚实的未知或过期状态。</p></article>
-            <article class="principle"><span>04</span><h3>人保留控制权</h3><p>高影响操作展示范围和后果；建议、规则、事实与已执行自动化始终能够区分。</p></article>
-            <article class="principle"><span>05</span><h3>高密度，不拥挤</h3><p>专业界面优先删除重复说明和装饰，不以牺牲可读性或触控区域换取密度。</p></article>
-          </div>
-        </section>
-
-        <hr class="section-rule">
-        <section class="content-section" id="foundations" aria-labelledby="foundations-title">
-          <div class="section-heading"><h2 id="foundations-title">设计基础</h2><p>下面的真实 Token 会随页面主题和高对比模式同步变化。</p></div>
-          <div class="foundation-block"><div class="subheading"><h3>表面层级</h3><p>不依赖厚重阴影建立层级</p></div><div class="surface-row" aria-label="表面颜色层级"><div class="surface-sample canvas"><strong>Canvas</strong>应用底层</div><div class="surface-sample one"><strong>Surface 1</strong>主要内容</div><div class="surface-sample two"><strong>Surface 2</strong>嵌入区域</div><div class="surface-sample three"><strong>Surface 3</strong>菜单和浮层</div><div class="surface-sample four"><strong>Surface 4</strong>最高表面</div></div></div>
-          <div class="foundation-block"><div class="subheading"><h3>语义颜色</h3><p>颜色表达含义，不负责装饰</p></div><div class="semantic-row" aria-label="语义颜色"><div class="semantic-item accent"><i></i>操作</div><div class="semantic-item monitor"><i></i>监测</div><div class="semantic-item positive"><i></i>正常</div><div class="semantic-item warning"><i></i>观察</div><div class="semantic-item negative"><i></i>风险</div><div class="semantic-item offline"><i></i>离线</div></div></div>
-          <div class="foundation-block"><div class="subheading"><h3>字体层级</h3><p>紧凑的应用字级与可读正文</p></div><div class="type-specimen"><div class="type-line"><span>Display</span><strong class="display">安静的智能</strong><span>32 / 38 · 600</span></div><div class="type-line"><span>页面标题</span><strong class="title">当前工作与上下文</strong><span>20 / 26 · 600</span></div><div class="type-line"><span>正文</span><strong class="body">界面应先解决清楚，再考虑装饰。</strong><span>14 / 22 · 400</span></div><div class="type-line"><span>元数据</span><strong class="meta">来源核查于 2026 年 7 月 12 日</strong><span>12 / 17 · 400</span></div></div></div>
-          <div class="foundation-block"><div class="subheading"><h3>间距</h3><p>4px 基础网格</p></div><div class="spacing-scale" aria-label="间距比例"><span class="space-token"><i style="height:4px"></i>4</span><span class="space-token"><i style="height:8px"></i>8</span><span class="space-token"><i style="height:12px"></i>12</span><span class="space-token"><i style="height:16px"></i>16</span><span class="space-token"><i style="height:20px"></i>20</span><span class="space-token"><i style="height:24px"></i>24</span><span class="space-token"><i style="height:32px"></i>32</span><span class="space-token"><i style="height:48px"></i>48</span></div></div>
-          <div class="foundation-block"><div class="subheading"><h3>图标库</h3><p>Lucide · 按需导入 · 1.5px stroke</p></div><div class="icon-sample-row" aria-label="Lucide 图标示例"><div class="icon-sample"><i data-lucide="search"></i><span>搜索</span></div><div class="icon-sample"><i data-lucide="database"></i><span>数据</span></div><div class="icon-sample"><i data-lucide="book-open"></i><span>阅读</span></div><div class="icon-sample"><i data-lucide="shopping-bag"></i><span>电商</span></div><div class="icon-sample"><i data-lucide="drafting-compass"></i><span>画布</span></div><div class="icon-sample"><i data-lucide="bot"></i><span>AI</span></div><div class="icon-sample"><i data-lucide="monitor-cog"></i><span>监测</span></div><div class="icon-sample"><i data-lucide="download"></i><span>导出</span></div></div></div>
-        </section>
-
-        <hr class="section-rule">
-        <section class="content-section" id="components" aria-labelledby="components-title">
-          <div class="section-heading"><h2 id="components-title">组件行为</h2><p>这里可以直接打开登录、控件、动效、反馈、浮层与专业工作流参考；状态属于设计合同的一部分。</p></div>
-          <nav class="component-directory" aria-label="可运行组件参考"><a href="../examples/page-patterns/access.html?lang=zh-CN"><span class="component-directory-icon"><i data-lucide="log-in"></i></span><span><strong>登录页面</strong><small>完整页面中的登录、恢复、SSO 可用状态、会话错误与返回上下文。</small></span><b>打开</b></a><a href="../examples/workspace-reference/core-components.html?lang=zh-CN&amp;dialog=authentication#authentication"><span class="component-directory-icon"><i data-lucide="shield-check"></i></span><span><strong>登录弹窗</strong><small>不丢失当前页面和未完成工作，只恢复被阻断的操作。</small></span><b>打开</b></a><a href="../examples/workspace-reference/core-components.html?lang=zh-CN&amp;dialog=reauthentication#authentication"><span class="component-directory-icon"><i data-lucide="lock-keyhole"></i></span><span><strong>会话重新验证</strong><small>在敏感操作前确认身份，同时保留当前任务。</small></span><b>打开</b></a><a href="../examples/workspace-reference/core-components.html#actions"><span class="component-directory-icon"><i data-lucide="list-checks"></i></span><span><strong>控件与表单</strong><small>操作、选择、字段、上传、导航、数据展示与状态。</small></span><b>打开</b></a><a href="../examples/workspace-reference/motion.html"><span class="component-directory-icon"><i data-lucide="circle-play"></i></span><span><strong>动效实验室</strong><small>频率与输入路径、Tooltip 连续浏览、Sonner 任务、可反向 Drawer、手势物理与慢速审查。</small></span><b>打开</b></a><a href="../examples/workspace-reference/core-components.html#overlays"><span class="component-directory-icon"><i data-lucide="panel-right-open"></i></span><span><strong>浮层与属性面板</strong><small>Dialog、空间一致的 Drawer、Popover、焦点约束与减弱动效。</small></span><b>打开</b></a><a href="../examples/workspace-reference/advanced-components.html"><span class="component-directory-icon"><i data-lucide="bot"></i></span><span><strong>AI 与审核工作流</strong><small>证据、批准、执行范围、媒体、持久任务与图表。</small></span><b>打开</b></a></nav>
-          <div class="component-demo">
-            <div class="demo-toolbar" aria-label="按钮示例"><button class="primary-button" type="button" data-toast-title="更改已保存" data-toast-description="参考设置已经更新。" data-toast-action="撤销" data-toast-undo="保存操作已撤销"><i data-lucide="check"></i>保存更改</button><button type="button">预览</button><button class="ghost-button" type="button">更多操作</button><button class="danger-button" type="button">移除</button><button type="button" disabled>不可用</button></div>
-            <div class="field-demo"><div class="field"><label for="project-name-zh">项目名称</label><input id="project-name-zh" value="KIN 参考界面"><small>显示在工作区标题中。</small></div><div class="field invalid"><label for="source-url-zh">来源地址</label><input id="source-url-zh" value="example"><small>请输入包含 https:// 的完整地址。</small></div></div>
-            <div class="data-demo" role="table" aria-label="对象数据行"><div class="data-row header" role="row"><span>对象</span><span>状态</span><span>来源</span><span>更新时间</span></div><div class="data-row selected" role="row" aria-selected="true"><strong>参考合同</strong><span class="status healthy">当前版本</span><span>代码仓库</span><span>2 分钟前</span></div><div class="data-row" role="row"><strong>外部证据</strong><span class="status watch">待复核</span><span>3 个来源</span><span>昨天</span></div><div class="data-row" role="row"><strong>历史决策</strong><span class="status">已过期</span><span>来源不可用</span><span>6 月 12 日</span></div></div>
-            <div class="metric-demo"><div><span>设计合同</span><strong>3.0.0 开发中</strong></div><div><span>主题模式</span><strong>4</strong></div><div><span>产品模式</span><strong>4</strong></div><div><span>最近复核</span><strong>2026-07-16</strong></div></div>
-            <div class="notification-demo"><div><strong>操作反馈</strong><span>只有操作需要临时反馈时才延迟加载 Sonner。</span></div><button type="button" data-toast-title="参考文件已导出" data-toast-description="生成文件已经可以复核。" data-toast-action="查看" data-toast-undo="已打开导出文件"><i data-lucide="bell"></i>显示通知</button></div>
-          </div>
-          <div class="intro-actions"><a class="button primary" href="../examples/workspace-reference/core-components.html">打开核心组件参考</a><a class="button" href="../examples/workspace-reference/integrations.html"><i data-lucide="blocks"></i>打开运行时集成实验室</a><a class="button" href="../examples/workspace-reference/advanced-components.html">打开 AI 与审核参考</a><a class="button" href="https://github.com/yehyakin/kin-design-system/blob/main/components/catalog.md">查看组件成熟度</a></div>
-        </section>
-
-        <hr class="section-rule">
-        <section class="content-section" id="patterns" aria-labelledby="patterns-title">
-          <div class="section-heading"><h2 id="patterns-title">产品模式服从任务</h2><p>KIN 不把所有产品都做成三栏 Dashboard。每种模式保留其任务真正需要的信息与控制。</p></div>
-          <div class="pattern-tabs" role="tablist" aria-label="产品模式" data-pattern-tabs><button id="tab-intelligence-zh" role="tab" aria-selected="true" aria-controls="panel-intelligence-zh">情报工作台</button><button id="tab-information-zh" role="tab" aria-selected="false" aria-controls="panel-information-zh" tabindex="-1">信息网站</button><button id="tab-commerce-zh" role="tab" aria-selected="false" aria-controls="panel-commerce-zh" tabindex="-1">电商运营</button><button id="tab-engineering-zh" role="tab" aria-selected="false" aria-controls="panel-engineering-zh" tabindex="-1">工程画布</button></div>
-          <div class="pattern-panel" id="panel-intelligence-zh" role="tabpanel" aria-labelledby="tab-intelligence-zh"><div class="pattern-summary"><div><h3>情报工作台</h3><p>保存视图、对象身份、事件、证据、属性与可逆的审核决定始终保留在上下文中。</p></div><a class="button" href="../examples/workspace-reference/">打开完整参考</a></div><div class="pattern-preview"><div class="mini-workspace"><div class="mini-sidebar"><div class="mini-brand">KIN / 审核</div><div class="mini-nav-item active">对象数据库</div><div class="mini-nav-item">风险信号</div><div class="mini-nav-item">证据队列</div></div><div class="mini-main"><div class="mini-bar"><span>对象 / Atlas 记录</span><span>2 分钟前更新</span></div><div class="mini-content"><h4 class="mini-title">Atlas 记录</h4><p class="mini-copy">当前状态、最近变化和已验证来源在同一上下文内保持可见。</p><div class="mini-metrics"><div><strong>已观测</strong><span>状态</span></div><div><strong>82 / 100</strong><span>证据</span></div><div><strong>3 个来源</strong><span>覆盖</span></div></div><div class="mini-list"><div class="mini-row"><span>09:42</span><strong>来源恢复</strong><span>监测</span></div><div class="mini-row"><span>昨天</span><strong>记录已修订</strong><span>审核人</span></div></div></div></div><div class="mini-inspector"><h4>属性</h4><div class="mini-property"><span>风险</span><strong>观察</strong></div><div class="mini-property"><span>证据</span><strong>82 / 100</strong></div><div class="mini-property"><span>更新</span><strong>2 分钟前</strong></div></div></div></div></div>
-          <div class="pattern-panel" id="panel-information-zh" role="tabpanel" aria-labelledby="tab-information-zh" hidden><div class="pattern-summary"><div><h3>信息网站</h3><p>阅读顺序、来源、搜索、稳定地址、修订记录和不依赖装饰的信息内容。</p></div><a class="button" href="../examples/product-patterns/information.html">打开完整参考</a></div><div class="pattern-preview"><div class="mini-article-layout"><div class="mini-topic">主题<br><br>当前记录<br>相关记录<br>档案</div><article class="mini-article"><h4>来源清楚的记录</h4><p>读者在推广内容争夺注意力以前，就能识别主题、时效、来源和下一步导航。</p><p>当图片、动效或生成摘要不可用时，文章仍然可以阅读。</p></article><aside class="mini-source">来源<br><br>[1] 原始记录<br>[2] 修订日志<br><br>最近核查<br>2026-07-12</aside></div></div></div>
-          <div class="pattern-panel" id="panel-commerce-zh" role="tabpanel" aria-labelledby="tab-commerce-zh" hidden><div class="pattern-summary"><div><h3>电商运营</h3><p>商品、金额、库存、渠道、审批与自动化分别表达，帮助运营人员安全执行操作。</p></div><a class="button" href="../examples/product-patterns/ecommerce.html">打开完整参考</a></div><div class="pattern-preview"><div class="mini-workspace mini-commerce"><div class="mini-sidebar"><div class="mini-brand">商店 / 运营</div><div class="mini-nav-item active">商品</div><div class="mini-nav-item">库存</div><div class="mini-nav-item">审批</div></div><div class="mini-main"><div class="mini-bar"><span>商品运营</span><span>24 条记录</span></div><div class="mini-content"><div class="mini-metrics"><div><strong>18</strong><span>在售</span></div><div><strong>4</strong><span>待审</span></div><div><strong>2</strong><span>阻塞</span></div></div><div class="mini-commerce-table"><div class="mini-commerce-row"><strong>Studio 台灯</strong><span>USD 84</span><span>可用 12</span></div><div class="mini-commerce-row"><strong>桌面托盘</strong><span>USD 32</span><span>待审核</span></div><div class="mini-commerce-row"><strong>墙面搁板</strong><span>USD 120</span><span>低库存</span></div></div></div></div><div class="mini-inspector"><h4>当前商品</h4><div class="mini-property"><span>渠道</span><strong>官网</strong></div><div class="mini-property"><span>审批</span><strong>待处理</strong></div><div class="mini-property"><span>库存</span><strong>12</strong></div></div></div></div></div>
-          <div class="pattern-panel" id="panel-engineering-zh" role="tabpanel" aria-labelledby="tab-engineering-zh" hidden><div class="pattern-summary"><div><h3>工程画布</h3><p>工具、结构、几何、单位、约束、版本和生成变更服务于精确操作，不与画布竞争。</p></div><a class="button" href="../examples/product-patterns/canvas.html">打开完整参考</a></div><div class="pattern-preview"><div class="mini-canvas"><div class="mini-tools"><div class="mini-tool active">选</div><div class="mini-tool">线</div><div class="mini-tool">移</div></div><div class="mini-layers"><strong>图层</strong><div class="mini-layer">框架</div><div class="mini-layer">面板</div><div class="mini-layer">紧固件</div></div><div class="mini-drawing"><div class="mini-geometry"></div></div><div class="mini-properties"><strong>属性</strong><br><br>宽度&nbsp; 640 mm<br>高度&nbsp; 420 mm<br>单位&nbsp; mm<br><br>生成变更<br>等待审核</div></div></div></div>
-        </section>
-
-        <hr class="section-rule">
-        <section class="content-section" id="ai-contract" aria-labelledby="ai-title"><div class="section-heading"><h2 id="ai-title">AI 行为是一份产品合同</h2><p>只有当来源、不确定性、范围和影响保持可见时，AI 才真正有用。AI 不是一种视觉皮肤。</p></div><div class="ai-contract"><div class="ai-row"><strong>结论</strong><p>说明建议或结果，不把推断伪装成已确认事实。</p></div><div class="ai-row"><strong>依据</strong><p>链接支持结果的记录、规则、输入与来源。</p></div><div class="ai-row"><strong>不确定性</strong><p>暴露缺失、冲突、过期或由模型估算的信息。</p></div><div class="ai-row"><strong>操作</strong><p>提供可预览的下一步，并在适用时说明范围、确认、审计历史与回滚。</p></div></div></section>
-
-        <hr class="section-rule">
-        <section class="content-section" id="agents" aria-labelledby="agents-title"><div class="section-heading"><h2 id="agents-title">给编码工具一份设计合同</h2><p>固定准确的 KIN 版本，在项目内保留合同副本，并记录项目自己的决定，不依赖含糊的风格提示词。</p></div><div class="code-block"><button class="copy-button" type="button" data-copy="agent-prompt-zh" data-success="提示词已复制。" data-failure="复制失败，请手动选择文本。" data-toast-description="Agent 提示词已经写入剪贴板。" aria-describedby="copy-status-zh"><i data-lucide="copy"></i>复制</button><code id="agent-prompt-zh">在修改界面之前，完整阅读 DESIGN.md、DELIVERY.md 和 principles/visual-signature.md。
-
-将它视为规范性产品设计合同。从真实用户任务、对象模型、数据状态和
-现有组件开始。保留主题、移动端、键盘、无障碍、真实 API 和人类控制。
-存在 kin.config.json 时先读取实施简报和路由/产品类型映射。编码前汇报
-KIN 构图检查点；不得开始仍为草稿或尚未解决的代表性工作流。</code></div><p class="inline-status" id="copy-status-zh" role="status" aria-live="polite"></p><div class="intro-actions"><a class="button primary" href="https://github.com/yehyakin/kin-design-system/tree/main/skills/kin-design">查看 Agent Skill</a><a class="button" href="https://github.com/yehyakin/kin-design-system/tree/main/adoption">阅读接入指南</a></div></section>
-
-        <hr class="section-rule">
-        <section class="content-section" id="resources" aria-labelledby="resources-title"><div class="section-heading"><h2 id="resources-title">使用同一份事实来源</h2><p>规范文档和生成文件共同进行版本管理，并由 CI 检查。</p></div><div class="resource-list"><a class="resource-link" href="https://github.com/yehyakin/kin-design-system/blob/main/DESIGN.md"><strong>DESIGN.md</strong><span>当前开发中的规范性原则、Token、行为、无障碍和交付合同。</span><b>阅读</b></a><a class="resource-link" href="https://github.com/yehyakin/kin-design-system/blob/main/DELIVERY.md"><strong>交付模型</strong><span>Contract-first 核心、Figma/运行时边界、未来包门禁与接入证据阶段。</span><b>阅读</b></a><a class="resource-link" href="https://github.com/yehyakin/kin-design-system/blob/main/adoption/implementation-brief.md"><strong>实施简报</strong><span>项目级路由类型、构图决策、代表性工作流、状态、证据与就绪门禁。</span><b>阅读</b></a><a class="resource-link" href="../tokens/kin.tokens.json"><strong>DTCG Tokens</strong><span>机器可读的主题、字体、间距、圆角和组件基础值。</span><b>下载</b></a><a class="resource-link" href="../tokens/kin.tailwind.css"><strong>Tailwind Tokens</strong><span>生成的 CSS 变量与 Tailwind 兼容主题值。</span><b>下载</b></a><a class="resource-link" href="../tokens/kin.figma.variables.json"><strong>Figma Variables</strong><span>包含日间、夜间和高对比模式的 create-only 请求体。</span><b>下载</b></a><a class="resource-link" href="../examples/workspace-reference/states.html"><strong>状态参考</strong><span>输入框、数据行、反馈、对话框、焦点和命令菜单行为。</span><b>打开</b></a><a class="resource-link" href="../examples/workspace-reference/motion.html"><strong>动效实验室</strong><span>频率与输入路径、Tooltip 连续浏览、可中断浮层、Sonner、手势落点、慢速审查与响应式 Drawer。</span><b>打开</b></a><a class="resource-link" href="../examples/workspace-reference/advanced-components.html"><strong>AI 与专业工作流参考</strong><span>确定性的 Composer、证据、审核、执行范围、媒体、持久任务与可访问图表状态。</span><b>打开</b></a><a class="resource-link" href="https://github.com/yehyakin/kin-design-system/blob/main/principles/verification.md"><strong>验证证据</strong><span>自动检查、截图、浏览器冒烟、缩放、RTL、Forced Colors、触控和读屏人工复核的边界。</span><b>阅读</b></a><a class="resource-link" href="https://github.com/yehyakin/kin-design-system/blob/main/components/micro-interactions.md"><strong>微交互合同</strong><span>成对状态、真实结果、进度、Disclosure 与 Reduced Motion 行为。</span><b>阅读</b></a><a class="resource-link" href="https://github.com/yehyakin/kin-design-system/blob/main/components/terminology.md"><strong>组件术语</strong><span>组件规范名称，以及相近界面模式之间的实际区别。</span><b>阅读</b></a><a class="resource-link" href="https://github.com/yehyakin/kin-design-system/blob/main/components/catalog.md"><strong>组件目录</strong><span>成熟度、覆盖范围、已知缺口和统一完成定义。</span><b>阅读</b></a><a class="resource-link" href="https://github.com/yehyakin/kin-design-system/releases/tag/v2.3.0"><strong>最新稳定版 2.3.0</strong><span>版本说明与不可变源代码标签。</span><b>查看</b></a></div></section>
-
-        <hr class="section-rule">
-        <section class="content-section" id="flows" aria-labelledby="page-flows-title-zh"><div class="section-heading"><h2 id="page-flows-title-zh">跨产品页面流程</h2><p>稳定的访问、设置、偏好、恢复、搜索和支持参考旁，新增了候选排期工作台。每个参考都会说明 URL 状态、失败路径、焦点行为、成熟度和产品后端责任边界。</p></div><div class="intro-actions"><a class="button primary" href="../examples/page-patterns/scheduling.html">排期工作台</a><a class="button" href="../examples/page-patterns/access.html?lang=zh-CN">登录与访问</a><a class="button" href="../examples/page-patterns/search.html">搜索与结果</a><a class="button" href="../examples/page-patterns/onboarding.html">设置流程</a><a class="button" href="../examples/page-patterns/settings.html">偏好设置</a><a class="button" href="../examples/page-patterns/system.html">恢复状态</a><a class="button" href="../examples/page-patterns/support.html">帮助与支持</a><a class="button" href="https://github.com/yehyakin/kin-design-system/blob/main/pages/catalog.md">查看页面成熟度</a></div></section>
-
-        <footer class="site-footer"><div><span>KIN Design System · MIT License</span><span>为需要认真处理的工作而设计，并在公开环境中维护。</span></div></footer>
+  <main class="showcase-main" id="main" data-showcase-route="home">
+    <section class="showcase-lead" id="overview" aria-labelledby="overview-title">
+      <div class="showcase-intro">
+        <p class="showcase-label">展示 · 目录支持的参考界面</p>
+        <h1 id="overview-title">为清晰、信息密集型产品提供设计规则和可运行参考。</h1>
+        <p class="lead">KIN 是一套不绑定前端框架的设计合同，适用于需要阅读、比较、判断和操作，同时不能丢失上下文的网站与软件。</p>
+        <div class="showcase-actions">
+          <a class="showcase-button primary" href="../scenarios/"><i data-lucide="panels-top-left"></i>浏览场景</a>
+          <a class="showcase-button secondary" href="docs/"><i data-lucide="book-open"></i>阅读文档</a>
+        </div>
+        <p class="showcase-intro-note">参考页面使用固定的本地样例，便于反复检查同一状态。它们不是生产服务，也不能证明其他产品已经完成 KIN 接入。KIN 3.0.0 开发中；生产接入请使用 v2.3.0。</p>
       </div>
-    </main>
-    <aside class="section-rail" aria-label="本页目录"><h2>本页目录</h2><a href="#overview">概览</a><a href="#principles">原则</a><a href="#foundations">基础</a><a href="#components">组件</a><a href="#patterns">产品模式</a><a href="#ai-contract">AI 行为</a><a href="#agents">编码工具</a><a href="#resources">资源</a><a href="#flows">页面流程</a><p class="release-note">KIN 3.0.0 开发中<br>最新稳定版 2.3.0<br><br>参考值会随主题实时变化。</p></aside>
-  </div>
+
+      <article
+        class="featured-reference"
+        data-showcase-preview
+        data-scenario-id="INT-02"
+        data-state="idle"
+        data-label-enter="进入交互预览"
+        data-label-loading="正在载入预览"
+        data-label-retry="重试交互预览"
+        data-label-narrow="在 Lab 中打开预览"
+        data-status-idle="当前显示海报，交互参考尚未载入。"
+        data-status-loading="正在载入同源交互参考…"
+        data-status-active="交互预览已启用；按 Escape 返回海报。"
+        data-status-fallback="嵌入预览未能载入，请在 Lab 中打开同一状态。"
+        aria-labelledby="featured-title"
+      >
+        <header class="reference-heading">
+          <div>
+            <p class="reference-code">INT-02 / 情报工作台</p>
+            <h2 id="featured-title" data-showcase-feature-name="INT-02">调查与证据复核</h2>
+            <p class="reference-job" data-showcase-feature-job="INT-02">在记录结论前比较时间顺序、来源、冲突与不确定性。</p>
+          </div>
+          <dl class="reference-status">
+            <div><dt>来源成熟度</dt><dd data-showcase-feature-source="INT-02">稳定</dd></div>
+            <div><dt>展示状态</dt><dd data-showcase-feature-presentation="INT-02">已展示</dd></div>
+          </dl>
+        </header>
+
+        <div class="preview-viewport">
+          <img
+            class="preview-poster"
+            data-preview-poster
+            src="../assets/posters/int-02-normal-dark.png"
+            width="1180"
+            height="760"
+            alt="KIN 调查参考界面：在深色工作台中显示 Alpha Network 证书变更调查、证据时间线、来源可用性与核验状态。"
+          >
+          <iframe
+            class="preview-frame"
+            data-preview-frame
+            data-showcase-feature-reference="INT-02"
+            data-src="../examples/workspace-reference/index.html?view=investigation&amp;lang=zh-CN&amp;state=normal"
+            data-preview-ready="[data-investigation]"
+            title="INT-02 调查与证据复核交互参考"
+            tabindex="-1"
+            aria-hidden="true"
+            inert
+          ></iframe>
+        </div>
+
+        <div class="preview-controls">
+          <p class="preview-status" data-preview-status data-state="idle" role="status" aria-live="polite">当前显示海报，交互参考尚未载入。</p>
+          <div class="preview-actions">
+            <button class="preview-action primary" type="button" data-preview-activate hidden><i data-lucide="circle-play"></i><span data-preview-trigger-label>进入交互预览</span></button>
+            <button class="preview-action" type="button" data-preview-deactivate hidden>退出预览 <kbd>Esc</kbd></button>
+            <a class="preview-action" data-showcase-lab-link data-showcase-feature-lab="INT-02" href="../scenarios/lab.html?scenario=INT-02&amp;state=normal&amp;viewport=wide&amp;theme=dark"><i data-lucide="external-link"></i>在 Lab 中打开</a>
+          </div>
+        </div>
+
+        <dl class="reference-boundaries">
+          <div><dt>海报证据</dt><dd>正常状态 · 宽视口 · 深色外观 · 来源提交 <code>4efb996</code></dd></div>
+          <div><dt>参考边界</dt><dd>这是固定的本地参考，没有连接实时来源、权威权限服务、持久化结论记录或生产调查数据。</dd></div>
+          <div><dt>验证边界</dt><dd>场景目录证据不包含人工读屏、真实浏览器缩放或实体触控设备复核。</dd></div>
+        </dl>
+      </article>
+    </section>
+
+    <section class="catalog-proof" aria-label="目录证据">
+      <div class="proof-heading"><strong>目录证据</strong><span>构建时从规范目录注入</span></div>
+      <div class="proof-cell"><strong><span data-showcase-count="showcased-scenarios">—</span></strong><span>已展示场景</span></div>
+      <div class="proof-cell"><strong><span data-showcase-count="planned-scenarios">—</span></strong><span>计划中场景</span></div>
+      <div class="proof-cell"><strong><span data-showcase-count="stable-components">—</span></strong><span>稳定组件合同</span></div>
+      <div class="proof-cell"><strong><span data-showcase-count="stable-pages">—</span></strong><span>稳定页面类型</span></div>
+      <div class="proof-cell appearance"><strong>日间 · 夜间 · 跟随系统 · 高对比度</strong><span>明确的外观模式，不作为质量分数</span></div>
+    </section>
+
+    <section class="showcase-section" id="patterns" aria-labelledby="patterns-title">
+      <div class="showcase-section-heading">
+        <div>
+          <h2 id="patterns-title">按需要检查的任务开始浏览。</h2>
+          <a class="section-route" href="../scenarios/">打开完整场景目录 <span aria-hidden="true">→</span></a>
+        </div>
+        <p>每一行都会在现有场景 Lab 中打开由目录支持的状态。本版本的场景目录和 Lab 目前以英文为主。</p>
+      </div>
+      <div class="task-list">
+        <a class="task-row" data-scenario-id="INT-02" data-showcase-lab-link data-showcase-scenario-link="INT-02" href="../scenarios/lab.html?scenario=INT-02&amp;state=normal&amp;viewport=wide&amp;theme=dark">
+          <span class="task-kind">复核证据</span>
+          <span class="task-copy"><strong>在记录结论前比较证据时间顺序</strong><span>分别保留来源可用性、核验状态、冲突与人工判断。</span></span>
+          <span class="row-meta" data-showcase-scenario-meta="INT-02">INT-02 · 稳定来源 · 已展示</span>
+          <span class="row-action">检查 →</span>
+        </a>
+        <a class="task-row" data-scenario-id="INF-01" data-showcase-lab-link data-showcase-scenario-link="INF-01" href="../scenarios/lab.html?scenario=INF-01&amp;state=normal&amp;viewport=wide&amp;theme=dark">
+          <span class="task-kind">核查记录</span>
+          <span class="task-copy"><strong>查找公开记录并确认来源与时效</strong><span>完成搜索、筛选、打开与返回，同时保留稳定的信息路径。</span></span>
+          <span class="row-meta" data-showcase-scenario-meta="INF-01">INF-01 · 稳定来源 · 已展示</span>
+          <span class="row-action">检查 →</span>
+        </a>
+        <a class="task-row" data-scenario-id="COM-02" data-showcase-lab-link data-showcase-scenario-link="COM-02" href="../scenarios/lab.html?scenario=COM-02&amp;state=normal&amp;viewport=wide&amp;theme=dark">
+          <span class="task-kind">编辑商品</span>
+          <span class="task-copy"><strong>修改商品数据时保留运营上下文</strong><span>价格、库存、渠道、审批与活动始终清楚区分。</span></span>
+          <span class="row-meta" data-showcase-scenario-meta="COM-02">COM-02 · 稳定来源 · 已展示</span>
+          <span class="row-action">检查 →</span>
+        </a>
+        <a class="task-row" data-scenario-id="ENG-01" data-showcase-lab-link data-showcase-scenario-link="ENG-01" href="../scenarios/lab.html?scenario=ENG-01&amp;state=normal&amp;viewport=wide&amp;theme=dark">
+          <span class="task-kind">编辑画布</span>
+          <span class="task-copy"><strong>选择、修改、提交并撤销结构化对象</strong><span>画布保持主导，工具、选择、单位与恢复路径继续可用。</span></span>
+          <span class="row-meta" data-showcase-scenario-meta="ENG-01">ENG-01 · 稳定来源 · 已展示</span>
+          <span class="row-action">检查 →</span>
+        </a>
+      </div>
+    </section>
+
+    <section class="showcase-section" id="components" aria-labelledby="components-title">
+      <div class="showcase-section-heading">
+        <div>
+          <h2 id="components-title">标志性交互让证据、审核、执行与持久任务保持可检查。</h2>
+          <a class="section-route" href="components/">浏览组件发现页 <span aria-hidden="true">→</span></a>
+        </div>
+        <p>这些行指向稳定的规范合同。稳定状态记录行为与证据，但不代表存在通用运行时组件包。</p>
+      </div>
+      <div class="component-list">
+        <a class="component-row" data-component-id="evidence-list" href="components/evidence-list/">
+          <strong>证据列表（<span data-showcase-component-name="evidence-list">Evidence List</span>）</strong>
+          <span>把结论或决策与支持、缺失、过期和冲突的来源建立对应关系。</span>
+          <span class="component-maturity" data-showcase-component-status="evidence-list">稳定合同</span>
+          <span class="row-action">检查 →</span>
+        </a>
+        <a class="component-row" data-component-id="suggested-change-review" href="components/suggested-change-review/">
+          <strong>建议变更审核（<span data-showcase-component-name="suggested-change-review">Suggested Change Review</span>）</strong>
+          <span>在接受、拒绝或编辑变更前，对比当前值与建议值。</span>
+          <span class="component-maturity" data-showcase-component-status="suggested-change-review">稳定合同</span>
+          <span class="row-action">检查 →</span>
+        </a>
+        <a class="component-row" data-component-id="execution-preview" href="components/execution-preview/">
+          <strong>执行预览（<span data-showcase-component-name="execution-preview">Execution Preview</span>）</strong>
+          <span>执行前展示目标、写入、权限、外部影响、不可逆性与回滚。</span>
+          <span class="component-maturity" data-showcase-component-status="execution-preview">稳定合同</span>
+          <span class="row-action">检查 →</span>
+        </a>
+        <a class="component-row" data-component-id="background-task-queue" href="components/background-task-queue/">
+          <strong>后台任务队列（<span data-showcase-component-name="background-task-queue">Background Task Queue</span>）</strong>
+          <span>让已接受的持久任务在进度、取消、恢复与结果阶段始终可识别。</span>
+          <span class="component-maturity" data-showcase-component-status="background-task-queue">稳定合同</span>
+          <span class="row-action">检查 →</span>
+        </a>
+      </div>
+    </section>
+
+    <section class="showcase-section" id="resources" aria-labelledby="resources-title">
+      <div class="showcase-section-heading">
+        <div>
+          <h2 id="resources-title">系统证据保持靠近事实来源。</h2>
+          <a class="section-route" href="docs/">打开文档 <span aria-hidden="true">→</span></a>
+        </div>
+        <p>规范合同、生成的互操作文件、固定参考界面与验证记录属于不同证据层，不互相替代。</p>
+      </div>
+      <div class="evidence-list">
+        <a class="evidence-row" id="principles" href="docs/#principles">
+          <strong>设计原则与视觉特征</strong>
+          <span>任务优先、单一主导区域、连续结构、语义分离与有目的的动效。</span>
+          <span class="evidence-kind">规范</span>
+          <span class="row-action">阅读 →</span>
+        </a>
+        <a class="evidence-row" id="foundations" href="docs/#foundations">
+          <strong>基础与语义 Token</strong>
+          <span>主题、对比度、字体、间距、表面、焦点和生成的互操作输出。</span>
+          <span class="evidence-kind">合同 + 生成文件</span>
+          <span class="row-action">检查 →</span>
+        </a>
+        <a class="evidence-row" id="ai-contract" href="docs/#ai-contract">
+          <strong>AI 交互合同</strong>
+          <span>结论、依据、不确定性、范围、人工批准、审计与回滚分别表达。</span>
+          <span class="evidence-kind">规范</span>
+          <span class="row-action">阅读 →</span>
+        </a>
+        <a class="evidence-row" id="agents" href="docs/#agents">
+          <strong>编码工具交付</strong>
+          <span>固定经过评审的合同，并明确保留项目自己的路由、数据、实现、证据与回滚。</span>
+          <span class="evidence-kind">Contract-first</span>
+          <span class="row-action">使用 →</span>
+        </a>
+        <a class="evidence-row" id="flows" href="docs/#flows">
+          <strong>页面与工作流合同</strong>
+          <span>完整用户任务、状态族、响应式行为、返回上下文与产品后端责任边界。</span>
+          <span class="evidence-kind">目录支持</span>
+          <span class="row-action">浏览 →</span>
+        </a>
+      </div>
+    </section>
+
+    <footer class="showcase-footer">
+      <p>KIN Design System · MIT License · KIN 3.0.0 开发中。固定参考展示构图与行为；生产接入需要独立证据。</p>
+      <nav aria-label="页脚">
+        <a href="docs/">文档</a>
+        <a href="../scenarios/">场景</a>
+        <a href="https://github.com/yehyakin/kin-design-system">GitHub</a>
+        <a href="https://github.com/yehyakin/kin-design-system/releases/tag/v2.3.0">稳定版 v2.3.0</a>
+      </nav>
+    </footer>
+  </main>
 
   <dialog class="command-dialog" data-command-dialog data-state="closed" aria-label="搜索 KIN">
-    <div class="command-search"><input type="search" data-command-search placeholder="搜索章节和资源" aria-label="搜索命令"></div>
+    <div class="command-search"><input type="search" data-command-search placeholder="搜索路由和证据" aria-label="搜索命令"></div>
     <div class="command-list">
-      <div class="command-group-label">章节</div>
-      <a class="command-item" data-command-item href="#principles">设计原则 <span>章节</span></a><a class="command-item" data-command-item href="#foundations">基础与 Token <span>章节</span></a><a class="command-item" data-command-item href="#components">组件行为 <span>章节</span></a><a class="command-item" data-command-item href="#patterns">产品模式 <span>章节</span></a><a class="command-item" data-command-item href="#ai-contract">AI 行为 <span>章节</span></a><a class="command-item" data-command-item href="#flows">页面流程 <span>章节</span></a>
-      <div class="command-group-label">身份验证演示</div>
-      <a class="command-item" data-command-item href="../examples/page-patterns/access.html?lang=zh-CN">登录页面 <span>页面</span></a><a class="command-item" data-command-item href="../examples/workspace-reference/core-components.html?lang=zh-CN&amp;dialog=authentication#authentication">登录弹窗 <span>弹窗</span></a><a class="command-item" data-command-item href="../examples/workspace-reference/core-components.html?lang=zh-CN&amp;dialog=reauthentication#authentication">会话重新验证 <span>弹窗</span></a>
+      <div class="command-group-label">前往</div>
+      <a class="command-item" data-command-item href="./">展示 <span>首页</span></a>
+      <a class="command-item" data-command-item href="components/">组件 <span>发现</span></a>
+      <a class="command-item" data-command-item href="patterns/">模式 <span>发现</span></a>
+      <a class="command-item" data-command-item href="../scenarios/">场景 <span>目录</span></a>
+      <a class="command-item" data-command-item href="../lab/">Lab <span>检查</span></a>
+      <a class="command-item" data-command-item href="docs/">文档 <span>合同</span></a>
+      <div class="command-group-label">检查</div>
+      <a class="command-item" data-command-item data-showcase-lab-link href="../scenarios/lab.html?scenario=INT-02&amp;state=normal&amp;viewport=wide&amp;theme=dark">调查与证据复核 <span>INT-02</span></a>
+      <a class="command-item" data-command-item href="components/evidence-list/">证据列表 <span>组件</span></a>
+      <a class="command-item" data-command-item href="docs/#principles">设计原则与视觉特征 <span>文档</span></a>
       <div class="command-group-label">资源</div>
-      <a class="command-item" data-command-item href="https://github.com/yehyakin/kin-design-system/blob/main/DESIGN.md">设计合同 <span>GitHub</span></a><a class="command-item" data-command-item href="https://github.com/yehyakin/kin-design-system/blob/main/DELIVERY.md">交付模型 <span>GitHub</span></a><a class="command-item" data-command-item href="../examples/workspace-reference/">工作台参考 <span>演示</span></a><a class="command-item" data-command-item href="../tokens/kin.tokens.json">DTCG Tokens <span>JSON</span></a><button class="command-item" type="button" data-command-item data-theme-system>跟随系统主题 <span>外观</span></button><p class="command-empty" data-command-empty hidden>没有匹配的章节或资源。</p>
+      <a class="command-item" data-command-item href="https://github.com/yehyakin/kin-design-system">源代码仓库 <span>GitHub</span></a>
+      <a class="command-item" data-command-item href="https://github.com/yehyakin/kin-design-system/blob/main/DESIGN.md">设计合同 <span>GitHub</span></a>
+      <button class="command-item" type="button" data-command-item data-theme-system>跟随系统主题 <span>外观</span></button>
+      <p class="command-empty" data-command-empty hidden>没有匹配的路由或证据。</p>
     </div>
   </dialog>
-  <div data-sonner-root></div>
+
   <script type="module" src="../assets/site.js"></script>
+  <script type="module" src="../assets/showcase.js"></script>
 </body>
 </html>

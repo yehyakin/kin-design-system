@@ -18,4 +18,114 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://yehyakin.github.io/kin-design-system/" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://yehyakin.github.io/kin-design-system/zh/" />
   </url>
+  <url>
+    <loc>https://yehyakin.github.io/kin-design-system/docs/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://yehyakin.github.io/kin-design-system/docs/" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://yehyakin.github.io/kin-design-system/zh/docs/" />
+  </url>
+  <url>
+    <loc>https://yehyakin.github.io/kin-design-system/zh/docs/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://yehyakin.github.io/kin-design-system/docs/" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://yehyakin.github.io/kin-design-system/zh/docs/" />
+  </url>
+  <url>
+    <loc>https://yehyakin.github.io/kin-design-system/components/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://yehyakin.github.io/kin-design-system/components/" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://yehyakin.github.io/kin-design-system/zh/components/" />
+  </url>
+  <url>
+    <loc>https://yehyakin.github.io/kin-design-system/zh/components/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://yehyakin.github.io/kin-design-system/components/" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://yehyakin.github.io/kin-design-system/zh/components/" />
+  </url>
+  <url>
+    <loc>https://yehyakin.github.io/kin-design-system/patterns/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://yehyakin.github.io/kin-design-system/patterns/" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://yehyakin.github.io/kin-design-system/zh/patterns/" />
+  </url>
+  <url>
+    <loc>https://yehyakin.github.io/kin-design-system/zh/patterns/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://yehyakin.github.io/kin-design-system/patterns/" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://yehyakin.github.io/kin-design-system/zh/patterns/" />
+  </url>
+  <url>
+    <loc>https://yehyakin.github.io/kin-design-system/components/app-shell/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://yehyakin.github.io/kin-design-system/components/app-shell/" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://yehyakin.github.io/kin-design-system/zh/components/app-shell/" />
+  </url>
+  <url>
+    <loc>https://yehyakin.github.io/kin-design-system/zh/components/app-shell/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://yehyakin.github.io/kin-design-system/components/app-shell/" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://yehyakin.github.io/kin-design-system/zh/components/app-shell/" />
+  </url>
+  <url>
+    <loc>https://yehyakin.github.io/kin-design-system/components/evidence-list/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://yehyakin.github.io/kin-design-system/components/evidence-list/" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://yehyakin.github.io/kin-design-system/zh/components/evidence-list/" />
+  </url>
+  <url>
+    <loc>https://yehyakin.github.io/kin-design-system/zh/components/evidence-list/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://yehyakin.github.io/kin-design-system/components/evidence-list/" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://yehyakin.github.io/kin-design-system/zh/components/evidence-list/" />
+  </url>
+  <url>
+    <loc>https://yehyakin.github.io/kin-design-system/components/suggested-change-review/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://yehyakin.github.io/kin-design-system/components/suggested-change-review/" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://yehyakin.github.io/kin-design-system/zh/components/suggested-change-review/" />
+  </url>
+  <url>
+    <loc>https://yehyakin.github.io/kin-design-system/zh/components/suggested-change-review/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://yehyakin.github.io/kin-design-system/components/suggested-change-review/" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://yehyakin.github.io/kin-design-system/zh/components/suggested-change-review/" />
+  </url>
+  <url>
+    <loc>https://yehyakin.github.io/kin-design-system/components/execution-preview/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://yehyakin.github.io/kin-design-system/components/execution-preview/" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://yehyakin.github.io/kin-design-system/zh/components/execution-preview/" />
+  </url>
+  <url>
+    <loc>https://yehyakin.github.io/kin-design-system/zh/components/execution-preview/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://yehyakin.github.io/kin-design-system/components/execution-preview/" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://yehyakin.github.io/kin-design-system/zh/components/execution-preview/" />
+  </url>
+  <url>
+    <loc>https://yehyakin.github.io/kin-design-system/components/background-task-queue/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://yehyakin.github.io/kin-design-system/components/background-task-queue/" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://yehyakin.github.io/kin-design-system/zh/components/background-task-queue/" />
+  </url>
+  <url>
+    <loc>https://yehyakin.github.io/kin-design-system/zh/components/background-task-queue/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://yehyakin.github.io/kin-design-system/components/background-task-queue/" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://yehyakin.github.io/kin-design-system/zh/components/background-task-queue/" />
+  </url>
+  <url>
+    <loc>https://yehyakin.github.io/kin-design-system/components/command-menu/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://yehyakin.github.io/kin-design-system/components/command-menu/" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://yehyakin.github.io/kin-design-system/zh/components/command-menu/" />
+  </url>
+  <url>
+    <loc>https://yehyakin.github.io/kin-design-system/zh/components/command-menu/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://yehyakin.github.io/kin-design-system/components/command-menu/" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://yehyakin.github.io/kin-design-system/zh/components/command-menu/" />
+  </url>
+  <url>
+    <loc>https://yehyakin.github.io/kin-design-system/components/authentication-dialog/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://yehyakin.github.io/kin-design-system/components/authentication-dialog/" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://yehyakin.github.io/kin-design-system/zh/components/authentication-dialog/" />
+  </url>
+  <url>
+    <loc>https://yehyakin.github.io/kin-design-system/zh/components/authentication-dialog/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://yehyakin.github.io/kin-design-system/components/authentication-dialog/" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://yehyakin.github.io/kin-design-system/zh/components/authentication-dialog/" />
+  </url>
+  <url>
+    <loc>https://yehyakin.github.io/kin-design-system/components/data-table/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://yehyakin.github.io/kin-design-system/components/data-table/" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://yehyakin.github.io/kin-design-system/zh/components/data-table/" />
+  </url>
+  <url>
+    <loc>https://yehyakin.github.io/kin-design-system/zh/components/data-table/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://yehyakin.github.io/kin-design-system/components/data-table/" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://yehyakin.github.io/kin-design-system/zh/components/data-table/" />
+  </url>
 </urlset>

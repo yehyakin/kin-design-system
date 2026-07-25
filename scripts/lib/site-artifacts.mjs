@@ -2,16 +2,22 @@ import fs from "node:fs";
 import path from "node:path";
 import { compareCodePoints } from "./canonical-content.mjs";
 import { normalizeRepositoryPath, resolveExistingPathWithin, resolveOutputFileWithin } from "./safe-path.mjs";
+import { SHOWCASE_GENERATED_PATHS } from "./showcase-pages.mjs";
 
 export const SITE_COPY_ARTIFACTS = Object.freeze([
   ["site/404.html", "404.html"],
   ["site/index.html", "index.html"],
+  ["site/docs/index.html", "docs/index.html"],
+  ["site/lab/index.html", "lab/index.html"],
   ["site/manifest.webmanifest", "manifest.webmanifest"],
   ["site/robots.txt", "robots.txt"],
   ["site/sitemap.xml", "sitemap.xml"],
   ["site/zh/index.html", "zh/index.html"],
+  ["site/zh/docs/index.html", "zh/docs/index.html"],
   ["site/assets/mark.svg", "assets/mark.svg"],
   ["site/assets/og-card.svg", "assets/og-card.svg"],
+  ["site/assets/posters/int-02-normal-dark.png", "assets/posters/int-02-normal-dark.png"],
+  ["site/assets/showcase.css", "assets/showcase.css"],
   ["site/assets/site.css", "assets/site.css"],
   ["site/scenarios/index.html", "scenarios/index.html"],
   ["site/scenarios/lab.html", "scenarios/lab.html"],
@@ -55,6 +61,7 @@ export const SITE_COPY_ARTIFACTS = Object.freeze([
 export const SITE_GENERATED_ARTIFACTS = Object.freeze([
   "assets/kin-react.css",
   "assets/scenario-lab.js",
+  "assets/showcase.js",
   "assets/site.js",
   "assets/sonner.css",
   "examples/page-patterns/reference.js",
@@ -63,6 +70,7 @@ export const SITE_GENERATED_ARTIFACTS = Object.freeze([
   "examples/workspace-reference/integration-reference.js",
   "examples/workspace-reference/motion-reference.js",
   "examples/workspace-reference/reference.js",
+  ...SHOWCASE_GENERATED_PATHS,
 ]);
 
 const SITE_GENERATED_CHUNK_PATTERNS = Object.freeze([

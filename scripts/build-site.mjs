@@ -3,6 +3,8 @@ import path from "node:path";
 import process from "node:process";
 import { build } from "esbuild";
 import { buildAgentPages } from "./lib/agent-pages.mjs";
+import { injectShowcaseProofCounts } from "./lib/showcase-home.mjs";
+import { buildShowcasePages } from "./lib/showcase-pages.mjs";
 import { copySiteArtifacts } from "./lib/site-artifacts.mjs";
 
 const root = process.cwd();
@@ -11,6 +13,8 @@ const output = path.join(root, ".site-dist");
 fs.rmSync(output, { recursive: true, force: true });
 fs.mkdirSync(output, { recursive: true });
 copySiteArtifacts({ root, output });
+injectShowcaseProofCounts({ root, output });
+buildShowcasePages({ root, output });
 
 buildAgentPages({ root, output });
 
@@ -23,6 +27,7 @@ await build({
   entryPoints: [
     path.join(root, "site", "assets", "site.js"),
     path.join(root, "site", "assets", "scenario-lab.js"),
+    path.join(root, "site", "assets", "showcase.js"),
   ],
   outdir: path.join(output, "assets"),
   bundle: true,

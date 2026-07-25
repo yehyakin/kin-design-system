@@ -5,6 +5,13 @@ if (!lab) {
 }
 
 const elements = {
+  controlsTrigger: document.querySelector("[data-lab-controls-trigger]"),
+  controls: document.querySelector("[data-lab-controls]"),
+  controlsClose: document.querySelector("[data-lab-controls-close]"),
+  controlsScrim: document.querySelector("[data-lab-controls-scrim]"),
+  brand: document.querySelector(".lab-brand"),
+  back: document.querySelector(".lab-back"),
+  skipLink: document.querySelector(".skip-link"),
   scenario: document.querySelector("[data-lab-scenario]"),
   state: document.querySelector("[data-lab-state]"),
   stateCount: document.querySelector("[data-lab-state-count]"),
@@ -21,27 +28,146 @@ const elements = {
   directLink: document.querySelector("[data-lab-direct-link]"),
   previewKicker: document.querySelector("[data-lab-preview-kicker]"),
   previewTitle: document.querySelector("[data-lab-preview-title]"),
+  preview: document.querySelector("[data-lab-preview]"),
+  previewActions: document.querySelector(".lab-preview-actions"),
+  scaleReadout: document.querySelector("[data-lab-scale-readout]"),
+  scaleStatus: document.querySelector("[data-lab-scale-status]"),
   viewportReadout: document.querySelector("[data-lab-viewport-readout]"),
   themeReadout: document.querySelector("[data-lab-theme-readout]"),
   verification: document.querySelector("[data-lab-verification]"),
   stage: document.querySelector("[data-lab-stage]"),
+  frameSizing: document.querySelector("[data-lab-frame-sizing]"),
   frameShell: document.querySelector("[data-lab-frame-shell]"),
   frameSize: document.querySelector("[data-lab-frame-size]"),
   frame: document.querySelector("[data-lab-frame]"),
+  fullscreen: document.querySelector("[data-lab-fullscreen]"),
   error: document.querySelector("[data-lab-error]"),
   errorMessage: document.querySelector("[data-lab-error-message]")
 };
+
+const controlsOverlay = matchMedia("(max-width: 780px)");
+const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+const controlsExitDuration = 180;
+const controlsReducedExitDuration = 80;
 
 let catalog;
 let scenarios = [];
 let viewports = [];
 let themes = [];
 let current = null;
+let controlsCloseTimer = null;
+let controlsReturnTarget = elements.controlsTrigger;
+let previewSizing = "fit";
+let previewResizeFrame = null;
 let frameObserver = null;
 let frameResizeVerification = null;
 let verificationObserver = null;
 let verificationTimer = null;
 let inspectionRevision = 0;
+
+function controlsState() {
+  return lab.dataset.controlsState || "open";
+}
+
+function controlsAreOpen() {
+  return controlsState() === "open";
+}
+
+function syncControlsMode() {
+  if (controlsOverlay.matches) {
+    elements.controls.setAttribute("role", "dialog");
+    elements.controls.setAttribute("aria-modal", "true");
+  } else {
+    elements.controls.removeAttribute("role");
+    elements.controls.removeAttribute("aria-modal");
+  }
+}
+
+function setModalBackground(modal) {
+  elements.preview.inert = modal;
+  elements.frame.inert = modal;
+  elements.brand.inert = modal;
+  elements.back.inert = modal;
+  elements.skipLink.inert = modal;
+  document.body.classList.toggle("lab-controls-modal-open", modal);
+}
+
+function repairFocus(target, expectedOpen) {
+  if (!target?.isConnected) return;
+  target.focus({ preventScroll: true });
+  queueMicrotask(() => {
+    if (controlsAreOpen() === expectedOpen && document.activeElement !== target) {
+      target.focus({ preventScroll: true });
+    }
+  });
+  requestAnimationFrame(() => {
+    if (controlsAreOpen() === expectedOpen && document.activeElement !== target) {
+      target.focus({ preventScroll: true });
+    }
+  });
+}
+
+function finishControlsClose() {
+  if (controlsState() !== "closing") return;
+  clearTimeout(controlsCloseTimer);
+  controlsCloseTimer = null;
+  lab.dataset.controlsState = "closed";
+}
+
+function setControls(open, { moveFocus = true, returnTarget } = {}) {
+  clearTimeout(controlsCloseTimer);
+  controlsCloseTimer = null;
+  if (open && returnTarget) controlsReturnTarget = returnTarget;
+
+  if (open) {
+    if (controlsState() === "closed" && !controlsOverlay.matches) {
+      lab.dataset.controlsTrack = "restored";
+      void lab.offsetWidth;
+    }
+    lab.dataset.controlsState = "open";
+    delete lab.dataset.controlsTrack;
+  } else if (controlsState() !== "closed") {
+    lab.dataset.controlsState = "closing";
+    const duration = reducedMotion.matches ? controlsReducedExitDuration : controlsExitDuration;
+    controlsCloseTimer = window.setTimeout(finishControlsClose, duration);
+  }
+
+  const modal = controlsOverlay.matches && open;
+  elements.controlsTrigger.setAttribute("aria-expanded", String(open));
+  elements.controlsTrigger.setAttribute("aria-label", open ? "Hide inspection controls" : "Show inspection controls");
+  elements.controls.setAttribute("aria-hidden", String(!open));
+  elements.controls.inert = !open;
+  setModalBackground(modal);
+  syncControlsMode();
+
+  if (!moveFocus) return;
+  const fallback = controlsReturnTarget?.isConnected ? controlsReturnTarget : elements.controlsTrigger;
+  const target = open && modal ? elements.controlsClose : fallback;
+  repairFocus(target, open);
+}
+
+function initializeControls() {
+  const open = !controlsOverlay.matches;
+  lab.dataset.controlsState = open ? "open" : "closed";
+  elements.controlsTrigger.setAttribute("aria-expanded", String(open));
+  elements.controlsTrigger.setAttribute("aria-label", open ? "Hide inspection controls" : "Show inspection controls");
+  elements.controls.setAttribute("aria-hidden", String(!open));
+  elements.controls.inert = !open;
+  setModalBackground(false);
+  syncControlsMode();
+  requestAnimationFrame(() => {
+    lab.dataset.controlsReady = "true";
+  });
+}
+
+function focusableControls() {
+  return [...elements.controls.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])')]
+    .filter((element) => {
+      if (element.disabled || element.closest("[hidden], [inert]")) return false;
+      const style = getComputedStyle(element);
+      return style.display !== "none" && style.visibility !== "hidden" && element.getClientRects().length > 0;
+    });
+}
 
 function option(value, label) {
   const item = document.createElement("option");
@@ -69,6 +195,16 @@ function selectedTheme() {
 
 function referenceUrl(referencePath) {
   return new URL("../" + referencePath, window.location.href);
+}
+
+function currentFrameUrl() {
+  try {
+    const href = elements.frame.contentWindow?.location.href;
+    if (href) return new URL(href);
+  } catch {
+    // Fall through to the iframe attribute while the nested document is isolated.
+  }
+  return new URL(elements.frame.src || "about:blank", window.location.href);
 }
 
 function beginInspection() {
@@ -111,7 +247,7 @@ function setVerification(state, message, detail) {
   elements.verification.title = detail || "";
 }
 
-function writeUrl() {
+function serializedUrl() {
   const url = new URL(window.location.href);
   url.hash = "";
   url.search = "";
@@ -119,7 +255,15 @@ function writeUrl() {
   url.searchParams.set("state", current.state);
   url.searchParams.set("viewport", current.viewport);
   url.searchParams.set("theme", current.theme);
-  history.replaceState(null, "", url.pathname + url.search);
+  return url.pathname + url.search;
+}
+
+function writeUrl(mode = "replace") {
+  if (mode !== "push" && mode !== "replace") throw new Error("Unknown Scenario Lab history mode: " + mode);
+  const nextUrl = serializedUrl();
+  const currentUrl = window.location.pathname + window.location.search;
+  if (mode === "push" && !window.location.hash && nextUrl === currentUrl) return;
+  history[mode + "State"]({ scenarioLab: true }, "", nextUrl);
 }
 
 function syncPressedControls() {
@@ -167,6 +311,61 @@ function renderScenarioDetails() {
   document.title = scenario.canonical_name + " - Scenario Inspection Lab";
 }
 
+function syncSizingControls() {
+  for (const button of elements.previewActions.querySelectorAll("[data-lab-sizing]")) {
+    button.setAttribute("aria-pressed", String(button.dataset.labSizing === previewSizing));
+  }
+}
+
+function stagePadding() {
+  const style = getComputedStyle(elements.stage);
+  return {
+    horizontal: (Number.parseFloat(style.paddingLeft) || 0) + (Number.parseFloat(style.paddingRight) || 0),
+    vertical: (Number.parseFloat(style.paddingTop) || 0) + (Number.parseFloat(style.paddingBottom) || 0)
+  };
+}
+
+function renderPreviewSizing({ announce = true } = {}) {
+  if (!current) return;
+  const viewport = selectedViewport();
+  const frameWidth = viewport.width + 2;
+  const frameHeight = viewport.height + 32;
+  const padding = stagePadding();
+  const availableWidth = elements.stage.clientWidth - padding.horizontal;
+  const availableHeight = elements.stage.clientHeight - padding.vertical;
+  const fitScale = availableWidth > 0 && availableHeight > 0
+    ? Math.min(1, availableWidth / frameWidth, availableHeight / frameHeight)
+    : 1;
+  const nextScale = previewSizing === "fit" ? fitScale : 1;
+  const roundedScale = Number(nextScale.toFixed(6));
+  const percentage = Math.round(roundedScale * 100);
+  const previousAnnouncement = elements.scaleStatus.textContent;
+
+  elements.frameShell.style.transform = "scale(" + roundedScale + ")";
+  elements.frameSizing.style.width = frameWidth * roundedScale + "px";
+  elements.frameSizing.style.height = frameHeight * roundedScale + "px";
+  elements.frameSizing.dataset.sizing = previewSizing;
+  elements.frameSizing.dataset.scale = String(roundedScale);
+  elements.scaleReadout.textContent = previewSizing === "fit" ? "Fit / " + percentage + "%" : "100%";
+  syncSizingControls();
+
+  const announcement = "Preview scale " + percentage + " percent. Configured viewport remains "
+    + viewport.width + " by " + viewport.height + " pixels.";
+  if (announce && announcement !== previousAnnouncement) elements.scaleStatus.textContent = announcement;
+
+  if (lab.dataset.previewReady !== "true") {
+    requestAnimationFrame(() => {
+      lab.dataset.previewReady = "true";
+    });
+  }
+}
+
+function choosePreviewSizing(mode) {
+  if (!["fit", "actual"].includes(mode) || mode === previewSizing) return;
+  previewSizing = mode;
+  renderPreviewSizing();
+}
+
 function renderViewport() {
   const viewport = selectedViewport();
   elements.frameShell.style.setProperty("--lab-frame-width", viewport.width + "px");
@@ -174,11 +373,47 @@ function renderViewport() {
   elements.stage.dataset.viewport = viewport.id;
   elements.viewportReadout.textContent = viewport.label + " / " + viewport.width + " px";
   elements.frameSize.textContent = viewport.width + " x " + viewport.height;
+  renderPreviewSizing();
 }
 
 function renderThemeReadout(theme) {
   const resolved = theme || selectedTheme();
   elements.themeReadout.textContent = resolved.label;
+}
+
+function fullscreenAvailable() {
+  return typeof elements.preview.requestFullscreen === "function"
+    && typeof document.exitFullscreen === "function"
+    && document.fullscreenEnabled !== false;
+}
+
+function syncFullscreenControl() {
+  const available = fullscreenAvailable();
+  const active = document.fullscreenElement === elements.preview;
+  elements.fullscreen.disabled = !available;
+  elements.fullscreen.setAttribute("aria-pressed", String(active));
+  elements.fullscreen.textContent = active ? "Exit fullscreen" : "Fullscreen";
+  elements.preview.dataset.fullscreen = String(active);
+  if (available) {
+    elements.fullscreen.removeAttribute("title");
+  } else {
+    elements.fullscreen.title = "Fullscreen is unavailable in this browser.";
+  }
+}
+
+async function toggleFullscreen() {
+  if (!fullscreenAvailable()) return;
+  try {
+    if (document.fullscreenElement === elements.preview) {
+      await document.exitFullscreen();
+    } else {
+      await elements.preview.requestFullscreen();
+    }
+  } catch {
+    // Fullscreen permission and user-agent policy are authoritative. The control
+    // remains synchronized by fullscreenchange instead of manufacturing success.
+    syncFullscreenControl();
+  }
 }
 
 function renderDirectLink() {
@@ -226,7 +461,7 @@ function applyAppearance() {
     if (resolved.id !== current.theme) {
       current.theme = resolved.id;
       syncPressedControls();
-      writeUrl();
+      writeUrl("replace");
     }
     renderThemeReadout(resolved);
   });
@@ -368,12 +603,12 @@ function loadReference() {
   lab.dataset.loadState = "loading";
   elements.frameShell.dataset.loading = "true";
 
-  if (elements.frame.src === nextUrl.href) {
+  const currentUrl = currentFrameUrl();
+  if (currentUrl.href === nextUrl.href) {
     inspectReference(revision);
     return;
   }
 
-  const currentUrl = new URL(elements.frame.src || "about:blank", window.location.href);
   const sameDocument = currentUrl.origin === nextUrl.origin
     && currentUrl.pathname === nextUrl.pathname
     && currentUrl.search === nextUrl.search;
@@ -381,10 +616,18 @@ function loadReference() {
     try {
       elements.frame.contentWindow?.addEventListener("hashchange", () => inspectReference(revision), { once: true });
     } catch {
-      // A temporarily isolated fixture cannot expose its Window. Assigning src below restores the requested same-origin reference.
+      // A temporarily isolated fixture cannot expose its Window. The fallback below restores the requested reference.
     }
   }
-  elements.frame.src = nextUrl.href;
+  try {
+    const frameWindow = elements.frame.contentWindow;
+    if (!frameWindow) throw new Error("The reference frame Window is unavailable.");
+    // Scenario controls own the top-level history entry. Replacing the nested
+    // document keeps iframe navigations from adding duplicate Back/Forward steps.
+    frameWindow.location.replace(nextUrl.href);
+  } catch {
+    elements.frame.src = nextUrl.href;
+  }
 }
 
 function renderAll(options = {}) {
@@ -393,48 +636,50 @@ function renderAll(options = {}) {
   renderThemeReadout();
   renderDirectLink();
   syncPressedControls();
-  writeUrl();
+  if (options.historyMode) writeUrl(options.historyMode);
   if (options.reload !== false) loadReference();
 }
 
-function chooseScenario(id) {
+function chooseScenario(id, historyMode = "push") {
   const scenario = scenarios.find((candidate) => candidate.id === id) || scenarios[0];
+  if (scenario.id === current.scenario) return;
   current.scenario = scenario.id;
   current.state = scenario.state_controls[0].state;
   elements.scenario.value = scenario.id;
   renderStateOptions(scenario);
-  renderAll();
+  renderAll({ historyMode });
 }
 
-function chooseState(state) {
+function chooseState(state, historyMode = "push") {
   const scenario = selectedScenario();
   const control = scenario.state_controls.find((candidate) => candidate.state === state) || scenario.state_controls[0];
+  if (control.state === current.state) return;
   current.state = control.state;
   elements.state.value = control.state;
   renderDirectLink();
-  writeUrl();
+  writeUrl(historyMode);
   loadReference();
 }
 
-function chooseViewport(id) {
-  if (!viewports.some((viewport) => viewport.id === id)) return;
+function chooseViewport(id, historyMode = "push") {
+  if (!viewports.some((viewport) => viewport.id === id) || id === current.viewport) return;
   const revision = beginInspection();
   clearError();
   current.viewport = id;
   renderViewport();
   syncPressedControls();
-  writeUrl();
+  writeUrl(historyMode);
   setVerification("loading", "Checking fixture", selectedControl().label);
   scheduleVerification(revision);
 }
 
-function chooseTheme(id) {
-  if (!themes.some((theme) => theme.id === id)) return;
+function chooseTheme(id, historyMode = "push") {
+  if (!themes.some((theme) => theme.id === id) || id === current.theme) return;
   const revision = beginInspection();
   clearError();
   current.theme = id;
   syncPressedControls();
-  writeUrl();
+  writeUrl(historyMode);
   setVerification("loading", "Checking fixture", selectedControl().label);
   try {
     if (frameMatchesCurrentReference()) {
@@ -493,6 +738,59 @@ const frameResizeObserver = new ResizeObserver(() => {
 });
 frameResizeObserver.observe(elements.frame);
 
+const previewResizeObserver = new ResizeObserver(() => {
+  if (!current || previewSizing !== "fit") return;
+  if (previewResizeFrame) cancelAnimationFrame(previewResizeFrame);
+  previewResizeFrame = requestAnimationFrame(() => {
+    previewResizeFrame = null;
+    renderPreviewSizing();
+  });
+});
+previewResizeObserver.observe(elements.stage);
+
+elements.controlsTrigger.addEventListener("click", () => {
+  if (controlsAreOpen()) {
+    setControls(false, { returnTarget: elements.controlsTrigger });
+  } else {
+    setControls(true, { returnTarget: elements.controlsTrigger });
+  }
+});
+
+elements.controlsClose.addEventListener("click", () => setControls(false));
+elements.controlsScrim.addEventListener("click", () => setControls(false));
+
+elements.controls.addEventListener("keydown", (event) => {
+  if (!controlsOverlay.matches || !controlsAreOpen() || event.key !== "Tab") return;
+  const focusable = focusableControls();
+  const first = focusable[0];
+  const last = focusable.at(-1);
+  if (!first || !last) return;
+  if (event.shiftKey && document.activeElement === first) {
+    event.preventDefault();
+    last.focus();
+  } else if (!event.shiftKey && document.activeElement === last) {
+    event.preventDefault();
+    first.focus();
+  }
+});
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && !document.fullscreenElement && controlsAreOpen()) setControls(false);
+});
+
+controlsOverlay.addEventListener("change", (event) => {
+  const focusedInside = elements.controls.contains(document.activeElement);
+  if (event.matches) {
+    setControls(false, { moveFocus: focusedInside, returnTarget: elements.controlsTrigger });
+  } else {
+    setControls(true, { moveFocus: false, returnTarget: elements.controlsTrigger });
+  }
+});
+
+reducedMotion.addEventListener("change", () => {
+  if (controlsState() === "closing") setControls(false, { moveFocus: false });
+});
+
 elements.scenario.addEventListener("change", () => chooseScenario(elements.scenario.value));
 elements.state.addEventListener("change", () => chooseState(elements.state.value));
 
@@ -506,8 +804,48 @@ elements.themeGroup.addEventListener("click", (event) => {
   if (button) chooseTheme(button.dataset.labTheme);
 });
 
+elements.previewActions.addEventListener("click", (event) => {
+  const sizing = event.target.closest("[data-lab-sizing]");
+  if (sizing) choosePreviewSizing(sizing.dataset.labSizing);
+});
+
+elements.fullscreen.addEventListener("click", toggleFullscreen);
+document.addEventListener("fullscreenchange", syncFullscreenControl);
+document.addEventListener("fullscreenerror", syncFullscreenControl);
+
 bindArrowNavigation(elements.viewportGroup, "[data-lab-viewport]");
 bindArrowNavigation(elements.themeGroup, "[data-lab-theme]");
+
+function resolveLocationState(params = new URLSearchParams(window.location.search)) {
+  const scenario = scenarios.find((candidate) => candidate.id === params.get("scenario")) || scenarios[0];
+  const control = scenario.state_controls.find((candidate) => candidate.state === params.get("state")) || scenario.state_controls[0];
+  const viewport = viewports.find((candidate) => candidate.id === params.get("viewport"))
+    || viewports.find((candidate) => candidate.id === (matchMedia("(max-width: 720px)").matches ? "narrow" : "wide"))
+    || viewports[0];
+  const theme = themes.find((candidate) => candidate.id === params.get("theme"))
+    || themes.find((candidate) => candidate.id === "dark")
+    || themes[0];
+
+  return {
+    scenario: scenario.id,
+    state: control.state,
+    viewport: viewport.id,
+    theme: theme.id
+  };
+}
+
+function restoreFromLocation() {
+  if (scenarios.length === 0 || viewports.length === 0 || themes.length === 0) return;
+  current = resolveLocationState();
+  elements.scenario.value = current.scenario;
+  renderStateOptions(selectedScenario());
+  renderAll();
+  if (window.location.hash || serializedUrl() !== window.location.pathname + window.location.search) {
+    writeUrl("replace");
+  }
+}
+
+window.addEventListener("popstate", restoreFromLocation);
 
 async function initialize() {
   try {
@@ -524,29 +862,15 @@ async function initialize() {
       elements.scenario.append(option(scenario.id, scenario.id + " / " + scenario.canonical_name));
     }
 
-    const params = new URLSearchParams(window.location.search);
-    const scenario = scenarios.find((candidate) => candidate.id === params.get("scenario")) || scenarios[0];
-    const control = scenario.state_controls.find((candidate) => candidate.state === params.get("state")) || scenario.state_controls[0];
-    const viewport = viewports.find((candidate) => candidate.id === params.get("viewport"))
-      || viewports.find((candidate) => candidate.id === (matchMedia("(max-width: 720px)").matches ? "narrow" : "wide"))
-      || viewports[0];
-    const theme = themes.find((candidate) => candidate.id === params.get("theme"))
-      || themes.find((candidate) => candidate.id === "dark")
-      || themes[0];
-
-    current = {
-      scenario: scenario.id,
-      state: control.state,
-      viewport: viewport.id,
-      theme: theme.id
-    };
-
-    elements.scenario.value = scenario.id;
-    renderStateOptions(scenario);
-    renderAll();
+    current = resolveLocationState();
+    elements.scenario.value = current.scenario;
+    renderStateOptions(selectedScenario());
+    renderAll({ historyMode: "replace" });
   } catch (error) {
     showError(error.message);
   }
 }
 
+initializeControls();
+syncFullscreenControl();
 initialize();

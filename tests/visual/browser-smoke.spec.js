@@ -19,10 +19,10 @@ test("cross-browser smoke preserves navigation focus and advanced states", async
   test.setTimeout(60_000);
   await page.goto("/", { waitUntil: "domcontentloaded" });
   await expect(page.locator("html")).toHaveAttribute("data-site-ready", "true");
-  await expect(page).toHaveTitle("KIN Design System");
+  await expect(page).toHaveTitle("KIN Showcase — Design rules and runnable references");
   await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
 
-  const search = page.getByRole("button", { name: /Search sections/ });
+  const search = page.getByRole("button", { name: /Search KIN/ });
   await search.click();
   await expect(page.getByRole("dialog")).toBeVisible();
   await expect(page.getByRole("searchbox", { name: "Search commands" })).toBeFocused();
