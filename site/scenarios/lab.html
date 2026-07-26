@@ -23,16 +23,24 @@
       <span><strong>KIN</strong><small>Scenario Atlas</small></span>
     </a>
     <div class="lab-topbar-end">
+      <button class="lab-controls-trigger" type="button" data-lab-controls-trigger aria-controls="lab-controls" aria-expanded="true">Controls</button>
       <span class="lab-phase">Phase 3 inspection</span>
       <a class="lab-back" href="./"><span aria-hidden="true">&larr;</span> All scenarios</a>
     </div>
   </header>
 
   <main id="main" class="lab-shell" data-scenario-lab data-load-state="loading">
-    <aside class="lab-controls" aria-labelledby="lab-controls-title">
+    <div class="lab-controls-scrim" data-lab-controls-scrim aria-hidden="true"></div>
+
+    <aside id="lab-controls" class="lab-controls" data-lab-controls aria-labelledby="lab-controls-title">
       <header class="lab-controls-heading">
-        <p class="eyebrow">Inspection controls</p>
-        <h1 id="lab-controls-title">Review the reference in context.</h1>
+        <div class="lab-controls-heading-row">
+          <div>
+            <p class="eyebrow">Inspection controls</p>
+            <h1 id="lab-controls-title">Review the reference in context.</h1>
+          </div>
+          <button class="lab-controls-close" type="button" data-lab-controls-close aria-label="Close inspection controls">Close</button>
+        </div>
         <p>Only deterministic states implemented by the linked reference appear here.</p>
       </header>
 
@@ -91,23 +99,36 @@
       </section>
     </aside>
 
-    <section class="lab-preview" aria-labelledby="lab-preview-title">
+    <section class="lab-preview" data-lab-preview aria-labelledby="lab-preview-title">
       <header class="lab-preview-bar">
-        <div>
+        <div class="lab-preview-heading">
           <p class="eyebrow" data-lab-preview-kicker>Loading scenario</p>
           <h2 id="lab-preview-title" data-lab-preview-title>Preparing reference...</h2>
         </div>
-        <div class="lab-readouts" aria-label="Resolved inspection settings">
-          <span data-lab-viewport-readout>Viewport</span>
-          <span data-lab-theme-readout>Theme</span>
-          <span class="lab-verification" data-lab-verification data-state="loading" role="status" aria-live="polite">Checking fixture</span>
+        <div class="lab-preview-tools">
+          <div class="lab-preview-actions" aria-label="Preview controls">
+            <div class="lab-sizing-controls" role="group" aria-label="Preview sizing">
+              <button type="button" data-lab-sizing="fit" aria-pressed="true">Fit</button>
+              <button type="button" data-lab-sizing="actual" aria-pressed="false">100%</button>
+            </div>
+            <button type="button" data-lab-fullscreen aria-pressed="false" disabled>Fullscreen</button>
+          </div>
+          <div class="lab-readouts" aria-label="Resolved inspection settings">
+            <span data-lab-scale-readout>Fit</span>
+            <span data-lab-viewport-readout>Viewport</span>
+            <span data-lab-theme-readout>Theme</span>
+            <span class="lab-verification" data-lab-verification data-state="loading" role="status" aria-live="polite">Checking fixture</span>
+          </div>
         </div>
+        <p class="visually-hidden" data-lab-scale-status role="status" aria-live="polite" aria-atomic="true"></p>
       </header>
 
       <div class="lab-stage" data-lab-stage tabindex="0" aria-label="Scrollable scenario preview">
-        <div class="lab-frame-shell" data-lab-frame-shell>
-          <div class="lab-frame-label" aria-hidden="true"><span data-lab-frame-size></span><span>Local deterministic reference</span></div>
-          <iframe data-lab-frame title="Scenario reference" loading="eager"></iframe>
+        <div class="lab-frame-sizing" data-lab-frame-sizing>
+          <div class="lab-frame-shell" data-lab-frame-shell>
+            <div class="lab-frame-label" aria-hidden="true"><span data-lab-frame-size></span><span>Local deterministic reference</span></div>
+            <iframe data-lab-frame title="Scenario reference" loading="eager"></iframe>
+          </div>
         </div>
       </div>
 

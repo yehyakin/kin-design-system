@@ -2,6 +2,8 @@ import fs from "node:fs";
 import path from "node:path";
 import process from "node:process";
 import { expectedAgentResponses, validateAgentSiteOutput } from "./lib/agent-pages.mjs";
+import { showcaseProofCounts } from "./lib/showcase-home.mjs";
+import { SHOWCASE_COMPONENT_IDS, SHOWCASE_GENERATED_PATHS } from "./lib/showcase-pages.mjs";
 import { validateSiteOutputAllowlist } from "./lib/site-artifacts.mjs";
 
 const root = process.cwd();
@@ -10,7 +12,13 @@ const failures = [];
 const required = [
   "index.html",
   "zh/index.html",
+  "docs/index.html",
+  "zh/docs/index.html",
+  "lab/index.html",
   "404.html",
+  "assets/showcase.css",
+  "assets/showcase.js",
+  "assets/posters/int-02-normal-dark.png",
   "assets/site.css",
   "assets/site.js",
   "assets/scenario-lab.js",
@@ -44,6 +52,7 @@ const required = [
   "examples/product-patterns/ecommerce.html",
   "examples/product-patterns/canvas.html",
   "tokens/kin.tokens.json",
+  ...SHOWCASE_GENERATED_PATHS,
 ];
 
 function findTarget(file, rawTarget) {
@@ -66,6 +75,9 @@ if (fs.existsSync(output)) {
   const htmlFiles = [
     "index.html",
     "zh/index.html",
+    "docs/index.html",
+    "zh/docs/index.html",
+    "lab/index.html",
     "404.html",
     "scenarios/index.html",
     "scenarios/lab.html",
@@ -83,12 +95,13 @@ if (fs.existsSync(output)) {
     "examples/product-patterns/information.html",
     "examples/product-patterns/ecommerce.html",
     "examples/product-patterns/canvas.html",
+    ...SHOWCASE_GENERATED_PATHS,
   ].map((file) => path.join(output, file));
   const attributePattern = /\b(?:href|src)=["']([^"']+)["']/g;
   for (const file of htmlFiles) {
     const source = fs.readFileSync(file, "utf8");
     const relative = path.relative(output, file).replaceAll(path.sep, "/");
-    const ids = [...source.matchAll(/\bid=["']([^"']+)["']/g)].map((match) => match[1]);
+    const ids = [...source.matchAll(/(?:^|[\s<])id=["']([^"']+)["']/g)].map((match) => match[1]);
     const duplicates = ids.filter((id, index) => ids.indexOf(id) !== index);
     if (duplicates.length > 0) failures.push(`${relative}: duplicate IDs -> ${[...new Set(duplicates)].join(", ")}`);
     if (!/<html\b[^>]*\blang=["'][^"']+["']/i.test(source)) failures.push(`${relative}: html language is missing`);
@@ -107,9 +120,95 @@ if (fs.existsSync(output)) {
       if (fragment && path.extname(target).toLowerCase() === ".html") {
         const targetSource = fs.readFileSync(target, "utf8");
         const escaped = fragment.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-        if (!new RegExp(`\\bid=["']${escaped}["']`).test(targetSource)) failures.push(`${relative}: missing fragment target -> ${raw}`);
+        if (!new RegExp(`(?:^|[\\s<])id=["']${escaped}["']`).test(targetSource)) failures.push(`${relative}: missing fragment target -> ${raw}`);
       }
     }
+  }
+}
+
+const showcaseRoutePairs = [
+  ["index.html", "zh/index.html"],
+  ["docs/index.html", "zh/docs/index.html"],
+  ["components/index.html", "zh/components/index.html"],
+  ["patterns/index.html", "zh/patterns/index.html"],
+  ...SHOWCASE_COMPONENT_IDS.map((id) => [
+    `components/${id}/index.html`,
+    `zh/components/${id}/index.html`,
+  ]),
+];
+const siteOrigin = "https://yehyakin.github.io/kin-design-system/";
+const absoluteShowcaseRoute = (publicPath) => new URL(publicPath.replace(/index\.html$/u, ""), siteOrigin).href;
+for (const [englishPath, chinesePath] of showcaseRoutePairs) {
+  for (const [publicPath, locale] of [[englishPath, "en"], [chinesePath, "zh-CN"]]) {
+    const file = path.join(output, publicPath);
+    if (!fs.existsSync(file)) continue;
+    const source = fs.readFileSync(file, "utf8");
+    const canonical = absoluteShowcaseRoute(publicPath);
+    if (!source.includes(`<link rel="canonical" href="${canonical}">`)) {
+      failures.push(`${publicPath}: canonical URL must be ${canonical}`);
+    }
+    if (!source.includes(`<link rel="alternate" hreflang="en" href="${absoluteShowcaseRoute(englishPath)}">`)) {
+      failures.push(`${publicPath}: English alternate is missing or incorrect`);
+    }
+    if (!source.includes(`<link rel="alternate" hreflang="zh-CN" href="${absoluteShowcaseRoute(chinesePath)}">`)) {
+      failures.push(`${publicPath}: Chinese alternate is missing or incorrect`);
+    }
+    if (!new RegExp(`<html\\b[^>]*\\blang=["']${locale}["']`, "iu").test(source)) {
+      failures.push(`${publicPath}: expected locale ${locale}`);
+    }
+  }
+}
+
+for (const publicPath of ["index.html", "zh/index.html"]) {
+  const file = path.join(output, publicPath);
+  if (!fs.existsSync(file)) continue;
+  const source = fs.readFileSync(file, "utf8");
+  for (const id of ["overview", "principles", "foundations", "components", "patterns", "ai-contract", "agents", "resources", "flows"]) {
+    const escaped = id.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    if (!new RegExp(`\\bid=["']${escaped}["']`, "u").test(source)) {
+      failures.push(`${publicPath}: legacy fragment #${id} must remain addressable`);
+    }
+  }
+  for (const [key, value] of Object.entries(showcaseProofCounts(root))) {
+    const escaped = key.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    if (!new RegExp(`<span(?=[^>]*\\bdata-showcase-count=["']${escaped}["'])[^>]*>\\s*${value}\\s*<\\/span>`, "u").test(source)) {
+      failures.push(`${publicPath}: proof count ${key} must resolve to ${value}`);
+    }
+  }
+  if (!source.includes('data-showcase-route="home"')) failures.push(`${publicPath}: home route marker is missing`);
+}
+
+const labAliasPath = path.join(output, "lab/index.html");
+if (fs.existsSync(labAliasPath)) {
+  const source = fs.readFileSync(labAliasPath, "utf8");
+  const canonical = `${siteOrigin}scenarios/lab.html`;
+  if (!source.includes(`<link rel="canonical" href="${canonical}">`)) {
+    failures.push(`lab/index.html: canonical URL must remain ${canonical}`);
+  }
+  if (!source.includes('location.replace(target)')) failures.push("lab/index.html: query-preserving canonical handoff is missing");
+}
+
+for (const [publicPath, marker] of [
+  ["components/index.html", "components"],
+  ["zh/components/index.html", "components"],
+  ["patterns/index.html", "patterns"],
+  ["zh/patterns/index.html", "patterns"],
+]) {
+  const file = path.join(output, publicPath);
+  if (fs.existsSync(file) && !fs.readFileSync(file, "utf8").includes(`data-showcase-route="${marker}"`)) {
+    failures.push(`${publicPath}: ${marker} route marker is missing`);
+  }
+}
+
+for (const id of SHOWCASE_COMPONENT_IDS) {
+  for (const publicPath of [`components/${id}/index.html`, `zh/components/${id}/index.html`]) {
+    const file = path.join(output, publicPath);
+    if (!fs.existsSync(file)) continue;
+    const source = fs.readFileSync(file, "utf8");
+    if (!source.includes('data-showcase-route="component-explorer"')) {
+      failures.push(`${publicPath}: component Explorer marker is missing`);
+    }
+    if (!source.includes(`data-component-id="${id}"`)) failures.push(`${publicPath}: canonical component ID is missing`);
   }
 }
 
@@ -143,12 +242,14 @@ const assetDirectory = path.join(output, "assets");
 if (fs.existsSync(path.join(assetDirectory, "sonner-island.js"))) failures.push("assets/sonner-island.js: unbundled source must not ship");
 if (fs.existsSync(assetDirectory)) {
   const mainBundle = path.join(assetDirectory, "site.js");
+  const showcaseBundle = path.join(assetDirectory, "showcase.js");
   const scenarioLabBundle = path.join(assetDirectory, "scenario-lab.js");
   const chunks = fs.existsSync(path.join(assetDirectory, "chunks"))
     ? fs.readdirSync(path.join(assetDirectory, "chunks"))
     : [];
   if (!chunks.some((file) => file.startsWith("sonner-island-") && file.endsWith(".js"))) failures.push("assets/chunks: lazy Sonner bundle is missing");
   if (fs.existsSync(mainBundle) && fs.statSync(mainBundle).size > 50_000) failures.push("assets/site.js: initial JavaScript bundle exceeds 50 KB");
+  if (fs.existsSync(showcaseBundle) && fs.statSync(showcaseBundle).size > 30_000) failures.push("assets/showcase.js: initial JavaScript bundle exceeds 30 KB");
   if (fs.existsSync(scenarioLabBundle) && fs.statSync(scenarioLabBundle).size > 35_000) failures.push("assets/scenario-lab.js: initial JavaScript bundle exceeds 35 KB");
 }
 
@@ -158,6 +259,25 @@ if (fs.existsSync(cssPath)) {
   if (/transition(?:-property)?\s*:\s*all\b/i.test(css)) failures.push("assets/site.css: transition: all is forbidden");
   if (!/prefers-reduced-motion/.test(css)) failures.push("assets/site.css: reduced-motion response is missing");
   if (!/:focus-visible/.test(css)) failures.push("assets/site.css: visible focus behavior is missing");
+}
+
+const showcaseCssPath = path.join(output, "assets/showcase.css");
+if (fs.existsSync(showcaseCssPath)) {
+  const css = fs.readFileSync(showcaseCssPath, "utf8");
+  if (/transition(?:-property)?\s*:\s*all\b/i.test(css)) failures.push("assets/showcase.css: transition: all is forbidden");
+  if (/(?:linear|radial|conic)-gradient\s*\(/i.test(css)) failures.push("assets/showcase.css: decorative gradients are forbidden");
+  if (!/prefers-reduced-motion/.test(css)) failures.push("assets/showcase.css: reduced-motion response is missing");
+}
+
+const posterPath = path.join(output, "assets/posters/int-02-normal-dark.png");
+if (fs.existsSync(posterPath)) {
+  const bytes = fs.readFileSync(posterPath);
+  const pngSignature = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]);
+  if (bytes.length < 24 || !bytes.subarray(0, 8).equals(pngSignature)) {
+    failures.push("assets/posters/int-02-normal-dark.png: expected a valid PNG poster");
+  } else if (bytes.readUInt32BE(16) !== 1180 || bytes.readUInt32BE(20) !== 760) {
+    failures.push("assets/posters/int-02-normal-dark.png: expected the governed 1180 x 760 reference viewport");
+  }
 }
 
 const integrationCssPath = path.join(output, "assets/kin-react.css");
@@ -235,7 +355,19 @@ if (fs.existsSync(scenarioCatalogPath) && fs.existsSync(scenarioHtmlPath)) {
 const scenarioLabHtmlPath = path.join(output, "scenarios/lab.html");
 if (fs.existsSync(scenarioLabHtmlPath)) {
   const scenarioLabHtml = fs.readFileSync(scenarioLabHtmlPath, "utf8");
-  for (const marker of ["data-lab-scenario", "data-lab-state", "data-lab-viewport-group", "data-lab-theme-group", "data-lab-verification", "data-lab-frame"]) {
+  for (const marker of [
+    "data-lab-scenario",
+    "data-lab-state",
+    "data-lab-viewport-group",
+    "data-lab-theme-group",
+    "data-lab-verification",
+    "data-lab-frame",
+    "data-lab-controls",
+    "data-lab-controls-trigger",
+    "data-lab-sizing",
+    "data-lab-fullscreen",
+    "data-lab-scale-readout",
+  ]) {
     if (!scenarioLabHtml.includes(marker)) failures.push("scenarios/lab.html: missing inspection marker " + marker);
   }
   if (!scenarioLabHtml.includes('src="../assets/scenario-lab.js"')) failures.push("scenarios/lab.html: bundled lab controller is missing");

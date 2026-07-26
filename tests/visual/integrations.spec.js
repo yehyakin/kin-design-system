@@ -296,9 +296,9 @@ test("Sonner keeps mobile notifications inside safe-area-aware offsets", async (
 });
 
 test("showcase registers the Blocks icon and removes thumb motion for Reduced Motion", async ({ page }) => {
-  await page.goto("/");
+  await page.goto("/docs/");
   await expect(page.locator("html")).toHaveAttribute("data-site-ready", "true");
-  const integrationLink = page.locator('a[href="examples/workspace-reference/integrations.html"]');
+  const integrationLink = page.locator('a[href="../examples/workspace-reference/integrations.html"]');
   await expect(integrationLink.locator("svg.lucide-blocks")).toBeVisible();
   const duration = await page.locator("[data-theme-switch]").evaluate((element) => getComputedStyle(element, "::after").transitionDuration);
   expect(duration).toBe("0s");
@@ -311,7 +311,7 @@ test("showcase registers the Blocks icon and removes thumb motion for Reduced Mo
   await expect(languageMenu).toHaveAttribute("data-state", "closed");
 
   const command = page.locator("[data-command-dialog]");
-  await page.getByRole("button", { name: /Search sections/ }).click();
+  await page.getByRole("button", { name: /Search sections and resources/ }).click();
   await expect(command).toHaveAttribute("data-state", "open");
   await expect(command.evaluate((element) => getComputedStyle(element).transform)).resolves.toBe("none");
   await page.keyboard.press("Escape");

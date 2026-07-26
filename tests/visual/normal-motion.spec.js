@@ -53,6 +53,36 @@ test("normal motion preserves spatial direction for Inspector and Drawer", async
   await expect(page.locator("[data-drawer-layer]")).toHaveAttribute("data-state", "closed");
 });
 
+test("normal motion keeps the mobile documentation Drawer edge path reversible", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/components/evidence-list/");
+
+  const trigger = page.locator("[data-nav-toggle]");
+  const navigation = page.locator(".docs-nav");
+  await trigger.click();
+  await expect(page.locator("body")).toHaveClass(/nav-open/);
+  const properties = await navigation.evaluate((element) =>
+    getComputedStyle(element).transitionProperty.split(",").map((value) => value.trim()),
+  );
+  expect(properties).toContain("transform");
+  expect(properties).toContain("opacity");
+
+  await trigger.click();
+  await expect(page.locator("body")).toHaveClass(/nav-closing/);
+  await trigger.click();
+  await expect(page.locator("body")).toHaveClass(/nav-open/);
+  await page.waitForTimeout(260);
+  await expect(page.locator("body")).toHaveClass(/nav-open/);
+  await expect(navigation).toHaveCSS("opacity", "1");
+  await expect(navigation.evaluate((element) => getComputedStyle(element).transform)).resolves.toMatch(
+    /matrix\(1, 0, 0, 1, 0, 0\)|none/,
+  );
+
+  await page.keyboard.press("Escape");
+  await expect(trigger).toBeFocused();
+  await expect(page.locator("body")).not.toHaveClass(/nav-open/);
+});
+
 test("normal motion core controls expose visible state transitions", async ({ page }) => {
   await page.goto("/examples/workspace-reference/core-components.html#motion");
   const disclosure = page.locator("[data-motion-disclosure]");

@@ -9,5 +9,6 @@ These plans were produced from a deep motion audit at commit `b300c02`. They are
 | [003](./003-define-tooltip-sequences.md) | Define first and subsequent Tooltip behavior | MEDIUM | COMPLETE | 002 |
 | [004](./004-specify-gesture-physics.md) | Specify gesture-driven Drawer and Sheet physics | MEDIUM | IMPLEMENTED · DEVICE REVIEW PENDING | 001 |
 | [005](./005-upgrade-motion-review-evidence.md) | Upgrade Motion Lab and verification evidence | MEDIUM | IMPLEMENTED · MANUAL REVIEW PENDING | 001–004 |
+| [006](./006-make-scenario-lab-spatial.md) | Make Scenario Lab controls spatial and reversible | HIGH | IMPLEMENTED · DEVICE REVIEW PENDING | 001–005 |
 
-Recommended order: 001 → 002 → 003 → 004 → 005. Plan 005 is the integration and evidence layer and MUST not be reported complete before the contracts it demonstrates are stable.
+Recommended order: 001 → 002 → 003 → 004 → 005 → 006. Plan 005 is the integration and evidence layer and MUST not be reported complete before the contracts it demonstrates are stable. Plan 006 applies those settled contracts to the Scenario Lab without changing Scenario evidence.
