@@ -8,6 +8,7 @@ The project follows semantic versioning for normative design documentation.
 
 ### Public documentation and discovery
 
+- Marked RFC 003 Showcase 2.0 implemented after production-bound build, deployment, Showcase-response, Agent-response, and cross-browser verification completed; physical-device, real screen-reader, and downstream product-adoption evidence remain explicitly unclaimed.
 - Accepted RFC 003 for Showcase 2.0, separating runnable workflow presentation, catalog-backed discovery, deterministic inspection, and full documentation while preserving legacy routes, Agent Distribution publication, source-maturity boundaries, and production evidence gates.
 - Implemented the first Showcase 2.0 candidate with bilingual workflow-led entry pages, catalog-generated Component and Pattern discovery, eight bounded Component Explorers, a friendly Lab alias, explicit canonical-fixture language boundaries, and a spatial Scenario Lab with reversible controls, Fit, 100%, fullscreen, and browser-history restoration.
 - Reworked the English and Chinese repository entry points so readers see KIN's purpose, a task-based reference, and the first-use paths before governance details. Added separate desktop and narrow-screen SVG illustrations, folded coding-tool instructions into a disclosure, and kept runnable references separate from production-adoption claims.

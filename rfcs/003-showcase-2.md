@@ -3,11 +3,20 @@
 Status: accepted
 Decision scope: public showcase composition, discovery routes, and inspection entry points
 Normative effect: none; accepted decisions become normative only when incorporated into governing contracts
-Implementation status: in progress
+Implementation status: implemented
 Accountable owner: [@yehyakin](https://github.com/yehyakin)
 Audited base: `4efb996cbffe8c8411400dbe722e8daae2d153ba`
+Implementation revision: `7616b5f9a87eff6a412427f446566ea39c93e5b0`
+Verification revision: `a4e39f060bb8898a19c9967408fd81bf6fce4bc2`
 
 Normative terms describe the required implementation of this accepted proposal. Acceptance authorizes phased implementation, but does not change component maturity, page maturity, adoption evidence, runtime-package maturity, Figma delivery, or release status.
+
+Production verification completed on 2026-07-26:
+
+- [GitHub Pages deployment](https://github.com/yehyakin/kin-design-system/actions/runs/30198324196) completed build, deployment, deployed-Showcase verification, and deployed-Agent verification successfully.
+- The production verifier checked 31 Showcase responses and 17 exact Agent responses at [yehyakin.github.io/kin-design-system](https://yehyakin.github.io/kin-design-system/).
+- Chromium, Firefox, and WebKit reference checks passed in CI before deployment.
+- This evidence does not claim a real screen-reader session, physical touch-device review, or production adoption by another product.
 
 ## 1. Decision
 
