@@ -3,6 +3,7 @@ import process from "node:process";
 import { SHOWCASE_COMPONENT_IDS } from "./lib/showcase-pages.mjs";
 
 const PUBLIC_ORIGIN = "https://yehyakin.github.io/kin-design-system/";
+const REQUEST_TIMEOUT_MS = 10_000;
 
 const LEGACY_HOME_FRAGMENTS = Object.freeze([
   "overview",
@@ -71,13 +72,24 @@ function canonicalUrl(route) {
   return new URL(route.replace(/^\//u, ""), PUBLIC_ORIGIN).href;
 }
 
+async function fetchForVerification(url) {
+  try {
+    return await fetch(url, {
+      cache: "no-store",
+      signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
+    });
+  } catch (error) {
+    throw new Error(`${url.href}: ${error.message}`, { cause: error });
+  }
+}
+
 async function inspectShowcase({ baseUrl }) {
   const failures = [];
   let checked = 0;
 
   for (const route of ROUTES) {
     const url = new URL(route.path, baseUrl);
-    const response = await fetch(url);
+    const response = await fetchForVerification(url);
     checked += 1;
     if (!response.ok) {
       failures.push(`${route.path || "/"}: expected a successful response, received ${response.status}`);
@@ -118,12 +130,12 @@ async function inspectShowcase({ baseUrl }) {
   }
 
   for (const asset of STATIC_ASSETS) {
-    const response = await fetch(new URL(asset, baseUrl));
+    const response = await fetchForVerification(new URL(asset, baseUrl));
     checked += 1;
     if (!response.ok) failures.push(`${asset}: expected a successful response, received ${response.status}`);
   }
 
-  const sitemapResponse = await fetch(new URL("sitemap.xml", baseUrl));
+  const sitemapResponse = await fetchForVerification(new URL("sitemap.xml", baseUrl));
   checked += 1;
   if (!sitemapResponse.ok) {
     failures.push(`sitemap.xml: expected a successful response, received ${sitemapResponse.status}`);

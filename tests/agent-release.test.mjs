@@ -733,6 +733,10 @@ test("release eligibility and Pages workflows preserve read-only verification bo
   assert.match(pages, /verify-showcase-responses\.mjs --base-url/u);
   assert.match(pages, /verify-agent-responses\.mjs --base-url/u);
 
+  const showcaseVerification = fs.readFileSync(path.join(root, "scripts", "verify-showcase-responses.mjs"), "utf8");
+  assert.match(showcaseVerification, /AbortSignal\.timeout\(REQUEST_TIMEOUT_MS\)/u);
+  assert.match(showcaseVerification, /cache:\s*"no-store"/u);
+
   const validation = fs.readFileSync(path.join(root, ".github", "workflows", "validate-docs.yml"), "utf8");
   assert.match(validation, /fetch-depth: 0/u);
   assert.match(validation, /agent:check:published/u);
