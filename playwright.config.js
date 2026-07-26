@@ -1,5 +1,8 @@
 import { defineConfig, devices } from "@playwright/test";
 
+const externalBaseURL = process.env.KIN_SHOWCASE_BASE_URL;
+const baseURL = externalBaseURL ?? "http://127.0.0.1:4173";
+
 export default defineConfig({
   testDir: "./tests/visual",
   outputDir: "./test-results/playwright",
@@ -9,7 +12,7 @@ export default defineConfig({
   workers: process.env.CI ? 2 : undefined,
   reporter: process.env.CI ? [["line"], ["html", { outputFolder: "playwright-report", open: "never" }]] : "line",
   use: {
-    baseURL: "http://127.0.0.1:4173",
+    baseURL,
     colorScheme: "dark",
     trace: "retain-on-failure",
   },
@@ -47,10 +50,12 @@ export default defineConfig({
       },
     },
   ],
-  webServer: {
-    command: "npm run site:build && node scripts/serve-site.mjs",
-    url: "http://127.0.0.1:4173/",
-    reuseExistingServer: !process.env.CI,
-    timeout: 30_000,
-  },
+  webServer: externalBaseURL
+    ? undefined
+    : {
+        command: "npm run site:build && node scripts/serve-site.mjs",
+        url: baseURL,
+        reuseExistingServer: !process.env.CI,
+        timeout: 30_000,
+      },
 });

@@ -18,7 +18,7 @@
   <link rel="icon" href="../assets/mark.svg" type="image/svg+xml">
   <link rel="manifest" href="../manifest.webmanifest">
   <link rel="stylesheet" href="../assets/site.css">
-  <link rel="stylesheet" href="../assets/showcase.css">
+  <link rel="stylesheet" href="../assets/showcase.css?v=2.1">
   <script>
     (() => {
       let storedTheme;
@@ -74,204 +74,167 @@
   </header>
 
   <main class="showcase-main" id="main" data-showcase-route="home">
-    <section class="showcase-lead" id="overview" aria-labelledby="overview-title">
-      <div class="showcase-intro">
-        <p class="showcase-label">展示 · 目录支持的参考界面</p>
-        <h1 id="overview-title">为清晰、信息密集型产品提供设计规则和可运行参考。</h1>
-        <p class="lead">KIN 是一套不绑定前端框架的设计合同，适用于需要阅读、比较、判断和操作，同时不能丢失上下文的网站与软件。</p>
-        <div class="showcase-actions">
-          <a class="showcase-button primary" href="../scenarios/"><i data-lucide="panels-top-left"></i>浏览场景</a>
-          <a class="showcase-button secondary" href="docs/"><i data-lucide="book-open"></i>阅读文档</a>
-        </div>
-        <p class="showcase-intro-note">参考页面使用固定的本地样例，便于反复检查同一状态。它们不是生产服务，也不能证明其他产品已经完成 KIN 接入。KIN 3.0.0 开发中；生产接入请使用 v2.3.0。</p>
+    <section class="showcase-hero" id="overview" aria-labelledby="overview-title">
+      <div class="showcase-hero-copy">
+        <p class="showcase-label">KIN Design System</p>
+        <h1 id="overview-title">为重要工作而设计。</h1>
+        <p class="lead">适用于需要认真阅读、比较依据、作出判断，并始终掌握下一步操作权的产品设计合同。</p>
+        <a class="showcase-button primary" href="../scenarios/"><i data-lucide="panels-top-left"></i>浏览场景</a>
       </div>
 
-      <article
-        class="featured-reference"
-        data-showcase-preview
-        data-scenario-id="INT-02"
-        data-state="idle"
-        data-label-enter="进入交互预览"
-        data-label-loading="正在载入预览"
-        data-label-retry="重试交互预览"
-        data-label-narrow="在 Lab 中打开预览"
-        data-status-idle="当前显示海报，交互参考尚未载入。"
-        data-status-loading="正在载入同源交互参考…"
-        data-status-active="交互预览已启用；按 Escape 返回海报。"
-        data-status-fallback="嵌入预览未能载入，请在 Lab 中打开同一状态。"
-        aria-labelledby="featured-title"
-      >
-        <header class="reference-heading">
-          <div>
-            <p class="reference-code">INT-02 / 情报工作台</p>
-            <h2 id="featured-title" data-showcase-feature-name="INT-02">调查与证据复核</h2>
-            <p class="reference-job" data-showcase-feature-job="INT-02">在记录结论前比较时间顺序、来源、冲突与不确定性。</p>
+      <article class="showcase-product-stage" data-scenario-stage data-stage-ready="false" aria-labelledby="stage-title">
+        <header class="stage-toolbar">
+          <div class="stage-tabs" role="tablist" aria-label="产品场景">
+            <button
+              id="scenario-tab-investigation"
+              type="button"
+              role="tab"
+              aria-controls="showcase-stage-panel"
+              aria-selected="true"
+              data-scenario-stage-option="INT-02"
+              data-showcase-stage-reference="INT-02"
+              data-showcase-stage-lab="INT-02"
+              data-reference="../examples/workspace-reference/index.html?view=investigation&amp;lang=zh-CN&amp;state=normal"
+              data-lab="../scenarios/lab.html?scenario=INT-02&amp;state=normal&amp;viewport=wide&amp;theme=dark&amp;mode=present"
+              data-title="调查与证据复核"
+              data-job="在记录结论前比较时间顺序、来源、冲突与不确定性。"
+              data-ready-selector="[data-investigation]"
+              data-poster="../assets/posters/int-02-normal-dark.png"
+            >调查</button>
+            <button
+              id="scenario-tab-commerce"
+              type="button"
+              role="tab"
+              aria-controls="showcase-stage-panel"
+              aria-selected="false"
+              data-scenario-stage-option="COM-02"
+              data-reference="../examples/product-patterns/ecommerce.html?edit=normal#product-context"
+              data-lab="../scenarios/lab.html?scenario=COM-02&amp;state=normal&amp;viewport=wide&amp;theme=dark&amp;mode=present"
+              data-title="商品详情与编辑"
+              data-job="编辑商品时，让可售状态、价格、库存、渠道和活动保持可见。"
+              data-ready-selector=".commerce-main"
+            >电商</button>
+            <button
+              id="scenario-tab-canvas"
+              type="button"
+              role="tab"
+              aria-controls="showcase-stage-panel"
+              aria-selected="false"
+              data-scenario-stage-option="ENG-01"
+              data-reference="../examples/product-patterns/canvas.html"
+              data-lab="../scenarios/lab.html?scenario=ENG-01&amp;state=normal&amp;viewport=wide&amp;theme=dark&amp;mode=present"
+              data-title="画布编辑与撤销"
+              data-job="在精确上下文中选择、修改、提交并撤销结构化对象。"
+              data-ready-selector=".canvas-main"
+            >画布</button>
           </div>
-          <dl class="reference-status">
-            <div><dt>来源成熟度</dt><dd data-showcase-feature-source="INT-02">稳定</dd></div>
-            <div><dt>展示状态</dt><dd data-showcase-feature-presentation="INT-02">已展示</dd></div>
-          </dl>
+          <a class="stage-lab-link" data-stage-lab-link data-showcase-lab-link data-showcase-feature-lab="INT-02" href="../scenarios/lab.html?scenario=INT-02&amp;state=normal&amp;viewport=wide&amp;theme=dark&amp;mode=present">在 Lab 中打开 <i data-lucide="arrow-up-right"></i></a>
         </header>
 
-        <div class="preview-viewport">
+        <div
+          class="stage-frame"
+          id="showcase-stage-panel"
+          role="tabpanel"
+          aria-labelledby="scenario-tab-investigation"
+        >
           <img
-            class="preview-poster"
-            data-preview-poster
+            class="stage-poster"
+            data-stage-poster
             src="../assets/posters/int-02-normal-dark.png"
             width="1180"
             height="760"
-            alt="KIN 调查参考界面：在深色工作台中显示 Alpha Network 证书变更调查、证据时间线、来源可用性与核验状态。"
+            alt="KIN 调查工作台，显示证据时间线与核验状态。"
           >
+          <div class="stage-loading" data-stage-loading role="status" aria-live="polite"><span aria-hidden="true"></span>正在准备参考界面</div>
           <iframe
-            class="preview-frame"
-            data-preview-frame
+            data-stage-frame
             data-showcase-feature-reference="INT-02"
-            data-src="../examples/workspace-reference/index.html?view=investigation&amp;lang=zh-CN&amp;state=normal"
-            data-preview-ready="[data-investigation]"
-            title="INT-02 调查与证据复核交互参考"
-            tabindex="-1"
-            aria-hidden="true"
-            inert
+            src="../examples/workspace-reference/index.html?view=investigation&amp;lang=zh-CN&amp;state=normal"
+            title="调查与证据复核参考界面"
+            scrolling="no"
           ></iframe>
         </div>
 
-        <div class="preview-controls">
-          <p class="preview-status" data-preview-status data-state="idle" role="status" aria-live="polite">当前显示海报，交互参考尚未载入。</p>
-          <div class="preview-actions">
-            <button class="preview-action primary" type="button" data-preview-activate hidden><i data-lucide="circle-play"></i><span data-preview-trigger-label>进入交互预览</span></button>
-            <button class="preview-action" type="button" data-preview-deactivate hidden>退出预览 <kbd>Esc</kbd></button>
-            <a class="preview-action" data-showcase-lab-link data-showcase-feature-lab="INT-02" href="../scenarios/lab.html?scenario=INT-02&amp;state=normal&amp;viewport=wide&amp;theme=dark"><i data-lucide="external-link"></i>在 Lab 中打开</a>
+        <footer class="stage-caption">
+          <div>
+            <p class="reference-code">INT-02 / 情报工作台</p>
+            <h2 id="stage-title" data-stage-title data-showcase-feature-name="INT-02">调查与证据复核</h2>
+            <p data-stage-job data-showcase-feature-job="INT-02">在记录结论前比较时间顺序、来源、冲突与不确定性。</p>
           </div>
-        </div>
-
-        <dl class="reference-boundaries">
-          <div><dt>海报证据</dt><dd>正常状态 · 宽视口 · 深色外观 · 来源提交 <code>4efb996</code></dd></div>
-          <div><dt>参考边界</dt><dd>这是固定的本地参考，没有连接实时来源、权威权限服务、持久化结论记录或生产调查数据。</dd></div>
-          <div><dt>验证边界</dt><dd>场景目录证据不包含人工读屏、真实浏览器缩放或实体触控设备复核。</dd></div>
-        </dl>
+          <details class="reference-disclosure">
+            <summary>关于此参考界面</summary>
+            <dl>
+              <div><dt>来源</dt><dd data-showcase-feature-source="INT-02">稳定</dd></div>
+              <div><dt>展示</dt><dd data-showcase-feature-presentation="INT-02">已展示</dd></div>
+              <div><dt>样例</dt><dd>使用固定本地数据；没有连接实时来源、权限服务或持久化结论。</dd></div>
+              <div><dt>验证</dt><dd>自动化参考检查不能替代真实读屏、浏览器缩放和实体设备复核。</dd></div>
+            </dl>
+          </details>
+        </footer>
       </article>
     </section>
 
-    <section class="catalog-proof" aria-label="目录证据">
-      <div class="proof-heading"><strong>目录证据</strong><span>构建时从规范目录注入</span></div>
-      <div class="proof-cell"><strong><span data-showcase-count="showcased-scenarios">—</span></strong><span>已展示场景</span></div>
-      <div class="proof-cell"><strong><span data-showcase-count="planned-scenarios">—</span></strong><span>计划中场景</span></div>
-      <div class="proof-cell"><strong><span data-showcase-count="stable-components">—</span></strong><span>稳定组件合同</span></div>
-      <div class="proof-cell"><strong><span data-showcase-count="stable-pages">—</span></strong><span>稳定页面类型</span></div>
-      <div class="proof-cell appearance"><strong>日间 · 夜间 · 跟随系统 · 高对比度</strong><span>明确的外观模式，不作为质量分数</span></div>
+    <section class="showcase-manifesto" id="patterns" aria-labelledby="manifesto-title">
+      <span class="legacy-fragment-anchor" id="principles" aria-hidden="true"></span>
+      <span class="legacy-fragment-anchor" id="foundations" aria-hidden="true"></span>
+      <p class="showcase-label">四种工作上下文</p>
+      <h2 id="manifesto-title">一套安静的系统，适应不同工作。</h2>
+      <div class="manifesto-grid">
+        <a data-scenario-id="INF-01" data-showcase-lab-link data-showcase-scenario-link="INF-01" href="../scenarios/lab.html?scenario=INF-01&amp;mode=present">
+          <span>01</span><strong>带着来源阅读</strong><p>把记录、来源和修订保留在同一条阅读路径中。</p><small data-showcase-scenario-meta="INF-01">INF-01 · 稳定来源 · 已展示</small>
+        </a>
+        <a data-scenario-id="INT-02" data-showcase-lab-link data-showcase-scenario-link="INT-02" href="../scenarios/lab.html?scenario=INT-02&amp;mode=present">
+          <span>02</span><strong>判断之前先调查</strong><p>比较时间顺序、冲突与不确定性，不把它们压成一个分数。</p><small data-showcase-scenario-meta="INT-02">INT-02 · 稳定来源 · 已展示</small>
+        </a>
+        <a data-scenario-id="COM-02" data-showcase-lab-link data-showcase-scenario-link="COM-02" href="../scenarios/lab.html?scenario=COM-02&amp;mode=present">
+          <span>03</span><strong>带着上下文运营</strong><p>分别保留可售状态、价格、库存、渠道、审批与历史。</p><small data-showcase-scenario-meta="COM-02">COM-02 · 稳定来源 · 已展示</small>
+        </a>
+        <a data-scenario-id="ENG-01" data-showcase-lab-link data-showcase-scenario-link="ENG-01" href="../scenarios/lab.html?scenario=ENG-01&amp;mode=present">
+          <span>04</span><strong>精确构建</strong><p>让画布主导，同时保留工具、选择、属性与恢复路径。</p><small data-showcase-scenario-meta="ENG-01">ENG-01 · 稳定来源 · 已展示</small>
+        </a>
+      </div>
+      <a class="section-route" href="patterns/">查看四种产品模式 <span aria-hidden="true">→</span></a>
     </section>
 
-    <section class="showcase-section" id="patterns" aria-labelledby="patterns-title">
-      <div class="showcase-section-heading">
-        <div>
-          <h2 id="patterns-title">按需要检查的任务开始浏览。</h2>
-          <a class="section-route" href="../scenarios/">打开完整场景目录 <span aria-hidden="true">→</span></a>
-        </div>
-        <p>每一行都会在现有场景 Lab 中打开由目录支持的状态。本版本的场景目录和 Lab 目前以英文为主。</p>
+    <section class="showcase-signature" id="components" aria-labelledby="components-title">
+      <span class="legacy-fragment-anchor" id="flows" aria-hidden="true"></span>
+      <span class="legacy-fragment-anchor" id="ai-contract" aria-hidden="true"></span>
+      <div class="signature-heading">
+        <p class="showcase-label">标志性交互</p>
+        <h2 id="components-title">在真正需要承诺的时刻保持清楚。</h2>
+        <p>KIN 让依据、建议变更、执行影响和持久任务，在人需要做决定的时刻保持可见。</p>
       </div>
-      <div class="task-list">
-        <a class="task-row" data-scenario-id="INT-02" data-showcase-lab-link data-showcase-scenario-link="INT-02" href="../scenarios/lab.html?scenario=INT-02&amp;state=normal&amp;viewport=wide&amp;theme=dark">
-          <span class="task-kind">复核证据</span>
-          <span class="task-copy"><strong>在记录结论前比较证据时间顺序</strong><span>分别保留来源可用性、核验状态、冲突与人工判断。</span></span>
-          <span class="row-meta" data-showcase-scenario-meta="INT-02">INT-02 · 稳定来源 · 已展示</span>
-          <span class="row-action">检查 →</span>
-        </a>
-        <a class="task-row" data-scenario-id="INF-01" data-showcase-lab-link data-showcase-scenario-link="INF-01" href="../scenarios/lab.html?scenario=INF-01&amp;state=normal&amp;viewport=wide&amp;theme=dark">
-          <span class="task-kind">核查记录</span>
-          <span class="task-copy"><strong>查找公开记录并确认来源与时效</strong><span>完成搜索、筛选、打开与返回，同时保留稳定的信息路径。</span></span>
-          <span class="row-meta" data-showcase-scenario-meta="INF-01">INF-01 · 稳定来源 · 已展示</span>
-          <span class="row-action">检查 →</span>
-        </a>
-        <a class="task-row" data-scenario-id="COM-02" data-showcase-lab-link data-showcase-scenario-link="COM-02" href="../scenarios/lab.html?scenario=COM-02&amp;state=normal&amp;viewport=wide&amp;theme=dark">
-          <span class="task-kind">编辑商品</span>
-          <span class="task-copy"><strong>修改商品数据时保留运营上下文</strong><span>价格、库存、渠道、审批与活动始终清楚区分。</span></span>
-          <span class="row-meta" data-showcase-scenario-meta="COM-02">COM-02 · 稳定来源 · 已展示</span>
-          <span class="row-action">检查 →</span>
-        </a>
-        <a class="task-row" data-scenario-id="ENG-01" data-showcase-lab-link data-showcase-scenario-link="ENG-01" href="../scenarios/lab.html?scenario=ENG-01&amp;state=normal&amp;viewport=wide&amp;theme=dark">
-          <span class="task-kind">编辑画布</span>
-          <span class="task-copy"><strong>选择、修改、提交并撤销结构化对象</strong><span>画布保持主导，工具、选择、单位与恢复路径继续可用。</span></span>
-          <span class="row-meta" data-showcase-scenario-meta="ENG-01">ENG-01 · 稳定来源 · 已展示</span>
-          <span class="row-action">检查 →</span>
-        </a>
+      <div class="signature-links">
+        <a data-component-id="evidence-list" href="components/evidence-list/"><i data-lucide="list-tree"></i><span><strong data-showcase-component-name="evidence-list">Evidence List</strong><small>把结论与支持、缺失、过期和冲突的来源建立对应关系。</small></span><em data-showcase-component-status="evidence-list">稳定合同</em></a>
+        <a data-component-id="suggested-change-review" href="components/suggested-change-review/"><i data-lucide="git-compare-arrows"></i><span><strong data-showcase-component-name="suggested-change-review">Suggested Change Review</strong><small>接受变更前，对比当前值与建议值。</small></span><em data-showcase-component-status="suggested-change-review">稳定合同</em></a>
+        <a data-component-id="execution-preview" href="components/execution-preview/"><i data-lucide="scan-eye"></i><span><strong data-showcase-component-name="execution-preview">Execution Preview</strong><small>执行前查看目标、写入、外部影响与回滚。</small></span><em data-showcase-component-status="execution-preview">稳定合同</em></a>
+        <a data-component-id="background-task-queue" href="components/background-task-queue/"><i data-lucide="list-checks"></i><span><strong data-showcase-component-name="background-task-queue">Background Task Queue</strong><small>让已接受的任务在进度、恢复和结果阶段始终可识别。</small></span><em data-showcase-component-status="background-task-queue">稳定合同</em></a>
       </div>
+      <a class="section-route" href="components/">探索组件系统 <span aria-hidden="true">→</span></a>
     </section>
 
-    <section class="showcase-section" id="components" aria-labelledby="components-title">
-      <div class="showcase-section-heading">
-        <div>
-          <h2 id="components-title">标志性交互让证据、审核、执行与持久任务保持可检查。</h2>
-          <a class="section-route" href="components/">浏览组件发现页 <span aria-hidden="true">→</span></a>
+    <section class="showcase-evidence" id="resources" aria-labelledby="resources-title">
+      <span class="legacy-fragment-anchor" id="agents" aria-hidden="true"></span>
+      <div>
+        <p class="showcase-label">可以随时检查</p>
+        <h2 id="resources-title">需要时，依据就在下一层。</h2>
+      </div>
+      <div class="evidence-copy">
+        <p>规范合同、可运行样例、生成产物和验证记录彼此分开。公共展示保持专注，依据只需一步即可查看。</p>
+        <div class="evidence-actions">
+          <a href="docs/">阅读合同 <span aria-hidden="true">→</span></a>
+          <a href="https://github.com/yehyakin/kin-design-system">检查仓库 <span aria-hidden="true">→</span></a>
         </div>
-        <p>这些行指向稳定的规范合同。稳定状态记录行为与证据，但不代表存在通用运行时组件包。</p>
-      </div>
-      <div class="component-list">
-        <a class="component-row" data-component-id="evidence-list" href="components/evidence-list/">
-          <strong>证据列表（<span data-showcase-component-name="evidence-list">Evidence List</span>）</strong>
-          <span>把结论或决策与支持、缺失、过期和冲突的来源建立对应关系。</span>
-          <span class="component-maturity" data-showcase-component-status="evidence-list">稳定合同</span>
-          <span class="row-action">检查 →</span>
-        </a>
-        <a class="component-row" data-component-id="suggested-change-review" href="components/suggested-change-review/">
-          <strong>建议变更审核（<span data-showcase-component-name="suggested-change-review">Suggested Change Review</span>）</strong>
-          <span>在接受、拒绝或编辑变更前，对比当前值与建议值。</span>
-          <span class="component-maturity" data-showcase-component-status="suggested-change-review">稳定合同</span>
-          <span class="row-action">检查 →</span>
-        </a>
-        <a class="component-row" data-component-id="execution-preview" href="components/execution-preview/">
-          <strong>执行预览（<span data-showcase-component-name="execution-preview">Execution Preview</span>）</strong>
-          <span>执行前展示目标、写入、权限、外部影响、不可逆性与回滚。</span>
-          <span class="component-maturity" data-showcase-component-status="execution-preview">稳定合同</span>
-          <span class="row-action">检查 →</span>
-        </a>
-        <a class="component-row" data-component-id="background-task-queue" href="components/background-task-queue/">
-          <strong>后台任务队列（<span data-showcase-component-name="background-task-queue">Background Task Queue</span>）</strong>
-          <span>让已接受的持久任务在进度、取消、恢复与结果阶段始终可识别。</span>
-          <span class="component-maturity" data-showcase-component-status="background-task-queue">稳定合同</span>
-          <span class="row-action">检查 →</span>
-        </a>
-      </div>
-    </section>
-
-    <section class="showcase-section" id="resources" aria-labelledby="resources-title">
-      <div class="showcase-section-heading">
-        <div>
-          <h2 id="resources-title">系统证据保持靠近事实来源。</h2>
-          <a class="section-route" href="docs/">打开文档 <span aria-hidden="true">→</span></a>
-        </div>
-        <p>规范合同、生成的互操作文件、固定参考界面与验证记录属于不同证据层，不互相替代。</p>
-      </div>
-      <div class="evidence-list">
-        <a class="evidence-row" id="principles" href="docs/#principles">
-          <strong>设计原则与视觉特征</strong>
-          <span>任务优先、单一主导区域、连续结构、语义分离与有目的的动效。</span>
-          <span class="evidence-kind">规范</span>
-          <span class="row-action">阅读 →</span>
-        </a>
-        <a class="evidence-row" id="foundations" href="docs/#foundations">
-          <strong>基础与语义 Token</strong>
-          <span>主题、对比度、字体、间距、表面、焦点和生成的互操作输出。</span>
-          <span class="evidence-kind">合同 + 生成文件</span>
-          <span class="row-action">检查 →</span>
-        </a>
-        <a class="evidence-row" id="ai-contract" href="docs/#ai-contract">
-          <strong>AI 交互合同</strong>
-          <span>结论、依据、不确定性、范围、人工批准、审计与回滚分别表达。</span>
-          <span class="evidence-kind">规范</span>
-          <span class="row-action">阅读 →</span>
-        </a>
-        <a class="evidence-row" id="agents" href="docs/#agents">
-          <strong>编码工具交付</strong>
-          <span>固定经过评审的合同，并明确保留项目自己的路由、数据、实现、证据与回滚。</span>
-          <span class="evidence-kind">Contract-first</span>
-          <span class="row-action">使用 →</span>
-        </a>
-        <a class="evidence-row" id="flows" href="docs/#flows">
-          <strong>页面与工作流合同</strong>
-          <span>完整用户任务、状态族、响应式行为、返回上下文与产品后端责任边界。</span>
-          <span class="evidence-kind">目录支持</span>
-          <span class="row-action">浏览 →</span>
-        </a>
+        <details class="catalog-disclosure">
+          <summary>目录与发布证据</summary>
+          <div class="catalog-proof" aria-label="目录证据">
+            <div class="proof-cell"><strong><span data-showcase-count="showcased-scenarios">—</span></strong><span>已展示场景</span></div>
+            <div class="proof-cell"><strong><span data-showcase-count="planned-scenarios">—</span></strong><span>计划中场景</span></div>
+            <div class="proof-cell"><strong><span data-showcase-count="stable-components">—</span></strong><span>稳定组件合同</span></div>
+            <div class="proof-cell"><strong><span data-showcase-count="stable-pages">—</span></strong><span>稳定页面类型</span></div>
+            <div class="proof-cell appearance"><strong>日间 · 夜间 · 跟随系统 · 高对比度</strong><span>明确的外观模式，不作为质量分数</span></div>
+          </div>
+        </details>
       </div>
     </section>
 
@@ -309,6 +272,6 @@
   </dialog>
 
   <script type="module" src="../assets/site.js"></script>
-  <script type="module" src="../assets/showcase.js"></script>
+  <script type="module" src="../assets/showcase.js?v=2.1"></script>
 </body>
 </html>

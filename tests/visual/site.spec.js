@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-const LEGACY_ROOT_IDS = [
+const SHOWCASE_ROOT_IDS = [
   "overview",
   "principles",
   "foundations",
@@ -13,9 +13,43 @@ const LEGACY_ROOT_IDS = [
 ];
 
 async function expectNoHorizontalOverflow(page) {
-  await expect(
-    page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth),
-  ).resolves.toBe(true);
+  const dimensions = await page.evaluate(() => ({
+    clientWidth: document.documentElement.clientWidth,
+    scrollWidth: document.documentElement.scrollWidth,
+  }));
+  expect(
+    dimensions.scrollWidth,
+    `${page.url()} has ${dimensions.scrollWidth - dimensions.clientWidth}px of horizontal overflow`,
+  ).toBeLessThanOrEqual(dimensions.clientWidth);
+}
+
+async function expectEmbeddedDocumentsNoHorizontalOverflow(page, selector = "iframe[data-stage-frame]") {
+  const frames = page.locator(selector);
+  const count = await frames.count();
+  for (let index = 0; index < count; index += 1) {
+    const frame = frames.nth(index);
+    await frame.scrollIntoViewIfNeeded();
+    await expect
+      .poll(
+        () =>
+          frame.evaluate((element) => {
+            const root = element.contentDocument?.documentElement;
+            return root?.clientWidth ?? 0;
+          }),
+        { message: `Waiting for embedded document ${index + 1} on ${page.url()}` },
+      )
+      .toBeGreaterThan(0);
+    const dimensions = await frame.evaluate((element) => {
+      const root = element.contentDocument.documentElement;
+      return { clientWidth: root.clientWidth, scrollWidth: root.scrollWidth };
+    });
+    expect(
+      dimensions.scrollWidth,
+      `Embedded document ${index + 1} on ${page.url()} has ${
+        dimensions.scrollWidth - dimensions.clientWidth
+      }px of horizontal overflow`,
+    ).toBeLessThanOrEqual(dimensions.clientWidth);
+  }
 }
 
 async function expectReadableContrast(locator, minimum = 4.5) {
@@ -89,17 +123,23 @@ test("English and Chinese roots lead with a catalog-backed workflow", async ({ p
       path: "/",
       lang: "en",
       title: "KIN Showcase — Design rules and runnable references",
-      heading: "Design rules and runnable references for clear, information-rich products.",
+      heading: "Designed for consequential work.",
       workflow: "Investigation and Evidence Review",
       job: "Compare chronology, sources, conflicts, and uncertainty before recording a finding.",
+      tabs: ["Investigation", "Commerce", "Canvas"],
+      reference: "examples/workspace-reference/index.html?view=investigation&lang=en&state=normal",
+      source: "Stable",
     },
     {
       path: "/zh/",
       lang: "zh-CN",
       title: "KIN 展示 — 设计规则与可运行参考",
-      heading: "为清晰、信息密集型产品提供设计规则和可运行参考。",
+      heading: "为重要工作而设计。",
       workflow: "调查与证据复核",
       job: "在记录结论前比较时间顺序、来源、冲突与不确定性。",
+      tabs: ["调查", "电商", "画布"],
+      reference: "../examples/workspace-reference/index.html?view=investigation&lang=zh-CN&state=normal",
+      source: "稳定",
     },
   ];
 
@@ -107,24 +147,42 @@ test("English and Chinese roots lead with a catalog-backed workflow", async ({ p
     await page.goto(locale.path);
     await expect(page).toHaveTitle(locale.title);
     await expect(page.locator("html")).toHaveAttribute("lang", locale.lang);
+    await expect(page.locator("main")).toHaveAttribute("data-showcase-route", "home");
     await expect(page.getByRole("heading", { level: 1 })).toHaveText(locale.heading);
 
     const firstSection = page.locator("main > section").first();
-    const workflow = firstSection.locator("[data-showcase-preview]");
+    const workflow = firstSection.locator("[data-scenario-stage]");
+    const frame = workflow.locator("[data-stage-frame]");
+    const disclosure = workflow.locator("details.reference-disclosure");
     await expect(workflow).toBeVisible();
     await expect(workflow.getByRole("heading", { level: 2 })).toHaveText(locale.workflow);
-    await expect(workflow.locator(".reference-job")).toHaveText(locale.job);
-    await expect(workflow.locator(".reference-status")).toContainText(locale.lang === "en" ? "Stable" : "稳定");
-    await expect(page.locator(".task-row")).toHaveCount(4);
+    await expect(workflow.locator("[data-stage-job]")).toHaveText(locale.job);
+    await expect(workflow.getByRole("tab")).toHaveCount(3);
+    await expect(workflow.getByRole("tab").allTextContents()).resolves.toEqual(locale.tabs);
+    await expect(workflow.getByRole("tab").first()).toHaveAttribute("aria-selected", "true");
+    await expect(workflow.getByRole("tab").first()).toHaveAttribute("aria-controls", "showcase-stage-panel");
+    await expect(workflow.getByRole("tabpanel")).toHaveAttribute("aria-labelledby", "scenario-tab-investigation");
+    await expect(frame).toHaveAttribute("src", locale.reference);
+    await expect(workflow).toHaveAttribute("data-stage-ready", "true", { timeout: 10_000 });
+    await expect(workflow.locator("[data-stage-loading]")).toBeHidden();
+    await expect(workflow.locator("[data-preview-activate], [data-preview-deactivate]")).toHaveCount(0);
+    await expect(page.locator(".manifesto-grid > a")).toHaveCount(4);
+    await expect(disclosure).not.toHaveAttribute("open", "");
+    await expect(disclosure.locator("dt")).toHaveCount(4);
+    await disclosure.locator("summary").click();
+    await expect(disclosure).toHaveAttribute("open", "");
+    await expect(disclosure).toContainText(locale.source);
 
-    for (const id of LEGACY_ROOT_IDS) {
+    for (const id of SHOWCASE_ROOT_IDS) {
       await expect(page.locator(`#${id}`)).toHaveCount(1);
     }
 
-    await expect(page.locator('[data-showcase-count="showcased-scenarios"]')).toHaveText("17");
-    await expect(page.locator('[data-showcase-count="planned-scenarios"]')).toHaveText("13");
-    await expect(page.locator('[data-showcase-count="stable-components"]')).toHaveText("65");
-    await expect(page.locator('[data-showcase-count="stable-pages"]')).toHaveText("10");
+    const catalogDisclosure = page.locator(".showcase-evidence details.catalog-disclosure");
+    await expect(catalogDisclosure).not.toHaveAttribute("open", "");
+    await expect(catalogDisclosure.locator('[data-showcase-count="showcased-scenarios"]')).toHaveText("17");
+    await expect(catalogDisclosure.locator('[data-showcase-count="planned-scenarios"]')).toHaveText("13");
+    await expect(catalogDisclosure.locator('[data-showcase-count="stable-components"]')).toHaveText("65");
+    await expect(catalogDisclosure.locator('[data-showcase-count="stable-pages"]')).toHaveText("10");
     await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
     await expectNoHorizontalOverflow(page);
   }
@@ -132,67 +190,132 @@ test("English and Chinese roots lead with a catalog-backed workflow", async ({ p
   expect(consoleWarnings).toEqual([]);
 });
 
-test("featured poster loads its iframe only on activation and Escape unloads it after settling", async ({ page }) => {
-  await page.emulateMedia({ reducedMotion: "no-preference" });
-  await page.goto("/");
+test("home stage auto-loads and keyboard tabs replace the live reference", async ({ page }) => {
+  let releaseInitialReference;
+  let releaseCommerceReference;
+  const initialReferenceGate = new Promise((resolve) => {
+    releaseInitialReference = resolve;
+  });
+  const commerceReferenceGate = new Promise((resolve) => {
+    releaseCommerceReference = resolve;
+  });
 
-  const preview = page.locator("[data-showcase-preview]");
-  const poster = preview.locator("[data-preview-poster]");
-  const frame = preview.locator("[data-preview-frame]");
-  const trigger = preview.locator("[data-preview-activate]");
-  const expectedSource = "examples/workspace-reference/index.html?view=investigation&lang=en&state=normal";
+  await page.route("**/examples/workspace-reference/index.html?view=investigation*", async (route) => {
+    await initialReferenceGate;
+    await route.continue();
+  });
+  await page.route("**/examples/product-patterns/ecommerce.html?edit=normal*", async (route) => {
+    await commerceReferenceGate;
+    await route.continue();
+  });
+  await page.goto("/", { waitUntil: "domcontentloaded" });
 
-  await expect(preview).toHaveAttribute("data-state", "idle");
-  await expect(poster).toBeVisible();
-  await expect(trigger).toBeVisible();
-  await expect(frame).not.toHaveAttribute("src", /.+/);
-  await expect(frame).toHaveAttribute("data-src", expectedSource);
-  await expect(frame).toHaveAttribute("aria-hidden", "true");
-  expect(await frame.evaluate((element) => element.inert)).toBe(true);
+  const stage = page.locator("[data-scenario-stage]");
+  const loader = stage.locator("[data-stage-loading]");
+  const frame = stage.locator("[data-stage-frame]");
+  const tabs = stage.getByRole("tab");
+  await expect(stage).toHaveAttribute("data-stage-ready", "false");
+  await expect(loader).toBeVisible();
+  await expect(frame).toHaveAttribute(
+    "src",
+    "examples/workspace-reference/index.html?view=investigation&lang=en&state=normal",
+  );
+  await expect(stage.locator("[data-preview-activate], [data-preview-deactivate]")).toHaveCount(0);
 
-  await trigger.click();
-  await expect(preview).toHaveAttribute("data-state", "active", { timeout: 10_000 });
-  await expect(frame).toHaveAttribute("src", expectedSource);
-  await expect(frame).toHaveAttribute("data-loaded", "true");
-  await expect(frame).toHaveAttribute("aria-hidden", "false");
-  expect(await frame.evaluate((element) => element.inert)).toBe(false);
-  await expect(frame).toBeFocused();
+  releaseInitialReference();
+  await expect(stage).toHaveAttribute("data-stage-ready", "true", { timeout: 10_000 });
+  await expect(loader).toBeHidden();
+  await expect(page.frameLocator("[data-stage-frame]").locator("[data-investigation]")).toBeVisible();
 
-  const innerControl = page.frameLocator("[data-preview-frame]").getByRole("button", { name: "Refresh local evidence" });
-  await innerControl.focus();
-  await expect(innerControl).toBeFocused();
-  await page.keyboard.press("Escape");
+  await tabs.first().focus();
+  await page.keyboard.press("ArrowRight");
+  await expect(tabs.nth(1)).toBeFocused();
+  await expect(tabs.nth(1)).toHaveAttribute("aria-selected", "true");
+  await expect(stage.getByRole("tabpanel")).toHaveAttribute("aria-labelledby", "scenario-tab-commerce");
+  await expect(stage).toHaveAttribute("data-stage-ready", "false");
+  await expect(loader).toBeVisible();
+  await expect(frame).toHaveAttribute(
+    "src",
+    "examples/product-patterns/ecommerce.html?edit=normal#product-context",
+  );
+  await expect(stage.locator("[data-stage-title]")).toHaveText("Product Detail and Edit");
+  await expect(stage.locator("[data-stage-lab-link]")).toHaveAttribute(
+    "href",
+    /scenarios\/lab\.html\?scenario=COM-02.*mode=present/,
+  );
 
-  await expect(preview).toHaveAttribute("data-state", "idle");
-  await expect(trigger).toBeVisible();
-  await expect(trigger).toBeFocused();
-  await expect(poster).toHaveAttribute("aria-hidden", "false");
-  await expect(frame).toHaveAttribute("aria-hidden", "true");
-  expect(await frame.evaluate((element) => element.inert)).toBe(true);
-  await expect.poll(() => frame.getAttribute("src"), { timeout: 2_000 }).toBeNull();
-  await expect(frame).toHaveAttribute("data-loaded", "false");
+  releaseCommerceReference();
+  await expect(stage).toHaveAttribute("data-stage-ready", "true", { timeout: 10_000 });
+  await expect(loader).toBeHidden();
+  await expect(page.frameLocator("[data-stage-frame]").locator(".commerce-main")).toBeVisible();
 });
 
-test("featured poster falls back when the embedded route resolves to the Pages 404 document", async ({ page }) => {
+test("home stage retains a useful fallback when a live reference is unavailable", async ({ page }) => {
   await page.goto("/");
 
-  const preview = page.locator("[data-showcase-preview]");
-  const frame = preview.locator("[data-preview-frame]");
-  const trigger = preview.locator("[data-preview-activate]");
-
-  await frame.evaluate((element) => {
-    element.dataset.src = "missing-interactive-reference.html";
+  const stage = page.locator("[data-scenario-stage]");
+  const frame = stage.locator("[data-stage-frame]");
+  const commerce = stage.getByRole("tab", { name: "Commerce" });
+  await commerce.evaluate((element) => {
+    element.dataset.reference = "missing-interactive-reference.html";
   });
-  await trigger.click();
+  await commerce.click();
 
-  await expect(preview).toHaveAttribute("data-state", "fallback", { timeout: 10_000 });
-  await expect(frame).not.toHaveAttribute("src", /.+/);
-  await expect(frame).toHaveAttribute("data-loaded", "false");
-  await expect(preview.locator("[data-preview-status]")).toHaveText(
-    "The embedded preview did not load. Open the same state in Lab.",
+  await expect(stage).toHaveAttribute("data-stage-ready", "false");
+  await expect(frame).toHaveAttribute("src", "missing-interactive-reference.html");
+  await expect(stage.locator("[data-stage-loading]")).toHaveText(
+    "Reference unavailable. Open it in Lab.",
+    { timeout: 10_000 },
   );
-  await expect(trigger).toHaveAccessibleName("Retry interactive preview");
-  await expect(trigger).toBeFocused();
+  await expect(stage.locator("[data-stage-loading]")).toBeVisible();
+  await expect(stage.locator("[data-stage-lab-link]")).toHaveAttribute(
+    "href",
+    /scenarios\/lab\.html\?scenario=COM-02.*mode=present/,
+  );
+});
+
+test("Reduced Motion stages use opacity-only transitions and settle rapid replacement", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/");
+  const homeStage = page.locator("[data-scenario-stage]");
+  const homeFrame = homeStage.locator("iframe[data-stage-frame]");
+  await expect
+    .poll(() =>
+      homeFrame.evaluate((element) => {
+        const style = getComputedStyle(element);
+        return `${style.transitionProperty} ${style.transitionDuration}`;
+      }),
+    )
+    .toBe("opacity 0.08s");
+
+  const tabs = homeStage.getByRole("tab");
+  await tabs.nth(1).click();
+  await tabs.nth(2).click();
+  await tabs.nth(0).click();
+  await expect(tabs.nth(0)).toHaveAttribute("aria-selected", "true");
+  await expect(homeStage).toHaveAttribute("data-stage-ready", "true", { timeout: 10_000 });
+  await expect(page.frameLocator("[data-scenario-stage] iframe").locator("[data-investigation]")).toBeVisible();
+
+  await page.goto("/components/");
+  const browser = page.locator("[data-component-browser]");
+  const choices = browser.locator("[data-component-choice]");
+  const componentStage = browser.locator("[data-reference-stage]");
+  const componentFrame = componentStage.locator("iframe[data-stage-frame]");
+  await expect
+    .poll(() =>
+      componentFrame.evaluate((element) => {
+        const style = getComputedStyle(element);
+        return `${style.transitionProperty} ${style.transitionDuration}`;
+      }),
+    )
+    .toBe("opacity 0.08s");
+
+  await choices.nth(1).click();
+  await choices.nth(2).click();
+  await choices.nth(0).click();
+  await expect(choices.nth(0)).toHaveAttribute("aria-selected", "true");
+  await expect(componentStage).toHaveAttribute("data-stage-ready", "true", { timeout: 10_000 });
+  await expect(page.frameLocator("[data-component-browser] iframe").locator("#state-reference")).toBeVisible();
 });
 
 test("documentation route retains the original contract and reference destinations", async ({ page }) => {
@@ -258,7 +381,8 @@ test("compact documentation and Lab metadata retain AA text contrast", async ({ 
     await expectReadableContrast(page.locator(".command-item span"));
     await page.keyboard.press("Escape");
 
-    await page.goto(`/scenarios/lab.html?scenario=INT-02&state=normal&viewport=wide&theme=${theme}`);
+    await page.goto(`/scenarios/lab.html?scenario=INT-02&state=normal&viewport=wide&theme=${theme}&mode=inspect`);
+    await expect(page.locator("[data-scenario-lab]")).toHaveAttribute("data-mode", "inspect");
     await expect(page.locator("[data-lab-verification]")).toHaveAttribute("data-state", "pass");
     for (const selector of [
       ".lab-phase",
@@ -274,44 +398,139 @@ test("compact documentation and Lab metadata retain AA text contrast", async ({ 
   }
 });
 
-test("component discovery and one Explorer expose canonical catalog evidence", async ({ page }) => {
+test("component discovery presents eight choices, a live stage, and a closed full catalog", async ({ page }) => {
   await page.goto("/components/");
   await expect(page).toHaveTitle("Find a component by task and evidence. · KIN Design System");
-  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Find a component by task and evidence.");
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Featured components");
   await expect(page.locator("main")).toHaveAttribute("data-showcase-route", "components");
-  await expect(page.locator("[data-component-id]")).toHaveCount(77);
-  await expect(page.locator("[data-component-id] .status-badge--stable")).toHaveCount(65);
-  await expect(page.locator("[data-component-id] a.discovery-row__name")).toHaveCount(8);
-  await expect(page.locator('[data-component-id="evidence-list"] a')).toHaveAttribute("href", "evidence-list/");
-  await expect(page.getByRole("heading", { name: "Source boundary" })).toBeVisible();
-  await expect(page.locator('.language-menu a[hreflang="zh-CN"]')).toHaveAttribute("href", "../zh/components/");
+  const browser = page.locator("[data-component-browser]");
+  const choices = browser.locator("[data-component-choice]");
+  const stage = browser.locator("[data-reference-stage]");
+  const catalog = page.locator("details.catalog-disclosure");
+  const catalogRows = catalog.locator(".discovery-row[data-component-id]");
 
+  await expect(choices).toHaveCount(8);
+  await expect(choices.first()).toHaveAttribute("data-component-id", "command-menu");
+  await expect(choices.first()).toHaveAttribute("aria-selected", "true");
+  await expect(stage).toHaveAttribute("data-stage-ready", "true", { timeout: 10_000 });
+  await expect(stage.locator("[data-stage-loading]")).toBeHidden();
+  await expect(stage.locator("[data-stage-frame]")).toHaveAttribute(
+    "src",
+    "../examples/workspace-reference/states.html?lang=zh-CN#state-reference",
+  );
+  await expect(catalog).not.toHaveAttribute("open", "");
+  await expect(catalogRows).toHaveCount(77);
+  await expect(catalogRows.locator(".status-badge--stable")).toHaveCount(65);
+  await expect(catalogRows.locator("a.discovery-row__name")).toHaveCount(8);
+  await expect(catalog.locator("#source-boundary-title")).toHaveText("Source boundary");
+  await expect(catalogRows.first()).toBeHidden();
+
+  await choices.first().focus();
+  await page.keyboard.press("ArrowDown");
+  await expect(choices.nth(1)).toBeFocused();
+  await expect(choices.nth(1)).toHaveAttribute("data-component-id", "evidence-list");
+  await expect(choices.nth(1)).toHaveAttribute("aria-selected", "true");
+  await expect(stage.locator("[data-stage-title]")).toHaveText("Evidence List");
+  await expect(stage.locator("[data-stage-explorer]")).toHaveAttribute("href", "evidence-list/");
+  await expect(stage.locator("[data-stage-frame]")).toHaveAttribute(
+    "src",
+    "../examples/workspace-reference/advanced-components.html?lang=zh-CN#evidence-title",
+  );
+  await expect(stage).toHaveAttribute("data-stage-ready", "true", { timeout: 10_000 });
+  await expect(page.frameLocator("[data-component-browser] [data-stage-frame]").locator("#evidence-title")).toBeVisible();
+
+  await stage.getByRole("button", { name: "Light" }).click();
+  await expect(stage.getByRole("button", { name: "Light" })).toHaveAttribute("aria-pressed", "true");
+  await expect(page.frameLocator("[data-component-browser] [data-stage-frame]").locator("html")).toHaveAttribute(
+    "data-theme",
+    "light",
+  );
+  await catalog.locator("summary").click();
+  await expect(catalog).toHaveAttribute("open", "");
+  await expect(catalogRows.first()).toBeVisible();
+  await expect(catalog.locator('[data-component-id="evidence-list"] a.discovery-row__name')).toHaveAttribute(
+    "href",
+    "evidence-list/",
+  );
+  await expect(page.locator('.language-menu a[hreflang="zh-CN"]')).toHaveAttribute("href", "../zh/components/");
+});
+
+test("component stages reveal only the intended fixture fragment", async ({ page }) => {
+  await page.route("**/examples/workspace-reference/states.html?lang=zh-CN", async (route) => {
+    await route.fulfill({
+      contentType: "text/html",
+      body: "<!doctype html><html><head><title>Valid but unrelated reference</title></head><body><main>Unrelated</main></body></html>",
+    });
+  });
+  await page.goto("/components/");
+
+  const stage = page.locator("[data-component-browser] [data-reference-stage]");
+  await expect(stage).toHaveAttribute("data-ready-fragment", "state-reference");
+  await expect(stage).toHaveAttribute("data-stage-ready", "false");
+  await expect(stage.locator("[data-stage-loading]")).toHaveText("Reference unavailable", { timeout: 10_000 });
+  await expect(stage.locator("[data-stage-loading]")).toBeVisible();
+});
+
+test("Component Explorer prioritizes local navigation, stage controls, and lower evidence tabs", async ({ page }) => {
   await page.goto("/components/evidence-list/");
   await expect(page).toHaveTitle("Evidence List · KIN Design System");
   await expect(page.locator("main")).toHaveAttribute("data-showcase-route", "component-explorer");
   const explorer = page.locator('header[data-component-id="evidence-list"]');
+  const localNavigation = page.locator(".component-studio__navigation");
+  const stage = page.locator("[data-reference-stage]");
   await expect(explorer.getByRole("heading", { level: 1 })).toHaveText("Evidence List");
   await expect(explorer).toContainText("Stable");
   await expect(explorer).toContainText("Map a claim or decision to supporting, missing, stale, or conflicting sources");
-  await expect(page.locator(".component-reference iframe")).toHaveAttribute(
+  await expect(localNavigation.locator("nav a")).toHaveCount(8);
+  await expect(localNavigation.locator('a[aria-current="page"]')).toHaveText("Evidence List");
+  await expect(stage).toHaveAttribute("data-stage-ready", "true", { timeout: 10_000 });
+  await expect(stage.locator("[data-stage-loading]")).toBeHidden();
+  await expect(stage.locator("[data-stage-frame]")).toHaveAttribute(
     "src",
     "../../examples/workspace-reference/advanced-components.html?lang=zh-CN#evidence-title",
   );
-  await expect(page.frameLocator(".component-reference iframe").locator("#evidence-title")).toBeVisible();
-  await expect(page.frameLocator(".component-reference iframe").locator("html")).toHaveAttribute("lang", "zh-CN");
-  await expect(page.getByText("Reference language").locator("..")).toContainText("中文");
-  await expect(page.getByText(/This canonical fixture is currently Chinese-only/)).toBeVisible();
-  await expect(page.getByRole("heading", { name: "State coverage boundary" })).toBeVisible();
-  await expect(page.getByText(/inventory is deferred until canonical machine-readable state sources exist/)).toBeVisible();
-  await expect(page.getByRole("link", { name: "Open the core state contract" })).toHaveAttribute(
+  await expect(page.frameLocator("[data-reference-stage] [data-stage-frame]").locator("#evidence-title")).toBeVisible();
+  await expect(page.frameLocator("[data-reference-stage] [data-stage-frame]").locator("html")).toHaveAttribute(
+    "lang",
+    "zh-CN",
+  );
+  await expect(stage.locator(".reference-stage__footer")).toContainText("Reference language");
+  await expect(stage.locator(".reference-stage__footer")).toContainText("中文");
+  await expect(stage.getByRole("combobox", { name: "States" })).toHaveValue("Evidence with a recorded conflict");
+  await expect(stage.getByRole("group", { name: "Theme" }).getByRole("button")).toHaveCount(2);
+  await expect(stage.getByRole("group", { name: "Viewport" }).getByRole("button")).toHaveCount(2);
+
+  await stage.getByRole("button", { name: "Light" }).click();
+  await expect(stage.getByRole("button", { name: "Light" })).toHaveAttribute("aria-pressed", "true");
+  await expect(page.frameLocator("[data-reference-stage] [data-stage-frame]").locator("html")).toHaveAttribute(
+    "data-theme",
+    "light",
+  );
+  await stage.getByRole("button", { name: "Narrow" }).click();
+  await expect(stage).toHaveAttribute("data-stage-viewport", "narrow");
+  await expect(stage.getByRole("button", { name: "Narrow" })).toHaveAttribute("aria-pressed", "true");
+
+  const tabs = page.locator("[data-component-tabs]");
+  await expect(tabs.getByRole("tab")).toHaveCount(4);
+  await expect(tabs.getByRole("tab", { name: "Usage" })).toHaveAttribute("aria-selected", "true");
+  await tabs.getByRole("tab", { name: "Usage" }).focus();
+  await page.keyboard.press("ArrowRight");
+  await expect(tabs.getByRole("tab", { name: "States" })).toBeFocused();
+  await expect(tabs.getByRole("tabpanel", { name: "States" })).toBeVisible();
+  await expect(tabs.getByRole("heading", { name: "State coverage boundary" })).toBeVisible();
+  await expect(tabs.getByText(/inventory is deferred until canonical machine-readable state sources exist/)).toBeVisible();
+  await expect(tabs.getByRole("link", { name: "Open the core state contract" })).toHaveAttribute(
     "href",
     /components\/core-states\.md$/,
   );
-  await expect(page.locator('.support-list [data-supported="true"]')).toHaveCount(5);
-  await expect(page.getByRole("heading", { name: "Known gaps" })).toBeVisible();
-  await expect(page.getByText("No gap is recorded for this component in the canonical catalog.")).toBeVisible();
-  await expect(page.getByRole("heading", { name: "Accessibility boundary" })).toBeVisible();
-  await expect(page.locator(".lucide-accessibility")).toBeVisible();
+  await tabs.getByRole("tab", { name: "Accessibility" }).click();
+  await expect(tabs.getByRole("tabpanel", { name: "Accessibility" })).toBeVisible();
+  await expect(tabs.locator('.component-support-grid [data-supported="true"]')).toHaveCount(5);
+  await expect(tabs.getByText(/do not establish assistive-technology/)).toBeVisible();
+  await tabs.getByRole("tab", { name: "Contract" }).click();
+  await expect(tabs.getByRole("tabpanel", { name: "Contract" })).toBeVisible();
+  await expect(tabs.getByRole("heading", { name: "Known gaps" })).toBeVisible();
+  await expect(tabs.getByText("No gap is recorded for this component in the canonical catalog.")).toBeVisible();
   await expect(page.locator('.language-menu a[hreflang="zh-CN"]')).toHaveAttribute(
     "href",
     "../../zh/components/evidence-list/",
@@ -337,13 +556,15 @@ test("Component Explorers expose the actual canonical fixture language", async (
 
   for (const [id, referenceLanguage] of explorers) {
     await page.goto(`/components/${id}/`);
-    const frame = page.locator(".component-reference iframe");
+    const stage = page.locator("[data-reference-stage]");
+    const frame = stage.locator("[data-stage-frame]");
     await expect(frame).toHaveAttribute("src", new RegExp(`lang=${referenceLanguage}`));
-    await expect(page.frameLocator(".component-reference iframe").locator("html")).toHaveAttribute(
+    await expect(stage).toHaveAttribute("data-stage-ready", "true", { timeout: 10_000 });
+    await expect(page.frameLocator("[data-reference-stage] [data-stage-frame]").locator("html")).toHaveAttribute(
       "lang",
       referenceLanguage,
     );
-    await expect(page.getByText("Reference language").locator("..")).toContainText(
+    await expect(stage.locator(".reference-stage__footer")).toContainText(
       referenceLanguage === "en" ? "English" : "中文",
     );
   }
@@ -351,13 +572,28 @@ test("Component Explorers expose the actual canonical fixture language", async (
   expect(consoleWarnings).toEqual([]);
 });
 
-test("Pattern discovery joins four product patterns without borrowing maturity", async ({ page }) => {
+test("Pattern discovery renders four live references without blueprint substitutes", async ({ page }) => {
   await page.goto("/patterns/");
   await expect(page).toHaveTitle("Choose composition from the work. · KIN Design System");
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("Choose composition from the work.");
   await expect(page.locator("main")).toHaveAttribute("data-showcase-route", "patterns");
-  await expect(page.locator("[data-pattern-id]")).toHaveCount(4);
-  await expect(page.locator("#pattern-maturity-note")).toHaveText(
+  const patterns = page.locator("[data-pattern-id]");
+  const stages = patterns.locator("[data-reference-stage]");
+  await expect(patterns).toHaveCount(4);
+  await expect(stages).toHaveCount(4);
+  await expect(patterns.locator("iframe[data-stage-frame]")).toHaveCount(4);
+  await expect(page.locator(".pattern-blueprint, [data-pattern-blueprint]")).toHaveCount(0);
+  await expect(page.locator("details.pattern-details")).toHaveCount(4);
+
+  for (let index = 0; index < 4; index += 1) {
+    await stages.nth(index).scrollIntoViewIfNeeded();
+    await expect(stages.nth(index)).toHaveAttribute("data-stage-ready", "true", { timeout: 10_000 });
+    await expect(stages.nth(index).locator("[data-stage-loading]")).toBeHidden();
+  }
+
+  const maturityDisclosure = page.locator("details.catalog-disclosure--compact");
+  await expect(maturityDisclosure).not.toHaveAttribute("open", "");
+  await expect(maturityDisclosure.locator("summary")).toContainText(
     "Pattern documents have no independent machine maturity. The status shown here belongs only to the joined Page record.",
   );
 
@@ -366,41 +602,117 @@ test("Pattern discovery joins four product patterns without borrowing maturity",
   await expect(intelligence).toContainText("Investigation and Evidence Review");
   await expect(intelligence.getByRole("link", { name: /Inspect in Scenario Lab/ })).toHaveAttribute(
     "href",
-    "../scenarios/lab.html?scenario=INT-02",
+    "../scenarios/lab.html?scenario=INT-02&mode=present",
   );
-  await expect(intelligence.getByRole("link", { name: /Open deterministic reference/ })).toHaveAttribute(
+  await expect(intelligence.locator('details.pattern-details a.button')).toHaveAttribute(
     "href",
     "../examples/workspace-reference/index.html?view=investigation&lang=en&state=normal",
   );
-  await expect(page.getByRole("link", { name: /Open Chinese reference/ })).toHaveCount(3);
+  await expect(intelligence.locator("iframe[data-stage-frame]")).toHaveAttribute(
+    "src",
+    "../examples/workspace-reference/index.html?view=investigation&lang=en&state=normal",
+  );
+  await expect(page.locator("details.pattern-details a.button").filter({ hasText: "Open Chinese reference" })).toHaveCount(3);
   await expect(page.locator(".reference-language-note")).toHaveCount(3);
   await expect(page.locator('.language-menu a[hreflang="zh-CN"]')).toHaveAttribute("href", "../zh/patterns/");
+});
+
+test("Pattern stages reveal only after their catalog assertion is present", async ({ page }) => {
+  await page.route("**/examples/product-patterns/information.html", async (route) => {
+    await route.fulfill({
+      contentType: "text/html",
+      body: "<!doctype html><html><head><title>Valid but unrelated reference</title></head><body><main>Unrelated</main></body></html>",
+    });
+  });
+  await page.goto("/patterns/");
+
+  const stage = page.locator('[data-pattern-id="information-site"] [data-reference-stage]');
+  await expect(stage).toHaveAttribute("data-ready-selector", "main.article h1");
+  await expect(stage).toHaveAttribute("data-stage-ready", "false");
+  await expect(stage.locator("[data-stage-loading]")).toHaveText("Reference unavailable", { timeout: 10_000 });
+  await expect(stage.locator("[data-stage-loading]")).toBeVisible();
+});
+
+test("public product stages expose a native iframe focus entry and return path", async ({ page }) => {
+  const cases = [
+    {
+      path: "/",
+      stage: "[data-scenario-stage]",
+      previous: "[data-scenario-stage] [data-stage-lab-link]",
+    },
+    {
+      path: "/components/",
+      stage: "[data-component-browser] [data-reference-stage]",
+      previous: '[data-component-browser] button[data-stage-theme="dark"]',
+    },
+    {
+      path: "/patterns/",
+      stage: '[data-pattern-id="information-site"] [data-reference-stage]',
+      previous: '[data-pattern-id="information-site"] .pattern-discovery-section__actions a',
+    },
+  ];
+
+  for (const entry of cases) {
+    await page.goto(entry.path);
+    const stage = page.locator(entry.stage);
+    await expect(stage).toHaveAttribute("data-stage-ready", "true", { timeout: 10_000 });
+    const frame = stage.locator("iframe[data-stage-frame]");
+    const previous = page.locator(entry.previous);
+    await previous.focus();
+    await page.keyboard.press("Tab");
+    await expect(frame).toBeFocused();
+    await page.keyboard.press("Shift+Tab");
+    await expect(previous).toBeFocused();
+    await page.keyboard.press("Tab");
+    await expect(frame).toBeFocused();
+  }
 });
 
 test("Chinese Component and Pattern discovery preserve machine-fact parity", async ({ page }) => {
   await page.goto("/zh/components/");
   await expect(page).toHaveTitle("按任务与证据查找组件。 · KIN Design System");
-  await expect(page.getByRole("heading", { level: 1 })).toHaveText("按任务与证据查找组件。");
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("精选组件");
   await expect(page.locator("html")).toHaveAttribute("lang", "zh-CN");
-  await expect(page.locator("[data-component-id]")).toHaveCount(77);
-  await expect(page.locator("[data-component-id] .status-badge--stable")).toHaveCount(65);
-  await expect(page.locator("[data-component-id] a.discovery-row__name")).toHaveCount(8);
-  await expect(page.getByText("通用交互或内容基础组件。")).toBeVisible();
-  await expect(page.locator('[data-component-id="evidence-list"] a')).toHaveAttribute("href", "evidence-list/");
-  await expect(page.locator('[data-component-id="evidence-list"] a')).toHaveAttribute("lang", "en");
+  const browser = page.locator("[data-component-browser]");
+  const catalog = page.locator("details.catalog-disclosure");
+  const catalogRows = catalog.locator(".discovery-row[data-component-id]");
+  await expect(browser.locator("[data-component-choice]")).toHaveCount(8);
+  await expect(browser.locator("[data-reference-stage]")).toHaveAttribute("data-stage-ready", "true", {
+    timeout: 10_000,
+  });
+  await expect(catalog).not.toHaveAttribute("open", "");
+  await expect(catalogRows).toHaveCount(77);
+  await expect(catalogRows.locator(".status-badge--stable")).toHaveCount(65);
+  await expect(catalogRows.locator("a.discovery-row__name")).toHaveCount(8);
+  await expect(catalog).toContainText("通用交互或内容基础组件。");
+  await expect(catalog.locator('[data-component-id="evidence-list"] a')).toHaveAttribute("href", "evidence-list/");
+  await expect(catalog.locator('[data-component-id="evidence-list"] a')).toHaveAttribute("lang", "en");
   await expect(page.locator('.language-menu a[hreflang="en"]')).toHaveAttribute("href", "../../components/");
 
   await page.goto("/zh/components/evidence-list/");
+  await expect(page.locator(".component-studio__navigation nav a")).toHaveCount(8);
+  await expect(page.locator("[data-reference-stage]")).toHaveAttribute("data-stage-ready", "true", {
+    timeout: 10_000,
+  });
+  await page.getByRole("tab", { name: "合同" }).click();
   await expect(page.getByRole("heading", { name: "具名人工检查" })).toBeVisible();
   await expect(page.getByText("冲突证据", { exact: true })).toBeVisible();
-  await expect(page.getByRole("heading", { name: "无障碍边界" })).toBeVisible();
+  await page.getByRole("tab", { name: "无障碍" }).click();
+  await expect(page.getByRole("heading", { name: "目录支持范围" })).toBeVisible();
+  await expect(page.locator('.component-support-grid [data-supported="true"]')).toHaveCount(5);
 
   await page.goto("/zh/patterns/");
   await expect(page).toHaveTitle("从真实工作选择构图。 · KIN Design System");
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("从真实工作选择构图。");
   await expect(page.locator("[data-pattern-id]")).toHaveCount(4);
+  await expect(page.locator("[data-pattern-id] iframe[data-stage-frame]")).toHaveCount(4);
+  await expect(page.locator(".pattern-blueprint, [data-pattern-blueprint]")).toHaveCount(0);
   await expect(page.locator('[data-pattern-id="intelligence-workspace"]')).toContainText("情报工作台");
   await expect(page.locator('[data-pattern-id="intelligence-workspace"]')).toContainText("INT-02");
+  await expect(page.locator('[data-pattern-id="intelligence-workspace"] iframe')).toHaveAttribute(
+    "src",
+    "../../examples/workspace-reference/index.html?view=investigation&lang=zh-CN&state=normal",
+  );
   await expect(page.locator('.language-menu a[hreflang="en"]')).toHaveAttribute("href", "../../patterns/");
 });
 
@@ -439,10 +751,11 @@ test("scenario atlas exposes honest coverage and seventeen inspectable scenarios
 test("friendly Lab route preserves query state when handing off to the canonical Lab", async ({ page }) => {
   await page.goto("/lab/?scenario=INT-02&state=permission&viewport=narrow&theme=light-high-contrast");
   await page.waitForURL(
-    "**/scenarios/lab.html?scenario=INT-02&state=permission&viewport=narrow&theme=light-high-contrast",
+    "**/scenarios/lab.html?scenario=INT-02&state=permission&viewport=narrow&theme=light-high-contrast&mode=present",
   );
   await expect(page).toHaveTitle("Investigation and Evidence Review - Scenario Inspection Lab");
-  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Review the reference in context.");
+  await expect(page.getByRole("heading", { level: 2, name: "Investigation and Evidence Review" })).toBeVisible();
+  await expect(page.locator('[data-lab-mode="present"]')).toHaveAttribute("aria-pressed", "true");
   await expect(page.locator("[data-lab-scenario]")).toHaveValue("INT-02");
   await expect(page.locator("[data-lab-state]")).toHaveValue("permission");
   await expect(page.locator('[data-lab-viewport="narrow"]')).toHaveAttribute("aria-pressed", "true");
@@ -489,6 +802,16 @@ test("route-aware language switching preserves valid shared fragments", async ({
   await page.getByRole("menuitem", { name: "中文" }).click();
   await page.waitForURL("**/zh/patterns/#pattern-intelligence-workspace");
   await expect(page.locator("#pattern-intelligence-workspace")).toBeVisible();
+
+  for (const id of SHOWCASE_ROOT_IDS) {
+    await page.goto(`/#${id}`);
+    await page.getByRole("button", { name: "Choose language" }).click();
+    await expect(page.getByRole("menuitem", { name: "中文" })).toHaveAttribute("href", `zh/#${id}`);
+
+    await page.goto(`/zh/#${id}`);
+    await page.getByRole("button", { name: "选择语言" }).click();
+    await expect(page.getByRole("menuitem", { name: "English" })).toHaveAttribute("href", `../#${id}`);
+  }
 });
 
 test("language menu supports arrow, Home, End, Escape, and focus return on a nested route", async ({ page }) => {
@@ -521,7 +844,7 @@ test("language menu supports arrow, Home, End, Escape, and focus return on a nes
 
 test("mobile documentation navigation is a contained Drawer with exact focus return", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto("/components/evidence-list/");
+  await page.goto("/docs/");
 
   const trigger = page.locator("[data-nav-toggle]");
   await expect(trigger).toHaveAccessibleName("Open navigation");
@@ -698,15 +1021,22 @@ test("Showcase routes avoid mobile overflow and expose 44px primary touch target
   for (const route of responsiveRoutes) {
     await page.goto(route);
     await expectNoHorizontalOverflow(page);
+    const stages = page.locator("[data-scenario-stage], [data-reference-stage]");
+    const stageCount = await stages.count();
+    for (let index = 0; index < stageCount; index += 1) {
+      await stages.nth(index).scrollIntoViewIfNeeded();
+      await expect(stages.nth(index)).toHaveAttribute("data-stage-ready", "true", { timeout: 10_000 });
+    }
+    await expectEmbeddedDocumentsNoHorizontalOverflow(page);
   }
 
   await page.goto("/");
-  const previewTrigger = page.locator("[data-preview-activate]");
-  await expect(previewTrigger).toHaveAccessibleName("Open preview in Lab");
+  await expect(page.getByRole("link", { name: "Explore the scenarios" })).toBeVisible();
+  await expect(page.locator("[data-preview-activate], [data-preview-deactivate]")).toHaveCount(0);
 
   const touchTargets = await page
     .locator(
-      "[data-command-trigger], [data-language-trigger], [data-theme-switch], [data-contrast-toggle], [data-preview-activate]",
+      "[data-command-trigger], [data-language-trigger], [data-theme-switch], [data-contrast-toggle], .showcase-button.primary",
     )
     .evaluateAll((items) =>
       items
@@ -718,6 +1048,16 @@ test("Showcase routes avoid mobile overflow and expose 44px primary touch target
     );
   expect(touchTargets).toHaveLength(5);
   expect(touchTargets.every((target) => target.width >= 44 && target.height >= 44)).toBe(true);
+  const stageTouchTargets = await page
+    .locator("[data-scenario-stage] [role=tab], [data-stage-lab-link]")
+    .evaluateAll((items) =>
+      items.map((item) => {
+        const box = item.getBoundingClientRect();
+        return { width: box.width, height: box.height };
+      }),
+    );
+  expect(stageTouchTargets).toHaveLength(4);
+  expect(stageTouchTargets.every((target) => target.width >= 44 && target.height >= 44)).toBe(true);
 
   for (const route of ["/docs/", "/components/evidence-list/"]) {
     await page.goto(route);
@@ -728,4 +1068,9 @@ test("Showcase routes avoid mobile overflow and expose 44px primary touch target
     expect(box.width).toBeGreaterThanOrEqual(44);
     expect(box.height).toBeGreaterThanOrEqual(44);
   }
+
+  await page.goto("/scenarios/lab.html?scenario=INT-02&state=normal&viewport=narrow&theme=dark&mode=present");
+  await expect(page.locator("[data-lab-verification]")).toHaveAttribute("data-state", "pass");
+  await expectNoHorizontalOverflow(page);
+  await expectEmbeddedDocumentsNoHorizontalOverflow(page, "iframe[data-lab-frame]");
 });

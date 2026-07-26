@@ -5,12 +5,12 @@ if (!lab) {
 }
 
 const elements = {
+  topbar: document.querySelector(".lab-topbar"),
+  modeGroup: document.querySelector("[data-lab-mode-group]"),
   controlsTrigger: document.querySelector("[data-lab-controls-trigger]"),
   controls: document.querySelector("[data-lab-controls]"),
   controlsClose: document.querySelector("[data-lab-controls-close]"),
   controlsScrim: document.querySelector("[data-lab-controls-scrim]"),
-  brand: document.querySelector(".lab-brand"),
-  back: document.querySelector(".lab-back"),
   skipLink: document.querySelector(".skip-link"),
   scenario: document.querySelector("[data-lab-scenario]"),
   state: document.querySelector("[data-lab-state]"),
@@ -38,6 +38,13 @@ const elements = {
   stage: document.querySelector("[data-lab-stage]"),
   frameSizing: document.querySelector("[data-lab-frame-sizing]"),
   frameShell: document.querySelector("[data-lab-frame-shell]"),
+  framePlaceholder: document.querySelector("[data-lab-frame-placeholder]"),
+  framePoster: document.querySelector("[data-lab-frame-poster]"),
+  framePosterNote: document.querySelector("[data-lab-frame-poster-note]"),
+  frameNeutral: document.querySelector("[data-lab-frame-neutral]"),
+  placeholderTitle: document.querySelector("[data-lab-placeholder-title]"),
+  placeholderState: document.querySelector("[data-lab-placeholder-state]"),
+  frameLoadingLabel: document.querySelector("[data-lab-frame-loading-label]"),
   frameSize: document.querySelector("[data-lab-frame-size]"),
   frame: document.querySelector("[data-lab-frame]"),
   fullscreen: document.querySelector("[data-lab-fullscreen]"),
@@ -49,12 +56,15 @@ const controlsOverlay = matchMedia("(max-width: 780px)");
 const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
 const controlsExitDuration = 180;
 const controlsReducedExitDuration = 80;
+const modeStorageKey = "kin-showcase-lab-mode";
+const validModes = new Set(["present", "inspect"]);
 
 let catalog;
 let scenarios = [];
 let viewports = [];
 let themes = [];
 let current = null;
+let currentMode = resolveMode();
 let controlsCloseTimer = null;
 let controlsReturnTarget = elements.controlsTrigger;
 let previewSizing = "fit";
@@ -64,13 +74,45 @@ let frameResizeVerification = null;
 let verificationObserver = null;
 let verificationTimer = null;
 let inspectionRevision = 0;
+let frameVerified = false;
+
+function readStoredMode() {
+  try {
+    const stored = localStorage.getItem(modeStorageKey);
+    return validModes.has(stored) ? stored : null;
+  } catch {
+    return null;
+  }
+}
+
+function resolveMode(params = new URLSearchParams(window.location.search)) {
+  const requested = params.get("mode");
+  if (validModes.has(requested)) return requested;
+  return readStoredMode() || "present";
+}
+
+function persistMode(mode) {
+  try {
+    localStorage.setItem(modeStorageKey, mode);
+  } catch {
+    // The URL remains authoritative when storage is unavailable.
+  }
+}
 
 function controlsState() {
-  return lab.dataset.controlsState || "open";
+  return lab.dataset.controlsState || "closed";
 }
 
 function controlsAreOpen() {
   return controlsState() === "open";
+}
+
+function syncModeControls() {
+  lab.dataset.mode = currentMode;
+  for (const button of elements.modeGroup.querySelectorAll("[data-lab-mode]")) {
+    button.setAttribute("aria-pressed", String(button.dataset.labMode === currentMode));
+  }
+  elements.controlsTrigger.setAttribute("aria-expanded", String(controlsAreOpen()));
 }
 
 function syncControlsMode() {
@@ -83,13 +125,52 @@ function syncControlsMode() {
   }
 }
 
-function setModalBackground(modal) {
+function syncInteractionOwnership() {
+  const controlsOpen = controlsAreOpen();
+  const modal = controlsOverlay.matches && controlsOpen;
+  elements.controls.setAttribute("aria-hidden", String(!controlsOpen));
+  elements.controls.inert = !controlsOpen;
   elements.preview.inert = modal;
-  elements.frame.inert = modal;
-  elements.brand.inert = modal;
-  elements.back.inert = modal;
+  elements.frame.inert = modal || !frameVerified;
+  elements.frame.setAttribute("aria-hidden", String(!frameVerified));
+  elements.framePlaceholder.inert = frameVerified;
+  elements.framePlaceholder.setAttribute("aria-hidden", String(frameVerified));
+  elements.topbar.inert = modal;
   elements.skipLink.inert = modal;
   document.body.classList.toggle("lab-controls-modal-open", modal);
+}
+
+function updateFramePlaceholder(status) {
+  if (!current || scenarios.length === 0 || viewports.length === 0 || themes.length === 0) return;
+  const scenario = selectedScenario();
+  const control = selectedControl();
+  const viewport = selectedViewport();
+  const theme = selectedTheme();
+  const usesGovernedPoster = scenario.id === "INT-02"
+    && control.state === "normal"
+    && viewport.id === "wide"
+    && theme.id === "dark";
+  const selection = control.label + " · " + viewport.label + " · " + theme.label;
+
+  elements.framePlaceholder.dataset.kind = usesGovernedPoster ? "poster" : "neutral";
+  elements.framePoster.hidden = !usesGovernedPoster;
+  elements.framePosterNote.hidden = !usesGovernedPoster;
+  elements.frameNeutral.hidden = usesGovernedPoster;
+  elements.placeholderTitle.textContent = scenario.id + " / " + scenario.canonical_name;
+  elements.placeholderState.textContent = selection;
+  elements.frameLoadingLabel.textContent = status || "Checking live reference · " + selection;
+  elements.framePlaceholder.setAttribute(
+    "aria-label",
+    (usesGovernedPoster ? "INT-02 presentation poster. " : "Neutral loading stage. ") + "Current selection: " + selection
+  );
+}
+
+function setFrameVerified(verified, status) {
+  frameVerified = verified;
+  elements.frameShell.dataset.referenceReady = String(verified);
+  elements.frameShell.dataset.loading = String(!verified);
+  updateFramePlaceholder(status);
+  syncInteractionOwnership();
 }
 
 function repairFocus(target, expectedOpen) {
@@ -112,6 +193,8 @@ function finishControlsClose() {
   clearTimeout(controlsCloseTimer);
   controlsCloseTimer = null;
   lab.dataset.controlsState = "closed";
+  syncModeControls();
+  syncInteractionOwnership();
 }
 
 function setControls(open, { moveFocus = true, returnTarget } = {}) {
@@ -132,31 +215,56 @@ function setControls(open, { moveFocus = true, returnTarget } = {}) {
     controlsCloseTimer = window.setTimeout(finishControlsClose, duration);
   }
 
-  const modal = controlsOverlay.matches && open;
-  elements.controlsTrigger.setAttribute("aria-expanded", String(open));
-  elements.controlsTrigger.setAttribute("aria-label", open ? "Hide inspection controls" : "Show inspection controls");
-  elements.controls.setAttribute("aria-hidden", String(!open));
-  elements.controls.inert = !open;
-  setModalBackground(modal);
+  syncModeControls();
+  syncInteractionOwnership();
   syncControlsMode();
 
   if (!moveFocus) return;
   const fallback = controlsReturnTarget?.isConnected ? controlsReturnTarget : elements.controlsTrigger;
-  const target = open && modal ? elements.controlsClose : fallback;
+  const target = open && controlsOverlay.matches ? elements.controlsClose : fallback;
   repairFocus(target, open);
 }
 
+function replaceModeOnly(mode) {
+  const url = new URL(window.location.href);
+  url.hash = "";
+  url.searchParams.set("mode", mode);
+  history.replaceState({ scenarioLab: true, mode }, "", url.pathname + url.search);
+}
+
+function setMode(mode, { historyMode = null, moveFocus, persist = true, returnTarget } = {}) {
+  if (!validModes.has(mode)) mode = "present";
+  const open = mode === "inspect";
+  const focusedInside = elements.controls.contains(document.activeElement);
+  currentMode = mode;
+  if (current) current.mode = mode;
+  lab.dataset.mode = mode;
+
+  const shouldMoveFocus = moveFocus ?? ((open && controlsOverlay.matches) || (!open && focusedInside));
+  setControls(open, {
+    moveFocus: shouldMoveFocus,
+    returnTarget: returnTarget || elements.controlsTrigger
+  });
+  syncModeControls();
+  if (persist) persistMode(mode);
+  if (historyMode) {
+    if (current) writeUrl(historyMode);
+    else replaceModeOnly(mode);
+  }
+}
+
 function initializeControls() {
-  const open = !controlsOverlay.matches;
+  const open = currentMode === "inspect";
   lab.dataset.controlsState = open ? "open" : "closed";
-  elements.controlsTrigger.setAttribute("aria-expanded", String(open));
-  elements.controlsTrigger.setAttribute("aria-label", open ? "Hide inspection controls" : "Show inspection controls");
-  elements.controls.setAttribute("aria-hidden", String(!open));
-  elements.controls.inert = !open;
-  setModalBackground(false);
+  syncModeControls();
+  syncInteractionOwnership();
   syncControlsMode();
+  persistMode(currentMode);
   requestAnimationFrame(() => {
     lab.dataset.controlsReady = "true";
+    if (open && controlsOverlay.matches && !elements.controls.contains(document.activeElement)) {
+      repairFocus(elements.controlsClose, true);
+    }
   });
 }
 
@@ -209,6 +317,7 @@ function currentFrameUrl() {
 
 function beginInspection() {
   inspectionRevision += 1;
+  setFrameVerified(false, "Checking the live same-origin reference");
   verificationObserver?.disconnect();
   verificationObserver = null;
   if (verificationTimer) {
@@ -255,6 +364,7 @@ function serializedUrl() {
   url.searchParams.set("state", current.state);
   url.searchParams.set("viewport", current.viewport);
   url.searchParams.set("theme", current.theme);
+  url.searchParams.set("mode", currentMode);
   return url.pathname + url.search;
 }
 
@@ -263,7 +373,7 @@ function writeUrl(mode = "replace") {
   const nextUrl = serializedUrl();
   const currentUrl = window.location.pathname + window.location.search;
   if (mode === "push" && !window.location.hash && nextUrl === currentUrl) return;
-  history[mode + "State"]({ scenarioLab: true }, "", nextUrl);
+  history[mode + "State"]({ scenarioLab: true, mode: currentMode }, "", nextUrl);
 }
 
 function syncPressedControls() {
@@ -309,6 +419,7 @@ function renderScenarioDetails() {
   elements.previewTitle.textContent = scenario.canonical_name;
   elements.frame.title = scenario.canonical_name + " reference";
   document.title = scenario.canonical_name + " - Scenario Inspection Lab";
+  updateFramePlaceholder();
 }
 
 function syncSizingControls() {
@@ -374,11 +485,13 @@ function renderViewport() {
   elements.viewportReadout.textContent = viewport.label + " / " + viewport.width + " px";
   elements.frameSize.textContent = viewport.width + " x " + viewport.height;
   renderPreviewSizing();
+  updateFramePlaceholder();
 }
 
 function renderThemeReadout(theme) {
   const resolved = theme || selectedTheme();
   elements.themeReadout.textContent = resolved.label;
+  updateFramePlaceholder();
 }
 
 function fullscreenAvailable() {
@@ -462,6 +575,7 @@ function applyAppearance() {
       current.theme = resolved.id;
       syncPressedControls();
       writeUrl("replace");
+      updateFramePlaceholder();
     }
     renderThemeReadout(resolved);
   });
@@ -488,6 +602,7 @@ function verifyCurrentState(revision = inspectionRevision, { reportFailure = tru
   const frameWindow = elements.frame.contentWindow;
   if (!frameDocument || !frameWindow) {
     setVerification("fail", "Fixture unavailable", "The same-origin reference document could not be inspected.");
+    setFrameVerified(false, "The live reference could not be inspected");
     return false;
   }
 
@@ -518,11 +633,11 @@ function verifyCurrentState(revision = inspectionRevision, { reportFailure = tru
     clearError();
     setVerification("pass", "Verified local fixture", detail);
     lab.dataset.loadState = "ready";
-    elements.frameShell.dataset.loading = "false";
+    setFrameVerified(true);
   } else if (reportFailure) {
     setVerification("fail", "Fixture check failed", detail);
     lab.dataset.loadState = "mismatch";
-    elements.frameShell.dataset.loading = "false";
+    setFrameVerified(false, "The live reference did not pass its selector check");
   }
   return passed;
 }
@@ -601,7 +716,7 @@ function loadReference() {
   renderDirectLink();
   setVerification("loading", "Checking fixture", control.label);
   lab.dataset.loadState = "loading";
-  elements.frameShell.dataset.loading = "true";
+  setFrameVerified(false, "Checking live reference · " + control.label);
 
   const currentUrl = currentFrameUrl();
   if (currentUrl.href === nextUrl.href) {
@@ -679,6 +794,7 @@ function chooseTheme(id, historyMode = "push") {
   clearError();
   current.theme = id;
   syncPressedControls();
+  updateFramePlaceholder();
   writeUrl(historyMode);
   setVerification("loading", "Checking fixture", selectedControl().label);
   try {
@@ -714,6 +830,7 @@ function showError(message) {
   elements.error.hidden = false;
   elements.errorMessage.textContent = message;
   setVerification("fail", "Inspection unavailable", message);
+  setFrameVerified(false, "Live reference unavailable; the loading stage remains visible");
 }
 
 function clearError() {
@@ -748,16 +865,22 @@ const previewResizeObserver = new ResizeObserver(() => {
 });
 previewResizeObserver.observe(elements.stage);
 
-elements.controlsTrigger.addEventListener("click", () => {
-  if (controlsAreOpen()) {
-    setControls(false, { returnTarget: elements.controlsTrigger });
-  } else {
-    setControls(true, { returnTarget: elements.controlsTrigger });
-  }
+elements.modeGroup.addEventListener("click", (event) => {
+  const button = event.target.closest("[data-lab-mode]");
+  if (!button) return;
+  setMode(button.dataset.labMode, {
+    historyMode: "replace",
+    moveFocus: button.dataset.labMode === "inspect" && controlsOverlay.matches,
+    returnTarget: button
+  });
 });
 
-elements.controlsClose.addEventListener("click", () => setControls(false));
-elements.controlsScrim.addEventListener("click", () => setControls(false));
+elements.controlsClose.addEventListener("click", () => {
+  setMode("present", { historyMode: "replace", moveFocus: true, returnTarget: elements.controlsTrigger });
+});
+elements.controlsScrim.addEventListener("click", () => {
+  setMode("present", { historyMode: "replace", moveFocus: true, returnTarget: elements.controlsTrigger });
+});
 
 elements.controls.addEventListener("keydown", (event) => {
   if (!controlsOverlay.matches || !controlsAreOpen() || event.key !== "Tab") return;
@@ -775,16 +898,17 @@ elements.controls.addEventListener("keydown", (event) => {
 });
 
 document.addEventListener("keydown", (event) => {
-  if (event.key === "Escape" && !document.fullscreenElement && controlsAreOpen()) setControls(false);
+  if (event.key === "Escape" && !document.fullscreenElement && controlsAreOpen()) {
+    setMode("present", { historyMode: "replace", moveFocus: true, returnTarget: elements.controlsTrigger });
+  }
 });
 
 controlsOverlay.addEventListener("change", (event) => {
-  const focusedInside = elements.controls.contains(document.activeElement);
-  if (event.matches) {
-    setControls(false, { moveFocus: focusedInside, returnTarget: elements.controlsTrigger });
-  } else {
-    setControls(true, { moveFocus: false, returnTarget: elements.controlsTrigger });
-  }
+  setMode(currentMode, {
+    moveFocus: event.matches && currentMode === "inspect",
+    persist: false,
+    returnTarget: elements.controlsTrigger
+  });
 });
 
 reducedMotion.addEventListener("change", () => {
@@ -815,6 +939,7 @@ document.addEventListener("fullscreenerror", syncFullscreenControl);
 
 bindArrowNavigation(elements.viewportGroup, "[data-lab-viewport]");
 bindArrowNavigation(elements.themeGroup, "[data-lab-theme]");
+bindArrowNavigation(elements.modeGroup, "[data-lab-mode]");
 
 function resolveLocationState(params = new URLSearchParams(window.location.search)) {
   const scenario = scenarios.find((candidate) => candidate.id === params.get("scenario")) || scenarios[0];
@@ -830,7 +955,8 @@ function resolveLocationState(params = new URLSearchParams(window.location.searc
     scenario: scenario.id,
     state: control.state,
     viewport: viewport.id,
-    theme: theme.id
+    theme: theme.id,
+    mode: resolveMode(params)
   };
 }
 
@@ -839,6 +965,7 @@ function restoreFromLocation() {
   current = resolveLocationState();
   elements.scenario.value = current.scenario;
   renderStateOptions(selectedScenario());
+  setMode(current.mode, { moveFocus: current.mode === "inspect" && controlsOverlay.matches });
   renderAll();
   if (window.location.hash || serializedUrl() !== window.location.pathname + window.location.search) {
     writeUrl("replace");
@@ -865,6 +992,7 @@ async function initialize() {
     current = resolveLocationState();
     elements.scenario.value = current.scenario;
     renderStateOptions(selectedScenario());
+    setMode(current.mode, { moveFocus: false });
     renderAll({ historyMode: "replace" });
   } catch (error) {
     showError(error.message);

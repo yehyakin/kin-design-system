@@ -11,16 +11,66 @@ const LOCALES = Object.freeze(["en", "zh-CN"]);
 const TIERS = Object.freeze(["core", "workspace", "product-specific", "conditional"]);
 const MATURITY_STATUSES = Object.freeze(["stable", "candidate", "draft", "deprecated"]);
 const PRESENTATION_STATUSES = Object.freeze(["planned", "linked", "showcased"]);
+const DISCOVERY_UI_COPY = Object.freeze({
+  en: Object.freeze({
+    featured_components: "Featured components",
+    featured_components_intro: "Choose a component, use the real reference, then open its contract when you need the implementation boundary.",
+    component_stage: "Component stage",
+    open_explorer: "Open Explorer",
+    full_catalog: "View full catalog",
+    full_catalog_hint: "All catalog records and maturity",
+    theme: "Theme",
+    viewport: "Viewport",
+    light: "Light",
+    dark: "Dark",
+    wide: "Wide",
+    narrow: "Narrow",
+    preparing: "Preparing reference",
+    local_navigation: "Featured component navigation",
+    usage: "Usage",
+    states: "States",
+    accessibility: "Accessibility",
+    contract: "Contract",
+    inspected_reference: "Inspected reference",
+    present_reference: "Present reference",
+    pattern_reference: "Live product reference",
+    pattern_details: "Composition and evidence",
+  }),
+  "zh-CN": Object.freeze({
+    featured_components: "精选组件",
+    featured_components_intro: "选择组件，直接使用真实参考；需要实现边界时，再打开对应合同。",
+    component_stage: "组件舞台",
+    open_explorer: "打开 Explorer",
+    full_catalog: "查看完整目录",
+    full_catalog_hint: "全部目录记录与成熟度",
+    theme: "主题",
+    viewport: "视口",
+    light: "日间",
+    dark: "夜间",
+    wide: "宽屏",
+    narrow: "窄屏",
+    preparing: "正在准备参考界面",
+    local_navigation: "精选组件导航",
+    usage: "用途",
+    states: "状态",
+    accessibility: "无障碍",
+    contract: "合同",
+    inspected_reference: "当前检查参考",
+    present_reference: "展示参考",
+    pattern_reference: "真实产品参考",
+    pattern_details: "构图与证据",
+  }),
+});
 
 export const SHOWCASE_COMPONENT_IDS = Object.freeze([
-  "app-shell",
+  "command-menu",
   "evidence-list",
   "suggested-change-review",
   "execution-preview",
   "background-task-queue",
-  "command-menu",
-  "authentication-dialog",
   "data-table",
+  "authentication-dialog",
+  "app-shell",
 ]);
 
 export const SHOWCASE_PATTERN_IDS = Object.freeze([
@@ -589,8 +639,12 @@ function componentReferenceHref(publicPath, locator, locale) {
   return `${siteFileHref(publicPath, locator.path)}${queryString(locator.query[locale])}#${encodeURIComponent(locator.fragment)}`;
 }
 
+function scenarioReferenceControl(scenario) {
+  return scenario.state_controls.find((entry) => entry.state === "normal") ?? scenario.state_controls[0];
+}
+
 function scenarioReferenceHref(publicPath, scenario, locale, referenceLanguage) {
-  const control = scenario.state_controls.find((entry) => entry.state === "normal") ?? scenario.state_controls[0];
+  const control = scenarioReferenceControl(scenario);
   const referencePath = control?.reference_path ?? scenario.reference_path;
   const url = new URL(referencePath, "https://kin.invalid/");
   if (referenceLanguage === "localized") url.searchParams.set("lang", locale);
@@ -599,7 +653,9 @@ function scenarioReferenceHref(publicPath, scenario, locale, referenceLanguage) 
 
 function scenarioLabHref(publicPath, scenario) {
   const publicInspectionPath = scenario.inspection_path.replace(/^site\//u, "");
-  return siteFileHref(publicPath, publicInspectionPath);
+  const url = new URL(publicInspectionPath, "https://kin.invalid/");
+  url.searchParams.set("mode", "present");
+  return siteFileHref(publicPath, `${url.pathname.replace(/^\//u, "")}${url.search}${url.hash}`);
 }
 
 function list(items, render, empty = "") {
@@ -716,7 +772,7 @@ function renderShell({
   <link rel="icon" href="${escapeHtml(`${assets}mark.svg`)}" type="image/svg+xml">
   <link rel="manifest" href="${escapeHtml(`${rootPrefix(publicPath)}manifest.webmanifest`)}">
   <link rel="stylesheet" href="${escapeHtml(`${assets}site.css`)}">
-  <link rel="stylesheet" href="${escapeHtml(`${assets}showcase.css`)}">
+  <link rel="stylesheet" href="${escapeHtml(`${assets}showcase.css?v=2.1`)}">
   <script>
     (() => {
       let storedTheme;
@@ -802,6 +858,7 @@ ${content}
     routePairs: commandPairs.routes,
   })}
   <script type="module" src="${escapeHtml(`${assets}site.js`)}"></script>
+  <script type="module" src="${escapeHtml(`${assets}showcase.js?v=2.1`)}"></script>
 </body>
 </html>`;
 }
@@ -825,9 +882,46 @@ function componentRow({ component, locale, publicPath, configuration, copy }) {
   </li>`;
 }
 
+const COMPONENT_ICONS = Object.freeze({
+  "command-menu": "command",
+  "evidence-list": "list-tree",
+  "suggested-change-review": "git-compare-arrows",
+  "execution-preview": "scan-eye",
+  "background-task-queue": "list-restart",
+  "data-table": "table-2",
+  "authentication-dialog": "log-in",
+  "app-shell": "panels-top-left",
+});
+
+function componentStageOption({ component, locale, publicPath, configuration, active = false }) {
+  const itemCopy = configuration.copy[locale].components.items[component.id];
+  const locator = configuration.locators.components[component.id];
+  const explorerHref = directoryHref(publicPath, localizedPaths("components", component.id)[locale]);
+  const referenceHref = componentReferenceHref(publicPath, locator, locale);
+
+  return `<button class="component-choice" type="button" role="option" aria-selected="${active}" tabindex="${
+    active ? "0" : "-1"
+  }" data-component-choice data-component-id="${escapeHtml(component.id)}" data-component-name="${escapeHtml(
+    component.canonical_name,
+  )}" data-component-job="${escapeHtml(itemCopy.job)}" data-component-state="${escapeHtml(
+    itemCopy.state_label,
+  )}" data-component-reference="${escapeHtml(referenceHref)}" data-component-ready-fragment="${escapeHtml(
+    locator.fragment,
+  )}" data-component-explorer="${escapeHtml(
+    explorerHref,
+  )}">
+    <i data-lucide="${escapeHtml(COMPONENT_ICONS[component.id] ?? "component")}"></i>
+    <span><strong lang="en">${escapeHtml(component.canonical_name)}</strong><small>${escapeHtml(
+      itemCopy.state_label,
+    )}</small></span>
+    <i class="component-choice__arrow" data-lucide="chevron-right"></i>
+  </button>`;
+}
+
 function renderComponentIndex({ locale, publicPath, configuration, components, commandPairs }) {
   const localized = configuration.copy[locale];
   const copy = localized.components.page;
+  const ui = DISCOVERY_UI_COPY[locale];
   const alternatePaths = localizedPaths("components");
   const stable = [...components.values()].filter((component) => component.status === "stable");
   const secondary = [...components.values()].filter((component) => component.status !== "stable");
@@ -871,30 +965,89 @@ function renderComponentIndex({ locale, publicPath, configuration, components, c
     })
     .join("\n");
 
-  const content = `        <header class="discovery-hero">
+  const featured = SHOWCASE_COMPONENT_IDS.map((id) => components.get(id));
+  const initial = featured[0];
+  const initialItem = localized.components.items[initial.id];
+  const initialLocator = configuration.locators.components[initial.id];
+  const initialReferenceHref = componentReferenceHref(publicPath, initialLocator, locale);
+  const initialExplorerHref = directoryHref(publicPath, localizedPaths("components", initial.id)[locale]);
+
+  const content = `        <header class="discovery-hero discovery-hero--compact">
           <p class="eyebrow">${escapeHtml(copy.eyebrow)}</p>
-          <h1>${escapeHtml(copy.title)}</h1>
-          <p class="lead">${escapeHtml(copy.lead)}</p>
-          <aside class="discovery-source-note" aria-labelledby="source-boundary-title">
-            <i data-lucide="shield-check"></i><div><h2 id="source-boundary-title">${escapeHtml(
-              localized.shared.source_boundary_title,
-            )}</h2><p>${escapeHtml(localized.shared.source_boundary_body)}</p></div>
-          </aside>
+          <h1>${escapeHtml(ui.featured_components)}</h1>
+          <p class="lead">${escapeHtml(ui.featured_components_intro)}</p>
         </header>
-        <section class="component-directory" aria-labelledby="stable-components">
-          <div class="section-heading"><h2 id="stable-components">${escapeHtml(copy.stable_heading)}</h2><p>${escapeHtml(
-            copy.stable_intro,
-          )}</p></div>
-          ${stableGroups}
+        <section class="component-browser" data-component-browser aria-labelledby="component-stage-title">
+          <div class="component-browser__choices" role="listbox" aria-label="${escapeHtml(ui.local_navigation)}">
+            ${featured
+              .map((component, index) =>
+                componentStageOption({
+                  component,
+                  locale,
+                  publicPath,
+                  configuration,
+                  active: index === 0,
+                }),
+              )
+              .join("\n")}
+          </div>
+          <div class="reference-stage reference-stage--component" data-reference-stage data-stage-ready="false" data-stage-viewport="wide" data-ready-fragment="${escapeHtml(
+            initialLocator.fragment,
+          )}">
+            <header class="reference-stage__toolbar">
+              <div class="reference-stage__identity">
+                <span>${escapeHtml(ui.component_stage)}</span>
+                <strong data-stage-title lang="en">${escapeHtml(initial.canonical_name)}</strong>
+              </div>
+              <div class="stage-segmented" role="group" aria-label="${escapeHtml(ui.theme)}">
+                <button type="button" data-stage-theme="light" aria-pressed="false"><i data-lucide="sun"></i><span>${escapeHtml(
+                  ui.light,
+                )}</span></button>
+                <button type="button" data-stage-theme="dark" aria-pressed="true"><i data-lucide="moon"></i><span>${escapeHtml(
+                  ui.dark,
+                )}</span></button>
+              </div>
+            </header>
+            <div class="reference-stage__viewport">
+              <div class="reference-stage__loading" data-stage-loading><span></span>${escapeHtml(ui.preparing)}</div>
+              <iframe src="${escapeHtml(initialReferenceHref)}" title="${escapeHtml(
+                `${initial.canonical_name}: ${initialItem.state_label}`,
+              )}" loading="eager" data-stage-frame></iframe>
+            </div>
+            <footer class="reference-stage__footer">
+              <p data-stage-job>${escapeHtml(initialItem.job)}</p>
+              <a class="stage-text-link" href="${escapeHtml(initialExplorerHref)}" data-stage-explorer>${escapeHtml(
+                ui.open_explorer,
+              )} <i data-lucide="arrow-up-right"></i></a>
+            </footer>
+          </div>
         </section>
-        <hr class="section-rule">
-        <section class="component-directory component-directory--secondary" aria-labelledby="secondary-components">
-          <div class="section-heading"><h2 id="secondary-components">${escapeHtml(copy.other_heading)}</h2><p>${escapeHtml(
-            copy.other_intro,
-          )}</p></div>
-          ${secondaryGroups}
-        </section>
-        <p class="showcase-source-link">${sourceLink("components/catalog.json", copy.catalog_link)}</p>`;
+        <details class="catalog-disclosure">
+          <summary><span><strong>${escapeHtml(ui.full_catalog)}</strong><small>${escapeHtml(
+            ui.full_catalog_hint,
+          )}</small></span><i data-lucide="chevron-down"></i></summary>
+          <div class="catalog-disclosure__body">
+            <aside class="discovery-source-note" aria-labelledby="source-boundary-title">
+              <i data-lucide="shield-check"></i><div><h2 id="source-boundary-title">${escapeHtml(
+                localized.shared.source_boundary_title,
+              )}</h2><p>${escapeHtml(localized.shared.source_boundary_body)}</p></div>
+            </aside>
+            <section class="component-directory" aria-labelledby="stable-components">
+              <div class="section-heading"><h2 id="stable-components">${escapeHtml(copy.stable_heading)}</h2><p>${escapeHtml(
+                copy.stable_intro,
+              )}</p></div>
+              ${stableGroups}
+            </section>
+            <hr class="section-rule">
+            <section class="component-directory component-directory--secondary" aria-labelledby="secondary-components">
+              <div class="section-heading"><h2 id="secondary-components">${escapeHtml(copy.other_heading)}</h2><p>${escapeHtml(
+                copy.other_intro,
+              )}</p></div>
+              ${secondaryGroups}
+            </section>
+            <p class="showcase-source-link">${sourceLink("components/catalog.json", copy.catalog_link)}</p>
+          </div>
+        </details>`;
 
   return renderShell({
     locale,
@@ -924,13 +1077,13 @@ function textList(items, empty = "", renderItem = escapeHtml) {
 function renderComponentExplorer({ id, locale, publicPath, configuration, components, commandPairs }) {
   const localized = configuration.copy[locale];
   const copy = localized.components.explorer;
+  const ui = DISCOVERY_UI_COPY[locale];
   const component = components.get(id);
   const itemCopy = localized.components.items[id];
   const locator = configuration.locators.components[id];
   const alternatePaths = localizedPaths("components", id);
   const referenceHref = componentReferenceHref(publicPath, locator, locale);
   const referenceLocale = locator.query[locale].lang === "en" ? "en" : "zh-CN";
-  const referenceLocaleMismatch = referenceLocale !== locale;
   const supportRows = [
     ["themes", copy.themes],
     ["responsive", copy.responsive],
@@ -938,89 +1091,139 @@ function renderComponentExplorer({ id, locale, publicPath, configuration, compon
     ["touch", copy.touch],
     ["reduced_motion", copy.reduced_motion],
   ];
+  const featuredNavigation = SHOWCASE_COMPONENT_IDS.map((componentId) => {
+    const record = components.get(componentId);
+    const active = componentId === id ? ' aria-current="page"' : "";
+    return `<a href="${escapeHtml(
+      directoryHref(publicPath, localizedPaths("components", componentId)[locale]),
+    )}"${active}><i data-lucide="${escapeHtml(COMPONENT_ICONS[componentId] ?? "component")}"></i><span lang="en">${escapeHtml(
+      record.canonical_name,
+    )}</span></a>`;
+  }).join("\n");
 
-  const content = `        <header class="discovery-hero component-explorer__hero" data-component-id="${escapeHtml(component.id)}">
-          <a class="back-link" href="${escapeHtml(directoryHref(publicPath, localizedPaths("components")[locale]))}"><i data-lucide="panel-right-open"></i>${escapeHtml(
-            copy.back,
-          )}</a>
-          <p class="eyebrow">${escapeHtml(copy.eyebrow)}</p>
-          <h1 lang="en">${escapeHtml(component.canonical_name)}</h1>
-          <div class="component-explorer__identity"><code>${escapeHtml(component.id)}</code>${statusBadge(
-            component.status,
-            localized.shared,
-          )}<span>${escapeHtml(copyStatus(localized.shared, component.tier))}</span></div>
-          <div class="component-explorer__job"><h2>${escapeHtml(copy.user_job)}</h2><p>${escapeHtml(itemCopy.job)}</p></div>
-        </header>
-        <section class="component-reference" aria-labelledby="reference-title">
-          <div class="section-heading"><h2 id="reference-title">${escapeHtml(copy.reference_heading)}</h2><p>${escapeHtml(
-            copy.reference_intro,
-          )}</p></div>
-          <div class="component-reference-frame">
-            <iframe src="${escapeHtml(referenceHref)}" title="${escapeHtml(
-              `${copy.reference_heading}: ${itemCopy.state_label}`,
-            )}" loading="eager"></iframe>
+  const content = `        <div class="component-studio">
+          <aside class="component-studio__navigation" aria-label="${escapeHtml(ui.local_navigation)}">
+            <a class="back-link" href="${escapeHtml(directoryHref(publicPath, localizedPaths("components")[locale]))}"><i data-lucide="arrow-left"></i>${escapeHtml(
+              copy.back,
+            )}</a>
+            <nav>${featuredNavigation}</nav>
+          </aside>
+          <div class="component-studio__main">
+            <header class="component-studio__header" data-component-id="${escapeHtml(component.id)}">
+              <div><p class="eyebrow">${escapeHtml(copy.eyebrow)}</p><h1 lang="en">${escapeHtml(
+                component.canonical_name,
+              )}</h1><p>${escapeHtml(itemCopy.job)}</p></div>
+              <div class="component-explorer__identity"><code>${escapeHtml(component.id)}</code>${statusBadge(
+                component.status,
+                localized.shared,
+              )}<span>${escapeHtml(copyStatus(localized.shared, component.tier))}</span></div>
+            </header>
+            <section class="reference-stage reference-stage--explorer" data-reference-stage data-stage-ready="false" data-stage-viewport="wide" data-ready-fragment="${escapeHtml(
+              locator.fragment,
+            )}" aria-labelledby="reference-title">
+              <header class="reference-stage__toolbar reference-stage__toolbar--explorer">
+                <div class="reference-stage__identity"><span id="reference-title">${escapeHtml(
+                  ui.present_reference,
+                )}</span><strong>${escapeHtml(itemCopy.state_label)}</strong></div>
+                <div class="reference-stage__controls">
+                  <label class="stage-select"><span>${escapeHtml(ui.states)}</span><select aria-label="${escapeHtml(
+                    ui.states,
+                  )}"><option>${escapeHtml(itemCopy.state_label)}</option></select></label>
+                  <div class="stage-segmented" role="group" aria-label="${escapeHtml(ui.theme)}">
+                    <button type="button" data-stage-theme="light" aria-pressed="false"><i data-lucide="sun"></i><span>${escapeHtml(
+                      ui.light,
+                    )}</span></button>
+                    <button type="button" data-stage-theme="dark" aria-pressed="true"><i data-lucide="moon"></i><span>${escapeHtml(
+                      ui.dark,
+                    )}</span></button>
+                  </div>
+                  <div class="stage-segmented" role="group" aria-label="${escapeHtml(ui.viewport)}">
+                    <button type="button" data-stage-viewport="wide" aria-pressed="true"><i data-lucide="monitor"></i><span>${escapeHtml(
+                      ui.wide,
+                    )}</span></button>
+                    <button type="button" data-stage-viewport="narrow" aria-pressed="false"><i data-lucide="smartphone"></i><span>${escapeHtml(
+                      ui.narrow,
+                    )}</span></button>
+                  </div>
+                </div>
+              </header>
+              <div class="reference-stage__viewport">
+                <div class="reference-stage__loading" data-stage-loading><span></span>${escapeHtml(ui.preparing)}</div>
+                <iframe src="${escapeHtml(referenceHref)}" title="${escapeHtml(
+                  `${copy.reference_heading}: ${itemCopy.state_label}`,
+                )}" loading="eager" data-stage-frame></iframe>
+              </div>
+              <footer class="reference-stage__footer">
+                <div><span>${escapeHtml(copy.reference_language)}</span><strong lang="${escapeHtml(
+                  referenceLocale,
+                )}">${escapeHtml(localeLabel(referenceLocale))}</strong></div>
+                <a class="stage-text-link" href="${escapeHtml(referenceHref)}">${escapeHtml(
+                  copy.open_reference,
+                )} <i data-lucide="external-link"></i></a>
+              </footer>
+            </section>
+            <section class="component-detail-tabs" data-component-tabs>
+              <div class="component-detail-tabs__list" role="tablist">
+                <button type="button" role="tab" id="usage-tab" aria-controls="usage-panel" aria-selected="true" tabindex="0">${escapeHtml(
+                  ui.usage,
+                )}</button>
+                <button type="button" role="tab" id="states-tab" aria-controls="states-panel" aria-selected="false" tabindex="-1">${escapeHtml(
+                  ui.states,
+                )}</button>
+                <button type="button" role="tab" id="accessibility-tab" aria-controls="accessibility-panel" aria-selected="false" tabindex="-1">${escapeHtml(
+                  ui.accessibility,
+                )}</button>
+                <button type="button" role="tab" id="contract-tab" aria-controls="contract-panel" aria-selected="false" tabindex="-1">${escapeHtml(
+                  ui.contract,
+                )}</button>
+              </div>
+              <div class="component-detail-tabs__panel" role="tabpanel" id="usage-panel" aria-labelledby="usage-tab">
+                <h2>${escapeHtml(copy.user_job)}</h2><p>${escapeHtml(itemCopy.job)}</p>
+                <aside><i data-lucide="info"></i><p>${escapeHtml(itemCopy.boundary)}</p></aside>
+              </div>
+              <div class="component-detail-tabs__panel" role="tabpanel" id="states-panel" aria-labelledby="states-tab" hidden>
+                <h2>${escapeHtml(copy.state_coverage)}</h2><p>${escapeHtml(copy.states_boundary)}</p>
+                <dl><div><dt>${escapeHtml(copy.inspected_state)}</dt><dd>${escapeHtml(
+                  itemCopy.state_label,
+                )} <code>${escapeHtml(locator.state_id)}</code></dd></div></dl>
+                <p>${sourceLink("components/core-states.md", copy.states_contract)}</p>
+              </div>
+              <div class="component-detail-tabs__panel" role="tabpanel" id="accessibility-panel" aria-labelledby="accessibility-tab" hidden>
+                <h2>${escapeHtml(copy.support)}</h2><dl class="component-support-grid">
+                  ${supportRows
+                    .map(
+                      ([key, label]) =>
+                        `<div><dt>${escapeHtml(label)}</dt><dd data-supported="${component.support[key]}">${escapeHtml(
+                          component.support[key] ? copy.supported : copy.not_recorded,
+                        )}</dd></div>`,
+                    )
+                    .join("\n")}
+                </dl><p>${escapeHtml(copy.accessibility_boundary_body)}</p>
+              </div>
+              <div class="component-detail-tabs__panel" role="tabpanel" id="contract-panel" aria-labelledby="contract-tab" hidden>
+                <div class="evidence-columns">
+                  <section><h3>${escapeHtml(copy.contracts)}</h3><ul>${evidencePathList(
+                    component.contract_paths,
+                  )}</ul></section>
+                  <section><h3>${escapeHtml(copy.tests)}</h3><ul>${evidencePathList(
+                    component.test_paths,
+                  )}</ul></section>
+                  <section><h3>${escapeHtml(copy.manual_checks)}</h3><ul>${textList(
+                    component.manual_checks,
+                    "",
+                    (item) => localizedCatalogMarkup(item, locale, configuration),
+                  )}</ul></section>
+                </div>
+                <section class="known-gaps"><h3>${escapeHtml(copy.known_gaps)}</h3><ul>${textList(
+                  component.known_gaps,
+                  copy.no_known_gaps,
+                  (item) => localizedCatalogMarkup(item, locale, configuration),
+                )}</ul></section>
+                <p>${sourceLink("components/catalog.json", localized.shared.catalog_record)}</p>
+              </div>
+            </section>
           </div>
-          <div class="component-reference__meta">
-            <div>
-              <p><strong>${escapeHtml(copy.inspected_state)}</strong><span>${escapeHtml(
-                itemCopy.state_label,
-              )}</span><code>${escapeHtml(locator.state_id)}</code></p>
-              <p><strong>${escapeHtml(copy.reference_language)}</strong><span lang="${escapeHtml(
-                referenceLocale,
-              )}">${escapeHtml(localeLabel(referenceLocale))}</span></p>
-              ${referenceLocaleMismatch ? `<p class="reference-language-note">${escapeHtml(copy.reference_language_mismatch)}</p>` : ""}
-            </div>
-            <a class="button" href="${escapeHtml(referenceHref)}">${escapeHtml(
-              copy.open_reference,
-            )} <i data-lucide="external-link"></i></a>
-          </div>
-          <section class="component-applicable-states" aria-labelledby="state-coverage-title">
-            <div><h2 id="state-coverage-title">${escapeHtml(copy.state_coverage)}</h2><p>${escapeHtml(
-              copy.states_boundary,
-            )}</p></div>
-            <p class="component-applicable-states__contract">${sourceLink(
-              "components/core-states.md",
-              copy.states_contract,
-            )}</p>
-          </section>
-        </section>
-        <hr class="section-rule">
-        <section class="component-evidence" aria-labelledby="evidence-title">
-          <div class="section-heading"><h2 id="evidence-title">${escapeHtml(copy.evidence_heading)}</h2></div>
-          <div class="evidence-columns">
-            <section><h3>${escapeHtml(copy.contracts)}</h3><ul>${evidencePathList(component.contract_paths)}</ul></section>
-            <section><h3>${escapeHtml(copy.tests)}</h3><ul>${evidencePathList(component.test_paths)}</ul></section>
-            <section><h3>${escapeHtml(copy.manual_checks)}</h3><ul>${textList(
-              component.manual_checks,
-              "",
-              (item) => localizedCatalogMarkup(item, locale, configuration),
-            )}</ul></section>
-          </div>
-          <section class="support-list" aria-labelledby="support-title"><h3 id="support-title">${escapeHtml(copy.support)}</h3><dl>
-            ${supportRows
-              .map(
-                ([key, label]) =>
-                  `<div><dt>${escapeHtml(label)}</dt><dd data-supported="${component.support[key]}">${escapeHtml(
-                    component.support[key] ? copy.supported : copy.not_recorded,
-                  )}</dd></div>`,
-              )
-              .join("\n")}
-          </dl></section>
-          <section class="known-gaps" aria-labelledby="gaps-title"><h3 id="gaps-title">${escapeHtml(
-            copy.known_gaps,
-          )}</h3><ul>${textList(
-            component.known_gaps,
-            copy.no_known_gaps,
-            (item) => localizedCatalogMarkup(item, locale, configuration),
-          )}</ul></section>
-          <aside class="discovery-source-note" aria-labelledby="accessibility-boundary-title"><i data-lucide="accessibility"></i><div><h3 id="accessibility-boundary-title">${escapeHtml(
-            copy.accessibility_boundary,
-          )}</h3><p>${escapeHtml(copy.accessibility_boundary_body)}</p></div></aside>
-          <aside class="discovery-source-note" aria-labelledby="reference-boundary-title"><i data-lucide="shield-check"></i><div><h3 id="reference-boundary-title">${escapeHtml(
-            copy.reference_boundary,
-          )}</h3><p>${escapeHtml(itemCopy.boundary)}</p></div></aside>
-        </section>
-        <p class="showcase-source-link">${sourceLink("components/catalog.json", localized.shared.catalog_record)}</p>`;
+        </div>`;
 
   return renderShell({
     locale,
@@ -1035,43 +1238,10 @@ function renderComponentExplorer({ id, locale, publicPath, configuration, compon
   });
 }
 
-function patternBlueprint(id, items) {
-  const escaped = items.map(escapeHtml);
-  if (id === "information-site") {
-    return `<div class="pattern-blueprint pattern-blueprint--information" aria-label="${escaped.join(", ")}">
-      <div class="pattern-blueprint__search">${escaped[0]}</div>
-      <div class="pattern-blueprint__reading">${escaped[1]}</div>
-      <div class="pattern-blueprint__source">${escaped[2]}</div>
-      <div class="pattern-blueprint__navigation">${escaped[3]}</div>
-    </div>`;
-  }
-  if (id === "intelligence-workspace") {
-    return `<div class="pattern-blueprint pattern-blueprint--intelligence" aria-label="${escaped.join(", ")}">
-      <div class="pattern-blueprint__scope">${escaped[0]}</div>
-      <div class="pattern-blueprint__list">${escaped[1]}</div>
-      <div class="pattern-blueprint__evidence">${escaped[2]}</div>
-      <div class="pattern-blueprint__properties">${escaped[3]}</div>
-    </div>`;
-  }
-  if (id === "ecommerce-operations") {
-    return `<div class="pattern-blueprint pattern-blueprint--commerce" aria-label="${escaped.join(", ")}">
-      <div class="pattern-blueprint__scope">${escaped[0]}</div>
-      <div class="pattern-blueprint__queue">${escaped[1]}</div>
-      <div class="pattern-blueprint__selected">${escaped[2]}</div>
-      <div class="pattern-blueprint__approval">${escaped[3]}</div>
-    </div>`;
-  }
-  return `<div class="pattern-blueprint pattern-blueprint--engineering" aria-label="${escaped.join(", ")}">
-    <div class="pattern-blueprint__tools">${escaped[0]}</div>
-    <div class="pattern-blueprint__canvas">${escaped[1]}</div>
-    <div class="pattern-blueprint__properties">${escaped[2]}</div>
-    <div class="pattern-blueprint__status">${escaped[3]}</div>
-  </div>`;
-}
-
 function renderPatternSection({ id, locale, publicPath, configuration, pages, scenarios }) {
   const localized = configuration.copy[locale];
   const copy = localized.patterns.page;
+  const ui = DISCOVERY_UI_COPY[locale];
   const itemCopy = localized.patterns.items[id];
   const locator = configuration.locators.patterns[id];
   const page = pages.get(locator.page_id);
@@ -1079,63 +1249,86 @@ function renderPatternSection({ id, locale, publicPath, configuration, pages, sc
   const catalogLanguage = locale === "zh-CN" ? ' lang="en"' : "";
   const referenceLocale = locator.reference_language === "localized" ? locale : locator.reference_language;
   const referenceLocaleMismatch = referenceLocale !== locale;
+  const referenceHref = scenarioReferenceHref(publicPath, scenario, locale, locator.reference_language);
+  const referenceControl = scenarioReferenceControl(scenario);
+  const initialTheme = id === "information-site" ? "light" : "dark";
 
   return `<article class="pattern-discovery-section pattern-discovery-section--${escapeHtml(id)}" data-pattern-id="${escapeHtml(
     id,
   )}" data-showcase-route="pattern-detail" aria-labelledby="pattern-${escapeHtml(id)}">
     <header class="pattern-discovery-section__heading">
       <div><h2 id="pattern-${escapeHtml(id)}">${escapeHtml(itemCopy.label)}</h2><p>${escapeHtml(itemCopy.summary)}</p></div>
-    </header>
-    ${patternBlueprint(id, itemCopy.blueprint)}
-    <div class="pattern-records">
-      <section aria-labelledby="page-${escapeHtml(id)}"><p class="record-kicker">${escapeHtml(copy.page_record)}</p><h3 id="page-${escapeHtml(
-        id,
-      )}"${catalogLanguage}>${escapeHtml(page.canonical_name)}</h3><dl><div><dt>${escapeHtml(
-        copy.page_status,
-      )}</dt><dd>${statusBadge(page.status, localized.shared)}</dd></div><div><dt>ID</dt><dd><code>${escapeHtml(
-        page.id,
-      )}</code></dd></div></dl></section>
-      <section aria-labelledby="scenario-${escapeHtml(id)}"><p class="record-kicker">${escapeHtml(
-        copy.scenario_record,
-      )}</p><h3 id="scenario-${escapeHtml(id)}"${catalogLanguage}>${escapeHtml(
-        scenario.canonical_name,
-      )}</h3><dl><div><dt>${escapeHtml(copy.scenario_presentation)}</dt><dd>${statusBadge(
-        scenario.presentation_status,
-        localized.shared,
-      )}</dd></div><div><dt>ID</dt><dd><code>${escapeHtml(scenario.id)}</code></dd></div></dl></section>
-    </div>
-    <section class="pattern-job" aria-labelledby="job-${escapeHtml(id)}"><h3 id="job-${escapeHtml(id)}">${escapeHtml(
-      copy.primary_job,
-    )}</h3><p${catalogLanguage}>${escapeHtml(scenario.user_job)}</p><dl class="pattern-composition">
-      <div><dt>${escapeHtml(copy.first_view)}</dt><dd${catalogLanguage}>${escapeHtml(
-        scenario.composition.first_meaningful_view,
-      )}</dd></div>
-      <div><dt>${escapeHtml(copy.dominant_region)}</dt><dd${catalogLanguage}>${escapeHtml(
-        scenario.composition.dominant_region,
-      )}</dd></div>
-      <div><dt>${escapeHtml(copy.persistent_context)}</dt><dd${catalogLanguage}>${escapeHtml(
-        scenario.composition.persistent_context,
-      )}</dd></div>
-    </dl></section>
-    <section class="pattern-prohibitions" aria-labelledby="prohibited-${escapeHtml(id)}"><h3 id="prohibited-${escapeHtml(
-      id,
-    )}">${escapeHtml(copy.prohibited)}</h3><ul>${textList(itemCopy.prohibited_substitutions)}</ul></section>
-    <footer class="pattern-discovery-section__sources">
-      <div class="pattern-source-copy">
-        <p><strong>${escapeHtml(copy.governing_contract)}</strong>${sourceLink(locator.document_path)}</p>
-        <p><strong>${escapeHtml(copy.reference_language)}</strong><span lang="${escapeHtml(
-          referenceLocale,
-        )}">${escapeHtml(localeLabel(referenceLocale))}</span></p>
-        ${referenceLocaleMismatch ? `<p class="reference-language-note">${escapeHtml(copy.reference_language_mismatch)}</p>` : ""}
-      </div>
-      <div><a class="button" href="${escapeHtml(
-        scenarioReferenceHref(publicPath, scenario, locale, locator.reference_language),
-      )}">${escapeHtml(
-        referenceLocaleMismatch ? copy.open_chinese_reference : copy.open_reference,
-      )} <i data-lucide="external-link"></i></a><a class="button" href="${escapeHtml(
+      <div class="pattern-discovery-section__actions"><a class="stage-text-link" href="${escapeHtml(
         scenarioLabHref(publicPath, scenario),
-      )}">${escapeHtml(copy.open_lab)} <i data-lucide="search"></i></a></div>
-    </footer>
+      )}">${escapeHtml(copy.open_lab)} <i data-lucide="arrow-up-right"></i></a></div>
+    </header>
+    <div class="reference-stage reference-stage--pattern" data-reference-stage data-stage-ready="false" data-stage-viewport="wide" data-initial-theme="${initialTheme}" data-ready-selector="${escapeHtml(
+      referenceControl.assertion.selector,
+    )}">
+      <div class="reference-stage__viewport">
+        <div class="reference-stage__loading" data-stage-loading><span></span>${escapeHtml(ui.preparing)}</div>
+        <iframe src="${escapeHtml(referenceHref)}" title="${escapeHtml(
+          `${ui.pattern_reference}: ${itemCopy.label}`,
+        )}" loading="lazy" data-stage-frame></iframe>
+      </div>
+    </div>
+    <details class="pattern-details">
+      <summary><span>${escapeHtml(ui.pattern_details)}</span><i data-lucide="chevron-down"></i></summary>
+      <div class="pattern-details__body">
+        <div class="pattern-records">
+          <section aria-labelledby="page-${escapeHtml(id)}"><p class="record-kicker">${escapeHtml(
+            copy.page_record,
+          )}</p><h3 id="page-${escapeHtml(id)}"${catalogLanguage}>${escapeHtml(
+            page.canonical_name,
+          )}</h3><dl><div><dt>${escapeHtml(copy.page_status)}</dt><dd>${statusBadge(
+            page.status,
+            localized.shared,
+          )}</dd></div><div><dt>ID</dt><dd><code>${escapeHtml(page.id)}</code></dd></div></dl></section>
+          <section aria-labelledby="scenario-${escapeHtml(id)}"><p class="record-kicker">${escapeHtml(
+            copy.scenario_record,
+          )}</p><h3 id="scenario-${escapeHtml(id)}"${catalogLanguage}>${escapeHtml(
+            scenario.canonical_name,
+          )}</h3><dl><div><dt>${escapeHtml(copy.scenario_presentation)}</dt><dd>${statusBadge(
+            scenario.presentation_status,
+            localized.shared,
+          )}</dd></div><div><dt>ID</dt><dd><code>${escapeHtml(scenario.id)}</code></dd></div></dl></section>
+        </div>
+        <section class="pattern-job" aria-labelledby="job-${escapeHtml(id)}"><h3 id="job-${escapeHtml(
+          id,
+        )}">${escapeHtml(copy.primary_job)}</h3><p${catalogLanguage}>${escapeHtml(
+          scenario.user_job,
+        )}</p><dl class="pattern-composition">
+          <div><dt>${escapeHtml(copy.first_view)}</dt><dd${catalogLanguage}>${escapeHtml(
+            scenario.composition.first_meaningful_view,
+          )}</dd></div>
+          <div><dt>${escapeHtml(copy.dominant_region)}</dt><dd${catalogLanguage}>${escapeHtml(
+            scenario.composition.dominant_region,
+          )}</dd></div>
+          <div><dt>${escapeHtml(copy.persistent_context)}</dt><dd${catalogLanguage}>${escapeHtml(
+            scenario.composition.persistent_context,
+          )}</dd></div>
+        </dl></section>
+        <section class="pattern-prohibitions" aria-labelledby="prohibited-${escapeHtml(
+          id,
+        )}"><h3 id="prohibited-${escapeHtml(id)}">${escapeHtml(copy.prohibited)}</h3><ul>${textList(
+          itemCopy.prohibited_substitutions,
+        )}</ul></section>
+        <footer class="pattern-discovery-section__sources">
+          <div class="pattern-source-copy">
+            <p><strong>${escapeHtml(copy.governing_contract)}</strong>${sourceLink(locator.document_path)}</p>
+            <p><strong>${escapeHtml(copy.reference_language)}</strong><span lang="${escapeHtml(
+              referenceLocale,
+            )}">${escapeHtml(localeLabel(referenceLocale))}</span></p>
+            ${referenceLocaleMismatch ? `<p class="reference-language-note">${escapeHtml(
+              copy.reference_language_mismatch,
+            )}</p>` : ""}
+          </div>
+          <a class="button" href="${escapeHtml(referenceHref)}">${escapeHtml(
+            referenceLocaleMismatch ? copy.open_chinese_reference : copy.open_reference,
+          )} <i data-lucide="external-link"></i></a>
+        </footer>
+      </div>
+    </details>
   </article>`;
 }
 
@@ -1143,20 +1336,25 @@ function renderPatternIndex({ locale, publicPath, configuration, pages, scenario
   const localized = configuration.copy[locale];
   const copy = localized.patterns.page;
   const alternatePaths = localizedPaths("patterns");
-  const content = `        <header class="discovery-hero">
+  const content = `        <header class="discovery-hero discovery-hero--compact">
           <p class="eyebrow">${escapeHtml(copy.eyebrow)}</p>
           <h1>${escapeHtml(copy.title)}</h1>
           <p class="lead">${escapeHtml(copy.lead)}</p>
-          <aside class="discovery-source-note discovery-source-note--compact" aria-labelledby="pattern-maturity-note"><i data-lucide="shield-check"></i><p id="pattern-maturity-note">${escapeHtml(
-            copy.maturity_note,
-          )}</p></aside>
         </header>
         <div class="pattern-discovery">
           ${SHOWCASE_PATTERN_IDS.map((id) =>
             renderPatternSection({ id, locale, publicPath, configuration, pages, scenarios }),
           ).join("\n")}
         </div>
-        <p class="showcase-source-link">${sourceLink("pages/catalog.json", copy.catalog_link)}</p>`;
+        <details class="catalog-disclosure catalog-disclosure--compact">
+          <summary><span><strong>${escapeHtml(copy.maturity_note)}</strong><small>${escapeHtml(
+            copy.catalog_link,
+          )}</small></span><i data-lucide="chevron-down"></i></summary>
+          <div class="catalog-disclosure__body"><p class="showcase-source-link">${sourceLink(
+            "pages/catalog.json",
+            copy.catalog_link,
+          )}</p></div>
+        </details>`;
 
   return renderShell({
     locale,

@@ -1,12 +1,10 @@
-const showcaseRoot = document.documentElement;
-const showcasePreviews = [...document.querySelectorAll("[data-showcase-preview]")];
-const narrowPreview = matchMedia("(max-width: 720px)");
-const reducedPreviewMotion = matchMedia("(prefers-reduced-motion: reduce)");
-const previewControllers = [];
+const root = document.documentElement;
+const stage = document.querySelector("[data-scenario-stage]");
+const labLinks = [...document.querySelectorAll("[data-showcase-lab-link]")];
 
 function resolvedAppearanceId() {
-  const theme = showcaseRoot.dataset.theme === "light" ? "light" : "dark";
-  return showcaseRoot.dataset.contrast === "more" ? `${theme}-high-contrast` : theme;
+  const theme = root.dataset.theme === "light" ? "light" : "dark";
+  return root.dataset.contrast === "more" ? `${theme}-high-contrast` : theme;
 }
 
 function syncLabLinkAppearance(link) {
@@ -16,294 +14,332 @@ function syncLabLinkAppearance(link) {
   link.href = url.href;
 }
 
-function initializePreview(preview) {
-  const poster = preview.querySelector("[data-preview-poster]");
-  const frame = preview.querySelector("[data-preview-frame]");
-  const trigger = preview.querySelector("[data-preview-activate]");
-  const triggerLabel = preview.querySelector("[data-preview-trigger-label]");
-  const deactivateButton = preview.querySelector("[data-preview-deactivate]");
-  const status = preview.querySelector("[data-preview-status]");
-  const labLinks = [...document.querySelectorAll("[data-showcase-lab-link]")];
-
-  if (!poster || !frame || !trigger || !triggerLabel || !deactivateButton || !status) return null;
-
-  let loadingTimer;
-  let teardownTimer;
-  let frameEscapeHandler;
-  let focusRestorePending = false;
-  let restoreTriggerOnFailure = false;
-
-  function message(name, fallback) {
-    return preview.dataset[name] || fallback;
+function syncEmbeddedAppearanceControls(frameDocument, theme, contrast) {
+  const dark = theme === "dark";
+  for (const control of frameDocument.querySelectorAll("[data-theme-switch]")) {
+    control.setAttribute("aria-checked", String(dark));
   }
-
-  function clearLoadingTimer() {
-    if (loadingTimer !== undefined) window.clearTimeout(loadingTimer);
-    loadingTimer = undefined;
-  }
-
-  function clearTeardownTimer() {
-    if (teardownTimer !== undefined) window.clearTimeout(teardownTimer);
-    teardownTimer = undefined;
-  }
-
-  function restoreTriggerFocus({ complete = false } = {}) {
-    if (!focusRestorePending || preview.dataset.state !== "idle") return;
-    trigger.focus({ preventScroll: true });
-    if (complete) focusRestorePending = false;
-  }
-
-  function setStatus(state, text) {
-    status.dataset.state = state;
-    status.textContent = text;
-  }
-
-  function updateTriggerLabel() {
-    if (narrowPreview.matches) {
-      triggerLabel.textContent = message("labelNarrow", "Open preview in Lab");
-      trigger.setAttribute("aria-label", message("labelNarrow", "Open preview in Lab"));
-      return;
+  for (const control of frameDocument.querySelectorAll("[data-contrast-toggle]")) {
+    const active = String(contrast === "more");
+    if (control.hasAttribute("aria-checked") || control.getAttribute("role") === "menuitemcheckbox") {
+      control.setAttribute("aria-checked", active);
     }
-
-    const fallback = preview.dataset.state === "fallback";
-    const label = fallback
-      ? message("labelRetry", "Retry interactive preview")
-      : message("labelEnter", "Enter interactive preview");
-    triggerLabel.textContent = label;
-    trigger.setAttribute("aria-label", label);
-  }
-
-  function setFrameInteractive(interactive) {
-    frame.inert = !interactive;
-    frame.tabIndex = interactive ? 0 : -1;
-    frame.setAttribute("aria-hidden", String(!interactive));
-  }
-
-  function detachFrameEscape() {
-    if (!frameEscapeHandler) return;
-    try {
-      frame.contentWindow?.removeEventListener("keydown", frameEscapeHandler);
-    } catch {}
-    frameEscapeHandler = undefined;
-  }
-
-  function unloadFrame() {
-    detachFrameEscape();
-    frame.dataset.loaded = "false";
-    frame.removeAttribute("src");
-  }
-
-  function syncFrameAppearance() {
-    if (frame.dataset.loaded !== "true") return;
-
-    try {
-      const frameDocument = frame.contentDocument;
-      if (!frameDocument) return;
-      const frameRoot = frameDocument.documentElement;
-      const theme = showcaseRoot.dataset.theme === "light" ? "light" : "dark";
-      const contrast = showcaseRoot.dataset.contrast === "more" ? "more" : "normal";
-
-      frameRoot.dataset.theme = theme;
-      frameRoot.dataset.themePreference = theme;
-      frameRoot.dataset.contrast = contrast;
-      frameRoot.style.colorScheme = theme;
-
-      const themeColor = frameDocument.querySelector('meta[name="theme-color"]');
-      if (themeColor) themeColor.content = theme === "dark" ? "#08090a" : "#f6f7f8";
-
-      for (const control of frameDocument.querySelectorAll("[data-theme-switch]")) {
-        control.setAttribute("aria-checked", String(theme === "dark"));
-      }
-      for (const control of frameDocument.querySelectorAll("[data-contrast-toggle]")) {
-        control.setAttribute("aria-pressed", String(contrast === "more"));
-      }
-    } catch {
-      failPreview();
+    if (control.hasAttribute("aria-pressed") || !control.hasAttribute("aria-checked")) {
+      control.setAttribute("aria-pressed", active);
     }
   }
+  for (const option of frameDocument.querySelectorAll("[data-theme-option], [data-theme-preference]")) {
+    const value = option.dataset.themeOption || option.dataset.themePreference;
+    option.setAttribute("aria-checked", String(value === theme));
+  }
+}
 
-  function syncAppearance() {
-    for (const link of labLinks) syncLabLinkAppearance(link);
-    syncFrameAppearance();
+function prepareEmbeddedReference(frame, { theme = "dark", contrast = "normal" } = {}) {
+  const frameDocument = frame.contentDocument;
+  if (!frameDocument?.documentElement) return false;
+  if (frameDocument.querySelector('[data-404-key="title"]') || /^Page not found\b/u.test(frameDocument.title)) {
+    return false;
+  }
+  const frameRoot = frameDocument.documentElement;
+  frameRoot.dataset.theme = theme;
+  frameRoot.dataset.themePreference = theme;
+  frameRoot.dataset.contrast = contrast;
+  frameRoot.dataset.showcaseEmbed = "true";
+  frameRoot.style.colorScheme = theme;
+  syncEmbeddedAppearanceControls(frameDocument, theme, contrast);
+
+  const themeColor = frameDocument.querySelector('meta[name="theme-color"]');
+  if (themeColor) themeColor.content = theme === "dark" ? "#08090a" : "#f6f7f8";
+
+  if (!frameDocument.querySelector("#kin-showcase-embed-style")) {
+    const style = frameDocument.createElement("style");
+    style.id = "kin-showcase-embed-style";
+    style.textContent = `
+      html, body, * { scrollbar-width: none !important; }
+      *::-webkit-scrollbar { width: 0 !important; height: 0 !important; }
+    `;
+    frameDocument.head.append(style);
+  }
+  return true;
+}
+
+function initializeScenarioStage(container) {
+  const options = [...container.querySelectorAll("[data-scenario-stage-option]")];
+  const frame = container.querySelector("[data-stage-frame]");
+  const poster = container.querySelector("[data-stage-poster]");
+  const loader = container.querySelector("[data-stage-loading]");
+  const title = container.querySelector("[data-stage-title]");
+  const job = container.querySelector("[data-stage-job]");
+  const code = container.querySelector(".reference-code");
+  const labLink = container.querySelector("[data-stage-lab-link]");
+  const panel = container.querySelector('[role="tabpanel"]');
+  if (!frame || !loader || options.length === 0 || !title || !job || !labLink || !panel) return;
+
+  let selected = options.find((option) => option.getAttribute("aria-selected") === "true") || options[0];
+  let loadRevision = 0;
+
+  function setLoading(label) {
+    container.dataset.stageReady = "false";
+    loader.textContent = "";
+    const dot = document.createElement("span");
+    dot.setAttribute("aria-hidden", "true");
+    loader.append(dot, document.createTextNode(label));
   }
 
-  function finishActivation() {
-    clearLoadingTimer();
-    clearTeardownTimer();
-    focusRestorePending = false;
-    restoreTriggerOnFailure = false;
-    preview.dataset.state = "active";
-    poster.setAttribute("aria-hidden", "true");
-    trigger.hidden = true;
-    trigger.disabled = false;
-    deactivateButton.hidden = false;
-    frame.dataset.loaded = "true";
-    setFrameInteractive(true);
-    syncFrameAppearance();
-    setStatus("active", message("statusActive", "Interactive preview active. Press Escape to return to the poster."));
+  function selectOption(option, { moveFocus = false } = {}) {
+    if (!option || option === selected && container.dataset.stageReady === "true") return;
+    selected = option;
+    loadRevision += 1;
+    const revision = loadRevision;
 
-    frameEscapeHandler = (event) => {
-      if (event.key !== "Escape" || event.defaultPrevented) return;
-      event.preventDefault();
-      deactivatePreview(true);
-    };
+    for (const candidate of options) {
+      const active = candidate === option;
+      candidate.setAttribute("aria-selected", String(active));
+      candidate.tabIndex = active ? 0 : -1;
+    }
 
-    try {
-      frame.contentWindow?.addEventListener("keydown", frameEscapeHandler);
-    } catch {}
+    const reference = option.dataset.reference;
+    const scenarioId = option.dataset.scenarioStageOption;
+    const stageTitle = option.dataset.title || option.textContent.trim();
+    const stageJob = option.dataset.job || "";
+    title.textContent = stageTitle;
+    job.textContent = stageJob;
+    code.textContent = `${scenarioId} / ${option.textContent.trim()}`;
+    panel.setAttribute("aria-labelledby", option.id);
+    frame.title = `${stageTitle} reference`;
+    labLink.href = option.dataset.lab || labLink.href;
+    syncLabLinkAppearance(labLink);
 
-    requestAnimationFrame(() => {
-      if (preview.dataset.state === "active") frame.focus({ preventScroll: true });
-    });
-  }
+    const posterSource = option.dataset.poster;
+    if (poster) {
+      if (posterSource) {
+        poster.src = posterSource;
+        poster.hidden = false;
+      } else {
+        poster.hidden = true;
+      }
+    }
 
-  function failPreview() {
-    const shouldRestoreFocus = restoreTriggerOnFailure
-      && (!document.activeElement
-        || document.activeElement === document.body
-        || preview.contains(document.activeElement));
-    clearLoadingTimer();
-    clearTeardownTimer();
-    detachFrameEscape();
-    restoreTriggerOnFailure = false;
-    preview.dataset.state = "fallback";
-    poster.setAttribute("aria-hidden", "false");
-    trigger.hidden = false;
-    trigger.disabled = false;
-    deactivateButton.hidden = true;
-    setFrameInteractive(false);
-    unloadFrame();
-    updateTriggerLabel();
-    setStatus("fallback", message("statusFallback", "The embedded preview did not load. Open the same state in Lab."));
-    if (shouldRestoreFocus) {
+    setLoading(document.documentElement.lang === "zh-CN" ? "正在准备参考界面" : "Preparing the reference");
+    if (reference && frame.getAttribute("src") !== reference) frame.src = reference;
+    else {
       requestAnimationFrame(() => {
-        if (preview.dataset.state === "fallback") trigger.focus({ preventScroll: true });
+        if (revision !== loadRevision) return;
+        finishFrame();
       });
     }
+    if (moveFocus) option.focus();
   }
 
-  function activatePreview() {
-    syncAppearance();
-    if (narrowPreview.matches) {
-      const directLabLink = preview.querySelector("[data-showcase-lab-link]");
-      if (directLabLink) window.location.assign(directLabLink.href);
-      return;
-    }
-
-    clearTeardownTimer();
-    focusRestorePending = false;
-    restoreTriggerOnFailure = document.activeElement === trigger;
-    if (frame.dataset.loaded === "true") {
-      finishActivation();
-      return;
-    }
-
-    preview.dataset.state = "loading";
-    poster.setAttribute("aria-hidden", "false");
-    trigger.hidden = false;
-    trigger.disabled = true;
-    deactivateButton.hidden = false;
-    setFrameInteractive(false);
-    triggerLabel.textContent = message("labelLoading", "Loading preview");
-    setStatus("loading", message("statusLoading", "Loading the same-origin interactive reference…"));
-
-    const source = frame.dataset.src;
-    if (!source) {
-      failPreview();
-      return;
-    }
-
-    if (!frame.hasAttribute("src")) frame.src = source;
-    clearLoadingTimer();
-    loadingTimer = window.setTimeout(failPreview, 10000);
-  }
-
-  function deactivatePreview(restoreFocus = true) {
-    if (!["active", "loading"].includes(preview.dataset.state)) return;
-    clearLoadingTimer();
-    detachFrameEscape();
-    preview.dataset.state = "idle";
-    poster.setAttribute("aria-hidden", "false");
-    trigger.hidden = false;
-    trigger.disabled = false;
-    restoreTriggerOnFailure = false;
-    deactivateButton.hidden = true;
-    setFrameInteractive(false);
-    updateTriggerLabel();
-    setStatus("idle", message("statusIdle", "Poster shown. The interactive reference is not loaded."));
-    focusRestorePending = restoreFocus;
-
-    clearTeardownTimer();
-    teardownTimer = window.setTimeout(
-      () => {
-        if (preview.dataset.state !== "idle") return;
-        unloadFrame();
-        window.setTimeout(() => restoreTriggerFocus({ complete: true }), 0);
-      },
-      reducedPreviewMotion.matches ? 0 : 180,
-    );
-
-    if (restoreFocus) window.setTimeout(restoreTriggerFocus, 0);
-  }
-
-  frame.addEventListener("load", () => {
-    if (preview.dataset.state === "idle") {
-      restoreTriggerFocus({ complete: true });
-      return;
-    }
-    if (preview.dataset.state !== "loading" || !frame.hasAttribute("src")) return;
+  function finishFrame() {
+    const revision = loadRevision;
     try {
-      const frameDocument = frame.contentDocument;
-      const frameLocation = frameDocument?.location.href;
-      const readySelector = frame.dataset.previewReady;
-      if (!frameLocation || frameLocation === "about:blank") {
-        failPreview();
-        return;
-      }
-      if (!readySelector || !frameDocument.querySelector(readySelector)) {
-        failPreview();
-        return;
-      }
-      finishActivation();
+      const readySelector = selected.dataset.readySelector;
+      if (!prepareEmbeddedReference(frame, { theme: "dark", contrast: "normal" })) throw new Error("Reference unavailable");
+      if (readySelector && !frame.contentDocument.querySelector(readySelector)) throw new Error("Reference state unavailable");
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        if (revision === loadRevision) container.dataset.stageReady = "true";
+      }));
     } catch {
-      failPreview();
+      container.dataset.stageReady = "false";
+      loader.textContent = document.documentElement.lang === "zh-CN"
+        ? "参考界面暂不可用，请在 Lab 中打开"
+        : "Reference unavailable. Open it in Lab.";
     }
+  }
+
+  frame.addEventListener("load", finishFrame);
+
+  for (const option of options) {
+    option.addEventListener("click", () => selectOption(option));
+  }
+
+  const tablist = container.querySelector('[role="tablist"]');
+  tablist?.addEventListener("keydown", (event) => {
+    if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
+    const index = options.indexOf(document.activeElement);
+    if (index < 0) return;
+    event.preventDefault();
+    let next = index;
+    if (event.key === "Home") next = 0;
+    else if (event.key === "End") next = options.length - 1;
+    else if (event.key === "ArrowLeft") next = (index - 1 + options.length) % options.length;
+    else next = (index + 1) % options.length;
+    selectOption(options[next], { moveFocus: true });
   });
-  frame.addEventListener("error", failPreview);
-  trigger.addEventListener("click", activatePreview);
-  deactivateButton.addEventListener("click", () => deactivatePreview(true));
-  narrowPreview.addEventListener("change", updateTriggerLabel);
 
-  trigger.hidden = false;
-  updateTriggerLabel();
-  syncAppearance();
-  setFrameInteractive(false);
-
-  return {
-    deactivate: deactivatePreview,
-    isActive: () => ["active", "loading"].includes(preview.dataset.state),
-    syncAppearance,
-  };
+  options.forEach((option) => {
+    option.tabIndex = option === selected ? 0 : -1;
+  });
+  syncLabLinkAppearance(labLink);
+  setLoading(document.documentElement.lang === "zh-CN" ? "正在准备参考界面" : "Preparing the reference");
+  if (frame.contentDocument?.readyState === "complete") finishFrame();
 }
 
-for (const preview of showcasePreviews) {
-  const controller = initializePreview(preview);
-  if (controller) previewControllers.push(controller);
-}
+for (const link of labLinks) syncLabLinkAppearance(link);
+if (stage) initializeScenarioStage(stage);
 
 const appearanceObserver = new MutationObserver((records) => {
   if (!records.some((record) => ["data-theme", "data-contrast"].includes(record.attributeName))) return;
-  for (const controller of previewControllers) controller.syncAppearance();
+  for (const link of labLinks) syncLabLinkAppearance(link);
 });
-appearanceObserver.observe(showcaseRoot, {
+appearanceObserver.observe(root, {
   attributes: true,
   attributeFilter: ["data-theme", "data-contrast"],
 });
 
-addEventListener("keydown", (event) => {
-  if (event.key !== "Escape" || event.defaultPrevented) return;
-  const activeController = previewControllers.find((controller) => controller.isActive());
-  if (!activeController) return;
-  event.preventDefault();
-  activeController.deactivate(true);
-});
+function initializeReferenceStage(container) {
+  const frame = container.querySelector("[data-stage-frame]");
+  const loader = container.querySelector("[data-stage-loading]");
+  if (!frame || !loader) return;
+
+  let theme = container.dataset.initialTheme === "light" ? "light" : "dark";
+  let viewport = container.dataset.stageViewport === "narrow" ? "narrow" : "wide";
+
+  function syncControls() {
+    for (const control of container.querySelectorAll("button[data-stage-theme]")) {
+      control.setAttribute("aria-pressed", String(control.dataset.stageTheme === theme));
+    }
+    for (const control of container.querySelectorAll("button[data-stage-viewport]")) {
+      control.setAttribute("aria-pressed", String(control.dataset.stageViewport === viewport));
+    }
+    container.dataset.stageViewport = viewport;
+  }
+
+  function reveal() {
+    try {
+      if (!prepareEmbeddedReference(frame, { theme, contrast: "normal" })) throw new Error("unavailable");
+      const frameDocument = frame.contentDocument;
+      const readyFragment = container.dataset.readyFragment;
+      const readySelector = container.dataset.readySelector;
+      if (readyFragment && !frameDocument.getElementById(readyFragment)) throw new Error("reference fragment unavailable");
+      if (readySelector && !frameDocument.querySelector(readySelector)) throw new Error("reference state unavailable");
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        container.dataset.stageReady = "true";
+        frame.dispatchEvent(new CustomEvent("kin:stage-ready", { bubbles: true }));
+      }));
+    } catch {
+      container.dataset.stageReady = "false";
+      loader.replaceChildren(document.createTextNode(
+        root.lang === "zh-CN" ? "参考界面暂不可用" : "Reference unavailable",
+      ));
+    }
+  }
+
+  function setTheme(nextTheme) {
+    theme = nextTheme === "light" ? "light" : "dark";
+    syncControls();
+    if (frame.contentDocument?.documentElement) reveal();
+  }
+
+  function setViewport(nextViewport) {
+    viewport = nextViewport === "narrow" ? "narrow" : "wide";
+    syncControls();
+  }
+
+  frame.addEventListener("load", reveal);
+  for (const control of container.querySelectorAll("button[data-stage-theme]")) {
+    control.addEventListener("click", () => setTheme(control.dataset.stageTheme));
+  }
+  for (const control of container.querySelectorAll("button[data-stage-viewport]")) {
+    control.addEventListener("click", () => setViewport(control.dataset.stageViewport));
+  }
+
+  container.addEventListener("kin:reference-change", () => {
+    container.dataset.stageReady = "false";
+  });
+  syncControls();
+  if (frame.contentDocument?.readyState === "complete") reveal();
+}
+
+function initializeComponentBrowser(browser) {
+  const choices = [...browser.querySelectorAll("[data-component-choice]")];
+  const stageContainer = browser.querySelector("[data-reference-stage]");
+  const frame = browser.querySelector("[data-stage-frame]");
+  const title = browser.querySelector("[data-stage-title]");
+  const job = browser.querySelector("[data-stage-job]");
+  const explorer = browser.querySelector("[data-stage-explorer]");
+  if (!stageContainer || !frame || !title || !job || !explorer || choices.length === 0) return;
+
+  let selected = choices.find((choice) => choice.getAttribute("aria-selected") === "true") || choices[0];
+
+  function activate(choice, { focus = false } = {}) {
+    selected = choice;
+    for (const candidate of choices) {
+      const active = candidate === choice;
+      candidate.setAttribute("aria-selected", String(active));
+      candidate.tabIndex = active ? 0 : -1;
+    }
+    title.textContent = choice.dataset.componentName;
+    job.textContent = choice.dataset.componentJob;
+    explorer.href = choice.dataset.componentExplorer;
+    stageContainer.dataset.readyFragment = choice.dataset.componentReadyFragment;
+    frame.title = `${choice.dataset.componentName}: ${choice.dataset.componentState}`;
+    stageContainer.dispatchEvent(new CustomEvent("kin:reference-change"));
+    frame.src = choice.dataset.componentReference;
+    if (focus) choice.focus();
+  }
+
+  for (const choice of choices) choice.addEventListener("click", () => activate(choice));
+  browser.querySelector('[role="listbox"]')?.addEventListener("keydown", (event) => {
+    if (!["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)) return;
+    const index = choices.indexOf(document.activeElement);
+    if (index < 0) return;
+    event.preventDefault();
+    let next = index;
+    if (event.key === "Home") next = 0;
+    else if (event.key === "End") next = choices.length - 1;
+    else if (event.key === "ArrowUp") next = (index - 1 + choices.length) % choices.length;
+    else next = (index + 1) % choices.length;
+    activate(choices[next], { focus: true });
+  });
+
+  frame.addEventListener("kin:stage-ready", () => {
+    if (selected.dataset.componentId !== "command-menu") return;
+    frame.contentDocument?.querySelector("[data-command-open]")?.click();
+  });
+  if (selected.dataset.componentId === "command-menu" && frame.contentDocument?.readyState === "complete") {
+    frame.contentDocument.querySelector("[data-command-open]")?.click();
+  }
+}
+
+function initializeComponentTabs(container) {
+  const tabs = [...container.querySelectorAll('[role="tab"]')];
+  const panels = [...container.querySelectorAll('[role="tabpanel"]')];
+  if (tabs.length === 0 || panels.length === 0) return;
+
+  function activate(tab, { focus = false } = {}) {
+    for (const candidate of tabs) {
+      const selected = candidate === tab;
+      candidate.setAttribute("aria-selected", String(selected));
+      candidate.tabIndex = selected ? 0 : -1;
+      const panel = panels.find((entry) => entry.id === candidate.getAttribute("aria-controls"));
+      if (panel) panel.hidden = !selected;
+    }
+    if (focus) tab.focus();
+  }
+
+  for (const tab of tabs) tab.addEventListener("click", () => activate(tab));
+  container.querySelector('[role="tablist"]')?.addEventListener("keydown", (event) => {
+    if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
+    const index = tabs.indexOf(document.activeElement);
+    if (index < 0) return;
+    event.preventDefault();
+    let next = index;
+    if (event.key === "Home") next = 0;
+    else if (event.key === "End") next = tabs.length - 1;
+    else if (event.key === "ArrowLeft") next = (index - 1 + tabs.length) % tabs.length;
+    else next = (index + 1) % tabs.length;
+    activate(tabs[next], { focus: true });
+  });
+}
+
+for (const referenceStage of document.querySelectorAll("[data-reference-stage]")) {
+  initializeReferenceStage(referenceStage);
+}
+for (const browser of document.querySelectorAll("[data-component-browser]")) {
+  initializeComponentBrowser(browser);
+}
+for (const tabset of document.querySelectorAll("[data-component-tabs]")) {
+  initializeComponentTabs(tabset);
+}

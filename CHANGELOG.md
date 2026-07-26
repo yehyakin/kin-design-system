@@ -8,6 +8,7 @@ The project follows semantic versioning for normative design documentation.
 
 ### Public documentation and discovery
 
+- Accepted RFC 004 and prepared a local Showcase 2.1 review candidate that makes real product references dominant on Home, Components, Component Explorers, Patterns, and Scenario Lab while moving catalog maturity, source boundaries, and verification detail into progressive disclosure. This entry does not claim deployment, production adoption, physical-device review, or real screen-reader completion.
 - Marked RFC 003 Showcase 2.0 implemented after production-bound build, deployment, Showcase-response, Agent-response, and cross-browser verification completed; physical-device, real screen-reader, and downstream product-adoption evidence remain explicitly unclaimed.
 - Accepted RFC 003 for Showcase 2.0, separating runnable workflow presentation, catalog-backed discovery, deterministic inspection, and full documentation while preserving legacy routes, Agent Distribution publication, source-maturity boundaries, and production evidence gates.
 - Implemented the first Showcase 2.0 candidate with bilingual workflow-led entry pages, catalog-generated Component and Pattern discovery, eight bounded Component Explorers, a friendly Lab alias, explicit canonical-fixture language boundaries, and a spatial Scenario Lab with reversible controls, Fit, 100%, fullscreen, and browser-history restoration.

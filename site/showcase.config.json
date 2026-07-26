@@ -45,11 +45,11 @@
         "showcased": "Showcased",
         "linked": "Linked",
         "planned": "Planned",
-        "footer_line": "Non-normative discovery · canonical facts remain in the repository"
+        "footer_line": "Reference surfaces for consequential product work."
       },
       "components": {
         "page": {
-          "eyebrow": "COMPONENT DISCOVERY / NON-NORMATIVE",
+          "eyebrow": "KIN COMPONENTS",
           "title": "Find a component by task and evidence.",
           "lead": "Browse stable KIN components by catalog tier, then open one of eight bounded Explorers when a deep reference is available.",
           "stable_heading": "Stable components by catalog tier",
@@ -137,9 +137,9 @@
       },
       "patterns": {
         "page": {
-          "eyebrow": "PATTERN DISCOVERY / NON-NORMATIVE",
+          "eyebrow": "KIN PATTERNS",
           "title": "Choose composition from the work.",
-          "lead": "Four KIN product patterns connect a governing Pattern document to one Page-family record and one showcased Scenario. A joined Page status never becomes Pattern maturity.",
+          "lead": "Four compositions keep a different kind of work primary while preserving navigation, context, and reversible action.",
           "page_record": "Joined Page record",
           "scenario_record": "Showcased Scenario",
           "page_status": "Page status",
@@ -265,11 +265,11 @@
         "showcased": "已展示",
         "linked": "已链接",
         "planned": "计划中",
-        "footer_line": "非规范发现视图 · 规范事实仍以代码仓库为准"
+        "footer_line": "面向重要产品工作的参考界面。"
       },
       "components": {
         "page": {
-          "eyebrow": "组件发现 / 非规范",
+          "eyebrow": "KIN 组件",
           "title": "按任务与证据查找组件。",
           "lead": "先按目录层级浏览稳定 KIN 组件；存在深层参考时，再打开首批八个边界明确的 Explorer。",
           "stable_heading": "按目录层级排列的稳定组件",
@@ -357,9 +357,9 @@
       },
       "patterns": {
         "page": {
-          "eyebrow": "产品模式发现 / 非规范",
+          "eyebrow": "KIN 产品模式",
           "title": "从真实工作选择构图。",
-          "lead": "四种 KIN 产品模式把治理 Pattern 文档、一个页面族记录与一个已展示场景连接起来。关联页面的状态永远不会变成 Pattern 成熟度。",
+          "lead": "四种构图分别突出一种工作，同时保留导航、上下文与可撤销操作。",
           "page_record": "关联页面记录",
           "scenario_record": "已展示场景",
           "page_status": "页面状态",
@@ -472,14 +472,14 @@
   },
   "display_order": {
     "component_explorers": [
-      "app-shell",
+      "command-menu",
       "evidence-list",
       "suggested-change-review",
       "execution-preview",
       "background-task-queue",
-      "command-menu",
+      "data-table",
       "authentication-dialog",
-      "data-table"
+      "app-shell"
     ],
     "component_tiers": [
       "core",

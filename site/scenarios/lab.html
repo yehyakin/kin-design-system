@@ -23,7 +23,10 @@
       <span><strong>KIN</strong><small>Scenario Atlas</small></span>
     </a>
     <div class="lab-topbar-end">
-      <button class="lab-controls-trigger" type="button" data-lab-controls-trigger aria-controls="lab-controls" aria-expanded="true">Controls</button>
+      <div class="lab-mode-switch" data-lab-mode-group role="group" aria-label="Lab mode">
+        <button type="button" data-lab-mode="present" aria-pressed="true">Present</button>
+        <button type="button" data-lab-mode="inspect" data-lab-controls-trigger aria-controls="lab-controls" aria-expanded="false" aria-pressed="false">Inspect</button>
+      </div>
       <span class="lab-phase">Phase 3 inspection</span>
       <a class="lab-back" href="./"><span aria-hidden="true">&larr;</span> All scenarios</a>
     </div>
@@ -95,7 +98,7 @@
           <ul data-lab-gaps></ul>
         </div>
         <p class="lab-motion-note">Motion follows the reference and the user's reduced-motion preference; this phase does not claim a separate motion fixture.</p>
-          <a class="lab-direct-link" data-lab-direct-link href="./" target="_blank" rel="noopener" hidden>Open this state directly <span aria-hidden="true">&nearr;</span></a>
+        <a class="lab-direct-link" data-lab-direct-link href="./" target="_blank" rel="noopener" hidden>Open this state directly <span aria-hidden="true">&nearr;</span></a>
       </section>
     </aside>
 
@@ -127,6 +130,27 @@
         <div class="lab-frame-sizing" data-lab-frame-sizing>
           <div class="lab-frame-shell" data-lab-frame-shell>
             <div class="lab-frame-label" aria-hidden="true"><span data-lab-frame-size></span><span>Local deterministic reference</span></div>
+            <div class="lab-frame-placeholder" data-lab-frame-placeholder data-kind="neutral">
+              <img
+                class="lab-frame-poster"
+                data-lab-frame-poster
+                src="../assets/posters/int-02-normal-dark.png"
+                width="1180"
+                height="760"
+                alt="Presentation poster for INT-02 in its normal, wide, dark state; not live verification."
+                hidden
+              >
+              <p class="lab-frame-poster-note" data-lab-frame-poster-note hidden>Presentation poster only · INT-02 normal / wide / dark</p>
+              <div class="lab-frame-neutral" data-lab-frame-neutral>
+                <p class="eyebrow">Live reference</p>
+                <strong data-lab-placeholder-title>Preparing Scenario Lab</strong>
+                <span data-lab-placeholder-state>Waiting for a catalog-backed selection.</span>
+              </div>
+              <div class="lab-frame-loading" data-lab-frame-loading role="status" aria-live="polite" aria-atomic="true">
+                <span class="lab-frame-loading-dot" aria-hidden="true"></span>
+                <span data-lab-frame-loading-label>Checking the live same-origin reference</span>
+              </div>
+            </div>
             <iframe data-lab-frame title="Scenario reference" loading="eager"></iframe>
           </div>
         </div>

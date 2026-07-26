@@ -147,6 +147,7 @@ function scenarioLabPath(scenario, locale) {
   params.set("state", state);
   params.set("viewport", scenario.viewports.includes("wide") ? "wide" : scenario.viewports[0]);
   params.set("theme", scenario.themes.includes("dark") ? "dark" : scenario.themes[0]);
+  params.set("mode", "present");
   return `${locale === "en" ? "" : "../"}${inspectionPath}?${params.toString()}`;
 }
 
@@ -226,7 +227,7 @@ function injectCatalogBackedHomeFacts({ source, publicPath, locale, scenarios, c
     source,
     "data-showcase-feature-reference",
     featured.id,
-    "data-src",
+    "src",
     scenarioReferencePath(featured, locale),
     publicPath,
   );
@@ -235,6 +236,22 @@ function injectCatalogBackedHomeFacts({ source, publicPath, locale, scenarios, c
     "data-showcase-feature-lab",
     featured.id,
     "href",
+    scenarioLabPath(featured, locale),
+    publicPath,
+  );
+  source = replaceMarkedAttribute(
+    source,
+    "data-showcase-stage-reference",
+    featured.id,
+    "data-reference",
+    scenarioReferencePath(featured, locale),
+    publicPath,
+  );
+  source = replaceMarkedAttribute(
+    source,
+    "data-showcase-stage-lab",
+    featured.id,
+    "data-lab",
     scenarioLabPath(featured, locale),
     publicPath,
   );
