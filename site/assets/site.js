@@ -1,14 +1,19 @@
 import {
   Accessibility,
   ArrowLeft,
+  ArrowRight,
   ArrowUpRight,
   Bell,
   BookOpen,
+  BookOpenText,
   Bot,
   Blocks,
+  BoxSelect,
   Check,
   ChevronDown,
   ChevronRight,
+  CircleCheckBig,
+  CircleDot,
   CirclePlay,
   Code2,
   Command,
@@ -19,6 +24,7 @@ import {
   Download,
   DraftingCompass,
   ExternalLink,
+  Focus,
   FolderDown,
   GitCompareArrows,
   Info,
@@ -32,12 +38,16 @@ import {
   Menu,
   Monitor,
   MonitorCog,
+  MousePointerClick,
   Moon,
+  PackageCheck,
   Palette,
   PanelsTopLeft,
   PanelRightOpen,
   Search,
   ScanEye,
+  ScanSearch,
+  ShieldAlert,
   ShieldCheck,
   ShoppingBag,
   Smartphone,
@@ -55,10 +65,13 @@ const themeColor = document.querySelector('meta[name="theme-color"]');
 const themeSwitch = document.querySelector("[data-theme-switch]");
 const systemThemeActions = [...document.querySelectorAll("[data-theme-system]")];
 const contrastToggle = document.querySelector("[data-contrast-toggle]");
-const navToggle = document.querySelector("[data-nav-toggle]");
-const docsNav = document.querySelector(".docs-nav");
-const docsMain = document.querySelector(".docs-main");
-const siteHeader = document.querySelector(".site-header");
+const globalNavToggle = document.querySelector("[data-nav-toggle]");
+const globalNav = document.querySelector("[data-mobile-nav]");
+const localNavToggle = document.querySelector("[data-local-nav-toggle]");
+const localNav = document.querySelector("[data-local-nav]");
+const docsMain = document.querySelector("[data-showcase-main], .docs-main, .showcase-main");
+const navigationBackgrounds = [...document.querySelectorAll("[data-nav-background]")];
+const siteHeader = document.querySelector(".site-header, .showcase-header");
 const skipLink = document.querySelector(".skip-link");
 const languageControl = document.querySelector("[data-language-control]");
 const languageTrigger = document.querySelector("[data-language-trigger]");
@@ -70,8 +83,14 @@ const commandItems = [...document.querySelectorAll("[data-command-item]")];
 const commandEmpty = document.querySelector("[data-command-empty]");
 let sonnerModulePromise;
 let navCloseTimer;
+let navCloseTransition;
+let activeNavigationDrawer;
 
-const navScrim = docsNav ? document.createElement("div") : null;
+const navigationDrawers = [
+  { trigger: globalNavToggle, panel: globalNav },
+  { trigger: localNavToggle, panel: localNav },
+].filter(({ trigger, panel }) => trigger && panel);
+const navScrim = navigationDrawers.length > 0 ? document.createElement("div") : null;
 if (navScrim) {
   navScrim.className = "nav-scrim";
   navScrim.setAttribute("aria-hidden", "true");
@@ -143,14 +162,17 @@ addEventListener("storage", (event) => {
   if (event.key === "kin-site-contrast") applyContrast(event.newValue === "more", false);
 });
 
-function setNavigationBackgroundInert(inert) {
+function setNavigationBackgroundInert(inert, drawer = activeNavigationDrawer) {
   if (docsMain) docsMain.inert = inert;
+  for (const element of navigationBackgrounds) element.inert = inert;
   if (skipLink) skipLink.inert = inert;
+  if (localNavToggle && localNavToggle !== drawer?.trigger) localNavToggle.inert = inert;
   if (siteHeader) {
     for (const child of siteHeader.children) {
-      if (child === navToggle || child.contains(navToggle)) {
+      if (navigationDrawers.some(({ panel }) => panel === child)) continue;
+      if (child === drawer?.trigger || child.contains(drawer?.trigger)) {
         for (const descendant of child.children) {
-          if (descendant !== navToggle && !descendant.contains(navToggle)) descendant.inert = inert;
+          if (descendant !== drawer.trigger && !descendant.contains(drawer.trigger)) descendant.inert = inert;
         }
       } else {
         child.inert = inert;
@@ -159,62 +181,104 @@ function setNavigationBackgroundInert(inert) {
   }
 }
 
-function finishNavigationClose() {
-  document.body.classList.remove("nav-closing");
-  setNavigationBackgroundInert(false);
-}
-
-function setNavigation(open, moveFocus = true) {
-  if (!docsNav || !navToggle) return;
+function cancelNavigationCloseWait() {
   if (navCloseTimer !== undefined) window.clearTimeout(navCloseTimer);
   navCloseTimer = undefined;
-  navToggle?.setAttribute("aria-expanded", String(open));
-  navToggle.setAttribute("aria-label", locale === "zh"
-    ? `${open ? "关闭" : "打开"}导航`
-    : `${open ? "Close" : "Open"} navigation`);
+  if (navCloseTransition) {
+    navCloseTransition.panel.removeEventListener("transitionend", navCloseTransition.handler);
+    navCloseTransition = undefined;
+  }
+}
+
+function finishNavigationClose(drawer) {
+  cancelNavigationCloseWait();
+  document.body.classList.remove("nav-closing");
+  drawer.panel.dataset.drawerState = "closed";
+  setNavigationBackgroundInert(false, drawer);
+}
+
+function navigationLabel(drawer, open) {
+  const key = open ? "closeLabel" : "openLabel";
+  if (drawer.trigger.dataset[key]) return drawer.trigger.dataset[key];
+  return locale === "zh" ? `${open ? "关闭" : "打开"}导航` : `${open ? "Close" : "Open"} navigation`;
+}
+
+function setNavigation(drawer, open, moveFocus = true, immediate = false) {
+  if (!drawer) return;
+  cancelNavigationCloseWait();
+  drawer.trigger.setAttribute("aria-expanded", String(open));
+  drawer.trigger.setAttribute("aria-label", navigationLabel(drawer, open));
 
   if (open) {
+    if (activeNavigationDrawer && activeNavigationDrawer !== drawer) {
+      setNavigation(activeNavigationDrawer, false, false, true);
+    }
+    activeNavigationDrawer = drawer;
     document.body.classList.remove("nav-closing");
     document.body.classList.add("nav-open");
-    docsNav.inert = false;
-    docsNav.removeAttribute("aria-hidden");
-    docsNav.setAttribute("role", "dialog");
-    docsNav.setAttribute("aria-modal", "true");
-    setNavigationBackgroundInert(true);
-    navToggle.inert = false;
-    if (moveFocus) docsNav.querySelector("a")?.focus();
+    drawer.panel.dataset.drawerState = "open";
+    setNavigationBackgroundInert(true, drawer);
+    drawer.panel.inert = false;
+    drawer.panel.removeAttribute("aria-hidden");
+    drawer.panel.setAttribute("role", "dialog");
+    drawer.panel.setAttribute("aria-modal", "true");
+    drawer.trigger.inert = false;
+    if (moveFocus) drawer.panel.querySelector("a, button:not([disabled])")?.focus();
     return;
   }
 
-  const wasOpen = document.body.classList.contains("nav-open");
+  const wasOpen = activeNavigationDrawer === drawer && document.body.classList.contains("nav-open");
   document.body.classList.remove("nav-open");
-  docsNav.inert = compactLayout.matches;
-  if (compactLayout.matches) docsNav.setAttribute("aria-hidden", "true");
-  else docsNav.removeAttribute("aria-hidden");
-  docsNav.removeAttribute("role");
-  docsNav.removeAttribute("aria-modal");
-  if (moveFocus && wasOpen) navToggle.focus();
+  if (activeNavigationDrawer === drawer) activeNavigationDrawer = undefined;
+  drawer.panel.inert = compactLayout.matches;
+  if (compactLayout.matches) drawer.panel.setAttribute("aria-hidden", "true");
+  else drawer.panel.removeAttribute("aria-hidden");
+  drawer.panel.removeAttribute("role");
+  drawer.panel.removeAttribute("aria-modal");
+  if (moveFocus && wasOpen) drawer.trigger.focus();
 
-  if (!wasOpen || !compactLayout.matches) {
-    finishNavigationClose();
+  if (!wasOpen || !compactLayout.matches || immediate || reducedMotion.matches) {
+    finishNavigationClose(drawer);
     return;
   }
 
   document.body.classList.add("nav-closing");
+  drawer.panel.dataset.drawerState = "closing";
+  const handleTransitionEnd = (event) => {
+    if (event.target !== drawer.panel || event.propertyName !== "transform") return;
+    finishNavigationClose(drawer);
+  };
+  navCloseTransition = { panel: drawer.panel, handler: handleTransitionEnd };
+  drawer.panel.addEventListener("transitionend", handleTransitionEnd);
   navCloseTimer = window.setTimeout(() => {
-    navCloseTimer = undefined;
-    finishNavigationClose();
-  }, reducedMotion.matches ? 80 : 180);
+    finishNavigationClose(drawer);
+  }, 320);
 }
 
-navToggle?.addEventListener("click", () => setNavigation(!document.body.classList.contains("nav-open")));
-docsNav?.addEventListener("click", (event) => {
-  if (compactLayout.matches && event.target.closest("a")) setNavigation(false);
-});
-navScrim?.addEventListener("click", () => setNavigation(false));
+for (const drawer of navigationDrawers) {
+  drawer.trigger.addEventListener("click", () => setNavigation(drawer, activeNavigationDrawer !== drawer));
+  drawer.panel.addEventListener("click", (event) => {
+    if (compactLayout.matches && event.target.closest("a")) setNavigation(drawer, false);
+  });
+}
+navScrim?.addEventListener("click", () => setNavigation(activeNavigationDrawer, false));
 addEventListener("resize", () => {
-  if (!compactLayout.matches) setNavigation(false, false);
-  else if (!document.body.classList.contains("nav-open")) setNavigation(false, false);
+  if (!compactLayout.matches && activeNavigationDrawer) setNavigation(activeNavigationDrawer, false, false, true);
+  for (const drawer of navigationDrawers) {
+    if (compactLayout.matches) {
+      if (activeNavigationDrawer !== drawer) {
+        drawer.panel.dataset.drawerState = "closed";
+        drawer.panel.inert = true;
+        drawer.panel.setAttribute("aria-hidden", "true");
+      }
+    } else {
+      drawer.panel.dataset.drawerState = "closed";
+      drawer.panel.inert = false;
+      drawer.panel.removeAttribute("aria-hidden");
+      drawer.panel.removeAttribute("role");
+      drawer.panel.removeAttribute("aria-modal");
+    }
+  }
 });
 
 addEventListener("keydown", (event) => {
@@ -222,12 +286,12 @@ addEventListener("keydown", (event) => {
     event.key !== "Tab"
     || !compactLayout.matches
     || !document.body.classList.contains("nav-open")
-    || !docsNav
-    || !navToggle
+    || !activeNavigationDrawer
   ) return;
+  const { trigger, panel } = activeNavigationDrawer;
   const focusable = [
-    navToggle,
-    ...docsNav.querySelectorAll('a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'),
+    trigger,
+    ...panel.querySelectorAll('a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'),
   ].filter((element) => !element.inert && !element.hidden);
   if (focusable.length === 0) return;
   const currentIndex = focusable.indexOf(document.activeElement);
@@ -238,7 +302,13 @@ addEventListener("keydown", (event) => {
   focusable[nextIndex].focus();
 });
 
-if (docsNav && compactLayout.matches) setNavigation(false, false);
+for (const drawer of navigationDrawers) {
+  drawer.panel.dataset.drawerState = "closed";
+  if (compactLayout.matches) {
+    drawer.panel.inert = true;
+    drawer.panel.setAttribute("aria-hidden", "true");
+  }
+}
 
 let languageOpenFrame;
 let languageCloseTimer;
@@ -250,10 +320,11 @@ function cancelLanguageMenuWork() {
   languageCloseTimer = undefined;
 }
 
-function setLanguageMenu(open, moveFocus = true) {
+function setLanguageMenu(open, moveFocus = true, invocation = "pointer") {
   if (!languageMenu || !languageTrigger) return;
   cancelLanguageMenuWork();
   languageTrigger.setAttribute("aria-expanded", String(open));
+  languageMenu.dataset.invocation = invocation;
 
   if (open) {
     languageMenu.hidden = false;
@@ -270,6 +341,7 @@ function setLanguageMenu(open, moveFocus = true) {
 
   if (languageMenu.hidden || languageMenu.dataset.state === "closed") {
     languageMenu.dataset.state = "closed";
+    delete languageMenu.dataset.invocation;
     if (moveFocus) languageTrigger.focus();
     return;
   }
@@ -283,6 +355,7 @@ function setLanguageMenu(open, moveFocus = true) {
     languageMenu.hidden = true;
     languageMenu.inert = false;
     languageMenu.dataset.state = "closed";
+    delete languageMenu.dataset.invocation;
   }, reducedMotion.matches ? 90 : 180);
 }
 
@@ -293,7 +366,7 @@ languageTrigger?.addEventListener("click", () => {
 languageTrigger?.addEventListener("keydown", (event) => {
   if (!["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key) || !languageMenu) return;
   event.preventDefault();
-  setLanguageMenu(true, false);
+  setLanguageMenu(true, false, "keyboard");
   const items = [...languageMenu.querySelectorAll('[role="menuitem"]')];
   const target = ["ArrowUp", "End"].includes(event.key) ? items.at(-1) : items[0];
   target?.focus();
@@ -447,10 +520,12 @@ for (const item of commandItems) item.addEventListener("click", closeCommand);
 addEventListener("keydown", (event) => {
   const editable = event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement || event.target.isContentEditable;
   if ((event.metaKey || event.ctrlKey) && event.key.toLocaleLowerCase() === "k") {
+    if (document.body.classList.contains("lab-controls-modal-open")) return;
     event.preventDefault();
     openCommand("keyboard");
   }
   if (event.key === "/" && !editable && !commandDialog?.open) {
+    if (document.body.classList.contains("lab-controls-modal-open")) return;
     event.preventDefault();
     openCommand("keyboard");
   }
@@ -459,9 +534,10 @@ addEventListener("keydown", (event) => {
     closeCommand();
   } else if (event.key === "Escape" && !languageMenu?.hidden) {
     event.preventDefault();
-    setLanguageMenu(false);
-  } else if (event.key === "Escape" && document.body.classList.contains("nav-open")) {
-    setNavigation(false);
+    setLanguageMenu(false, true, "keyboard");
+  } else if (event.key === "Escape" && activeNavigationDrawer) {
+    event.preventDefault();
+    setNavigation(activeNavigationDrawer, false);
   }
 });
 
@@ -516,14 +592,19 @@ createIcons({
   icons: {
     Accessibility,
     ArrowLeft,
+    ArrowRight,
     ArrowUpRight,
     Bell,
     BookOpen,
+    BookOpenText,
     Bot,
     Blocks,
+    BoxSelect,
     Check,
     ChevronDown,
     ChevronRight,
+    CircleCheckBig,
+    CircleDot,
     CirclePlay,
     Code2,
     Command,
@@ -533,6 +614,7 @@ createIcons({
     Download,
     DraftingCompass,
     ExternalLink,
+    Focus,
     FolderDown,
     GitCompareArrows,
     Info,
@@ -546,12 +628,16 @@ createIcons({
     Menu,
     Monitor,
     MonitorCog,
+    MousePointerClick,
     Moon,
+    PackageCheck,
     Palette,
     PanelRightOpen,
     PanelsTopLeft,
     Search,
     ScanEye,
+    ScanSearch,
+    ShieldAlert,
     ShieldCheck,
     ShoppingBag,
     Smartphone,

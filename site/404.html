@@ -12,15 +12,17 @@
       const explicitLocale = params.get("lang");
       const pathLocale = /\/zh(?:\/|$)/.test(location.pathname) ? "zh" : null;
       const savedLocale = localStorage.getItem("kin-site-locale");
-      const locale = explicitLocale === "zh" || explicitLocale === "en"
-        ? explicitLocale
+      const locale = explicitLocale === "zh" || explicitLocale === "zh-CN" || explicitLocale === "en"
+        ? (explicitLocale === "en" ? "en" : "zh")
         : pathLocale || (savedLocale === "zh" ? "zh" : "en");
       const savedPreference = localStorage.getItem("kin-site-theme");
       const preference = ["light", "dark", "system"].includes(savedPreference) ? savedPreference : "system";
       const theme = preference === "system"
         ? (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")
         : preference;
-      if (explicitLocale === "zh" || explicitLocale === "en") localStorage.setItem("kin-site-locale", locale);
+      if (explicitLocale === "zh" || explicitLocale === "zh-CN" || explicitLocale === "en") {
+        localStorage.setItem("kin-site-locale", locale);
+      }
       root.lang = locale === "zh" ? "zh-CN" : "en";
       root.dataset.locale = locale;
       root.dataset.themePreference = preference;
@@ -40,7 +42,7 @@
   <header class="site-header">
     <a class="brand" data-404-home data-404-brand href="/kin-design-system/" aria-label="KIN Design System home">
       <span class="brand-mark" aria-hidden="true">KIN</span>
-      <span class="brand-copy"><strong>KIN</strong><small>Design System</small></span>
+      <span class="brand-copy"><strong>KIN</strong><small data-404-key="brand">Design System</small></span>
     </a>
     <div class="header-center" aria-hidden="true"></div>
     <div class="header-actions">
@@ -48,7 +50,7 @@
         <button class="language-trigger" type="button" data-language-trigger aria-haspopup="menu" aria-expanded="false" aria-label="Choose language"><i data-lucide="languages" aria-hidden="true"></i></button>
         <div class="language-menu" data-language-menu role="menu" data-state="closed" hidden>
           <a data-404-language="en" href="?lang=en" role="menuitem" lang="en"><span>English</span><i data-lucide="check" data-404-check="en" aria-hidden="true"></i></a>
-          <a data-404-language="zh" href="?lang=zh" role="menuitem" lang="zh-CN"><span>中文</span><i data-lucide="check" data-404-check="zh" aria-hidden="true"></i></a>
+          <a data-404-language="zh-CN" href="?lang=zh-CN" role="menuitem" lang="zh-CN"><span>中文</span><i data-lucide="check" data-404-check="zh" aria-hidden="true"></i></a>
         </div>
       </div>
       <button class="theme-switch" type="button" role="switch" data-theme-switch aria-checked="true" aria-label="Switch to light mode"><i class="theme-sun" data-lucide="sun" aria-hidden="true"></i><i class="theme-moon" data-lucide="moon" aria-hidden="true"></i></button>
@@ -57,7 +59,7 @@
   </header>
   <main id="main" class="error-main">
     <section class="error-content" aria-labelledby="error-title">
-      <p class="eyebrow">404 / KIN DESIGN SYSTEM</p>
+      <p class="eyebrow" data-404-key="eyebrow">404 / KIN DESIGN SYSTEM</p>
       <h1 id="error-title" data-404-key="title">This page is not part of the current contract.</h1>
       <p class="lead" data-404-key="body">The address may have changed, or the resource may belong to another version.</p>
       <div class="intro-actions">
@@ -73,6 +75,8 @@
       const copy = {
         en: {
           skip: "Skip to content",
+          brand: "Design System",
+          eyebrow: "404 / KIN DESIGN SYSTEM",
           title: "This page is not part of the current contract.",
           body: "The address may have changed, or the resource may belong to another version.",
           return: "Return to KIN",
@@ -83,7 +87,9 @@
         },
         zh: {
           skip: "跳到主要内容",
-          title: "当前设计合同中没有这个页面。",
+          brand: "设计系统",
+          eyebrow: "404 / KIN 设计系统",
+          title: "找不到这个页面。",
           body: "地址可能已经变更，或该资源属于其他版本。",
           return: "返回 KIN",
           repository: "打开代码仓库",
@@ -99,7 +105,8 @@
       }
       document.querySelector("[data-404-brand]").setAttribute("aria-label", copy.home);
       for (const link of document.querySelectorAll("[data-404-language]")) {
-        const selected = link.dataset["404Language"] === locale;
+        const linkLocale = link.dataset["404Language"] === "zh-CN" ? "zh" : link.dataset["404Language"];
+        const selected = linkLocale === locale;
         link.href = `${location.pathname}?lang=${link.dataset["404Language"]}`;
         if (selected) link.setAttribute("aria-current", "page");
         else link.removeAttribute("aria-current");

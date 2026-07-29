@@ -38,20 +38,25 @@
   </script>
   <title>Documentation - KIN Design System</title>
 </head>
-<body>
+<body class="showcase-shell-page" data-showcase-route="docs">
   <a class="skip-link" href="#main">Skip to content</a>
-  <header class="site-header">
+  <header class="site-header global-header">
     <a class="brand" href="../" aria-label="KIN Design System home">
       <span class="brand-mark" aria-hidden="true">KIN</span>
       <span class="brand-copy"><strong>KIN</strong><small>Design System</small></span>
     </a>
-    <div class="header-center">
-      <button class="command-trigger" type="button" data-command-trigger aria-haspopup="dialog">
-        <i data-lucide="search"></i><span>Search sections and resources</span><kbd>Ctrl K</kbd>
-      </button>
-    </div>
+    <nav class="showcase-nav" id="showcase-nav" data-mobile-nav aria-label="Primary">
+      <a href="../" data-global-nav-key="showcase">Showcase</a>
+      <a href="../components/" data-global-nav-key="components">Components</a>
+      <a href="../patterns/" data-global-nav-key="patterns">Patterns</a>
+      <a href="../scenarios/" data-global-nav-key="scenarios">Scenarios</a>
+      <a href="../scenarios/lab.html" data-global-nav-key="lab">Lab</a>
+      <a href="./" data-global-nav-key="docs" aria-current="page">Documentation</a>
+      <a href="https://github.com/yehyakin/kin-design-system">GitHub</a>
+    </nav>
     <div class="header-actions">
-      <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="docs-nav" aria-label="Open navigation"><i data-lucide="menu"></i></button>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="showcase-nav" aria-label="Open navigation"><i data-lucide="menu"></i></button>
+      <button class="command-trigger showcase-command-trigger" type="button" data-command-trigger aria-haspopup="dialog" aria-label="Search sections and resources"><i data-lucide="search"></i><span class="visually-hidden">Search sections and resources</span></button>
       <div class="language-control" data-language-control>
         <button class="language-trigger" type="button" data-language-trigger aria-haspopup="menu" aria-expanded="false" aria-label="Choose language"><i data-lucide="languages"></i></button>
         <div class="language-menu" data-language-menu role="menu" data-state="closed" hidden>
@@ -61,12 +66,12 @@
       </div>
       <button class="theme-switch" type="button" role="switch" data-theme-switch aria-checked="true" aria-label="Switch to light mode"><i class="theme-sun" data-lucide="sun"></i><i class="theme-moon" data-lucide="moon"></i></button>
       <button class="contrast-toggle" type="button" data-contrast-toggle aria-pressed="false" aria-label="Increase contrast"><i data-lucide="contrast"></i></button>
-      <a class="github-link" href="https://github.com/yehyakin/kin-design-system" aria-label="KIN on GitHub"><i data-lucide="code-2"></i><span>GitHub</span></a>
     </div>
   </header>
 
   <div class="docs-shell">
-    <nav class="docs-nav" id="docs-nav" aria-label="Documentation">
+    <button class="local-nav-toggle" type="button" data-local-nav-toggle data-open-label="Open documentation sections" data-close-label="Close documentation sections" aria-expanded="false" aria-controls="docs-nav" aria-label="Open documentation sections"><i data-lucide="list-tree"></i><span>Documentation sections</span><i data-lucide="chevron-right"></i></button>
+    <nav class="docs-nav" id="docs-nav" data-local-nav aria-label="Documentation sections">
       <div class="nav-group">
         <h2>Start here</h2>
         <a href="#overview" aria-current="location"><i data-lucide="layout-dashboard"></i>Overview</a>

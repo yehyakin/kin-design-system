@@ -39,7 +39,7 @@ test("cross-browser smoke preserves navigation focus and advanced states", async
   const accept = page.getByRole("button", { name: "接受建议" });
   await accept.scrollIntoViewIfNeeded();
   await accept.click();
-  await expect(page.getByText("已接受 · 尚未执行", { exact: true })).toBeVisible();
+  await expect(page.getByText("已采纳 · 尚未执行", { exact: true })).toBeVisible();
 
   await page.goto("/examples/page-patterns/access.html", { waitUntil: "domcontentloaded" });
   await expect(page.locator("[data-sign-in-view]")).toBeVisible();
@@ -64,7 +64,7 @@ test("cross-browser smoke preserves navigation focus and advanced states", async
 
   await page.goto("/examples/page-patterns/scheduling.html?selected=SCH-103", { waitUntil: "domcontentloaded" });
   await expect(page.locator("[data-schedule-sidecar]")).toHaveAttribute("aria-hidden", "false");
-  await expect(page.locator("[data-sidecar-title]")).toHaveText("主图审核");
+  await expect(page.locator("[data-sidecar-title]")).toHaveText("主图复核");
   await page.keyboard.press("Escape");
   await expect(page).not.toHaveURL(/selected=/);
 

@@ -51,7 +51,7 @@
         "page": {
           "eyebrow": "KIN COMPONENTS",
           "title": "Find a component by task and evidence.",
-          "lead": "Browse stable KIN components by catalog tier, then open one of eight bounded Explorers when a deep reference is available.",
+          "lead": "Browse stable KIN components by catalog tier, then open a bounded Explorer when a deep reference is available.",
           "stable_heading": "Stable components by catalog tier",
           "stable_intro": "Names, tiers, maturity, support, references, tests, and gaps are read from the canonical Component catalog at build time.",
           "other_heading": "Candidate and draft records",
@@ -93,42 +93,56 @@
           "not_recorded": "Not recorded"
         },
         "items": {
+          "button": {
+            "display_name": "Button",
+            "job": "Execute one discrete action with clear hierarchy, stable geometry, and visible progress or recovery.",
+            "boundary": "The reference demonstrates deterministic appearance and local states. Requests, permissions, committed results, and undo remain product-owned.",
+            "state_label": "Action hierarchy, async feedback, menus, and recovery"
+          },
           "app-shell": {
+            "display_name": "App Shell",
             "job": "Keep navigation, the current workspace, contextual properties, and command surfaces in a stable relationship.",
             "boundary": "The reference demonstrates deterministic shell structure. Product routes, permissions, data, and adoption evidence remain product-owned.",
             "state_label": "Default workspace shell"
           },
           "evidence-list": {
+            "display_name": "Evidence List",
             "job": "Map a claim or decision to supporting, missing, stale, or conflicting sources without collapsing them into one score.",
             "boundary": "The sources are deterministic fixture content. They do not establish live provenance or authoritative verification.",
             "state_label": "Evidence with a recorded conflict"
           },
           "suggested-change-review": {
+            "display_name": "Suggested Change Review",
             "job": "Compare current and proposed values before a person accepts, rejects, or edits a change.",
             "boundary": "The review is local and reversible inside the reference. It does not persist a product change or grant approval authority.",
             "state_label": "Pending suggested change"
           },
           "execution-preview": {
+            "display_name": "Execution Preview",
             "job": "Expose targets, writes, external effects, permissions, irreversibility, and rollback before execution.",
             "boundary": "The reference creates no external side effect. Authorization, scope validation, execution, and rollback remain product-owned.",
             "state_label": "Confirmation required"
           },
           "background-task-queue": {
+            "display_name": "Background Task Queue",
             "job": "Keep accepted long-running work identifiable through progress, cancellation, failure, recovery, and result access.",
             "boundary": "The queue uses deterministic local tasks. It does not prove backend persistence, idempotency, cancellation, or retry.",
             "state_label": "Mixed running, failed, and completed tasks"
           },
           "command-menu": {
+            "display_name": "Command Menu",
             "job": "Launch navigation and actions from an immediately usable, keyboard-first searchable surface.",
             "boundary": "The reference demonstrates invocation, filtering, focus, and return behavior over fixture commands, not a product-wide search service.",
-            "state_label": "Closed with an available invocation control"
+            "state_label": "Open command menu"
           },
           "authentication-dialog": {
+            "display_name": "Authentication Dialog",
             "job": "Restore one blocked action through a modal sign-in task while preserving the underlying workflow.",
             "boundary": "The dialog is an interface reference only. It does not authenticate, manage credentials, enforce sessions, or authorize the resumed action.",
             "state_label": "Open authentication dialog"
           },
           "data-table": {
+            "display_name": "Data Table",
             "job": "Compare related records through named columns, stable row semantics, selection, and keyboard-accessible actions.",
             "boundary": "The fixture is bounded. Real datasets, virtualization, authorization, responsive priority, and assistive-technology evidence remain product responsibilities.",
             "state_label": "Default comparable-record table"
@@ -138,8 +152,8 @@
       "patterns": {
         "page": {
           "eyebrow": "KIN PATTERNS",
-          "title": "Choose composition from the work.",
-          "lead": "Four compositions keep a different kind of work primary while preserving navigation, context, and reversible action.",
+          "title": "Four layouts, shaped by the work.",
+          "lead": "Reading, investigation, operations, and precision editing need different compositions. KIN keeps orientation and recovery intact across all four.",
           "page_record": "Joined Page record",
           "scenario_record": "Showcased Scenario",
           "page_status": "Page status",
@@ -224,36 +238,36 @@
     },
     "zh-CN": {
       "shared": {
-        "site_name": "KIN Design System",
+        "site_name": "KIN 设计系统",
         "skip_link": "跳到正文",
-        "search_trigger": "搜索页面与来源",
+        "search_trigger": "搜索页面与规范",
         "open_navigation": "打开导航",
         "choose_language": "选择语言",
         "switch_to_light": "切换为日间模式",
         "increase_contrast": "增强对比度",
         "github_label": "在 GitHub 查看 KIN",
-        "nav_label": "Showcase 导航",
-        "nav_start": "浏览",
-        "nav_sources": "事实来源",
-        "nav_showcase": "Showcase",
+        "nav_label": "主导航",
+        "nav_start": "页面",
+        "nav_sources": "规范",
+        "nav_showcase": "总览",
         "nav_components": "组件",
-        "nav_patterns": "产品模式",
+      "nav_patterns": "布局",
         "nav_scenarios": "场景",
-        "nav_lab": "实验室",
+      "nav_lab": "场景检查台",
         "nav_documentation": "文档",
         "command_label": "搜索 KIN",
-        "command_placeholder": "搜索页面与来源",
+        "command_placeholder": "搜索页面与规范",
         "command_pages": "页面",
-        "command_sources": "规范来源",
-        "command_empty": "没有匹配的页面或来源。",
+        "command_sources": "规范",
+        "command_empty": "没有匹配的页面或规范。",
         "command_system_theme": "跟随系统主题",
         "appearance": "外观",
-        "source_boundary_title": "来源边界",
-        "source_boundary_body": "这是根据代码仓库规范事实生成的非规范发现视图。它不会改变成熟度、创建运行时组件包，也不能建立生产接入证据。",
-        "catalog_record": "目录记录",
+        "source_boundary_title": "关于此页面",
+        "source_boundary_body": "本页根据仓库中的组件与页面目录生成，用于浏览和试用。组件成熟度与实际接入情况仍以对应规范和产品实现为准。",
+        "catalog_record": "目录条目",
         "open": "打开",
         "status": "状态",
-        "tier": "层级",
+        "tier": "类型",
         "stable": "稳定",
         "candidate": "候选",
         "draft": "草稿",
@@ -261,127 +275,141 @@
         "core": "核心",
         "workspace": "工作台",
         "product_specific": "产品专用",
-        "conditional": "条件采用",
-        "showcased": "已展示",
-        "linked": "已链接",
+        "conditional": "按需",
+        "showcased": "可预览",
+        "linked": "有参考",
         "planned": "计划中",
-        "footer_line": "面向重要产品工作的参考界面。"
+      "footer_line": "KIN 界面与交互规范。"
       },
       "components": {
         "page": {
-          "eyebrow": "KIN 组件",
-          "title": "按任务与证据查找组件。",
-          "lead": "先按目录层级浏览稳定 KIN 组件；存在深层参考时，再打开首批八个边界明确的 Explorer。",
-          "stable_heading": "按目录层级排列的稳定组件",
-          "stable_intro": "名称、层级、成熟度、支持范围、参考、测试与缺口都在构建时读取自规范组件目录。",
-          "other_heading": "候选与草稿记录",
-          "other_intro": "这些记录可以被发现，但不会被描述为完整组件，也不会获得深层 Explorer 路由。",
-          "explorer_available": "打开 Explorer",
-          "catalog_only": "仅目录记录",
+          "eyebrow": "组件",
+        "title": "组件与交互",
+        "lead": "先体验常用组件，再按需查看用法、支持情况和实现规范。",
+          "stable_heading": "稳定组件",
+          "stable_intro": "按用途分组，快速了解每个组件的用途、状态和适用范围。",
+          "other_heading": "候选组件",
+          "other_intro": "这些组件仍在整理中，行为和接口可能继续调整。",
+          "explorer_available": "打开演示",
+          "catalog_only": "查看记录",
           "empty_group": "该分组暂无记录。",
-          "catalog_link": "打开规范组件目录"
+          "catalog_link": "查看完整组件目录"
         },
         "explorer": {
-          "eyebrow": "组件 EXPLORER / 有边界的参考",
-          "back": "全部组件",
-          "user_job": "用户任务",
-          "reference_heading": "可运行的确定性参考",
-          "reference_intro": "框架只打开一个受支持的参考状态。嵌入区域过窄或不可用时，请使用独立打开链接。",
-          "reference_language": "参考语言",
-          "reference_language_mismatch": "该规范 fixture 目前仅提供中文；外围中文 Explorer 不会扩大其运行时证据。",
-          "inspected_state": "检查状态",
-          "state_coverage": "状态覆盖边界",
-          "states_boundary": "可运行框架只展示上方检查状态。在规范的机器可读状态来源建立之前，不生成适用状态清单；核心与组件专用合同仍是权威来源。",
-          "states_contract": "打开核心状态合同",
-          "open_reference": "独立打开参考",
-          "evidence_heading": "规范证据",
-          "contracts": "治理合同",
-          "tests": "自动检查",
-          "manual_checks": "具名人工检查",
-          "support": "目录支持范围",
+          "eyebrow": "组件",
+          "back": "返回组件",
+          "user_job": "用途",
+          "reference_heading": "交互预览",
+          "reference_intro": "选择状态、主题和视口，在这里体验组件。需要更大空间时，可在新标签页打开。",
+          "reference_language": "预览语言",
+          "reference_language_mismatch": "这项预览尚未提供当前语言版本。",
+          "inspected_state": "当前状态",
+          "state_coverage": "可预览状态",
+          "states_boundary": "此处只展示已经实现的状态。完整状态定义与实现要求见组件规范。",
+          "states_contract": "查看状态规范",
+          "open_reference": "在新标签页打开",
+          "evidence_heading": "实现依据",
+          "contracts": "相关规范",
+          "tests": "自动测试",
+          "manual_checks": "人工检查",
+          "support": "支持情况",
           "known_gaps": "已知缺口",
-          "no_known_gaps": "规范目录没有为这个组件记录缺口。",
-          "reference_boundary": "参考边界",
-          "accessibility_boundary": "无障碍边界",
-          "accessibility_boundary_body": "该参考呈现目录支持范围与自动检查。具名人工检查仍被明确列出，不能据此宣称辅助技术或采用产品已经完成验收。",
+          "no_known_gaps": "组件目录中没有记录已知问题。",
+          "reference_boundary": "预览说明",
+          "accessibility_boundary": "无障碍说明",
+          "accessibility_boundary_body": "这里列出目录中记录的支持情况和自动测试。仍需完成的人工检查会单独显示，不能据此认定读屏软件或实际产品已经通过验收。",
           "themes": "主题",
           "responsive": "响应式",
           "keyboard": "键盘",
           "touch": "触控",
           "reduced_motion": "减弱动效",
-          "supported": "已记录",
-          "not_recorded": "未记录"
+          "supported": "支持",
+          "not_recorded": "未说明"
         },
         "items": {
+          "button": {
+            "display_name": "按钮",
+            "job": "用清楚的层级和状态完成单次操作，并在处理中、成功或失败时及时反馈。",
+            "boundary": "预览只演示外观和本地状态；真实请求、权限判断、提交结果和撤销由接入产品实现。",
+            "state_label": "层级、加载、菜单与撤销"
+          },
           "app-shell": {
-            "job": "让导航、当前工作区、上下文属性与命令层保持稳定关系。",
-            "boundary": "参考展示确定性的 Shell 结构。产品路由、权限、数据和接入证据仍由产品负责。",
-            "state_label": "默认工作台 Shell"
+            "display_name": "应用框架",
+            "job": "在页面切换中保持全局导航、当前工作区、任务信息和命令入口稳定。",
+            "boundary": "预览只展示应用框架结构；路由、权限、数据和实际接入由产品实现。",
+            "state_label": "默认应用框架"
           },
           "evidence-list": {
-            "job": "把结论或决定映射到支持、缺失、过期或冲突来源，不压缩成一个分数。",
-            "boundary": "来源是确定性 fixture 内容，不能建立实时来源链或权威核验结论。",
-            "state_label": "包含已记录冲突的证据"
+            "display_name": "证据列表",
+            "job": "把结论与支持它、反驳它或已经过期的来源逐条对应，避免压缩成一个总分。",
+            "boundary": "内容为本地样例，不代表实时数据或最终核验结果。",
+            "state_label": "包含冲突来源"
           },
           "suggested-change-review": {
-            "job": "在人接受、拒绝或编辑变更以前，对比当前值和建议值。",
-            "boundary": "审核只在本地参考内可逆，不会持久化产品变更，也不会授予审批权限。",
-            "state_label": "等待审核的建议变更"
+            "display_name": "建议变更复核",
+            "job": "让用户在接受、拒绝或编辑前，清楚比较当前值与建议值。",
+            "boundary": "所有操作只影响本地预览，不会保存业务变更，也不代表用户拥有审批权限。",
+            "state_label": "待复核的建议变更"
           },
           "execution-preview": {
-            "job": "在执行前展示目标、写入、外部影响、权限、不可逆性与回滚。",
-            "boundary": "参考不会产生外部副作用。授权、范围校验、执行与回滚仍由产品负责。",
+            "display_name": "执行预览",
+            "job": "执行前说明目标、改动、外部影响、所需权限、不可逆项和回退方式。",
+            "boundary": "预览不会产生外部影响；授权、范围校验、执行和回退由产品实现。",
             "state_label": "需要确认"
           },
           "background-task-queue": {
-            "job": "让已接受的长任务在进度、取消、失败、恢复和结果访问期间保持可识别。",
-            "boundary": "队列使用确定性本地任务，不能证明后端持久化、幂等、取消或重试。",
-            "state_label": "同时包含运行、失败与完成任务"
+            "display_name": "后台任务队列",
+            "job": "让耗时任务在运行、取消、失败、重试和完成后都可追踪。",
+            "boundary": "队列使用本地样例，不代表后端已经支持持久化、幂等、取消或重试。",
+            "state_label": "运行中、失败与已完成"
           },
           "command-menu": {
-            "job": "通过立即可用、键盘优先的可搜索界面启动导航与操作。",
-            "boundary": "参考针对 fixture 命令展示调用、筛选、焦点与返回行为，不是产品级搜索服务。",
-            "state_label": "关闭状态，调用控件可用"
+            "display_name": "命令菜单",
+            "job": "用键盘优先的搜索入口快速跳转页面或执行命令。",
+            "boundary": "预览使用一组固定命令，只演示打开、筛选、焦点与返回行为，不是产品搜索服务。",
+            "state_label": "已打开的命令菜单"
           },
           "authentication-dialog": {
-            "job": "在保留底层工作流的同时，通过模态登录任务恢复一个被阻断的操作。",
-            "boundary": "该 Dialog 只是界面参考；它不会认证、处理凭据、执行会话策略或授权恢复后的操作。",
-            "state_label": "已打开的身份验证 Dialog"
+            "display_name": "身份验证对话框",
+            "job": "登录失效或权限不足时，在不丢失当前工作进度的前提下完成身份验证。",
+            "boundary": "该对话框只演示界面行为，不会验证身份、处理凭据、执行会话策略或授权后续操作。",
+            "state_label": "已打开的身份验证对话框"
           },
           "data-table": {
-            "job": "通过具名列、稳定行语义、选择与键盘操作比较相关记录。",
-            "boundary": "该 fixture 范围有限。真实数据、虚拟化、授权、响应式优先级和辅助技术证据仍由产品负责。",
-            "state_label": "默认可比较记录表格"
+            "display_name": "数据表格",
+            "job": "用清楚的列和行语义比较记录，并支持选择、排序与键盘操作。",
+            "boundary": "预览数据量有限；真实数据、虚拟列表、权限、移动端优先级和辅助技术验证由产品负责。",
+            "state_label": "默认数据表格"
           }
         }
       },
       "patterns": {
         "page": {
-          "eyebrow": "KIN 产品模式",
-          "title": "从真实工作选择构图。",
-          "lead": "四种构图分别突出一种工作，同时保留导航、上下文与可撤销操作。",
-          "page_record": "关联页面记录",
-          "scenario_record": "已展示场景",
-          "page_status": "页面状态",
-          "scenario_presentation": "场景展示状态",
-          "primary_job": "主要用户任务",
-          "first_view": "第一有效视图",
-          "dominant_region": "主导区域",
-          "persistent_context": "持续上下文",
-          "prohibited": "禁止替代",
-          "governing_contract": "治理 Pattern 合同",
-          "open_reference": "打开确定性参考",
-          "open_chinese_reference": "打开中文参考",
-          "reference_language": "参考语言",
-          "reference_language_mismatch": "该规范 fixture 目前仅提供中文；外围 Pattern 记录不会扩大其运行时证据。",
-          "open_lab": "在英语优先的 Scenario Lab 中检查",
-          "maturity_note": "Pattern 文档没有独立机器成熟度。这里显示的状态只属于关联页面记录。",
-          "catalog_link": "打开规范页面目录"
+        "eyebrow": "产品布局",
+        "title": "按工作方式选择布局",
+        "lead": "阅读、调查、运营和精确编辑需要不同的布局；界面应随任务变化，而不是套用同一张后台模板。",
+          "page_record": "页面规范",
+          "scenario_record": "可预览场景",
+          "page_status": "页面成熟度",
+          "scenario_presentation": "场景状态",
+          "primary_job": "核心任务",
+          "first_view": "首屏要点",
+          "dominant_region": "主要工作区",
+          "persistent_context": "持续显示",
+          "prohibited": "不要这样做",
+          "governing_contract": "布局规范",
+          "open_reference": "打开交互预览",
+          "open_chinese_reference": "打开中文预览",
+          "reference_language": "预览语言",
+          "reference_language_mismatch": "这项预览尚未提供当前语言版本。",
+        "open_lab": "在场景检查台中打开",
+          "maturity_note": "这里的成熟度来自对应页面记录；布局规范本身不单独评级。",
+          "catalog_link": "查看页面目录"
         },
         "items": {
           "information-site": {
             "label": "信息网站",
-            "summary": "搜索、主题身份、阅读顺序、来源、修订与稳定地址先于说明出现。",
+          "summary": "搜索、正文、来源和修订信息按阅读顺序出现，便于查找与判断。",
             "blueprint": [
               "搜索或主题",
               "记录列表或阅读内容",
@@ -389,29 +417,29 @@
               "相关导航"
             ],
             "prohibited_substitutions": [
-              "在搜索、主题或阅读内容之前放置营销 Hero",
-              "用等宽卡片替代记录、引用或阅读顺序",
-              "用无来源的生成摘要替代来源信息"
+              "让营销首屏挡在搜索、主题或正文之前",
+              "用一排相同卡片替代记录、引用或阅读顺序",
+              "用没有来源的自动摘要替代原始信息"
             ]
           },
           "intelligence-workspace": {
             "label": "情报工作台",
-            "summary": "列表选择变化时，对象身份、证据、历史与可逆审核仍保持可见。",
+          "summary": "切换记录时，记录身份、证据、事件和复核进度始终可见。",
             "blueprint": [
-              "保存范围与筛选",
-              "对象列表",
+              "已保存视图与筛选",
+              "记录列表",
               "证据与事件",
               "选择属性"
             ],
             "prohibited_substitutions": [
-              "用发光监控大屏替代分析任务",
+              "用发光监控大屏替代真实分析任务",
               "用一个分数合并风险、证据、完整度与健康状态",
-              "在 Landing Page 内部套入 Sidebar 与 Inspector"
+              "在落地页内部套入侧栏与属性面板"
             ]
           },
           "ecommerce-operations": {
             "label": "电商运营",
-            "summary": "队列与当前记录让金额、数量、渠道、负责人、审批与安全操作保持可比较。",
+          "summary": "把队列与详情放在一起，便于比较金额、库存、渠道、负责人和审批状态。",
             "blueprint": [
               "运营范围",
               "可操作队列",
@@ -426,9 +454,9 @@
           },
           "engineering-canvas": {
             "label": "工程画布",
-            "summary": "文档或模型占据主导，工具、结构、选择属性、单位与版本保持精确。",
+          "summary": "以画布为主；工具、结构、所选内容、单位和版本信息围绕当前操作展开。",
             "blueprint": [
-              "工具与对象结构",
+              "工具与图形结构",
               "精确画布",
               "选择属性",
               "单位、保存状态与版本"
@@ -445,13 +473,13 @@
   },
   "catalog_translations": {
     "zh-CN": {
-      "Common interaction or content primitive.": "通用交互或内容基础组件。",
-      "Structure for dense applications and object-based work.": "用于高密度应用与对象式工作的结构组件。",
-      "Domain component for AI, ecommerce, information, or engineering work.": "用于 AI、电商、信息或工程工作的领域组件。",
-      "Adopt only when real product requirements justify it.": "仅在真实产品需求能够说明采用理由时使用。",
-      "Normative contract, runnable reference, and applicable automated acceptance checks exist.": "已有规范合同、可运行参考和适用的自动验收检查。",
-      "Useful contract or reference exists, but at least one completion dimension remains open.": "已有可用合同或参考，但至少一个完成维度仍未关闭。",
-      "Planned or partially described; consuming products must document missing decisions.": "处于计划或部分描述阶段；采用产品必须记录尚未完成的决定。",
+      "Common interaction or content primitive.": "通用的交互或内容组件。",
+      "Structure for dense applications and object-based work.": "用于高密度应用和记录型工作流的结构组件。",
+      "Domain component for AI, ecommerce, information, or engineering work.": "面向 AI、电商、信息或工程任务的专用组件。",
+      "Adopt only when real product requirements justify it.": "仅在产品确实需要时采用。",
+      "Normative contract, runnable reference, and applicable automated acceptance checks exist.": "已有完整规范、可运行预览和适用的自动测试。",
+      "Useful contract or reference exists, but at least one completion dimension remains open.": "已有可用规范或预览，但仍有部分工作尚未完成。",
+      "Planned or partially described; consuming products must document missing decisions.": "仍在规划或补充中；接入产品需要记录尚未确定的部分。",
       "Retained only for migration and unavailable to new implementations.": "仅为迁移保留，不允许用于新的实现。",
       "screen-reader landmarks": "屏幕阅读器地标",
       "200% zoom": "200% 缩放",
@@ -462,16 +490,41 @@
       "backend authorization, scope drift, side effects, and rollback": "后端授权、范围漂移、副作用与回滚",
       "real backend persistence, idempotency, cancellation, and retry": "真实后端持久化、幂等、取消与重试",
       "screen-reader result announcements": "屏幕阅读器结果播报",
-      "real identity-provider integration": "真实身份提供方接入",
+      "real identity-provider integration": "尚未接入正式登录服务",
       "underlying draft preservation": "底层草稿保留",
       "screen-reader modal behavior and mobile reflow": "屏幕阅读器模态行为与移动端重排",
-      "production identity-provider and task-resume evidence": "生产身份提供方与任务恢复证据",
+      "production identity-provider and task-resume evidence": "尚未验证正式登录与任务恢复流程",
       "screen-reader table navigation": "屏幕阅读器表格导航",
-      "large dataset": "大数据集"
+      "large dataset": "大数据集",
+      "Information Record Page": "信息记录页",
+      "Intelligence Workspace Page": "情报工作台页",
+      "Ecommerce Operations Page": "电商运营页",
+      "Engineering Canvas Page": "工程画布页",
+      "Find and Verify a Record": "查找并核验记录",
+      "Investigation and Evidence Review": "调查与证据复核",
+      "Product or Inventory Exception": "商品或库存异常",
+      "Canvas Edit and Undo": "画布编辑与撤销",
+      "Search, filter, open a record, and identify its source and currency.": "搜索、筛选并打开记录，同时确认来源与时效。",
+      "Compare chronology, sources, conflicts, and uncertainty before recording a finding.": "记录结论前，对比事件顺序、来源、冲突与不确定性。",
+      "Identify a blocking state, affected quantity or channel, and the next safe action.": "识别阻断状态、受影响数量或渠道，以及下一项安全操作。",
+      "Select, modify, commit, and undo a structured object with precise context.": "在明确的工作区中选择、修改、提交并撤销结构化内容。",
+      "Search, results, or record subject.": "搜索、结果或记录主题。",
+      "Result list or reading content.": "结果列表或阅读内容。",
+      "Query, subject, source, revision, and stable URL.": "查询、主题、来源、修订与固定链接。",
+      "Entity identity with chronology and evidence.": "记录身份、事件顺序与证据。",
+      "Evidence and event chronology.": "证据与事件顺序。",
+      "Entity, source attribution, verification state, and current finding.": "记录、来源出处、核验状态与当前结论。",
+      "Actionable exception queue and selected product.": "可操作的异常队列与已选商品。",
+      "Queue or selected operational record.": "队列或已选运营记录。",
+      "Selection, batch scope, currency, quantity, channel, and owner.": "当前选择、批量操作范围、币种、数量、渠道与负责人。",
+      "Canvas with a real selection or active tool.": "包含真实选择或当前工具的画布。",
+      "Precision canvas.": "精确画布。",
+      "Tool mode, selection, units, zoom, save state, and revision.": "工具模式、选择、单位、缩放、保存状态与版本。"
     }
   },
   "display_order": {
     "component_explorers": [
+      "button",
       "command-menu",
       "evidence-list",
       "suggested-change-review",
@@ -501,6 +554,19 @@
   },
   "locators": {
     "components": {
+      "button": {
+        "path": "examples/workspace-reference/core-components.html",
+        "query": {
+          "en": {
+            "lang": "zh-CN"
+          },
+          "zh-CN": {
+            "lang": "zh-CN"
+          }
+        },
+        "fragment": "button-contract-title",
+        "state_id": "variants-and-states"
+      },
       "app-shell": {
         "path": "examples/workspace-reference/index.html",
         "query": {
@@ -577,13 +643,13 @@
           }
         },
         "fragment": "state-reference",
-        "state_id": "closed"
+        "state_id": "open"
       },
       "authentication-dialog": {
         "path": "examples/workspace-reference/core-components.html",
         "query": {
           "en": {
-            "lang": "zh-CN",
+            "lang": "en",
             "dialog": "authentication"
           },
           "zh-CN": {

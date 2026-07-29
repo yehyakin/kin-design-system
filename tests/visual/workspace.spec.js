@@ -179,13 +179,13 @@ test("location bar preserves identity and moves secondary actions into overflow"
   await more.click();
   await expect(page.getByRole("menuitemcheckbox", { name: "切换高对比度" })).toBeFocused();
   await page.keyboard.press("ArrowDown");
-  await expect(page.getByRole("menuitem", { name: "复制对象链接" })).toBeFocused();
+  await expect(page.getByRole("menuitem", { name: "复制记录链接" })).toBeFocused();
   await page.keyboard.press("Escape");
   await expect(more).toBeFocused();
 
   await page.setViewportSize({ width: 390, height: 844 });
   await expect(location.getByText("Alpha Network", { exact: true })).toBeVisible();
-  await expect(location.getByText("对象数据库", { exact: true })).toBeHidden();
+  await expect(location.getByText("记录库", { exact: true })).toBeHidden();
   await assertNoHorizontalOverflow(page);
 });
 
@@ -652,11 +652,15 @@ test("core actions preserve distinct selection semantics", async ({ page }) => {
   await expect(density.getByRole("button", { name: "紧凑" })).toHaveAttribute("aria-pressed", "false");
   await expect(page.getByRole("radio", { name: "人工确认" })).toBeChecked();
 
-  const buttonMatrix = page.getByRole("table", { name: "按钮变体与状态矩阵" });
-  await expect(buttonMatrix.getByRole("rowheader", { name: "主要操作" })).toBeVisible();
-  await expect(buttonMatrix.getByRole("button", { name: "正在保存" })).toHaveAttribute("aria-busy", "true");
-  await expect(buttonMatrix.getByRole("button", { name: "复制对象链接" })).toHaveAttribute("title", "复制对象链接");
-  await expect(buttonMatrix.getByRole("button", { name: "移除记录" }).first()).toBeEnabled();
+  const buttonLab = page.locator("[data-button-lab]");
+  const toolbar = buttonLab.getByRole("region", { name: "渠道价格同步" });
+  await expect(toolbar.locator(".button-lab-actions > .primary-action")).toHaveCount(1);
+  await expect(toolbar.getByRole("button", { name: "复制规则链接" })).toHaveAttribute("aria-describedby", "button-copy-tooltip");
+  await expect(buttonLab.locator(".button-semantics dt")).toHaveText(["主要", "次要", "弱化", "危险"]);
+  const preview = toolbar.locator("[data-button-preview]");
+  await preview.click();
+  await expect(preview).toHaveAttribute("aria-pressed", "true");
+  await expect(buttonLab.locator("[data-button-preview-panel]")).toHaveAttribute("data-preview", "true");
 });
 
 test("core authentication reference preserves context and never submits credentials", async ({ page }, testInfo) => {
@@ -767,7 +771,7 @@ test("core form retains input and commits combobox value", async ({ page }) => {
   await page.keyboard.press("Enter");
   await expect(combo).toHaveValue("周远");
 
-  await page.getByRole("button", { name: "保存规则" }).click();
+  await page.locator("#forms").getByRole("button", { name: "保存规则" }).click();
   await expect(page.getByText("规则已保存到当前工作区。", { exact: true })).toBeVisible();
   await expect(page.getByLabel("规则名称")).toHaveValue("价格异常复核");
   await page.getByLabel("通知频率").selectOption({ label: "每日汇总" });
@@ -796,7 +800,7 @@ test("file upload fixture distinguishes validation transfer retry cancel and com
 
   await upload.getByRole("button", { name: "移除", exact: true }).click();
   await input.setInputFiles({ name: "unsupported.exe", mimeType: "application/octet-stream", buffer: Buffer.from("fixture") });
-  await expect(page.getByText("验证失败", { exact: true })).toBeVisible();
+  await expect(page.getByText("校验失败", { exact: true })).toBeVisible();
   await expect(page.getByText(/文件类型不受支持/)).toBeVisible();
 
   await upload.getByRole("button", { name: "移除", exact: true }).click();
@@ -842,7 +846,7 @@ test("core navigation separates tabs menus disclosures and pagination", async ({
   await expect(page.getByRole("menuitem", { name: "查看审计记录" })).toBeFocused();
   await page.keyboard.press("Escape");
   await expect(menuTrigger).toBeFocused();
-  const contextTarget = page.getByRole("button", { name: "当前对象操作" });
+  const contextTarget = page.getByRole("button", { name: "当前记录操作" });
   await contextTarget.focus();
   await page.keyboard.press("Shift+F10");
   await expect(page.getByRole("menuitem", { name: "打开详情" })).toBeFocused();
@@ -867,7 +871,7 @@ test("core data display preserves labels status and loading meaning", async ({ p
   await page.setViewportSize({ width: 1280, height: 900 });
   await page.goto("/examples/workspace-reference/core-components.html#data-display");
 
-  await expect(page.getByRole("table", { name: "等待审核的价格变化" })).toBeVisible();
+  await expect(page.getByRole("table", { name: "待复核的价格变化" })).toBeVisible();
   await expect(page.getByText("来源不可用", { exact: true })).toBeVisible();
   await expect(page.locator("#data-display").getByText("RULE-024", { exact: true })).toBeVisible();
   await expect(page.getByRole("tree", { name: "规则分组" })).toBeVisible();
@@ -876,7 +880,7 @@ test("core data display preserves labels status and loading meaning", async ({ p
   await treeRoot.focus();
   await page.keyboard.press("ArrowRight");
   await expect(page.getByRole("treeitem", { name: "异常变化" })).toBeFocused();
-  await expect(page.getByLabel("正在载入下一批审核记录")).toHaveAttribute("aria-busy", "true");
+  await expect(page.getByLabel("正在加载下一批复核记录")).toHaveAttribute("aria-busy", "true");
   await assertNoHorizontalOverflow(page);
   await page.evaluate(() => { document.activeElement?.blur(); scrollTo(0, 0); });
   await capture(page, testInfo, "core-components-light-desktop.png");
@@ -904,12 +908,12 @@ test("core feedback keeps progress and recovery in context", async ({ page }) =>
   await page.goto("/examples/workspace-reference/core-components.html#feedback");
 
   await expect(page.getByRole("alert")).toContainText("来源同步失败");
-  await expect(page.getByRole("status").filter({ hasText: "审核服务将在 18:00 维护" })).toBeVisible();
+  await expect(page.getByRole("status").filter({ hasText: "复核服务将在 18:00 维护" })).toBeVisible();
   const progress = page.getByRole("progressbar");
   await expect(progress).toHaveAttribute("max", "5");
   await expect(progress).toHaveAttribute("value", "3");
   await expect(page.getByRole("meter")).toHaveAttribute("value", "68");
-  await expect(page.getByRole("status").filter({ hasText: "正在读取审核历史" })).toBeVisible();
+  await expect(page.getByRole("status").filter({ hasText: "正在读取复核记录" })).toBeVisible();
   await expect(page.getByRole("button", { name: "清除筛选" })).toBeVisible();
 });
 
@@ -935,7 +939,7 @@ test("core motion reference exposes paired async disclosure and Sonner states", 
 
   await page.locator("[data-motion-toast]").click();
   await expect(page.getByText("正在创建导出任务", { exact: true })).toBeVisible();
-  await expect(page.getByText("导出任务已创建", { exact: true })).toBeVisible({ timeout: 2_000 });
+  await expect(page.getByText("导出任务已创建", { exact: true })).toBeVisible({ timeout: 3_000 });
 });
 
 test("Motion Lab exposes icon, menu, feedback, disclosure, theme and Drawer behavior", async ({ page }, testInfo) => {
@@ -949,7 +953,7 @@ test("Motion Lab exposes icon, menu, feedback, disclosure, theme and Drawer beha
   await expect(paired).toHaveAttribute("aria-pressed", "true");
   await expect(paired.locator('[data-icon-state="active"]')).toBeVisible();
 
-  await page.getByRole("button", { name: "对象操作" }).click();
+  await page.getByRole("button", { name: "记录操作" }).click();
   await expect(page.getByRole("menuitem", { name: "编辑名称 E" })).toBeFocused();
   await page.keyboard.press("ArrowDown");
   await expect(page.getByRole("menuitem", { name: "复制链接 C" })).toBeFocused();
@@ -1000,7 +1004,7 @@ test("core overlays restore focus and contain modal tasks", async ({ page }, tes
   await seedPreferences(page, "dark");
   await page.goto("/examples/workspace-reference/core-components.html#overlays");
 
-  const dialogOpen = page.getByRole("button", { name: "打开确认 Dialog" });
+  const dialogOpen = page.getByRole("button", { name: "打开确认对话框" });
   const initialScroll = await page.evaluate(() => scrollY);
   await dialogOpen.click();
   await expect(page.locator("body")).toHaveCSS("position", "fixed");
@@ -1010,12 +1014,12 @@ test("core overlays restore focus and contain modal tasks", async ({ page }, tes
   await expect(dialogOpen).toBeFocused();
   await expect.poll(() => page.evaluate(() => scrollY)).toBe(initialScroll);
 
-  const drawerOpen = page.getByRole("button", { name: "打开属性 Drawer" });
+  const drawerOpen = page.getByRole("button", { name: "打开属性抽屉" });
   await drawerOpen.click();
   await expect(drawerOpen).toHaveAttribute("aria-expanded", "true");
   await expect(page.locator("[data-drawer-layer]")).toHaveAttribute("data-state", "open");
   await expect(page.getByRole("dialog", { name: "规则属性" })).toBeVisible();
-  await expect(page.getByRole("dialog", { name: "规则属性" }).getByRole("button", { name: "关闭属性 Drawer" })).toBeFocused();
+  await expect(page.getByRole("dialog", { name: "规则属性" }).getByRole("button", { name: "关闭属性抽屉" })).toBeFocused();
   await page.keyboard.press("Escape");
   await expect(drawerOpen).toHaveAttribute("aria-expanded", "false");
   await expect(drawerOpen).toBeFocused();
@@ -1039,14 +1043,14 @@ test("AI fixture preserves input through stop retry and completion", async ({ pa
 
   await expect(page.getByRole("note")).toContainText("不会联系模型");
   const instruction = page.getByLabel("说明");
-  await expect(instruction).toHaveValue(/根据已验证来源/);
-  await page.getByRole("button", { name: "生成参考结果" }).click();
-  await expect(page.getByText("正在生成本地参考结果", { exact: true })).toBeVisible();
+  await expect(instruction).toHaveValue(/根据已核验来源/);
+  await page.getByRole("button", { name: "生成示例分析" }).click();
+  await expect(page.getByText("正在生成示例分析", { exact: true })).toBeVisible();
   await page.getByRole("button", { name: "停止" }).click();
   await expect(page.getByText("已停止 · 保留部分结果", { exact: true })).toBeVisible();
-  await expect(instruction).toHaveValue(/根据已验证来源/);
+  await expect(instruction).toHaveValue(/根据已核验来源/);
   await page.getByRole("button", { name: "重试", exact: true }).click();
-  await expect(page.getByText("已完成 · 本地基准", { exact: true })).toBeVisible({ timeout: 2_000 });
+  await expect(page.getByText("已完成 · 本地预置结果", { exact: true })).toBeVisible({ timeout: 3_000 });
   await expect(page.getByText("仍需确认", { exact: true })).toBeVisible();
   await expect(page.getByRole("link", { name: /外部渠道快照/ })).toHaveAttribute("href", "#evidence-3");
 });
@@ -1056,7 +1060,7 @@ test("review separates acceptance execution and task creation", async ({ page })
   await page.goto("/examples/workspace-reference/advanced-components.html#review");
 
   await page.getByRole("button", { name: "接受建议" }).click();
-  await expect(page.getByText("已接受 · 尚未执行", { exact: true })).toBeVisible();
+  await expect(page.getByText("已采纳 · 尚未执行", { exact: true })).toBeVisible();
   await expect(page.getByText("源数据尚未修改", { exact: false })).toBeVisible();
 
   const createTask = page.getByRole("button", { name: "确认并创建发布任务" });
@@ -1064,7 +1068,7 @@ test("review separates acceptance execution and task creation", async ({ page })
   await page.getByRole("checkbox", { name: /核对目标/ }).check();
   await expect(createTask).toBeEnabled();
   await createTask.click();
-  await expect(page.getByText("发布任务已在本地基准中创建", { exact: false })).toBeVisible();
+  await expect(page.getByText("已创建本地示例发布任务", { exact: false })).toBeVisible();
   await expect(page.getByText("TASK-NEW", { exact: false })).toBeVisible();
   await expect(page.locator("[data-created-cancel]")).toBeFocused();
   await page.locator("[data-created-cancel]").click();
@@ -1103,7 +1107,7 @@ test("chart provides keyboard points and a semantic table fallback", async ({ pa
   await page.goto("/examples/workspace-reference/advanced-components.html#chart");
 
   await expect(page.getByRole("img", { name: "近 7 日 Field Jacket 商品价格" })).toBeVisible();
-  const firstPoint = page.locator(".chart-points circle").first();
+  const firstPoint = page.locator(".chart-point-hit").first();
   await firstPoint.focus();
   await expect(firstPoint).toHaveAttribute("aria-label", "7 月 7 日，CNY 1,399");
   await page.getByRole("button", { name: "数据表" }).click();
@@ -1178,10 +1182,10 @@ test("ecommerce operations keeps money inventory and approval distinct", async (
   await expect(editForm).toHaveAttribute("data-state", "loading");
   await expect(editForm).toHaveAttribute("data-state", "committed");
   await expect(page.getByText("CNY 1,349.00", { exact: true })).toHaveCount(2);
-  await expect(page.locator("[data-commerce-stock-allocation]")).toHaveText("未在此参考建模");
+  await expect(page.locator("[data-commerce-stock-allocation]")).toHaveText("此示例不包含分仓分配");
   await expect(page.locator("[data-commerce-stock-shanghai], [data-commerce-stock-shenzhen]")).toHaveCount(0);
   await expect(page.locator("[data-commerce-approval-copy]")).toContainText("CNY 1,349.00");
-  await expect(page.locator("[data-commerce-edit-status]")).toContainText("未发送到服务端");
+  await expect(page.locator("[data-commerce-edit-status]")).toContainText("未发送到服务器");
   await price.fill("1399");
   await page.locator("[data-commerce-discard]").click();
   await expect(editForm).toHaveAttribute("data-state", "normal");

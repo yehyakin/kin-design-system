@@ -18,7 +18,7 @@ test.afterEach(async ({ page }) => {
 async function expectVerified(page) {
   const verification = page.locator("[data-lab-verification]");
   await expect(verification).toHaveAttribute("data-state", "pass");
-  await expect(verification).toHaveText("Verified local fixture");
+  await expect(verification).toHaveText("Preview ready");
 }
 
 async function expectControl(frame, control) {
@@ -78,6 +78,21 @@ test("Present is the default and explicit mode changes replace history and persi
   expect(await frame.evaluate((element) => element.inert)).toBe(false);
   expect(new URL(page.url()).searchParams.get("mode")).toBe("present");
   expect(await page.evaluate(() => localStorage.getItem("kin-showcase-lab-mode"))).toBe("present");
+  const presentGeometry = await page.evaluate(() => {
+    const stageElement = document.querySelector("[data-lab-stage]");
+    const frameShell = document.querySelector("[data-lab-frame-shell]");
+    return {
+      stage: stageElement.getBoundingClientRect().toJSON(),
+      frame: frameShell.getBoundingClientRect().toJSON(),
+      scale: document.querySelector("[data-lab-frame-sizing]").dataset.scale,
+      documentScrollHeight: document.documentElement.scrollHeight,
+      documentClientHeight: document.documentElement.clientHeight,
+      stageScrollHeight: stageElement.scrollHeight,
+      stageClientHeight: stageElement.clientHeight,
+    };
+  });
+  expect(presentGeometry.documentScrollHeight).toBe(presentGeometry.documentClientHeight);
+  expect(presentGeometry.stageScrollHeight).toBe(presentGeometry.stageClientHeight);
 
   await inspect.click();
   await expect(root).toHaveAttribute("data-mode", "inspect");
@@ -86,6 +101,18 @@ test("Present is the default and explicit mode changes replace history and persi
   expect(new URL(page.url()).searchParams.get("mode")).toBe("inspect");
   expect(await page.evaluate(() => history.length)).toBe(initialHistoryLength);
   expect(await page.evaluate(() => localStorage.getItem("kin-showcase-lab-mode"))).toBe("inspect");
+  const inspectGeometry = await page.evaluate(() => {
+    const stageElement = document.querySelector("[data-lab-stage]");
+    const frameShell = document.querySelector("[data-lab-frame-shell]");
+    return {
+      stage: stageElement.getBoundingClientRect().toJSON(),
+      frame: frameShell.getBoundingClientRect().toJSON(),
+      scale: document.querySelector("[data-lab-frame-sizing]").dataset.scale,
+    };
+  });
+  expect(inspectGeometry.stage).toEqual(presentGeometry.stage);
+  expect(inspectGeometry.frame).toEqual(presentGeometry.frame);
+  expect(inspectGeometry.scale).toBe(presentGeometry.scale);
 
   await present.click();
   await expect(root).toHaveAttribute("data-mode", "present");
@@ -93,6 +120,75 @@ test("Present is the default and explicit mode changes replace history and persi
   expect(new URL(page.url()).searchParams.get("mode")).toBe("present");
   expect(await page.evaluate(() => history.length)).toBe(initialHistoryLength);
   expect(await page.evaluate(() => localStorage.getItem("kin-showcase-lab-mode"))).toBe("present");
+});
+
+test("Scenario Lab retains global navigation and gives Escape to the topmost surface", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/scenarios/lab.html?scenario=INT-02&state=normal&viewport=wide&theme=dark&mode=present&lang=zh-CN");
+  await expect(page.locator("[data-lab-verification]")).toHaveAttribute("data-state", "pass");
+
+  const globalHeader = page.locator(".global-header");
+  const navigation = page.locator("[data-mobile-nav]");
+  const labLink = navigation.locator('[data-global-nav-key="lab"]');
+  await expect(globalHeader).toBeVisible();
+  await expect(navigation).toBeVisible();
+  await expect(labLink).toHaveText("场景检查台");
+  await expect(labLink).toHaveAttribute("aria-current", "page");
+  const persistedHref = await labLink.evaluate((element) => element.href);
+  expect(persistedHref).toContain("scenario=INT-02");
+  expect(persistedHref).toContain("state=normal");
+  expect(persistedHref).toContain("viewport=wide");
+  expect(persistedHref).toContain("theme=dark");
+  expect(persistedHref).toContain("mode=present");
+  expect(persistedHref).toContain("lang=zh-CN");
+
+  await page.locator('[data-lab-mode="inspect"]').click();
+  await expect(page.locator("[data-scenario-lab]")).toHaveAttribute("data-mode", "inspect");
+  await expect(globalHeader).toBeVisible();
+  await expect(navigation).toBeVisible();
+  await page.locator("[data-command-trigger]").click();
+  await expect(page.locator("[data-command-dialog]")).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(page.locator("[data-command-dialog]")).toBeHidden();
+  await expect(page.locator("[data-scenario-lab]")).toHaveAttribute("data-mode", "inspect");
+  await page.keyboard.press("Escape");
+  await expect(page.locator("[data-scenario-lab]")).toHaveAttribute("data-mode", "present");
+  await expect(globalHeader).toBeVisible();
+});
+
+test("mobile Lab drawers cannot compete for focus or global shortcuts", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/scenarios/lab.html?scenario=INT-02&state=normal&viewport=narrow&theme=dark&mode=present&lang=zh-CN");
+  await expect(page.locator("[data-lab-verification]")).toHaveAttribute("data-state", "pass");
+
+  const topbar = page.locator(".lab-topbar");
+  const shell = page.locator("[data-scenario-lab]");
+  const navToggle = page.locator("[data-nav-toggle]");
+  await navToggle.click();
+  await expect(page.locator("[data-mobile-nav]")).toHaveAttribute("data-drawer-state", "open");
+  expect(await topbar.evaluate((element) => element.inert)).toBe(true);
+  expect(await shell.evaluate((element) => element.inert)).toBe(true);
+  await page.keyboard.press("Escape");
+  await expect(page.locator("[data-mobile-nav]")).toHaveAttribute("data-drawer-state", "closed");
+  await expect(shell).toHaveAttribute("data-mode", "present");
+
+  await page.locator('[data-lab-mode="inspect"]').click();
+  await expect(shell).toHaveAttribute("data-mode", "inspect");
+  const globalHeader = page.locator(".global-header");
+  await expect(globalHeader).toBeVisible();
+  expect(await globalHeader.evaluate((element) => element.inert)).toBe(true);
+  const headerGeometry = await globalHeader.evaluate((element) => {
+    const box = element.getBoundingClientRect();
+    return { top: box.top, bottom: box.bottom };
+  });
+  expect(Math.abs(headerGeometry.top)).toBeLessThan(1);
+  expect(headerGeometry.bottom).toBeGreaterThan(0);
+  await page.keyboard.press("Control+K");
+  await expect(page.locator("[data-command-dialog]")).toBeHidden();
+  await page.keyboard.press("Escape");
+  await expect(shell).toHaveAttribute("data-mode", "present");
+  await expect(shell).toHaveAttribute("data-controls-state", "closed");
+  expect(await globalHeader.evaluate((element) => element.inert)).toBe(false);
 });
 
 test("a valid URL mode overrides local storage and a missing mode uses the stored fallback", async ({ page }) => {
@@ -255,7 +351,25 @@ test("narrow controls are a modal left Drawer with containment and exact focus r
   await page.keyboard.press("Tab");
   await expect(close).toBeFocused();
 
-  await page.keyboard.press("Escape");
+  const closingOwnership = await page.evaluate(() => {
+    document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true }));
+    const root = document.querySelector("[data-scenario-lab]");
+    const preview = document.querySelector("[data-lab-preview]");
+    const frame = document.querySelector("[data-lab-frame]");
+    const scrim = document.querySelector("[data-lab-controls-scrim]");
+    return {
+      state: root.dataset.controlsState,
+      previewInert: preview.inert,
+      frameInert: frame.inert,
+      scrimPointerEvents: getComputedStyle(scrim).pointerEvents,
+    };
+  });
+  expect(closingOwnership).toEqual({
+    state: "closing",
+    previewInert: true,
+    frameInert: true,
+    scrimPointerEvents: "auto",
+  });
   await expect(trigger).toBeFocused();
   await expect(root).toHaveAttribute("data-mode", "present");
   expect(await preview.evaluate((element) => element.inert)).toBe(false);
@@ -594,6 +708,13 @@ test("scenario lab snaps exact viewport sizes under normal motion and settles ra
   await expect(shell).toHaveCSS("transition-property", "transform, opacity");
   await expect(shell).toHaveCSS("transition-duration", "0.18s, 0.12s");
   await page.locator('[data-lab-sizing="actual"]').click();
+  await page.waitForTimeout(220);
+  await shell.evaluate((element) => {
+    window.__kinKeyboardLabTransitions = [];
+    element.addEventListener("transitionrun", (event) => {
+      window.__kinKeyboardLabTransitions.push(event.propertyName);
+    });
+  });
 
   const wide = page.locator('[data-lab-viewport="wide"]');
   const narrow = page.locator('[data-lab-viewport="narrow"]');
@@ -606,6 +727,7 @@ test("scenario lab snaps exact viewport sizes under normal motion and settles ra
   await expect(narrow).toHaveAttribute("aria-pressed", "true");
   await expect(wide).toHaveAttribute("aria-pressed", "false");
   await expect.poll(() => frame.evaluate((element) => Math.round(element.getBoundingClientRect().width))).toBe(390);
+  expect(await page.evaluate(() => window.__kinKeyboardLabTransitions.filter((property) => property === "transform"))).toEqual([]);
   await expectVerified(page);
 });
 

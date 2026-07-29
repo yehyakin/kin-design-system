@@ -1,3 +1,260 @@
+const requestedLocale = new URLSearchParams(window.location.search).get("lang");
+const locale = requestedLocale === "zh-CN" ? "zh-CN" : "en";
+const isChinese = locale === "zh-CN";
+document.documentElement.lang = locale;
+
+const STATIC_COPY_ZH = Object.freeze({
+  "Skip to scenario inspection": "跳到场景预览",
+  "KIN Design System home": "KIN 设计系统首页",
+  "Design System": "设计系统",
+  "Primary navigation": "主导航",
+  "Showcase": "总览",
+  "Components": "组件",
+  "Patterns": "布局",
+  "Scenarios": "场景",
+  "Lab": "场景检查台",
+  "Documentation": "文档",
+  "Open navigation": "打开导航",
+  "Search KIN": "搜索 KIN",
+  "Search pages and sources": "搜索页面与规范",
+  "Choose language": "选择语言",
+  "Switch to light mode": "切换为日间模式",
+  "Increase contrast": "增强对比度",
+  "Pages": "页面",
+  "Sources": "规范",
+  "Scenario catalog": "场景目录",
+  "Design contract": "设计规范",
+  "No matching page or source.": "没有匹配的页面或规范。",
+  "Use system theme": "跟随系统主题",
+  "Scenario Lab toolbar": "场景检查台工具栏",
+  "Back to the Scenario Atlas": "返回场景目录",
+  "Scenario Lab": "场景检查台",
+  "Back to scenarios": "返回场景",
+  "Lab mode": "预览模式",
+  "Present": "预览",
+  "Inspect": "检查",
+  "Inspection settings": "预览设置",
+  "Choose a preview state.": "选择预览状态。",
+  "Close inspection controls": "关闭预览设置",
+  "Close": "关闭",
+  "Only deterministic states implemented by the linked reference appear here.": "这里只显示当前预览已经实现且结果稳定的状态。",
+  "Scenario": "场景",
+  "Seventeen scenarios are available to preview.": "当前提供 17 个可预览场景。",
+  "Reference state": "界面状态",
+  "Viewport": "视口",
+  "Wide": "宽屏",
+  "Narrow": "窄屏",
+  "Appearance": "外观",
+  "Light": "日间",
+  "Dark": "夜间",
+  "Light HC": "日间高对比度",
+  "Dark HC": "夜间高对比度",
+  "Loading catalog...": "正在加载场景……",
+  "User job": "要完成的任务",
+  "Entry": "起点",
+  "Completion": "完成条件",
+  "Persistent context": "始终保留",
+  "Known gaps": "仍需补充",
+  "Motion follows the reference and the user's reduced-motion preference; this phase does not claim a separate motion fixture.": "动效由当前预览提供，并遵循系统的“减少动态效果”设置。",
+  "Open this state directly": "在新标签页打开",
+  "Loading scenario": "正在加载场景",
+  "Preparing reference...": "正在准备预览……",
+  "Preview controls": "预览工具",
+  "Preview sizing": "预览尺寸",
+  "Fit": "适应窗口",
+  "Fullscreen": "全屏",
+  "Resolved inspection settings": "当前预览设置",
+  "Theme": "主题",
+  "Preparing preview": "正在准备预览",
+  "Scrollable scenario preview": "可滚动的场景预览",
+  "Interactive reference": "交互预览",
+  "Presentation poster for INT-02 in its normal, wide, dark state; not live verification.": "INT-02 常规、宽屏、夜间状态的静态预览图，不代表当前界面已经通过验证。",
+  "Presentation poster only · INT-02 normal / wide / dark": "仅为展示海报 · INT-02 常规 / 宽屏 / 夜间",
+  "Live reference": "交互预览",
+  "Preparing Scenario Lab": "正在准备场景检查台",
+  "Waiting for a catalog-backed selection.": "请选择一个可预览场景。",
+  "Checking the live same-origin reference": "正在检查本地交互预览",
+  "Scenario reference": "场景预览",
+  "The inspection lab could not load.": "场景检查台无法加载。",
+  "Check the local site build and try again.": "请检查本地站点构建后重试。",
+  "Return to the Scenario Atlas": "返回场景目录",
+  "JavaScript is required to resolve catalog fixtures and verify their state.": "加载交互预览需要启用 JavaScript。"
+});
+
+const LAB_COPY = Object.freeze({
+  en: Object.freeze({
+    checking_reference: "Checking live reference · {selection}",
+    poster_label: "INT-02 presentation poster. ",
+    neutral_label: "Neutral loading stage. ",
+    current_selection: "Current selection: {selection}",
+    checking_same_origin: "Checking the live same-origin reference",
+    state_count_one: "{count} state",
+    state_count_many: "{count} states",
+    source: "{maturity} source",
+    lab_title: "{name} - Scenario Inspection Lab",
+    fit: "Fit / {percentage}%",
+    fit_readonly: "Fit / {percentage}% / preview only",
+    preview_scale: "Preview scale {percentage} percent. Configured viewport remains {width} by {height} pixels.",
+    preview_scale_readonly: "Preview scale {percentage} percent. Touch interaction is paused at reduced scale; choose 100% or open the reference in a new tab.",
+    exit_fullscreen: "Exit fullscreen",
+    fullscreen: "Fullscreen",
+    fullscreen_unavailable: "Fullscreen is unavailable in this browser.",
+    open_direct: "Open {state} directly in a new tab",
+    fixture_unavailable: "Preview unavailable",
+    same_origin_unavailable: "The same-origin reference document could not be inspected.",
+    invalid_selector: "Preview rule unavailable",
+    verified: "Preview ready",
+    fixture_failed: "Preview check failed",
+    selector_failed: "The live reference did not pass its selector check",
+    checking_fixture: "Preparing preview",
+    inspection_unavailable: "Inspection unavailable",
+    live_unavailable: "Live reference unavailable; the loading stage remains visible",
+    reference_unavailable: "The reference could not be inspected: {message}",
+    theme_unavailable: "The theme could not be applied: {message}",
+    catalog_request_failed: "Catalog request returned {status}.",
+    no_fixtures: "The catalog contains no inspectable fixtures.",
+    visible_detail: "{selector} must be visible.",
+    attribute_detail: "{selector} expected {attribute}=\"{expected}\"; received \"{actual}\".",
+    text_detail: "{selector} must include \"{expected}\".",
+    reference_document_unavailable: "The reference document is unavailable.",
+    reference_window_unavailable: "The reference frame Window is unavailable."
+  }),
+  "zh-CN": Object.freeze({
+    checking_reference: "正在检查交互预览 · {selection}",
+    poster_label: "INT-02 展示海报。",
+    neutral_label: "预览正在加载。",
+    current_selection: "当前选择：{selection}",
+    checking_same_origin: "正在检查本地交互预览",
+    state_count_one: "{count} 个状态",
+    state_count_many: "{count} 个状态",
+    source: "{maturity}",
+    lab_title: "{name} · 场景检查台",
+    fit: "适应窗口 / {percentage}%",
+    fit_readonly: "适应窗口 / {percentage}% / 仅预览",
+    preview_scale: "预览缩放为 {percentage}%。设定视口仍为 {width} × {height} 像素。",
+    preview_scale_readonly: "预览缩放为 {percentage}%。触控环境下已暂停缩放页面的交互；请选择 100% 或在新标签页打开。",
+    exit_fullscreen: "退出全屏",
+    fullscreen: "全屏",
+    fullscreen_unavailable: "当前浏览器不支持全屏。",
+    open_direct: "在新标签页独立打开“{state}”",
+    fixture_unavailable: "预览不可用",
+    same_origin_unavailable: "无法读取本地预览页面。",
+    invalid_selector: "预览规则无效",
+    verified: "预览已就绪",
+    fixture_failed: "预览检查失败",
+    selector_failed: "预览状态检查未通过",
+    checking_fixture: "正在准备预览",
+    inspection_unavailable: "暂时无法验证",
+    live_unavailable: "交互预览暂时不可用，当前保留加载界面",
+    reference_unavailable: "无法验证预览：{message}",
+    theme_unavailable: "无法应用主题：{message}",
+    catalog_request_failed: "加载场景目录失败（{status}）。",
+    no_fixtures: "场景目录中暂无可预览样例。",
+    visible_detail: "{selector} 必须可见。",
+    attribute_detail: "{selector} 预期 {attribute}=\"{expected}\"；实际为 \"{actual}\"。",
+    text_detail: "{selector} 必须包含“{expected}”。",
+    reference_document_unavailable: "预览页面不可用。",
+    reference_window_unavailable: "无法访问预览窗口。"
+  })
+});
+
+function formatCopy(key, values = {}) {
+  let value = LAB_COPY[locale][key];
+  for (const [name, replacement] of Object.entries(values)) {
+    value = value.replaceAll(`{${name}}`, String(replacement));
+  }
+  return value;
+}
+
+function replaceNodeText(node, replacement) {
+  const leading = node.nodeValue.match(/^\s*/u)?.[0] ?? "";
+  const trailing = node.nodeValue.match(/\s*$/u)?.[0] ?? "";
+  node.nodeValue = `${leading}${replacement}${trailing}`;
+}
+
+function localeHref(language) {
+  const url = new URL("../scenarios/lab.html", window.location.href);
+  const current = new URL(window.location.href);
+  for (const [key, value] of current.searchParams) {
+    url.searchParams.append(key, value);
+  }
+  url.hash = "";
+  if (language === "zh-CN") url.searchParams.set("lang", "zh-CN");
+  else url.searchParams.delete("lang");
+  return url.pathname + url.search;
+}
+
+function syncGlobalLocaleNavigation() {
+  const languageLinks = document.querySelectorAll("[data-lab-language]");
+  for (const link of languageLinks) {
+    const language = link.dataset.labLanguage;
+    const href = localeHref(language);
+    link.href = href;
+    link.dataset.localeBaseHref = href;
+    if (language === locale) {
+      link.setAttribute("aria-current", "page");
+      link.removeAttribute("hreflang");
+    } else {
+      link.removeAttribute("aria-current");
+      link.setAttribute("hreflang", language);
+    }
+  }
+
+  const routeHrefs = isChinese
+    ? {
+        showcase: "../zh/",
+        components: "../zh/components/",
+        patterns: "../zh/patterns/",
+        scenarios: "./?lang=zh-CN",
+        lab: localeHref("zh-CN"),
+        docs: "../zh/docs/"
+      }
+    : {
+        showcase: "../",
+        components: "../components/",
+        patterns: "../patterns/",
+        scenarios: "./",
+        lab: localeHref("en"),
+        docs: "../docs/"
+      };
+
+  for (const link of document.querySelectorAll("[data-global-nav-key]")) {
+    const href = routeHrefs[link.dataset.globalNavKey];
+    if (href) link.href = href;
+  }
+  for (const link of document.querySelectorAll("[data-lab-command-key]")) {
+    const href = routeHrefs[link.dataset.labCommandKey];
+    if (href) link.href = href;
+  }
+}
+
+function applyStaticLocale() {
+  syncGlobalLocaleNavigation();
+  if (!isChinese) return;
+  const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+  let node = walker.nextNode();
+  while (node) {
+    const value = node.nodeValue.trim();
+    if (STATIC_COPY_ZH[value]) replaceNodeText(node, STATIC_COPY_ZH[value]);
+    node = walker.nextNode();
+  }
+  for (const element of document.querySelectorAll("[aria-label], [alt], [title], [placeholder]")) {
+    for (const attribute of ["aria-label", "alt", "title", "placeholder"]) {
+      if (!element.hasAttribute(attribute)) continue;
+      const value = element.getAttribute(attribute);
+      if (STATIC_COPY_ZH[value]) element.setAttribute(attribute, STATIC_COPY_ZH[value]);
+    }
+  }
+  document.title = "场景检查台 · KIN 设计系统";
+  const description = document.querySelector('meta[name="description"]');
+  if (description) description.content = "在固定的状态、视口和主题下查看 KIN 场景。";
+  for (const link of document.querySelectorAll('a[href="./"]')) {
+    link.href = "./?lang=zh-CN";
+  }
+}
+
+applyStaticLocale();
+
 const lab = document.querySelector("[data-scenario-lab]");
 
 if (!lab) {
@@ -6,6 +263,7 @@ if (!lab) {
 
 const elements = {
   topbar: document.querySelector(".lab-topbar"),
+  globalHeader: document.querySelector(".global-header"),
   modeGroup: document.querySelector("[data-lab-mode-group]"),
   controlsTrigger: document.querySelector("[data-lab-controls-trigger]"),
   controls: document.querySelector("[data-lab-controls]"),
@@ -53,6 +311,7 @@ const elements = {
 };
 
 const controlsOverlay = matchMedia("(max-width: 780px)");
+const coarsePointer = matchMedia("(any-pointer: coarse)");
 const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
 const controlsExitDuration = 180;
 const controlsReducedExitDuration = 80;
@@ -60,6 +319,7 @@ const modeStorageKey = "kin-showcase-lab-mode";
 const validModes = new Set(["present", "inspect"]);
 
 let catalog;
+let localeCatalog = null;
 let scenarios = [];
 let viewports = [];
 let themes = [];
@@ -67,7 +327,10 @@ let current = null;
 let currentMode = resolveMode();
 let controlsCloseTimer = null;
 let controlsReturnTarget = elements.controlsTrigger;
-let previewSizing = "fit";
+let restoreControlsFocusOnClose = false;
+let previewSizing = coarsePointer.matches ? "actual" : "fit";
+let previewSizingUserSet = false;
+let previewInteractionLocked = false;
 let previewResizeFrame = null;
 let frameObserver = null;
 let frameResizeVerification = null;
@@ -127,15 +390,16 @@ function syncControlsMode() {
 
 function syncInteractionOwnership() {
   const controlsOpen = controlsAreOpen();
-  const modal = controlsOverlay.matches && controlsOpen;
+  const modal = controlsOverlay.matches && ["open", "closing"].includes(controlsState());
   elements.controls.setAttribute("aria-hidden", String(!controlsOpen));
   elements.controls.inert = !controlsOpen;
   elements.preview.inert = modal;
-  elements.frame.inert = modal || !frameVerified;
+  elements.frame.inert = modal || !frameVerified || previewInteractionLocked;
   elements.frame.setAttribute("aria-hidden", String(!frameVerified));
   elements.framePlaceholder.inert = frameVerified;
   elements.framePlaceholder.setAttribute("aria-hidden", String(frameVerified));
   elements.topbar.inert = modal;
+  if (elements.globalHeader) elements.globalHeader.inert = modal;
   elements.skipLink.inert = modal;
   document.body.classList.toggle("lab-controls-modal-open", modal);
 }
@@ -158,10 +422,11 @@ function updateFramePlaceholder(status) {
   elements.frameNeutral.hidden = usesGovernedPoster;
   elements.placeholderTitle.textContent = scenario.id + " / " + scenario.canonical_name;
   elements.placeholderState.textContent = selection;
-  elements.frameLoadingLabel.textContent = status || "Checking live reference · " + selection;
+  elements.frameLoadingLabel.textContent = status || formatCopy("checking_reference", { selection });
   elements.framePlaceholder.setAttribute(
     "aria-label",
-    (usesGovernedPoster ? "INT-02 presentation poster. " : "Neutral loading stage. ") + "Current selection: " + selection
+    (usesGovernedPoster ? formatCopy("poster_label") : formatCopy("neutral_label"))
+      + formatCopy("current_selection", { selection })
   );
 }
 
@@ -195,6 +460,11 @@ function finishControlsClose() {
   lab.dataset.controlsState = "closed";
   syncModeControls();
   syncInteractionOwnership();
+  if (restoreControlsFocusOnClose) {
+    restoreControlsFocusOnClose = false;
+    const fallback = controlsReturnTarget?.isConnected ? controlsReturnTarget : elements.controlsTrigger;
+    repairFocus(fallback, false);
+  }
 }
 
 function setControls(open, { moveFocus = true, returnTarget } = {}) {
@@ -203,13 +473,10 @@ function setControls(open, { moveFocus = true, returnTarget } = {}) {
   if (open && returnTarget) controlsReturnTarget = returnTarget;
 
   if (open) {
-    if (controlsState() === "closed" && !controlsOverlay.matches) {
-      lab.dataset.controlsTrack = "restored";
-      void lab.offsetWidth;
-    }
+    restoreControlsFocusOnClose = false;
     lab.dataset.controlsState = "open";
-    delete lab.dataset.controlsTrack;
   } else if (controlsState() !== "closed") {
+    restoreControlsFocusOnClose ||= moveFocus;
     lab.dataset.controlsState = "closing";
     const duration = reducedMotion.matches ? controlsReducedExitDuration : controlsExitDuration;
     controlsCloseTimer = window.setTimeout(finishControlsClose, duration);
@@ -222,6 +489,7 @@ function setControls(open, { moveFocus = true, returnTarget } = {}) {
   if (!moveFocus) return;
   const fallback = controlsReturnTarget?.isConnected ? controlsReturnTarget : elements.controlsTrigger;
   const target = open && controlsOverlay.matches ? elements.controlsClose : fallback;
+  if (!open && controlsOverlay.matches && controlsState() === "closing") return;
   repairFocus(target, open);
 }
 
@@ -230,6 +498,7 @@ function replaceModeOnly(mode) {
   url.hash = "";
   url.searchParams.set("mode", mode);
   history.replaceState({ scenarioLab: true, mode }, "", url.pathname + url.search);
+  syncGlobalLocaleNavigation();
 }
 
 function setMode(mode, { historyMode = null, moveFocus, persist = true, returnTarget } = {}) {
@@ -251,6 +520,10 @@ function setMode(mode, { historyMode = null, moveFocus, persist = true, returnTa
     if (current) writeUrl(historyMode);
     else replaceModeOnly(mode);
   }
+  if (!previewSizingUserSet) {
+    previewSizing = coarsePointer.matches ? "actual" : "fit";
+  }
+  if (current) requestAnimationFrame(() => renderPreviewSizing({ announce: false }));
 }
 
 function initializeControls() {
@@ -284,6 +557,50 @@ function option(value, label) {
   return item;
 }
 
+function localizeCatalogData(sourceCatalog, sourceLocaleCatalog) {
+  if (!isChinese || !sourceLocaleCatalog) return sourceCatalog;
+  return {
+    ...sourceCatalog,
+    inspection_defaults: {
+      ...sourceCatalog.inspection_defaults,
+      viewports: sourceCatalog.inspection_defaults.viewports.map((viewport) => ({
+        ...viewport,
+        label: sourceLocaleCatalog.viewports[viewport.id] ?? viewport.label
+      })),
+      themes: sourceCatalog.inspection_defaults.themes.map((theme) => ({
+        ...theme,
+        label: sourceLocaleCatalog.themes[theme.id] ?? theme.label
+      }))
+    },
+    scenarios: sourceCatalog.scenarios.map((scenario) => {
+      const translated = sourceLocaleCatalog.scenarios[scenario.id];
+      if (!translated) return scenario;
+      return {
+        ...scenario,
+        canonical_name: translated.name ?? scenario.canonical_name,
+        user_job: translated.job ?? scenario.user_job,
+        entry: translated.entry ?? scenario.entry,
+        completion: translated.completion ?? scenario.completion,
+        composition: {
+          ...scenario.composition,
+          persistent_context: translated.context ?? scenario.composition.persistent_context
+        },
+        known_gaps: translated.gaps ?? scenario.known_gaps,
+        state_controls: scenario.state_controls.map((control) => ({
+          ...control,
+          label: translated.states?.[control.state] ?? control.label,
+          assertion: control.assertion.kind === "text"
+            ? {
+                ...control.assertion,
+                value: sourceLocaleCatalog.assertion_values[control.assertion.value] ?? control.assertion.value
+              }
+            : control.assertion
+        }))
+      };
+    })
+  };
+}
+
 function selectedScenario() {
   return scenarios.find((scenario) => scenario.id === current.scenario) || scenarios[0];
 }
@@ -302,7 +619,9 @@ function selectedTheme() {
 }
 
 function referenceUrl(referencePath) {
-  return new URL("../" + referencePath, window.location.href);
+  const url = new URL("../" + referencePath, window.location.href);
+  if (isChinese) url.searchParams.set("lang", "zh-CN");
+  return url;
 }
 
 function currentFrameUrl() {
@@ -317,7 +636,7 @@ function currentFrameUrl() {
 
 function beginInspection() {
   inspectionRevision += 1;
-  setFrameVerified(false, "Checking the live same-origin reference");
+  setFrameVerified(false, formatCopy("checking_same_origin"));
   verificationObserver?.disconnect();
   verificationObserver = null;
   if (verificationTimer) {
@@ -365,6 +684,7 @@ function serializedUrl() {
   url.searchParams.set("viewport", current.viewport);
   url.searchParams.set("theme", current.theme);
   url.searchParams.set("mode", currentMode);
+  if (isChinese) url.searchParams.set("lang", "zh-CN");
   return url.pathname + url.search;
 }
 
@@ -374,6 +694,7 @@ function writeUrl(mode = "replace") {
   const currentUrl = window.location.pathname + window.location.search;
   if (mode === "push" && !window.location.hash && nextUrl === currentUrl) return;
   history[mode + "State"]({ scenarioLab: true, mode: currentMode }, "", nextUrl);
+  syncGlobalLocaleNavigation();
 }
 
 function syncPressedControls() {
@@ -395,7 +716,7 @@ function renderStateOptions(scenario) {
   }
   elements.state.value = current.state;
   const count = scenario.state_controls.length;
-  elements.stateCount.textContent = count + (count === 1 ? " state" : " states");
+  elements.stateCount.textContent = formatCopy(count === 1 ? "state_count_one" : "state_count_many", { count });
 }
 
 function renderScenarioDetails() {
@@ -404,7 +725,8 @@ function renderScenarioDetails() {
   elements.scenarioId.textContent = scenario.id + " / " + scenario.group;
   elements.scenarioTitle.textContent = scenario.canonical_name;
   elements.sourceMaturity.className = "source-status " + maturity;
-  elements.sourceMaturity.textContent = maturity.charAt(0).toUpperCase() + maturity.slice(1) + " source";
+  const maturityLabel = localeCatalog?.maturity?.[maturity] ?? (maturity.charAt(0).toUpperCase() + maturity.slice(1));
+  elements.sourceMaturity.textContent = formatCopy("source", { maturity: maturityLabel });
   elements.userJob.textContent = scenario.user_job;
   elements.entry.textContent = scenario.entry;
   elements.completion.textContent = scenario.completion;
@@ -415,10 +737,12 @@ function renderScenarioDetails() {
     item.textContent = gap;
     elements.gaps.append(item);
   }
-  elements.previewKicker.textContent = scenario.id + " / " + scenario.group + " / " + maturity + " source";
+  const groupLabel = localeCatalog?.groups?.[scenario.group] ?? scenario.group;
+  elements.scenarioId.textContent = scenario.id + " / " + groupLabel;
+  elements.previewKicker.textContent = scenario.id + " / " + groupLabel + " / " + formatCopy("source", { maturity: maturityLabel });
   elements.previewTitle.textContent = scenario.canonical_name;
-  elements.frame.title = scenario.canonical_name + " reference";
-  document.title = scenario.canonical_name + " - Scenario Inspection Lab";
+  elements.frame.title = isChinese ? `${scenario.canonical_name}预览` : `${scenario.canonical_name} reference`;
+  document.title = formatCopy("lab_title", { name: scenario.canonical_name });
   updateFramePlaceholder();
 }
 
@@ -451,17 +775,25 @@ function renderPreviewSizing({ announce = true } = {}) {
   const roundedScale = Number(nextScale.toFixed(6));
   const percentage = Math.round(roundedScale * 100);
   const previousAnnouncement = elements.scaleStatus.textContent;
+  previewInteractionLocked = coarsePointer.matches && roundedScale < 1;
 
   elements.frameShell.style.transform = "scale(" + roundedScale + ")";
   elements.frameSizing.style.width = frameWidth * roundedScale + "px";
   elements.frameSizing.style.height = frameHeight * roundedScale + "px";
   elements.frameSizing.dataset.sizing = previewSizing;
   elements.frameSizing.dataset.scale = String(roundedScale);
-  elements.scaleReadout.textContent = previewSizing === "fit" ? "Fit / " + percentage + "%" : "100%";
+  elements.frameShell.dataset.interactionLocked = String(previewInteractionLocked);
+  elements.scaleReadout.textContent = previewSizing === "fit"
+    ? formatCopy(previewInteractionLocked ? "fit_readonly" : "fit", { percentage })
+    : "100%";
   syncSizingControls();
+  syncInteractionOwnership();
 
-  const announcement = "Preview scale " + percentage + " percent. Configured viewport remains "
-    + viewport.width + " by " + viewport.height + " pixels.";
+  const announcement = formatCopy(previewInteractionLocked ? "preview_scale_readonly" : "preview_scale", {
+    percentage,
+    width: viewport.width,
+    height: viewport.height
+  });
   if (announce && announcement !== previousAnnouncement) elements.scaleStatus.textContent = announcement;
 
   if (lab.dataset.previewReady !== "true") {
@@ -471,8 +803,9 @@ function renderPreviewSizing({ announce = true } = {}) {
   }
 }
 
-function choosePreviewSizing(mode) {
+function choosePreviewSizing(mode, { user = true } = {}) {
   if (!["fit", "actual"].includes(mode) || mode === previewSizing) return;
+  if (user) previewSizingUserSet = true;
   previewSizing = mode;
   renderPreviewSizing();
 }
@@ -505,12 +838,12 @@ function syncFullscreenControl() {
   const active = document.fullscreenElement === elements.preview;
   elements.fullscreen.disabled = !available;
   elements.fullscreen.setAttribute("aria-pressed", String(active));
-  elements.fullscreen.textContent = active ? "Exit fullscreen" : "Fullscreen";
+  elements.fullscreen.textContent = formatCopy(active ? "exit_fullscreen" : "fullscreen");
   elements.preview.dataset.fullscreen = String(active);
   if (available) {
     elements.fullscreen.removeAttribute("title");
   } else {
-    elements.fullscreen.title = "Fullscreen is unavailable in this browser.";
+    elements.fullscreen.title = formatCopy("fullscreen_unavailable");
   }
 }
 
@@ -532,7 +865,7 @@ async function toggleFullscreen() {
 function renderDirectLink() {
   const control = selectedControl();
   elements.directLink.href = referenceUrl(control.reference_path).href;
-  elements.directLink.setAttribute("aria-label", "Open " + control.label + " directly in a new tab");
+  elements.directLink.setAttribute("aria-label", formatCopy("open_direct", { state: control.label }));
   elements.directLink.hidden = false;
 }
 
@@ -554,7 +887,7 @@ function syncEmbeddedAppearanceControls(frameDocument, theme) {
 
 function applyAppearance() {
   const frameDocument = elements.frame.contentDocument;
-  if (!frameDocument) throw new Error("The reference document is unavailable.");
+  if (!frameDocument) throw new Error(formatCopy("reference_document_unavailable"));
   const root = frameDocument.documentElement;
   const theme = selectedTheme();
 
@@ -601,8 +934,8 @@ function verifyCurrentState(revision = inspectionRevision, { reportFailure = tru
   const frameDocument = elements.frame.contentDocument;
   const frameWindow = elements.frame.contentWindow;
   if (!frameDocument || !frameWindow) {
-    setVerification("fail", "Fixture unavailable", "The same-origin reference document could not be inspected.");
-    setFrameVerified(false, "The live reference could not be inspected");
+    setVerification("fail", formatCopy("fixture_unavailable"), formatCopy("same_origin_unavailable"));
+    setFrameVerified(false, formatCopy("same_origin_unavailable"));
     return false;
   }
 
@@ -610,7 +943,7 @@ function verifyCurrentState(revision = inspectionRevision, { reportFailure = tru
   try {
     target = frameDocument.querySelector(assertion.selector);
   } catch (error) {
-    if (reportFailure) setVerification("fail", "Invalid fixture selector", error.message);
+    if (reportFailure) setVerification("fail", formatCopy("invalid_selector"), error.message);
     return false;
   }
 
@@ -618,26 +951,31 @@ function verifyCurrentState(revision = inspectionRevision, { reportFailure = tru
   let detail = "";
   if (assertion.kind === "visible") {
     passed = visibleInFrame(target, frameWindow);
-    detail = assertion.selector + " must be visible.";
+    detail = formatCopy("visible_detail", { selector: assertion.selector });
   } else if (assertion.kind === "attribute") {
     const actual = target?.getAttribute(assertion.attribute);
     passed = actual === assertion.value;
-    detail = assertion.selector + " expected " + assertion.attribute + "=\"" + assertion.value + "\"; received \"" + actual + "\".";
+    detail = formatCopy("attribute_detail", {
+      selector: assertion.selector,
+      attribute: assertion.attribute,
+      expected: assertion.value,
+      actual
+    });
   } else if (assertion.kind === "text") {
     const actual = target?.textContent?.replace(/\s+/g, " ").trim() || "";
     passed = actual.includes(assertion.value);
-    detail = assertion.selector + " must include \"" + assertion.value + "\".";
+    detail = formatCopy("text_detail", { selector: assertion.selector, expected: assertion.value });
   }
 
   if (passed) {
     clearError();
-    setVerification("pass", "Verified local fixture", detail);
+    setVerification("pass", formatCopy("verified"), detail);
     lab.dataset.loadState = "ready";
     setFrameVerified(true);
   } else if (reportFailure) {
-    setVerification("fail", "Fixture check failed", detail);
+    setVerification("fail", formatCopy("fixture_failed"), detail);
     lab.dataset.loadState = "mismatch";
-    setFrameVerified(false, "The live reference did not pass its selector check");
+    setFrameVerified(false, formatCopy("selector_failed"));
   }
   return passed;
 }
@@ -697,13 +1035,13 @@ function scheduleVerification(revision = inspectionRevision) {
 function inspectReference(revision = inspectionRevision) {
   if (revision !== inspectionRevision) return;
   try {
-    if (!elements.frame.contentDocument) throw new Error("The reference document is unavailable.");
+    if (!elements.frame.contentDocument) throw new Error(formatCopy("reference_document_unavailable"));
     if (!frameMatchesCurrentReference()) return;
     clearError();
     applyAppearance();
     scheduleVerification(revision);
   } catch (error) {
-    if (revision === inspectionRevision) showError("The reference could not be inspected: " + error.message);
+    if (revision === inspectionRevision) showError(formatCopy("reference_unavailable", { message: error.message }));
   }
 }
 
@@ -714,9 +1052,9 @@ function loadReference() {
   clearError();
   elements.frame.dataset.referencePath = control.reference_path;
   renderDirectLink();
-  setVerification("loading", "Checking fixture", control.label);
+  setVerification("loading", formatCopy("checking_fixture"), control.label);
   lab.dataset.loadState = "loading";
-  setFrameVerified(false, "Checking live reference · " + control.label);
+  setFrameVerified(false, formatCopy("checking_reference", { selection: control.label }));
 
   const currentUrl = currentFrameUrl();
   if (currentUrl.href === nextUrl.href) {
@@ -736,7 +1074,7 @@ function loadReference() {
   }
   try {
     const frameWindow = elements.frame.contentWindow;
-    if (!frameWindow) throw new Error("The reference frame Window is unavailable.");
+    if (!frameWindow) throw new Error(formatCopy("reference_window_unavailable"));
     // Scenario controls own the top-level history entry. Replacing the nested
     // document keeps iframe navigations from adding duplicate Back/Forward steps.
     frameWindow.location.replace(nextUrl.href);
@@ -784,7 +1122,7 @@ function chooseViewport(id, historyMode = "push") {
   renderViewport();
   syncPressedControls();
   writeUrl(historyMode);
-  setVerification("loading", "Checking fixture", selectedControl().label);
+  setVerification("loading", formatCopy("checking_fixture"), selectedControl().label);
   scheduleVerification(revision);
 }
 
@@ -796,14 +1134,14 @@ function chooseTheme(id, historyMode = "push") {
   syncPressedControls();
   updateFramePlaceholder();
   writeUrl(historyMode);
-  setVerification("loading", "Checking fixture", selectedControl().label);
+  setVerification("loading", formatCopy("checking_fixture"), selectedControl().label);
   try {
     if (frameMatchesCurrentReference()) {
       applyAppearance();
       scheduleVerification(revision);
     }
   } catch (error) {
-    if (revision === inspectionRevision) showError("The theme could not be applied: " + error.message);
+    if (revision === inspectionRevision) showError(formatCopy("theme_unavailable", { message: error.message }));
   }
 }
 
@@ -820,7 +1158,9 @@ function bindArrowNavigation(group, selector) {
     else if (event.key === "ArrowLeft" || event.key === "ArrowUp") next = (index - 1 + buttons.length) % buttons.length;
     else next = (index + 1) % buttons.length;
     buttons[next].focus();
+    lab.dataset.sizingInput = "keyboard";
     buttons[next].click();
+    requestAnimationFrame(() => delete lab.dataset.sizingInput);
   });
 }
 
@@ -829,8 +1169,8 @@ function showError(message) {
   lab.dataset.loadState = "error";
   elements.error.hidden = false;
   elements.errorMessage.textContent = message;
-  setVerification("fail", "Inspection unavailable", message);
-  setFrameVerified(false, "Live reference unavailable; the loading stage remains visible");
+  setVerification("fail", formatCopy("inspection_unavailable"), message);
+  setFrameVerified(false, formatCopy("live_unavailable"));
 }
 
 function clearError() {
@@ -898,17 +1238,27 @@ elements.controls.addEventListener("keydown", (event) => {
 });
 
 document.addEventListener("keydown", (event) => {
-  if (event.key === "Escape" && !document.fullscreenElement && controlsAreOpen()) {
+  const commandOpen = document.querySelector("[data-command-dialog]")?.open;
+  const languageOpen = document.querySelector("[data-language-menu]")?.dataset.state !== "closed";
+  if (event.key === "Escape" && !commandOpen && !languageOpen && !document.fullscreenElement && controlsAreOpen()) {
     setMode("present", { historyMode: "replace", moveFocus: true, returnTarget: elements.controlsTrigger });
   }
 });
 
 controlsOverlay.addEventListener("change", (event) => {
+  if (!previewSizingUserSet) {
+    previewSizing = coarsePointer.matches ? "actual" : "fit";
+  }
   setMode(currentMode, {
     moveFocus: event.matches && currentMode === "inspect",
     persist: false,
     returnTarget: elements.controlsTrigger
   });
+});
+
+coarsePointer.addEventListener("change", () => {
+  if (!previewSizingUserSet) previewSizing = coarsePointer.matches ? "actual" : "fit";
+  renderPreviewSizing({ announce: false });
 });
 
 reducedMotion.addEventListener("change", () => {
@@ -930,7 +1280,7 @@ elements.themeGroup.addEventListener("click", (event) => {
 
 elements.previewActions.addEventListener("click", (event) => {
   const sizing = event.target.closest("[data-lab-sizing]");
-  if (sizing) choosePreviewSizing(sizing.dataset.labSizing);
+  if (sizing) choosePreviewSizing(sizing.dataset.labSizing, { user: true });
 });
 
 elements.fullscreen.addEventListener("click", toggleFullscreen);
@@ -976,13 +1326,25 @@ window.addEventListener("popstate", restoreFromLocation);
 
 async function initialize() {
   try {
-    const response = await fetch(new URL("catalog.json", window.location.href), { cache: "no-store" });
-    if (!response.ok) throw new Error("Catalog request returned " + response.status + ".");
-    catalog = await response.json();
+    const catalogUrl = new URL("catalog.json", window.location.href);
+    const localeUrl = new URL("locale.zh-CN.json", window.location.href);
+    const [response, localeResponse] = await Promise.all([
+      fetch(catalogUrl, { cache: "no-store" }),
+      isChinese ? fetch(localeUrl, { cache: "no-store" }) : Promise.resolve(null)
+    ]);
+    if (!response.ok) throw new Error(formatCopy("catalog_request_failed", { status: response.status }));
+    if (isChinese && !localeResponse?.ok) {
+      const fallbackUrl = new URL(window.location.href);
+      fallbackUrl.searchParams.delete("lang");
+      window.location.replace(fallbackUrl);
+      return;
+    }
+    localeCatalog = isChinese ? await localeResponse.json() : null;
+    catalog = localizeCatalogData(await response.json(), localeCatalog);
     scenarios = catalog.scenarios.filter((scenario) => scenario.presentation_status === "showcased" && scenario.state_controls.length > 0);
     viewports = catalog.inspection_defaults.viewports;
     themes = catalog.inspection_defaults.themes;
-    if (scenarios.length === 0 || viewports.length === 0 || themes.length === 0) throw new Error("The catalog contains no inspectable fixtures.");
+    if (scenarios.length === 0 || viewports.length === 0 || themes.length === 0) throw new Error(formatCopy("no_fixtures"));
 
     elements.scenario.replaceChildren();
     for (const scenario of scenarios) {

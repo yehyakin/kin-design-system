@@ -159,6 +159,32 @@ for (const pattern of ["access", "onboarding", "settings", "system", "search", "
   });
 }
 
+for (const [pattern, headingKey, englishHeading, chineseHeading] of [
+  ["access", "access.contextTitle", "Verify your identity and continue the current task", "验证身份后继续"],
+  ["onboarding", "onboarding.title", "Set up the workspace", "设置工作区"],
+  ["scheduling", "schedule.title", "Publication and review schedule", "发布与复核排期"],
+  ["search", "search.title", "Find records, documents, and tasks", "查找记录、文档和任务"],
+  ["settings", "settings.title", "Settings", "设置"],
+  ["support", "support.title", "Help and support", "帮助与支持"],
+  ["system", "system.title", "System and recovery", "系统与恢复"],
+]) {
+  test(`${pattern} returns to canonical Chinese copy after an English session`, async ({ page }) => {
+    await seedPreferences(page, "light", "en");
+    await page.goto(`/examples/page-patterns/${pattern}.html?lang=en`);
+
+    const heading = page.locator(`[data-i18n="${headingKey}"]`).first();
+    await expect(page.locator("html")).toHaveAttribute("lang", "en");
+    await expect(heading).toHaveText(englishHeading);
+
+    await page.locator("[data-language-trigger]").click();
+    await page.locator('[data-language-option="zh-CN"]').click();
+
+    await expect(page.locator("html")).toHaveAttribute("lang", "zh-CN");
+    await expect(heading).toHaveText(chineseHeading);
+    await expect(page.locator("[data-language-trigger]")).toHaveAccessibleName("切换语言");
+  });
+}
+
 test("access flow covers sign-in, recovery, and contextual reauthentication", async ({ page }, testInfo) => {
   await seedPreferences(page, "dark");
   await page.setViewportSize({ width: 1440, height: 900 });
@@ -180,18 +206,18 @@ test("access flow covers sign-in, recovery, and contextual reauthentication", as
   const provider = page.locator(".provider-action");
   await expect(provider).toBeDisabled();
   await expect(provider).toHaveAttribute("aria-describedby", "sso-unavailable");
-  await expect(page.locator("#sso-unavailable")).toContainText("未配置组织 SSO");
+  await expect(page.locator("#sso-unavailable")).toContainText("未接入组织 SSO");
 
   const fixtureSelect = page.locator("[data-auth-fixture-select]");
   const fixtureStatus = page.locator("[data-auth-fixture-status]");
   for (const [state, message] of [
-    ["throttled", "何时可以安全重试"],
-    ["locked", "管理员或恢复路径"],
+    ["throttled", "稍后重试"],
+    ["locked", "管理员或使用账号恢复入口"],
     ["provider-unavailable", "组织 SSO 暂不可用"],
-    ["offline", "保留输入"],
-    ["expired", "重新发起验证"],
-    ["verified", "未创建真实会话"],
-    ["session-expired", "保留当前工作"],
+    ["offline", "输入会保留"],
+    ["expired", "重新开始验证"],
+    ["verified", "不会创建真实会话"],
+    ["session-expired", "当前工作会保留"],
   ]) {
     await fixtureSelect.selectOption(state);
     await expect(page.locator("[data-auth-fixture]")).toHaveAttribute("data-fixture-state", state);
@@ -235,16 +261,16 @@ test("access flow covers sign-in, recovery, and contextual reauthentication", as
   await password.fill("reference-only");
   await expect(page.locator("#sign-in-email-error")).toBeHidden();
   await page.locator("[data-sign-in-form]").getByRole("button", { name: "继续" }).click();
-  await expect(page.locator("[data-sign-in-status]")).toContainText("未连接身份服务");
+  await expect(page.locator("[data-sign-in-status]")).toContainText("尚未接入身份服务");
 
   await page.locator("[data-recovery-open]").click();
   await expect(page.locator("[data-recovery-view]")).toBeVisible();
-  await page.locator("[data-recovery-form]").getByRole("button", { name: "发送恢复说明" }).click();
+  await page.locator("[data-recovery-form]").getByRole("button", { name: "发送恢复指引" }).click();
   await expect(page.locator("#recovery-email")).toHaveAttribute("aria-invalid", "true");
   await expect(page.locator("#recovery-email-error")).toBeVisible();
   await expect(page.locator("[data-recovery-status]")).toBeFocused();
   await page.locator("#recovery-email").fill("operator@example.com");
-  await page.locator("[data-recovery-form]").getByRole("button", { name: "发送恢复说明" }).click();
+  await page.locator("[data-recovery-form]").getByRole("button", { name: "发送恢复指引" }).click();
   await expect(page.locator("[data-recovery-status]")).toContainText("如果该账号存在");
   await page.locator("[data-recovery-back]").click();
 
@@ -367,7 +393,7 @@ test("system states preserve context and expose distinct recovery actions", asyn
   await expect(page.locator("[data-system-code]")).toHaveText("409");
   await expect(page.locator("[data-system-title]")).toContainText("发生变化");
   await page.locator("[data-system-primary]").click();
-  await expect(page.locator("[data-system-status]")).toContainText("实际产品");
+  await expect(page.locator("[data-system-status]")).toContainText("不会更改真实数据");
   await page.locator('[data-system-state="offline"]').click();
   await expect(page.locator("[data-system-code]")).toHaveText("OFFLINE");
   await assertNoHorizontalOverflow(page);
@@ -444,6 +470,9 @@ test("search preserves URL state and separates partial empty error and selected 
   await page.locator('[data-language-option="en"]').click();
   await expect(page.getByRole("heading", { name: "Find records, documents, and tasks", level: 1 })).toBeVisible();
   await expect(page.locator("[data-search-detail-title]")).toHaveText("Workspace role review");
+  await page.locator("[data-language-trigger]").click();
+  await page.locator('[data-language-option="zh-CN"]').click();
+  await expect(page.locator("[data-search-detail-title]")).toHaveText("工作区角色复核");
 
   await page.setViewportSize({ width: 390, height: 844 });
   await page.reload();
@@ -476,7 +505,7 @@ test("help and support separates guidance requests tickets and sourced status", 
   await page.locator("#affected-reference").fill("TASK-204");
   await page.locator("#request-description").fill("导出结果缺少两条记录，刷新和重新筛选后仍然缺失。");
   await page.locator('[name="safe-content"]').check();
-  await page.locator("[data-support-request-form]").getByRole("button", { name: "提交参考请求" }).click();
+  await page.locator("[data-support-request-form]").getByRole("button", { name: "记录示例请求" }).click();
   await expect(page.locator("[data-support-request-status]")).toContainText("未发送");
   await expect(page.locator("[data-support-request-result]")).toContainText("REF-SUP-2407");
 
@@ -489,7 +518,7 @@ test("help and support separates guidance requests tickets and sourced status", 
   await page.locator('[data-support-nav="status"]').click();
   await expect(page.locator("[data-support-status-feedback]")).toBeEmpty();
   await page.locator("[data-support-status-source]").click();
-  await expect(page.locator("[data-support-status-feedback]")).toContainText("没有配置外部状态服务");
+  await expect(page.locator("[data-support-status-feedback]")).toContainText("未连接外部状态服务");
   await page.locator("[data-language-trigger]").click();
   await page.locator('[data-language-option="en"]').click();
   await expect(page.getByRole("heading", { name: "Service status and source", level: 2 })).toBeVisible();
@@ -519,7 +548,7 @@ test("scheduling preserves period, selection, Sidebar, Sidecar, agenda, and resp
   const sidecar = page.locator("[data-schedule-sidecar]");
   const conflict = page.locator('[data-event-id="SCH-103"]');
   await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
-  await expect(page.getByRole("heading", { name: "发布与审核排期", level: 1 })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "发布与复核排期", level: 1 })).toBeVisible();
   await expect(page.locator("[data-schedule-period]")).toContainText("2026");
 
   await page.locator("[data-theme-switch]").click();
@@ -540,7 +569,7 @@ test("scheduling preserves period, selection, Sidebar, Sidecar, agenda, and resp
   await expect(shell).toHaveAttribute("data-sidecar-open", "true");
   await expect(sidecar).toHaveAttribute("role", "region");
   await expect(sidecar).not.toHaveAttribute("aria-modal", "true");
-  await expect(page.locator("[data-sidecar-title]")).toHaveText("主图审核");
+  await expect(page.locator("[data-sidecar-title]")).toHaveText("主图复核");
   await expect(page.locator("[data-sidecar-title]")).toBeFocused();
   await expect(primary).not.toHaveAttribute("inert", "");
   await expect.poll(() => primary.evaluate((element) => element.getBoundingClientRect().width)).toBeLessThan(collapsedWidth - 250);

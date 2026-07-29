@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#08090a" />
-    <title>KIN State Reference</title>
+    <title>KIN 组件状态示例</title>
     <script>
       (() => {
         const preference = localStorage.getItem("kin-reference-theme") || "system";
@@ -23,12 +23,12 @@
     <script type="module" src="../shared/preference-controls.js"></script>
   </head>
   <body class="states-page">
-    <a class="skip-link" href="#state-reference">跳到状态基准</a>
+    <a class="skip-link" href="#state-reference">跳到状态示例</a>
 
     <header class="reference-header">
       <div>
-        <p>KIN reference</p>
-        <h1>组件状态基准</h1>
+        <p>KIN 示例</p>
+        <h1>组件状态示例</h1>
       </div>
       <div class="reference-actions">
         <button type="button" data-command-open>打开命令菜单 <kbd>⌘ K</kbd></button>
@@ -44,9 +44,9 @@
           <span>4 种状态</span>
         </header>
 
-        <div class="reference-table" role="grid" aria-label="对象状态示例">
+        <div class="reference-table" role="grid" aria-label="记录状态示例">
           <div class="reference-row reference-row-header" role="row">
-            <span role="columnheader">状态</span><span role="columnheader">对象</span><span role="columnheader">来源</span><span role="columnheader">更新时间</span>
+            <span role="columnheader">状态</span><span role="columnheader">记录</span><span role="columnheader">来源</span><span role="columnheader">更新时间</span>
           </div>
           <div class="reference-row" role="row" tabindex="0">
             <span role="gridcell"><i class="status-dot positive"></i>正常</span><strong role="gridcell">North Relay</strong><span role="gridcell">7 个来源</span><time role="gridcell" datetime="2026-07-12T14:40:00+08:00">3 分钟前</time>
@@ -55,7 +55,7 @@
             <span role="gridcell"><i class="status-dot warning"></i>观察</span><strong role="gridcell">Harbor Link</strong><span role="gridcell">5 个来源</span><time role="gridcell" datetime="2026-07-12T14:28:00+08:00">15 分钟前</time>
           </div>
           <div class="reference-row is-stale" role="row" tabindex="0">
-            <span role="gridcell"><i class="status-dot neutral"></i>数据陈旧</span><strong role="gridcell">Delta Route</strong><span role="gridcell">上游无响应</span><time role="gridcell" datetime="2026-07-10T09:15:00+08:00">2 天前</time>
+            <span role="gridcell"><i class="status-dot neutral"></i>数据已过期</span><strong role="gridcell">Delta Route</strong><span role="gridcell">上游无响应</span><time role="gridcell" datetime="2026-07-10T09:15:00+08:00">2 天前</time>
           </div>
           <div class="reference-row is-error" role="row" tabindex="0">
             <span role="gridcell"><i class="status-dot negative"></i>检测失败</span><strong role="gridcell">East Gate</strong><span role="gridcell">保留上次结果</span><span role="gridcell">重试</span>
@@ -81,7 +81,7 @@
             <small id="email-error" role="alert">请输入完整的邮箱地址，例如 alerts@example.com。</small>
           </label>
           <label>
-            <span>公开对象 ID</span>
+            <span>公开记录 ID</span>
             <input name="public-id" value="PRX-1027" readonly />
             <small>只读值可以选择和复制。</small>
           </label>
@@ -99,17 +99,17 @@
 
       <section aria-labelledby="system-title">
         <header class="reference-section-heading">
-          <div><h2 id="system-title">系统状态</h2><p>空、错和陈旧状态提供下一步，不填充装饰。</p></div>
+          <div><h2 id="system-title">系统状态</h2><p>空状态、错误与过期状态都提供下一步，不用装饰填充。</p></div>
           <span>上下文反馈</span>
         </header>
 
         <div class="system-states">
           <article>
-            <div><strong>暂无关联域名</strong><p>当前对象还没有经过验证的关联域名。</p></div>
+            <div><strong>暂无关联域名</strong><p>当前记录还没有经过核验的关联域名。</p></div>
             <button type="button">提交线索</button>
           </article>
           <article class="state-error">
-            <div><strong>最近一次同步失败</strong><p>公开频道返回限流响应，已有数据仍可查看。</p></div>
+            <div><strong>最近一次同步失败</strong><p>公开频道暂时限制请求频率，已有数据仍可查看。</p></div>
             <button type="button">重新同步</button>
           </article>
           <article class="state-stale">
@@ -122,13 +122,13 @@
 
     <dialog class="command-dialog" aria-labelledby="command-title">
       <header>
-        <label for="command-search" id="command-title">搜索对象或执行命令</label>
+        <label for="command-search" id="command-title">搜索记录或执行命令</label>
         <button type="button" data-command-close aria-label="关闭命令菜单">Esc</button>
       </header>
-      <input id="command-search" type="search" name="command" autocomplete="off" placeholder="输入对象、视图或操作…" />
+      <input id="command-search" type="search" name="command" autocomplete="off" placeholder="输入记录、视图或操作…" />
       <div class="command-results" role="listbox" aria-label="命令结果">
         <p>最近使用</p>
-        <button type="button" role="option" aria-selected="true"><span><strong>Harbor Link</strong><small>打开对象详情</small></span><kbd>↵</kbd></button>
+        <button type="button" role="option" aria-selected="true"><span><strong>Harbor Link</strong><small>打开记录详情</small></span><kbd>↵</kbd></button>
         <button type="button" role="option"><span><strong>风险情报</strong><small>前往工作区</small></span><kbd>G R</kbd></button>
         <p>操作</p>
         <button type="button" role="option"><span><strong>切换到日间模式</strong><small>外观</small></span></button>

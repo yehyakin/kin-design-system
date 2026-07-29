@@ -125,7 +125,7 @@ test("reduced motion keeps Motion Lab state and focus without directional travel
   await expect(paired).toHaveAttribute("aria-pressed", "true");
   await expect(paired.locator('[data-icon-state="active"]').evaluate((element) => getComputedStyle(element).transform)).resolves.toBe("none");
 
-  const menuTrigger = page.getByRole("button", { name: "对象操作" });
+  const menuTrigger = page.getByRole("button", { name: "记录操作" });
   await menuTrigger.click();
   const menu = page.locator(".lab-menu");
   await expect(menu).toHaveAttribute("data-state", "open");

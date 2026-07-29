@@ -39,6 +39,16 @@
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://yehyakin.github.io/kin-design-system/zh/components/" />
   </url>
   <url>
+    <loc>https://yehyakin.github.io/kin-design-system/components/button/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://yehyakin.github.io/kin-design-system/components/button/" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://yehyakin.github.io/kin-design-system/zh/components/button/" />
+  </url>
+  <url>
+    <loc>https://yehyakin.github.io/kin-design-system/zh/components/button/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://yehyakin.github.io/kin-design-system/components/button/" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://yehyakin.github.io/kin-design-system/zh/components/button/" />
+  </url>
+  <url>
     <loc>https://yehyakin.github.io/kin-design-system/patterns/</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://yehyakin.github.io/kin-design-system/patterns/" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://yehyakin.github.io/kin-design-system/zh/patterns/" />

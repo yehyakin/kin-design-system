@@ -18,6 +18,9 @@
   <link rel="stylesheet" href="../assets/site.css">
   <script>
     (() => {
+      if (new URLSearchParams(location.search).get("lang") === "zh-CN") {
+        document.documentElement.lang = "zh-CN";
+      }
       let storedTheme;
       let storedContrast;
       try {
@@ -35,35 +38,40 @@
   </script>
   <title>Scenario Atlas - KIN Design System</title>
 </head>
-<body class="atlas-page">
+<body class="atlas-page showcase-shell-page" data-showcase-route="scenarios">
   <a class="skip-link" href="#main">Skip to content</a>
-  <header class="site-header">
+  <header class="site-header global-header">
     <a class="brand" href="../" aria-label="KIN Design System home">
       <span class="brand-mark" aria-hidden="true">KIN</span>
-      <span class="brand-copy"><strong>KIN</strong><small>Scenario Atlas</small></span>
+      <span class="brand-copy"><strong>KIN</strong><small>Design System</small></span>
     </a>
-    <div class="header-center">
-      <button class="command-trigger" type="button" data-command-trigger aria-haspopup="dialog">
-        <i data-lucide="search"></i><span>Search Atlas sections and scenarios</span><kbd>Ctrl K</kbd>
-      </button>
-    </div>
+    <nav class="showcase-nav" id="showcase-nav" data-mobile-nav aria-label="Primary">
+      <a href="../" data-global-nav-key="showcase">Showcase</a>
+      <a href="../components/" data-global-nav-key="components">Components</a>
+      <a href="../patterns/" data-global-nav-key="patterns">Patterns</a>
+      <a href="./" data-global-nav-key="scenarios" aria-current="page">Scenarios</a>
+      <a href="./lab.html" data-global-nav-key="lab">Lab</a>
+      <a href="../docs/" data-global-nav-key="docs">Documentation</a>
+      <a href="https://github.com/yehyakin/kin-design-system">GitHub</a>
+    </nav>
     <div class="header-actions">
-      <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="docs-nav" aria-label="Open navigation"><i data-lucide="menu"></i></button>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="showcase-nav" aria-label="Open navigation"><i data-lucide="menu"></i></button>
+      <button class="command-trigger showcase-command-trigger" type="button" data-command-trigger aria-haspopup="dialog" aria-label="Search Atlas sections and scenarios"><i data-lucide="search"></i><span class="visually-hidden">Search Atlas sections and scenarios</span></button>
       <div class="language-control" data-language-control>
         <button class="language-trigger" type="button" data-language-trigger aria-haspopup="menu" aria-expanded="false" aria-label="Choose documentation language"><i data-lucide="languages"></i></button>
         <div class="language-menu" data-language-menu role="menu" data-state="closed" hidden>
           <a href="./" role="menuitem" lang="en" aria-current="page"><span>English Atlas</span><i data-lucide="check"></i></a>
-          <a href="../zh/" role="menuitem" lang="zh-CN" hreflang="zh-CN"><span>Chinese documentation</span></a>
+          <a href="./?lang=zh-CN" role="menuitem" lang="zh-CN" hreflang="zh-CN"><span>Chinese documentation</span></a>
         </div>
       </div>
       <button class="theme-switch" type="button" role="switch" data-theme-switch aria-checked="true" aria-label="Switch to light mode"><i class="theme-sun" data-lucide="sun"></i><i class="theme-moon" data-lucide="moon"></i></button>
       <button class="contrast-toggle" type="button" data-contrast-toggle aria-pressed="false" aria-label="Increase contrast"><i data-lucide="contrast"></i></button>
-      <a class="github-link" href="https://github.com/yehyakin/kin-design-system" aria-label="KIN on GitHub"><i data-lucide="code-2"></i><span>GitHub</span></a>
     </div>
   </header>
 
   <div class="docs-shell">
-    <nav class="docs-nav" id="docs-nav" aria-label="Scenario Atlas">
+    <button class="local-nav-toggle" type="button" data-local-nav-toggle data-open-label="Open Scenario Atlas sections" data-close-label="Close Scenario Atlas sections" aria-expanded="false" aria-controls="docs-nav" aria-label="Open Scenario Atlas sections"><i data-lucide="list-tree"></i><span>Scenario Atlas sections</span><i data-lucide="chevron-right"></i></button>
+    <nav class="docs-nav" id="docs-nav" data-local-nav aria-label="Scenario Atlas sections">
       <div class="nav-group">
         <h2>Start here</h2>
         <a href="../"><i data-lucide="layout-dashboard"></i>Documentation</a>
@@ -93,10 +101,27 @@
           <h1 id="overview-title">Inspect KIN across product tasks.</h1>
           <p class="lead">Thirty task-led scenarios connect KIN product patterns and page contracts to the work people need to complete. Seventeen are now inspectable: six P0 pilots, five stable shared workflows, and six product-family P1 scenarios. Each exposes only implemented local states across wide and narrow viewports and four theme modes; 13 entries remain visibly planned.</p>
           <div class="intro-actions">
-            <a class="button primary" href="lab.html?scenario=INT-01">Inspect 17 showcased scenarios</a>
+            <a class="button primary" href="lab.html?scenario=INT-02&amp;state=normal&amp;viewport=wide&amp;theme=dark&amp;mode=present">Start with evidence review</a>
+            <a class="button" href="#intelligence">Browse all scenarios</a>
             <a class="button" href="catalog.json">Inspect the machine catalog</a>
-            <a class="button" href="https://github.com/yehyakin/kin-design-system/blob/main/rfcs/002-scenario-atlas.md">Read RFC 002</a>
           </div>
+          <section class="atlas-feature" aria-labelledby="atlas-feature-title">
+            <header>
+              <div>
+                <p class="eyebrow">FEATURED SCENARIO / INT-02</p>
+                <h2 id="atlas-feature-title">Investigation and Evidence Review</h2>
+                <p>Compare chronology, sources, conflicts, and uncertainty before recording a finding.</p>
+              </div>
+              <a href="lab.html?scenario=INT-02&amp;state=normal&amp;viewport=wide&amp;theme=dark&amp;mode=present">Inspect this scenario <span aria-hidden="true">&rarr;</span></a>
+            </header>
+            <div class="atlas-feature__stage">
+              <iframe
+                data-atlas-feature-frame
+                title="Interactive preview of Investigation and Evidence Review"
+                src="../examples/workspace-reference/index.html?view=investigation&amp;lang=en&amp;state=normal"
+              ></iframe>
+            </div>
+          </section>
           <dl class="atlas-summary">
             <div><dt>Coverage map</dt><dd>30 scenarios</dd></div>
             <div><dt>Inspectable today</dt><dd>17 showcased scenarios</dd></div>
@@ -417,5 +442,6 @@
   </dialog>
   <div data-sonner-root></div>
   <script type="module" src="../assets/site.js"></script>
+  <script type="module" src="../assets/scenario-atlas.js"></script>
 </body>
 </html>

@@ -14,7 +14,7 @@ const PRESENTATION_STATUSES = Object.freeze(["planned", "linked", "showcased"]);
 const DISCOVERY_UI_COPY = Object.freeze({
   en: Object.freeze({
     featured_components: "Featured components",
-    featured_components_intro: "Choose a component, use the real reference, then open its contract when you need the implementation boundary.",
+    featured_components_intro: "Choose a component, try it in a real workflow, then open the implementation details when you need them.",
     component_stage: "Component stage",
     open_explorer: "Open Explorer",
     full_catalog: "View full catalog",
@@ -35,34 +35,41 @@ const DISCOVERY_UI_COPY = Object.freeze({
     present_reference: "Present reference",
     pattern_reference: "Live product reference",
     pattern_details: "Composition and evidence",
+    context: "Reference view",
+    workflow: "In workflow",
+    isolated: "Isolated",
   }),
   "zh-CN": Object.freeze({
     featured_components: "精选组件",
-    featured_components_intro: "选择组件，直接使用真实参考；需要实现边界时，再打开对应合同。",
-    component_stage: "组件舞台",
-    open_explorer: "打开 Explorer",
+    featured_components_intro: "选择一个组件，先体验可用状态；需要实现细节时，再查看对应规范。",
+    component_stage: "组件预览",
+    open_explorer: "查看组件",
     full_catalog: "查看完整目录",
-    full_catalog_hint: "全部目录记录与成熟度",
+    full_catalog_hint: "全部组件及成熟度",
     theme: "主题",
     viewport: "视口",
     light: "日间",
     dark: "夜间",
     wide: "宽屏",
     narrow: "窄屏",
-    preparing: "正在准备参考界面",
+    preparing: "正在准备交互预览",
     local_navigation: "精选组件导航",
     usage: "用途",
     states: "状态",
     accessibility: "无障碍",
-    contract: "合同",
-    inspected_reference: "当前检查参考",
-    present_reference: "展示参考",
-    pattern_reference: "真实产品参考",
-    pattern_details: "构图与证据",
+    contract: "规范",
+    inspected_reference: "交互预览",
+    present_reference: "当前预览",
+    pattern_reference: "产品布局预览",
+    pattern_details: "布局与说明",
+    context: "预览方式",
+    workflow: "工作流中",
+    isolated: "单独查看",
   }),
 });
 
 export const SHOWCASE_COMPONENT_IDS = Object.freeze([
+  "button",
   "command-menu",
   "evidence-list",
   "suggested-change-review",
@@ -425,6 +432,83 @@ function validateScenarios(root, catalog, pages) {
   return indexed;
 }
 
+function validateScenarioLocale(localeCatalog, scenarios) {
+  assertExactKeys(
+    localeCatalog,
+    ["schema_version", "locale", "groups", "maturity", "viewports", "themes", "assertion_values", "scenarios"],
+    "site/scenarios/locale.zh-CN.json",
+  );
+  if (localeCatalog.schema_version !== "1.0.0") fail('scenario locale schema_version must be "1.0.0".');
+  if (localeCatalog.locale !== "zh-CN") fail('scenario locale must be "zh-CN".');
+  assertExactKeys(
+    localeCatalog.groups,
+    ["intelligence", "information", "commerce", "engineering", "shared"],
+    "scenario locale groups",
+  );
+  assertExactKeys(localeCatalog.maturity, ["stable", "candidate", "draft"], "scenario locale maturity");
+  assertExactKeys(localeCatalog.viewports, ["wide", "narrow"], "scenario locale viewports");
+  assertExactKeys(
+    localeCatalog.themes,
+    ["light", "dark", "light-high-contrast", "dark-high-contrast"],
+    "scenario locale themes",
+  );
+  for (const [group, value] of Object.entries(localeCatalog.groups)) {
+    assertNonEmptyString(value, `scenario locale groups.${group}`);
+  }
+  for (const [status, value] of Object.entries(localeCatalog.maturity)) {
+    assertNonEmptyString(value, `scenario locale maturity.${status}`);
+  }
+  for (const [viewport, value] of Object.entries(localeCatalog.viewports)) {
+    assertNonEmptyString(value, `scenario locale viewports.${viewport}`);
+  }
+  for (const [theme, value] of Object.entries(localeCatalog.themes)) {
+    assertNonEmptyString(value, `scenario locale themes.${theme}`);
+  }
+  assertObject(localeCatalog.assertion_values, "scenario locale assertion_values");
+  for (const [source, value] of Object.entries(localeCatalog.assertion_values)) {
+    assertNonEmptyString(source, "scenario locale assertion source");
+    assertNonEmptyString(value, `scenario locale assertion_values.${source}`);
+  }
+
+  assertExactKeys(localeCatalog.scenarios, [...scenarios.keys()], "scenario locale scenarios");
+  for (const scenario of scenarios.values()) {
+    const translation = localeCatalog.scenarios[scenario.id];
+    const showcased = scenario.presentation_status === "showcased";
+    assertExactKeys(
+      translation,
+      showcased
+        ? ["name", "job", "entry", "completion", "context", "gaps", "states"]
+        : ["name", "job"],
+      `scenario locale scenarios.${scenario.id}`,
+    );
+    assertNonEmptyString(translation.name, `scenario locale scenarios.${scenario.id}.name`);
+    assertNonEmptyString(translation.job, `scenario locale scenarios.${scenario.id}.job`);
+    if (!showcased) continue;
+    assertNonEmptyString(translation.entry, `scenario locale scenarios.${scenario.id}.entry`);
+    assertNonEmptyString(translation.completion, `scenario locale scenarios.${scenario.id}.completion`);
+    assertNonEmptyString(translation.context, `scenario locale scenarios.${scenario.id}.context`);
+    assertStringArray(translation.gaps, `scenario locale scenarios.${scenario.id}.gaps`);
+    assertExactKeys(
+      translation.states,
+      scenario.state_controls.map((control) => control.state),
+      `scenario locale scenarios.${scenario.id}.states`,
+    );
+    for (const [state, value] of Object.entries(translation.states)) {
+      assertNonEmptyString(value, `scenario locale scenarios.${scenario.id}.states.${state}`);
+    }
+    for (const control of scenario.state_controls) {
+      if (
+        control.assertion.kind === "text"
+        && /[A-Za-z]{3}/u.test(control.assertion.value)
+        && !/^(OFFLINE|5XX)$/u.test(control.assertion.value)
+        && !localeCatalog.assertion_values[control.assertion.value]
+      ) {
+        fail(`scenario locale assertion_values must translate "${control.assertion.value}" for ${scenario.id}/${control.state}.`);
+      }
+    }
+  }
+}
+
 function validateCopy(copy) {
   assertExactKeys(copy, LOCALES, "showcase.config.json.copy");
   assertLocaleParity(copy.en, copy["zh-CN"]);
@@ -438,7 +522,11 @@ function validateCopy(copy) {
     assertExactKeys(localized.components.explorer, COMPONENT_EXPLORER_COPY_KEYS, `copy.${locale}.components.explorer`);
     assertExactKeys(localized.components.items, SHOWCASE_COMPONENT_IDS, `copy.${locale}.components.items`);
     for (const id of SHOWCASE_COMPONENT_IDS) {
-      assertExactKeys(localized.components.items[id], ["job", "boundary", "state_label"], `copy.${locale}.components.items.${id}`);
+      assertExactKeys(
+        localized.components.items[id],
+        ["display_name", "job", "boundary", "state_label"],
+        `copy.${locale}.components.items.${id}`,
+      );
     }
 
     assertExactKeys(localized.patterns, ["page", "items"], `copy.${locale}.patterns`);
@@ -635,8 +723,9 @@ function queryString(query) {
   return value === "" ? "" : `?${value}`;
 }
 
-function componentReferenceHref(publicPath, locator, locale) {
-  return `${siteFileHref(publicPath, locator.path)}${queryString(locator.query[locale])}#${encodeURIComponent(locator.fragment)}`;
+function componentReferenceHref(publicPath, locator, locale, { includeFragment = true } = {}) {
+  const fragment = includeFragment ? `#${encodeURIComponent(locator.fragment)}` : "";
+  return `${siteFileHref(publicPath, locator.path)}${queryString(locator.query[locale])}${fragment}`;
 }
 
 function scenarioReferenceControl(scenario) {
@@ -651,10 +740,18 @@ function scenarioReferenceHref(publicPath, scenario, locale, referenceLanguage) 
   return `${siteFileHref(publicPath, url.pathname.replace(/^\//u, ""))}${url.search}${url.hash}`;
 }
 
-function scenarioLabHref(publicPath, scenario) {
+function localizedScenarioHref(publicPath, locale, file = "", query = {}) {
+  const search = new URLSearchParams(query);
+  if (locale === "zh-CN") search.set("lang", "zh-CN");
+  const suffix = search.size === 0 ? "" : `?${search.toString()}`;
+  return `${rootPrefix(publicPath)}scenarios/${file}${suffix}`;
+}
+
+function scenarioLabHref(publicPath, scenario, locale) {
   const publicInspectionPath = scenario.inspection_path.replace(/^site\//u, "");
   const url = new URL(publicInspectionPath, "https://kin.invalid/");
   url.searchParams.set("mode", "present");
+  if (locale === "zh-CN") url.searchParams.set("lang", "zh-CN");
   return siteFileHref(publicPath, `${url.pathname.replace(/^\//u, "")}${url.search}${url.hash}`);
 }
 
@@ -676,8 +773,8 @@ function commandDialog({ copy, locale, publicPath, routePairs }) {
     [copy.nav_showcase, locale === "en" ? rootPrefix(publicPath) : `${rootPrefix(publicPath)}zh/`],
     [copy.nav_components, directoryHref(publicPath, routePairs.components[locale])],
     [copy.nav_patterns, directoryHref(publicPath, routePairs.patterns[locale])],
-    [copy.nav_scenarios, `${rootPrefix(publicPath)}scenarios/`],
-    [copy.nav_lab, `${rootPrefix(publicPath)}scenarios/lab.html`],
+    [copy.nav_scenarios, localizedScenarioHref(publicPath, locale)],
+    [copy.nav_lab, localizedScenarioHref(publicPath, locale, "lab.html")],
     [copy.nav_documentation, `${rootPrefix(publicPath)}${locale === "en" ? "" : "zh/"}docs/`],
   ];
   const sourceItems = [
@@ -747,10 +844,18 @@ function renderShell({
     ["showcase", copy.nav_showcase, currentRoot, "layout-dashboard"],
     ["components", copy.nav_components, directoryHref(publicPath, commandPairs.routes.components[locale]), "blocks"],
     ["patterns", copy.nav_patterns, directoryHref(publicPath, commandPairs.routes.patterns[locale]), "panels-top-left"],
-    ["scenarios", copy.nav_scenarios, `${rootPrefix(publicPath)}scenarios/`, "list-checks"],
-    ["lab", copy.nav_lab, `${rootPrefix(publicPath)}scenarios/lab.html`, "search"],
+    ["scenarios", copy.nav_scenarios, localizedScenarioHref(publicPath, locale), "list-checks"],
+    ["lab", copy.nav_lab, localizedScenarioHref(publicPath, locale, "lab.html"), "search"],
     ["docs", copy.nav_documentation, `${rootPrefix(publicPath)}${locale === "en" ? "" : "zh/"}docs/`, "book-open"],
   ];
+  const globalNavigation = navEntries
+    .map(
+      ([key, label, href]) =>
+        `<a href="${escapeHtml(href)}" data-global-nav-key="${escapeHtml(key)}"${
+          key === activeNav ? ' aria-current="page"' : ""
+        }>${escapeHtml(label)}</a>`,
+    )
+    .join("\n");
 
   return `<!doctype html>
 <html lang="${escapeHtml(locale)}" data-theme="dark" data-theme-preference="system" data-contrast="normal">
@@ -772,7 +877,7 @@ function renderShell({
   <link rel="icon" href="${escapeHtml(`${assets}mark.svg`)}" type="image/svg+xml">
   <link rel="manifest" href="${escapeHtml(`${rootPrefix(publicPath)}manifest.webmanifest`)}">
   <link rel="stylesheet" href="${escapeHtml(`${assets}site.css`)}">
-  <link rel="stylesheet" href="${escapeHtml(`${assets}showcase.css?v=2.1`)}">
+  <link rel="stylesheet" href="${escapeHtml(`${assets}showcase.css?v=3.0.1`)}">
   <script>
     (() => {
       let storedTheme;
@@ -792,20 +897,24 @@ function renderShell({
   </script>
   <title>${escapeHtml(title)}</title>
 </head>
-<body data-showcase-route="${escapeHtml(route)}">
+<body class="showcase-shell-page" data-showcase-route="${escapeHtml(route)}">
   <a class="skip-link" href="#main">${escapeHtml(copy.skip_link)}</a>
-  <header class="site-header">
+  <header class="site-header global-header">
     <a class="brand" href="${escapeHtml(currentRoot)}" aria-label="${escapeHtml(copy.site_name)}">
       <span class="brand-mark" aria-hidden="true">KIN</span>
-      <span class="brand-copy"><strong>KIN</strong><small>Design System</small></span>
+      <span class="brand-copy"><strong>KIN</strong><small>${locale === "zh-CN" ? "设计系统" : "Design System"}</small></span>
     </a>
-    <div class="header-center"><button class="command-trigger" type="button" data-command-trigger aria-haspopup="dialog"><i data-lucide="search"></i><span>${escapeHtml(
-      copy.search_trigger,
-    )}</span><kbd>Ctrl K</kbd></button></div>
+    <nav class="showcase-nav" id="showcase-nav" data-mobile-nav aria-label="${escapeHtml(copy.nav_label)}">
+      ${globalNavigation}
+      <a href="${REPOSITORY_ORIGIN}">GitHub</a>
+    </nav>
     <div class="header-actions">
-      <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="docs-nav" aria-label="${escapeHtml(
+      <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="showcase-nav" aria-label="${escapeHtml(
         copy.open_navigation,
       )}"><i data-lucide="menu"></i></button>
+      <button class="command-trigger showcase-command-trigger" type="button" data-command-trigger aria-haspopup="dialog" aria-label="${escapeHtml(
+        copy.search_trigger,
+      )}"><i data-lucide="search"></i><span class="visually-hidden">${escapeHtml(copy.search_trigger)}</span></button>
       <div class="language-control" data-language-control><button class="language-trigger" type="button" data-language-trigger aria-haspopup="menu" aria-expanded="false" aria-label="${escapeHtml(
         copy.choose_language,
       )}"><i data-lucide="languages"></i></button><div class="language-menu" data-language-menu role="menu" data-state="closed" hidden>${languageLinks}</div></div>
@@ -815,35 +924,9 @@ function renderShell({
       <button class="contrast-toggle" type="button" data-contrast-toggle aria-pressed="false" aria-label="${escapeHtml(
         copy.increase_contrast,
       )}"><i data-lucide="contrast"></i></button>
-      <a class="github-link" href="${REPOSITORY_ORIGIN}" aria-label="${escapeHtml(copy.github_label)}"><i data-lucide="code-2"></i><span>GitHub</span></a>
     </div>
   </header>
-  <div class="docs-shell">
-    <nav class="docs-nav" id="docs-nav" aria-label="${escapeHtml(copy.nav_label)}">
-      <div class="nav-group"><h2>${escapeHtml(copy.nav_start)}</h2>
-        ${navEntries
-          .slice(0, 3)
-          .map(
-            ([key, label, href, icon]) =>
-              `<a href="${escapeHtml(href)}"${key === activeNav ? ' aria-current="page"' : ""}><i data-lucide="${icon}"></i>${escapeHtml(
-                label,
-              )}</a>`,
-          )
-          .join("\n")}
-      </div>
-      <div class="nav-group"><h2>${escapeHtml(copy.nav_sources)}</h2>
-        ${navEntries
-          .slice(3)
-          .map(
-            ([key, label, href, icon]) =>
-              `<a href="${escapeHtml(href)}"${key === activeNav ? ' aria-current="page"' : ""}><i data-lucide="${icon}"></i>${escapeHtml(
-                label,
-              )}</a>`,
-          )
-          .join("\n")}
-      </div>
-      <p class="nav-footer">${escapeHtml(copy.footer_line)}</p>
-    </nav>
+  <div class="docs-shell docs-shell--discovery">
     <main class="docs-main showcase-main" id="main" data-showcase-route="${escapeHtml(route)}">
       <div class="content discovery-page">
 ${content}
@@ -858,19 +941,21 @@ ${content}
     routePairs: commandPairs.routes,
   })}
   <script type="module" src="${escapeHtml(`${assets}site.js`)}"></script>
-  <script type="module" src="${escapeHtml(`${assets}showcase.js?v=2.1`)}"></script>
+  <script type="module" src="${escapeHtml(`${assets}showcase.js?v=3.0.1`)}"></script>
 </body>
 </html>`;
 }
 
 function componentRow({ component, locale, publicPath, configuration, copy }) {
   const isExplorer = SHOWCASE_COMPONENT_IDS.includes(component.id);
-  const name = escapeHtml(component.canonical_name);
+  const itemCopy = isExplorer ? configuration.copy[locale].components.items[component.id] : null;
+  const name = escapeHtml(itemCopy?.display_name ?? component.canonical_name);
+  const language = locale === "zh-CN" && isExplorer ? "zh-CN" : "en";
   const nameMarkup = isExplorer
     ? `<a class="discovery-row__name" href="${escapeHtml(
         directoryHref(publicPath, localizedPaths("components", component.id)[locale]),
-      )}" lang="en">${name}</a>`
-    : `<span class="discovery-row__name" lang="en">${name}</span>`;
+      )}" lang="${language}">${name}</a>`
+    : `<span class="discovery-row__name" lang="${language}">${name}</span>`;
   const action = isExplorer ? copy.explorer_available : copy.catalog_only;
 
   return `<li class="discovery-row" data-component-id="${escapeHtml(component.id)}">
@@ -883,6 +968,7 @@ function componentRow({ component, locale, publicPath, configuration, copy }) {
 }
 
 const COMPONENT_ICONS = Object.freeze({
+  "button": "mouse-pointer-click",
   "command-menu": "command",
   "evidence-list": "list-tree",
   "suggested-change-review": "git-compare-arrows",
@@ -893,25 +979,58 @@ const COMPONENT_ICONS = Object.freeze({
   "app-shell": "panels-top-left",
 });
 
+const COMPONENT_STAGE_FOCUS_SELECTORS = Object.freeze({
+  "button": ".button-contract",
+  "command-menu": ".command-dialog",
+  "evidence-list": ".evidence-list",
+  "suggested-change-review": ".change-review",
+  "execution-preview": ".execution-preview",
+  "background-task-queue": "#background-work",
+  "data-table": ".table-wrap",
+  "authentication-dialog": "[data-auth-dialog]",
+});
+
+const PATTERN_ICONS = Object.freeze({
+  "information-site": "book-open-text",
+  "intelligence-workspace": "scan-search",
+  "ecommerce-operations": "package-check",
+  "engineering-canvas": "box-select",
+});
+
 function componentStageOption({ component, locale, publicPath, configuration, active = false }) {
   const itemCopy = configuration.copy[locale].components.items[component.id];
   const locator = configuration.locators.components[component.id];
   const explorerHref = directoryHref(publicPath, localizedPaths("components", component.id)[locale]);
-  const referenceHref = componentReferenceHref(publicPath, locator, locale);
+  const referenceHref = componentReferenceHref(publicPath, locator, locale, { includeFragment: false });
+  const referenceLocale = locator.query[locale].lang === "en" ? "en" : "zh-CN";
+  const referenceLocaleMismatch = referenceLocale !== locale;
+  const referenceLocaleNotice = referenceLocaleMismatch
+    ? locale === "zh-CN"
+      ? referenceLocale === "en"
+        ? "英文参考"
+        : "中文参考"
+      : referenceLocale === "zh-CN"
+        ? "Chinese reference"
+        : "English reference"
+    : "";
 
   return `<button class="component-choice" type="button" role="option" aria-selected="${active}" tabindex="${
     active ? "0" : "-1"
   }" data-component-choice data-component-id="${escapeHtml(component.id)}" data-component-name="${escapeHtml(
-    component.canonical_name,
+    itemCopy.display_name,
   )}" data-component-job="${escapeHtml(itemCopy.job)}" data-component-state="${escapeHtml(
     itemCopy.state_label,
   )}" data-component-reference="${escapeHtml(referenceHref)}" data-component-ready-fragment="${escapeHtml(
     locator.fragment,
+  )}" data-component-focus-selector="${escapeHtml(
+    COMPONENT_STAGE_FOCUS_SELECTORS[component.id] ?? "",
+  )}" data-component-reference-language="${escapeHtml(
+    referenceLocaleNotice,
   )}" data-component-explorer="${escapeHtml(
     explorerHref,
   )}">
     <i data-lucide="${escapeHtml(COMPONENT_ICONS[component.id] ?? "component")}"></i>
-    <span><strong lang="en">${escapeHtml(component.canonical_name)}</strong><small>${escapeHtml(
+    <span><strong lang="${escapeHtml(locale)}">${escapeHtml(itemCopy.display_name)}</strong><small>${escapeHtml(
       itemCopy.state_label,
     )}</small></span>
     <i class="component-choice__arrow" data-lucide="chevron-right"></i>
@@ -969,8 +1088,19 @@ function renderComponentIndex({ locale, publicPath, configuration, components, c
   const initial = featured[0];
   const initialItem = localized.components.items[initial.id];
   const initialLocator = configuration.locators.components[initial.id];
-  const initialReferenceHref = componentReferenceHref(publicPath, initialLocator, locale);
+  const initialReferenceHref = componentReferenceHref(publicPath, initialLocator, locale, { includeFragment: false });
   const initialExplorerHref = directoryHref(publicPath, localizedPaths("components", initial.id)[locale]);
+  const initialReferenceLocale = initialLocator.query[locale].lang === "en" ? "en" : "zh-CN";
+  const initialReferenceLocaleMismatch = initialReferenceLocale !== locale;
+  const initialReferenceLocaleNotice = initialReferenceLocaleMismatch
+    ? locale === "zh-CN"
+      ? initialReferenceLocale === "en"
+        ? "英文参考"
+        : "中文参考"
+      : initialReferenceLocale === "zh-CN"
+        ? "Chinese reference"
+        : "English reference"
+    : "";
 
   const content = `        <header class="discovery-hero discovery-hero--compact">
           <p class="eyebrow">${escapeHtml(copy.eyebrow)}</p>
@@ -993,11 +1123,18 @@ function renderComponentIndex({ locale, publicPath, configuration, components, c
           </div>
           <div class="reference-stage reference-stage--component" data-reference-stage data-stage-ready="false" data-stage-viewport="wide" data-ready-fragment="${escapeHtml(
             initialLocator.fragment,
-          )}">
+          )}"${
+            COMPONENT_STAGE_FOCUS_SELECTORS[initial.id]
+              ? ` data-focus-selector="${escapeHtml(COMPONENT_STAGE_FOCUS_SELECTORS[initial.id])}"`
+              : ""
+          }>
             <header class="reference-stage__toolbar">
               <div class="reference-stage__identity">
                 <span>${escapeHtml(ui.component_stage)}</span>
-                <strong data-stage-title lang="en">${escapeHtml(initial.canonical_name)}</strong>
+                <strong data-stage-title lang="${escapeHtml(locale)}">${escapeHtml(initialItem.display_name)}</strong>
+                <small data-stage-language${initialReferenceLocaleNotice === "" ? " hidden" : ""}><i data-lucide="languages"></i>${escapeHtml(
+                  initialReferenceLocaleNotice,
+                )}</small>
               </div>
               <div class="stage-segmented" role="group" aria-label="${escapeHtml(ui.theme)}">
                 <button type="button" data-stage-theme="light" aria-pressed="false"><i data-lucide="sun"></i><span>${escapeHtml(
@@ -1011,7 +1148,7 @@ function renderComponentIndex({ locale, publicPath, configuration, components, c
             <div class="reference-stage__viewport">
               <div class="reference-stage__loading" data-stage-loading><span></span>${escapeHtml(ui.preparing)}</div>
               <iframe src="${escapeHtml(initialReferenceHref)}" title="${escapeHtml(
-                `${initial.canonical_name}: ${initialItem.state_label}`,
+                `${initialItem.display_name}${locale === "zh-CN" ? "：" : ": "}${initialItem.state_label}`,
               )}" loading="eager" data-stage-frame></iframe>
             </div>
             <footer class="reference-stage__footer">
@@ -1083,7 +1220,9 @@ function renderComponentExplorer({ id, locale, publicPath, configuration, compon
   const locator = configuration.locators.components[id];
   const alternatePaths = localizedPaths("components", id);
   const referenceHref = componentReferenceHref(publicPath, locator, locale);
+  const referenceFrameHref = componentReferenceHref(publicPath, locator, locale, { includeFragment: false });
   const referenceLocale = locator.query[locale].lang === "en" ? "en" : "zh-CN";
+  const referenceLocaleMismatch = referenceLocale !== locale;
   const supportRows = [
     ["themes", copy.themes],
     ["responsive", copy.responsive],
@@ -1092,13 +1231,13 @@ function renderComponentExplorer({ id, locale, publicPath, configuration, compon
     ["reduced_motion", copy.reduced_motion],
   ];
   const featuredNavigation = SHOWCASE_COMPONENT_IDS.map((componentId) => {
-    const record = components.get(componentId);
     const active = componentId === id ? ' aria-current="page"' : "";
+    const displayName = localized.components.items[componentId].display_name;
     return `<a href="${escapeHtml(
       directoryHref(publicPath, localizedPaths("components", componentId)[locale]),
-    )}"${active}><i data-lucide="${escapeHtml(COMPONENT_ICONS[componentId] ?? "component")}"></i><span lang="en">${escapeHtml(
-      record.canonical_name,
-    )}</span></a>`;
+    )}"${active}><i data-lucide="${escapeHtml(COMPONENT_ICONS[componentId] ?? "component")}"></i><span lang="${escapeHtml(
+      locale,
+    )}">${escapeHtml(displayName)}</span></a>`;
   }).join("\n");
 
   const content = `        <div class="component-studio">
@@ -1110,25 +1249,41 @@ function renderComponentExplorer({ id, locale, publicPath, configuration, compon
           </aside>
           <div class="component-studio__main">
             <header class="component-studio__header" data-component-id="${escapeHtml(component.id)}">
-              <div><p class="eyebrow">${escapeHtml(copy.eyebrow)}</p><h1 lang="en">${escapeHtml(
-                component.canonical_name,
+              <div><p class="eyebrow">${escapeHtml(copy.eyebrow)}</p><h1 lang="${escapeHtml(locale)}">${escapeHtml(
+                itemCopy.display_name,
               )}</h1><p>${escapeHtml(itemCopy.job)}</p></div>
               <div class="component-explorer__identity"><code>${escapeHtml(component.id)}</code>${statusBadge(
                 component.status,
                 localized.shared,
               )}<span>${escapeHtml(copyStatus(localized.shared, component.tier))}</span></div>
             </header>
-            <section class="reference-stage reference-stage--explorer" data-reference-stage data-stage-ready="false" data-stage-viewport="wide" data-ready-fragment="${escapeHtml(
+            <section class="reference-stage reference-stage--explorer" data-reference-stage data-stage-ready="false" data-stage-viewport="wide" data-stage-context="isolated" data-ready-fragment="${escapeHtml(
               locator.fragment,
-            )}" aria-labelledby="reference-title">
-              <header class="reference-stage__toolbar reference-stage__toolbar--explorer">
-                <div class="reference-stage__identity"><span id="reference-title">${escapeHtml(
+            )}"${
+              COMPONENT_STAGE_FOCUS_SELECTORS[id]
+                ? ` data-focus-selector="${escapeHtml(COMPONENT_STAGE_FOCUS_SELECTORS[id])}"`
+                : ""
+            } data-component-id="${escapeHtml(id)}" aria-labelledby="reference-title">
+            <header class="reference-stage__toolbar reference-stage__toolbar--explorer">
+              <div class="reference-stage__identity"><span id="reference-title">${escapeHtml(
                   ui.present_reference,
-                )}</span><strong>${escapeHtml(itemCopy.state_label)}</strong></div>
-                <div class="reference-stage__controls">
-                  <label class="stage-select"><span>${escapeHtml(ui.states)}</span><select aria-label="${escapeHtml(
-                    ui.states,
-                  )}"><option>${escapeHtml(itemCopy.state_label)}</option></select></label>
+                )}</span><strong>${escapeHtml(itemCopy.display_name)}</strong>${
+                  referenceLocaleMismatch
+                    ? `<small><i data-lucide="languages"></i>${escapeHtml(localeLabel(referenceLocale))}</small>`
+                    : ""
+                }</div>
+              <div class="reference-stage__controls">
+                  <div class="stage-state-readout" aria-label="${escapeHtml(ui.states)}"><i data-lucide="circle-dot"></i><span>${escapeHtml(
+                    itemCopy.state_label,
+                  )}</span></div>
+                  <div class="stage-segmented" role="group" aria-label="${escapeHtml(ui.context)}">
+                    <button type="button" data-stage-context="workflow" aria-pressed="false"><i data-lucide="panels-top-left"></i><span>${escapeHtml(
+                      ui.workflow,
+                    )}</span></button>
+                    <button type="button" data-stage-context="isolated" aria-pressed="true"><i data-lucide="focus"></i><span>${escapeHtml(
+                      ui.isolated,
+                    )}</span></button>
+                  </div>
                   <div class="stage-segmented" role="group" aria-label="${escapeHtml(ui.theme)}">
                     <button type="button" data-stage-theme="light" aria-pressed="false"><i data-lucide="sun"></i><span>${escapeHtml(
                       ui.light,
@@ -1149,14 +1304,18 @@ function renderComponentExplorer({ id, locale, publicPath, configuration, compon
               </header>
               <div class="reference-stage__viewport">
                 <div class="reference-stage__loading" data-stage-loading><span></span>${escapeHtml(ui.preparing)}</div>
-                <iframe src="${escapeHtml(referenceHref)}" title="${escapeHtml(
+                <iframe src="${escapeHtml(referenceFrameHref)}" title="${escapeHtml(
                   `${copy.reference_heading}: ${itemCopy.state_label}`,
                 )}" loading="eager" data-stage-frame></iframe>
               </div>
               <footer class="reference-stage__footer">
                 <div><span>${escapeHtml(copy.reference_language)}</span><strong lang="${escapeHtml(
                   referenceLocale,
-                )}">${escapeHtml(localeLabel(referenceLocale))}</strong></div>
+                )}">${escapeHtml(localeLabel(referenceLocale))}</strong>${
+                  referenceLocaleMismatch
+                    ? `<small class="reference-language-note">${escapeHtml(copy.reference_language_mismatch)}</small>`
+                    : ""
+                }</div>
                 <a class="stage-text-link" href="${escapeHtml(referenceHref)}">${escapeHtml(
                   copy.open_reference,
                 )} <i data-lucide="external-link"></i></a>
@@ -1229,7 +1388,7 @@ function renderComponentExplorer({ id, locale, publicPath, configuration, compon
     locale,
     publicPath,
     alternatePaths,
-    title: `${component.canonical_name} · ${localized.shared.site_name}`,
+    title: `${itemCopy.display_name} · ${localized.shared.site_name}`,
     description: itemCopy.job,
     route: "component-explorer",
     activeNav: "components",
@@ -1238,7 +1397,33 @@ function renderComponentExplorer({ id, locale, publicPath, configuration, compon
   });
 }
 
-function renderPatternSection({ id, locale, publicPath, configuration, pages, scenarios }) {
+function renderPatternChoice({ id, locale, publicPath, configuration, scenarios, active }) {
+  const localized = configuration.copy[locale];
+  const itemCopy = localized.patterns.items[id];
+  const locator = configuration.locators.patterns[id];
+  const scenario = scenarios.get(locator.scenario_id);
+  const referenceControl = scenarioReferenceControl(scenario);
+  const referenceHref = scenarioReferenceHref(publicPath, scenario, locale, locator.reference_language);
+  const referenceLocale = locator.reference_language === "localized" ? locale : locator.reference_language;
+  const initialTheme = id === "information-site" ? "light" : "dark";
+
+  return `<button type="button" role="tab" id="pattern-choice-${escapeHtml(id)}" aria-controls="pattern-${escapeHtml(
+    id,
+  )}" aria-selected="${active}" tabindex="${active ? "0" : "-1"}" data-pattern-choice="${escapeHtml(
+    id,
+  )}" data-pattern-name="${escapeHtml(itemCopy.label)}" data-pattern-summary="${escapeHtml(
+    itemCopy.summary,
+  )}" data-pattern-reference="${escapeHtml(referenceHref)}" data-pattern-ready-selector="${escapeHtml(
+    referenceControl.assertion.selector,
+  )}" data-pattern-theme="${initialTheme}" data-pattern-lab="${escapeHtml(
+    scenarioLabHref(publicPath, scenario, locale),
+  )}" data-pattern-language="${escapeHtml(localeLabel(referenceLocale))}">
+    <i data-lucide="${escapeHtml(PATTERN_ICONS[id] ?? "panel-top")}"></i>
+    <span><strong>${escapeHtml(itemCopy.label)}</strong><small>${escapeHtml(itemCopy.summary)}</small></span>
+  </button>`;
+}
+
+function renderPatternContextPanel({ id, locale, publicPath, configuration, pages, scenarios, active }) {
   const localized = configuration.copy[locale];
   const copy = localized.patterns.page;
   const ui = DISCOVERY_UI_COPY[locale];
@@ -1246,71 +1431,59 @@ function renderPatternSection({ id, locale, publicPath, configuration, pages, sc
   const locator = configuration.locators.patterns[id];
   const page = pages.get(locator.page_id);
   const scenario = scenarios.get(locator.scenario_id);
-  const catalogLanguage = locale === "zh-CN" ? ' lang="en"' : "";
   const referenceLocale = locator.reference_language === "localized" ? locale : locator.reference_language;
   const referenceLocaleMismatch = referenceLocale !== locale;
   const referenceHref = scenarioReferenceHref(publicPath, scenario, locale, locator.reference_language);
-  const referenceControl = scenarioReferenceControl(scenario);
-  const initialTheme = id === "information-site" ? "light" : "dark";
 
-  return `<article class="pattern-discovery-section pattern-discovery-section--${escapeHtml(id)}" data-pattern-id="${escapeHtml(
+  return `<section class="pattern-browser__context" id="pattern-${escapeHtml(
     id,
-  )}" data-showcase-route="pattern-detail" aria-labelledby="pattern-${escapeHtml(id)}">
-    <header class="pattern-discovery-section__heading">
-      <div><h2 id="pattern-${escapeHtml(id)}">${escapeHtml(itemCopy.label)}</h2><p>${escapeHtml(itemCopy.summary)}</p></div>
-      <div class="pattern-discovery-section__actions"><a class="stage-text-link" href="${escapeHtml(
-        scenarioLabHref(publicPath, scenario),
-      )}">${escapeHtml(copy.open_lab)} <i data-lucide="arrow-up-right"></i></a></div>
-    </header>
-    <div class="reference-stage reference-stage--pattern" data-reference-stage data-stage-ready="false" data-stage-viewport="wide" data-initial-theme="${initialTheme}" data-ready-selector="${escapeHtml(
-      referenceControl.assertion.selector,
-    )}">
-      <div class="reference-stage__viewport">
-        <div class="reference-stage__loading" data-stage-loading><span></span>${escapeHtml(ui.preparing)}</div>
-        <iframe src="${escapeHtml(referenceHref)}" title="${escapeHtml(
-          `${ui.pattern_reference}: ${itemCopy.label}`,
-        )}" loading="lazy" data-stage-frame></iframe>
-      </div>
-    </div>
+  )}" role="tabpanel" aria-labelledby="pattern-choice-${escapeHtml(id)}" data-pattern-context="${escapeHtml(id)}"${
+    active ? "" : " hidden"
+  }>
+    <dl class="pattern-context-strip">
+      <div><dt>${escapeHtml(copy.first_view)}</dt><dd>${localizedCatalogMarkup(
+        scenario.composition.first_meaningful_view,
+        locale,
+        configuration,
+      )}</dd></div>
+      <div><dt>${escapeHtml(copy.dominant_region)}</dt><dd>${localizedCatalogMarkup(
+        scenario.composition.dominant_region,
+        locale,
+        configuration,
+      )}</dd></div>
+      <div><dt>${escapeHtml(copy.persistent_context)}</dt><dd>${localizedCatalogMarkup(
+        scenario.composition.persistent_context,
+        locale,
+        configuration,
+      )}</dd></div>
+    </dl>
     <details class="pattern-details">
       <summary><span>${escapeHtml(ui.pattern_details)}</span><i data-lucide="chevron-down"></i></summary>
       <div class="pattern-details__body">
         <div class="pattern-records">
-          <section aria-labelledby="page-${escapeHtml(id)}"><p class="record-kicker">${escapeHtml(
-            copy.page_record,
-          )}</p><h3 id="page-${escapeHtml(id)}"${catalogLanguage}>${escapeHtml(
+          <section><p class="record-kicker">${escapeHtml(copy.page_record)}</p><h3>${localizedCatalogMarkup(
             page.canonical_name,
+            locale,
+            configuration,
           )}</h3><dl><div><dt>${escapeHtml(copy.page_status)}</dt><dd>${statusBadge(
             page.status,
             localized.shared,
           )}</dd></div><div><dt>ID</dt><dd><code>${escapeHtml(page.id)}</code></dd></div></dl></section>
-          <section aria-labelledby="scenario-${escapeHtml(id)}"><p class="record-kicker">${escapeHtml(
-            copy.scenario_record,
-          )}</p><h3 id="scenario-${escapeHtml(id)}"${catalogLanguage}>${escapeHtml(
+          <section><p class="record-kicker">${escapeHtml(copy.scenario_record)}</p><h3>${localizedCatalogMarkup(
             scenario.canonical_name,
+            locale,
+            configuration,
           )}</h3><dl><div><dt>${escapeHtml(copy.scenario_presentation)}</dt><dd>${statusBadge(
             scenario.presentation_status,
             localized.shared,
           )}</dd></div><div><dt>ID</dt><dd><code>${escapeHtml(scenario.id)}</code></dd></div></dl></section>
         </div>
-        <section class="pattern-job" aria-labelledby="job-${escapeHtml(id)}"><h3 id="job-${escapeHtml(
-          id,
-        )}">${escapeHtml(copy.primary_job)}</h3><p${catalogLanguage}>${escapeHtml(
+        <section class="pattern-job"><h3>${escapeHtml(copy.primary_job)}</h3><p>${localizedCatalogMarkup(
           scenario.user_job,
-        )}</p><dl class="pattern-composition">
-          <div><dt>${escapeHtml(copy.first_view)}</dt><dd${catalogLanguage}>${escapeHtml(
-            scenario.composition.first_meaningful_view,
-          )}</dd></div>
-          <div><dt>${escapeHtml(copy.dominant_region)}</dt><dd${catalogLanguage}>${escapeHtml(
-            scenario.composition.dominant_region,
-          )}</dd></div>
-          <div><dt>${escapeHtml(copy.persistent_context)}</dt><dd${catalogLanguage}>${escapeHtml(
-            scenario.composition.persistent_context,
-          )}</dd></div>
-        </dl></section>
-        <section class="pattern-prohibitions" aria-labelledby="prohibited-${escapeHtml(
-          id,
-        )}"><h3 id="prohibited-${escapeHtml(id)}">${escapeHtml(copy.prohibited)}</h3><ul>${textList(
+          locale,
+          configuration,
+        )}</p></section>
+        <section class="pattern-prohibitions"><h3>${escapeHtml(copy.prohibited)}</h3><ul>${textList(
           itemCopy.prohibited_substitutions,
         )}</ul></section>
         <footer class="pattern-discovery-section__sources">
@@ -1329,22 +1502,102 @@ function renderPatternSection({ id, locale, publicPath, configuration, pages, sc
         </footer>
       </div>
     </details>
-  </article>`;
+  </section>`;
 }
 
 function renderPatternIndex({ locale, publicPath, configuration, pages, scenarios, commandPairs }) {
   const localized = configuration.copy[locale];
   const copy = localized.patterns.page;
+  const ui = DISCOVERY_UI_COPY[locale];
   const alternatePaths = localizedPaths("patterns");
+  const firstId = SHOWCASE_PATTERN_IDS[0];
+  const firstLocator = configuration.locators.patterns[firstId];
+  const firstScenario = scenarios.get(firstLocator.scenario_id);
+  const firstControl = scenarioReferenceControl(firstScenario);
+  const firstReference = scenarioReferenceHref(
+    publicPath,
+    firstScenario,
+    locale,
+    firstLocator.reference_language,
+  );
+  const firstReferenceLocale = firstLocator.reference_language === "localized"
+    ? locale
+    : firstLocator.reference_language;
+  const firstCopy = localized.patterns.items[firstId];
   const content = `        <header class="discovery-hero discovery-hero--compact">
           <p class="eyebrow">${escapeHtml(copy.eyebrow)}</p>
           <h1>${escapeHtml(copy.title)}</h1>
           <p class="lead">${escapeHtml(copy.lead)}</p>
         </header>
-        <div class="pattern-discovery">
-          ${SHOWCASE_PATTERN_IDS.map((id) =>
-            renderPatternSection({ id, locale, publicPath, configuration, pages, scenarios }),
-          ).join("\n")}
+        <div class="pattern-browser" data-pattern-browser>
+          <div class="pattern-browser__selector" role="tablist" aria-label="${escapeHtml(copy.title)}">
+            ${SHOWCASE_PATTERN_IDS.map((id, index) =>
+              renderPatternChoice({
+                id,
+                locale,
+                publicPath,
+                configuration,
+                scenarios,
+                active: index === 0,
+              }),
+            ).join("\n")}
+          </div>
+          <header class="pattern-browser__heading">
+            <div><h2 data-pattern-title>${escapeHtml(firstCopy.label)}</h2><p data-pattern-summary>${escapeHtml(
+              firstCopy.summary,
+            )}</p></div>
+            <a class="stage-text-link" data-pattern-lab data-showcase-lab-link href="${escapeHtml(
+              scenarioLabHref(publicPath, firstScenario, locale),
+            )}">${escapeHtml(copy.open_lab)} <i data-lucide="arrow-up-right"></i></a>
+          </header>
+          <div class="reference-stage reference-stage--pattern-browser" data-reference-stage data-stage-ready="false" data-stage-viewport="wide" data-initial-theme="light" data-ready-selector="${escapeHtml(
+            firstControl.assertion.selector,
+          )}">
+            <header class="reference-stage__toolbar">
+              <div class="reference-stage__identity"><span>${escapeHtml(ui.pattern_reference)}</span><strong data-pattern-stage-title>${escapeHtml(
+                firstCopy.label,
+              )}</strong><small><i data-lucide="languages"></i><span data-pattern-language>${escapeHtml(
+                localeLabel(firstReferenceLocale),
+              )}</span></small></div>
+              <div class="reference-stage__controls">
+                <div class="stage-segmented" role="group" aria-label="${escapeHtml(ui.theme)}">
+                  <button type="button" data-stage-theme="light" aria-pressed="true"><i data-lucide="sun"></i><span>${escapeHtml(
+                    ui.light,
+                  )}</span></button>
+                  <button type="button" data-stage-theme="dark" aria-pressed="false"><i data-lucide="moon"></i><span>${escapeHtml(
+                    ui.dark,
+                  )}</span></button>
+                </div>
+                <div class="stage-segmented" role="group" aria-label="${escapeHtml(ui.viewport)}">
+                  <button type="button" data-stage-viewport="wide" aria-pressed="true"><i data-lucide="monitor"></i><span>${escapeHtml(
+                    ui.wide,
+                  )}</span></button>
+                  <button type="button" data-stage-viewport="narrow" aria-pressed="false"><i data-lucide="smartphone"></i><span>${escapeHtml(
+                    ui.narrow,
+                  )}</span></button>
+                </div>
+              </div>
+            </header>
+            <div class="reference-stage__viewport">
+              <div class="reference-stage__loading" data-stage-loading><span></span>${escapeHtml(ui.preparing)}</div>
+              <iframe src="${escapeHtml(firstReference)}" title="${escapeHtml(
+                `${ui.pattern_reference}: ${firstCopy.label}`,
+              )}" loading="eager" data-stage-frame></iframe>
+            </div>
+          </div>
+          <div class="pattern-browser__contexts">
+            ${SHOWCASE_PATTERN_IDS.map((id, index) =>
+              renderPatternContextPanel({
+                id,
+                locale,
+                publicPath,
+                configuration,
+                pages,
+                scenarios,
+                active: index === 0,
+              }),
+            ).join("\n")}
+          </div>
         </div>
         <details class="catalog-disclosure catalog-disclosure--compact">
           <summary><span><strong>${escapeHtml(copy.maturity_note)}</strong><small>${escapeHtml(
@@ -1400,10 +1653,12 @@ export function buildShowcasePages({ root, output } = {}) {
   const componentCatalog = readJson(realRoot, "components/catalog.json");
   const pageCatalog = readJson(realRoot, "pages/catalog.json");
   const scenarioCatalog = readJson(realRoot, "scenarios/catalog.json");
+  const scenarioLocaleCatalog = readJson(realRoot, "site/scenarios/locale.zh-CN.json");
 
   const components = validateRecordCatalog(realRoot, componentCatalog, "component");
   const pages = validateRecordCatalog(realRoot, pageCatalog, "page");
   const scenarios = validateScenarios(realRoot, scenarioCatalog, pages);
+  validateScenarioLocale(scenarioLocaleCatalog, scenarios);
   components.catalog = componentCatalog;
   pages.catalog = pageCatalog;
   validateConfiguration(realRoot, configuration, components, pages, scenarios);

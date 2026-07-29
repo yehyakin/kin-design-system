@@ -122,3 +122,32 @@
 
 [data-contrast="more"] .command-dialog { border-width: 2px; }
 [data-contrast="more"] .field-invalid input { border-width: 2px; }
+
+@media (any-pointer: coarse) {
+  .states-page button,
+  .states-page select,
+  .states-page textarea,
+  .states-page input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="hidden"]) {
+    min-height: 44px;
+  }
+
+  .states-page button {
+    min-width: 44px;
+  }
+
+  .states-page .reference-row[tabindex] {
+    min-height: 44px;
+  }
+
+  .states-page .reference-back {
+    display: inline-flex;
+    min-height: 44px;
+    align-items: center;
+  }
+
+  .states-page label:has(input[type="checkbox"]),
+  .states-page label:has(input[type="radio"]) {
+    min-height: 44px;
+    align-items: center;
+  }
+}

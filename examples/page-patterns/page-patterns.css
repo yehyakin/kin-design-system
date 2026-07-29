@@ -3525,3 +3525,32 @@
     border-left: 3px solid Highlight;
   }
 }
+
+@media (any-pointer: coarse) {
+  .flow-page button,
+  .flow-page select,
+  .flow-page textarea,
+  .flow-page input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="hidden"]) {
+    min-height: 44px;
+  }
+
+  .flow-page button {
+    min-width: 44px;
+  }
+
+  .flow-page nav a,
+  .flow-page [role="tab"] {
+    min-height: 44px;
+  }
+
+  .flow-page .flow-brand {
+    min-height: 44px;
+    align-items: center;
+  }
+
+  .flow-page label:has(input[type="checkbox"]),
+  .flow-page label:has(input[type="radio"]) {
+    min-height: 44px;
+    align-items: center;
+  }
+}

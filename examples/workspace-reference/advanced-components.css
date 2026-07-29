@@ -90,8 +90,9 @@
 .chart-grid line { stroke: var(--line); stroke-width: 1; }
 .chart-axis text { fill: var(--muted); font-size: 10px; }
 .chart-line { fill: none; stroke: var(--accent); stroke-width: 2; }
-.chart-points circle { fill: var(--surface-1); stroke: var(--accent); stroke-width: 2; }
-.chart-points circle:focus-visible { outline: 2px solid transparent; outline-offset: 2px; stroke: var(--focus); stroke-width: 4; }
+.chart-point-hit { fill: transparent; pointer-events: all; stroke: transparent; }
+.chart-point-marker { fill: var(--surface-1); pointer-events: none; stroke: var(--accent); stroke-width: 2; }
+.chart-point:has(.chart-point-hit:focus-visible) .chart-point-marker { stroke: var(--focus); stroke-width: 4; }
 .chart-summary { margin: 10px 0 0; color: var(--muted); font-size: 11px; }
 .chart-table { min-width: 0; }
 .chart-table table { width: 100%; border-collapse: collapse; }
@@ -125,3 +126,31 @@
 [data-contrast="more"] .composer-sample,
 [data-contrast="more"] .generated-result,
 [data-contrast="more"] .media-review-layout { border-color: var(--line-strong); }
+
+@media (any-pointer: coarse) {
+  .advanced-reference-page button,
+  .advanced-reference-page select,
+  .advanced-reference-page textarea,
+  .advanced-reference-page input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="hidden"]) {
+    min-height: 44px;
+  }
+
+  .advanced-reference-page button {
+    min-width: 44px;
+  }
+
+  .advanced-reference-page .evidence-list a,
+  .advanced-reference-page .change-context a,
+  .advanced-reference-page .task-row a {
+    display: inline-flex;
+    min-width: 44px;
+    min-height: 44px;
+    align-items: center;
+  }
+
+  .advanced-reference-page label:has(input[type="checkbox"]),
+  .advanced-reference-page label:has(input[type="radio"]) {
+    min-height: 44px;
+    align-items: center;
+  }
+}
