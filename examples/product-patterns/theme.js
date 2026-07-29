@@ -259,7 +259,7 @@ function setupCommerceEditor() {
   function syncCurrentValues() {
     for (const target of document.querySelectorAll("[data-commerce-current-price]")) target.textContent = formattedPrice(currentPrice);
     for (const target of document.querySelectorAll("[data-commerce-current-stock]")) target.textContent = String(currentStock);
-    priceHelp.textContent = `含币种；当前记录值 ${formattedPrice(currentPrice)}。`;
+    priceHelp.textContent = `币种为 CNY；当前售价为 ${formattedPrice(currentPrice)}。`;
   }
 
   function priceHasSupportedPrecision() {
@@ -331,12 +331,12 @@ function setupCommerceEditor() {
     const changed = [numberValue(price) !== currentPrice, numberValue(stock) !== currentStock].filter(Boolean).length;
     const messages = {
       normal: "商品数据已加载，没有待保存更改。",
-      pending: `${changed} 项本地更改待保存；当前记录值保持可见。`,
+      pending: `${changed} 项本地更改待保存；原值仍显示在表单中。`,
       error: "请修正标记字段；当前商品记录没有改变。",
-      loading: "正在保存到本地参考；不会自动发布到渠道。",
-      committed: "本地参考已保存为修订 R19；未发送到服务端。",
+      loading: "正在保存到本地示例；不会自动发布到渠道。",
+      committed: "本地示例已保存为修订 R19；未发送到服务器。",
       permission: "当前角色没有商品编辑权限；未创建草稿。",
-      failed: "保存失败；当前记录值保持不变，可重试或放弃本地更改。",
+      failed: "保存失败；原值保持不变，可重试或放弃本地更改。",
     };
     return messages[state];
   }
@@ -347,9 +347,9 @@ function setupCommerceEditor() {
       normal: "商品数据已加载，记录值未改变。",
       pending: "本地草稿包含未保存的商品更改。",
       error: "本地草稿校验失败，记录值未改变。",
-      loading: "本地参考正在保存商品更改。",
-      committed: "本地参考已保存为修订 R19，未发布到渠道。",
-      permission: "当前角色被限制为只读，没有创建草稿。",
+      loading: "本地示例正在保存商品更改。",
+      committed: "本地示例已保存为修订 R19，未发布到渠道。",
+      permission: "当前角色只有查看权限，未创建草稿。",
       failed: "保存失败，本地草稿已保留，记录值未改变。",
     };
     return messages[state];

@@ -51,6 +51,7 @@ import {
   X,
 } from "lucide";
 import { lockModalScroll, unlockModalScroll } from "../shared/modal-scroll-lock.js";
+import chineseLocale from "./locale.zh-CN.json";
 
 const root = document.documentElement;
 const media = matchMedia("(prefers-color-scheme: dark)");
@@ -63,7 +64,15 @@ const languageTrigger = document.querySelector("[data-language-trigger]");
 const languageMenu = document.querySelector("[data-language-menu]");
 const languageOptions = [...document.querySelectorAll("[data-language-option]")];
 const dictionaryElement = document.querySelector("[data-i18n-dictionary]");
-const dictionary = dictionaryElement ? JSON.parse(dictionaryElement.textContent) : {};
+const page = document.body?.dataset.page;
+const inlineDictionary = dictionaryElement ? JSON.parse(dictionaryElement.textContent) : {};
+const dictionary = Object.freeze({
+  en: Object.freeze(inlineDictionary.en ?? {}),
+  "zh-CN": Object.freeze({
+    ...chineseLocale.common,
+    ...(chineseLocale.pages?.[page] ?? {}),
+  }),
+});
 
 function text(key, locale = root.lang || "zh-CN") {
   return dictionary[locale]?.[key] ?? dictionary["zh-CN"]?.[key] ?? key;
@@ -204,10 +213,8 @@ for (const option of languageOptions) {
     const locale = option.dataset.languageOption;
     applyLocale(locale);
     const url = new URL(window.location.href);
-    if (url.searchParams.has("lang")) {
-      url.searchParams.set("lang", locale);
-      window.history.replaceState(null, "", `${url.pathname}${url.search}${url.hash}`);
-    }
+    url.searchParams.set("lang", locale);
+    window.history.replaceState(null, "", `${url.pathname}${url.search}${url.hash}`);
     languageMenuController?.close();
   });
 }

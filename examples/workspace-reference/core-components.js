@@ -1,5 +1,6 @@
 import {
   Activity,
+  ArrowRight,
   Bell,
   Check,
   ChevronDown,
@@ -45,6 +46,7 @@ window.addEventListener("kin:themechange", (event) => {
 
 const iconSet = {
   Activity,
+  ArrowRight,
   Bell,
   Check,
   ChevronDown,
@@ -230,7 +232,7 @@ function resetFileUpload() {
 }
 
 function failFileValidation(message) {
-  renderFileState("failed-validation", "验证失败", message);
+  renderFileState("failed-validation", "校验失败", message);
   fileRetry.hidden = true;
   fileRemove.hidden = false;
 }
@@ -249,14 +251,14 @@ function startLocalTransfer() {
   stopFileTimers();
   transferAttempt += 1;
   let progress = 0;
-  renderFileState("uploading", "本地模拟中", "正在运行本地交互 fixture；文件不会发送到服务器。", progress);
+  renderFileState("uploading", "本地模拟中", "正在运行本地交互样例；文件不会发送到服务器。", progress);
   uploadTimer = setInterval(() => {
     progress = Math.min(100, progress + 20);
     fileProgress.value = progress;
     fileProgress.textContent = `${progress}%`;
     if (selectedFile?.name.toLocaleLowerCase().includes("retry") && transferAttempt === 1 && progress >= 60) {
       stopFileTimers();
-      renderFileState("failed", "模拟传输失败", "本地 fixture 在传输阶段失败。可重试；没有文件离开此页面。", progress);
+      renderFileState("failed", "模拟传输失败", "本地样例在传输阶段失败。可重试；没有文件离开此页面。", progress);
       return;
     }
     if (progress >= 100) {
@@ -271,7 +273,7 @@ function validateSelectedFile(file) {
   selectedFile = file;
   transferAttempt = 0;
   fileName.textContent = `${file.name} · ${formatFileSize(file.size)}`;
-  renderFileState("validating", "正在验证", "正在检查文件类型与大小；尚未开始模拟传输。");
+  renderFileState("validating", "正在校验", "正在检查文件类型与大小；尚未开始模拟传输。");
   validationTimer = setTimeout(() => {
     const extensionAccepted = /\.(pdf|png|jpe?g)$/i.test(file.name);
     if (!acceptedFileTypes.has(file.type) && !extensionAccepted) {
@@ -449,7 +451,7 @@ function closeManagedDialog(dialog, { trigger, returnValue = "cancel", restoreFo
     if (restoreFocus) trigger?.focus();
   };
   const onTransitionEnd = (event) => {
-    if (event.target === dialog && (event.propertyName === "opacity" || event.propertyName === "transform")) finish();
+    if (event.target === dialog && event.propertyName === "transform") finish();
   };
   dialog.addEventListener("transitionend", onTransitionEnd);
   timer = window.setTimeout(finish, reducedMotion.matches ? 90 : 230);
@@ -494,52 +496,55 @@ contextMenu.addEventListener("keydown", (event) => {
 });
 for (const item of contextItems) item.addEventListener("click", () => setContextMenu(false, true));
 
-const tooltipSample = document.querySelector(".tooltip-sample");
-const tooltipTrigger = tooltipSample.querySelector("button");
-const tooltipSurface = tooltipSample.querySelector('[role="tooltip"]');
-let tooltipOpenTimer;
+function bindCoreTooltip(tooltipSample) {
+  const tooltipTrigger = tooltipSample.querySelector("button");
+  const tooltipSurface = tooltipSample.querySelector('[role="tooltip"]');
+  let tooltipOpenTimer;
 
-function openCoreTooltip(instant) {
-  window.clearTimeout(tooltipOpenTimer);
-  if (tooltipTrigger.dataset.tooltipDismissed === "true") return;
-  const open = () => {
-    tooltipSurface.hidden = false;
-    tooltipSurface.dataset.instant = String(instant || reducedMotion.matches);
-    tooltipSurface.dataset.state = instant || reducedMotion.matches ? "open" : "opening";
-    if (tooltipSurface.dataset.state === "opening") {
-      requestAnimationFrame(() => {
-        if (tooltipSurface.dataset.state === "opening") tooltipSurface.dataset.state = "open";
-      });
-    }
-  };
-  if (instant) open();
-  else tooltipOpenTimer = window.setTimeout(open, 500);
+  function openCoreTooltip(instant) {
+    window.clearTimeout(tooltipOpenTimer);
+    if (tooltipTrigger.dataset.tooltipDismissed === "true") return;
+    const open = () => {
+      tooltipSurface.hidden = false;
+      tooltipSurface.dataset.instant = String(instant || reducedMotion.matches);
+      tooltipSurface.dataset.state = instant || reducedMotion.matches ? "open" : "opening";
+      if (tooltipSurface.dataset.state === "opening") {
+        requestAnimationFrame(() => {
+          if (tooltipSurface.dataset.state === "opening") tooltipSurface.dataset.state = "open";
+        });
+      }
+    };
+    if (instant) open();
+    else tooltipOpenTimer = window.setTimeout(open, 500);
+  }
+
+  function closeCoreTooltip() {
+    window.clearTimeout(tooltipOpenTimer);
+    tooltipSurface.dataset.state = "closed";
+    tooltipSurface.hidden = true;
+  }
+
+  tooltipTrigger.addEventListener("pointerenter", () => openCoreTooltip(false));
+  tooltipTrigger.addEventListener("pointerleave", () => {
+    if (document.activeElement === tooltipTrigger) return;
+    tooltipTrigger.dataset.tooltipDismissed = "false";
+    closeCoreTooltip();
+  });
+  tooltipTrigger.addEventListener("focus", () => openCoreTooltip(true));
+  tooltipTrigger.addEventListener("keydown", (event) => {
+    if (event.key !== "Escape") return;
+    event.preventDefault();
+    tooltipTrigger.dataset.tooltipDismissed = "true";
+    closeCoreTooltip();
+  });
+  tooltipTrigger.addEventListener("blur", () => {
+    if (tooltipTrigger.matches(":hover")) return;
+    tooltipTrigger.dataset.tooltipDismissed = "false";
+    closeCoreTooltip();
+  });
 }
 
-function closeCoreTooltip() {
-  window.clearTimeout(tooltipOpenTimer);
-  tooltipSurface.dataset.state = "closed";
-  tooltipSurface.hidden = true;
-}
-
-tooltipTrigger.addEventListener("pointerenter", () => openCoreTooltip(false));
-tooltipTrigger.addEventListener("pointerleave", () => {
-  if (document.activeElement === tooltipTrigger) return;
-  tooltipTrigger.dataset.tooltipDismissed = "false";
-  closeCoreTooltip();
-});
-tooltipTrigger.addEventListener("focus", () => openCoreTooltip(true));
-tooltipTrigger.addEventListener("keydown", (event) => {
-  if (event.key !== "Escape") return;
-  event.preventDefault();
-  tooltipTrigger.dataset.tooltipDismissed = "true";
-  closeCoreTooltip();
-});
-tooltipTrigger.addEventListener("blur", () => {
-  if (tooltipTrigger.matches(":hover")) return;
-  tooltipTrigger.dataset.tooltipDismissed = "false";
-  closeCoreTooltip();
-});
+for (const tooltipSample of document.querySelectorAll(".tooltip-sample")) bindCoreTooltip(tooltipSample);
 
 const tree = document.querySelector('[role="tree"]');
 const treeItems = [...tree.querySelectorAll('[role="treeitem"]')];
@@ -676,7 +681,7 @@ authForm.addEventListener("submit", (event) => {
   if (!validateCoreAuthForm(authForm, authStatus)) return;
   authStatus.textContent = authForm.closest('[lang="en"]')
     ? "This local interface reference is not connected to an identity service and sends no credentials."
-    : "这是本地界面参考，未连接身份服务，也不会发送凭据。";
+    : "这是本地界面示例，未连接身份服务，也不会发送凭据。";
   authStatus.focus();
 });
 
@@ -698,7 +703,7 @@ reauthForm.addEventListener("submit", (event) => {
   if (!validateCoreAuthForm(reauthForm, reauthStatus)) return;
   reauthStatus.textContent = reauthForm.closest('[lang="en"]')
     ? "This is a local interface reference. Connect a real identity service before continuing."
-    : "这是本地界面参考；连接真实身份服务后才能继续。";
+    : "这是本地界面示例；连接真实身份服务后才能继续。";
   reauthStatus.focus();
 });
 reauthDialog.addEventListener("cancel", (event) => {
@@ -724,7 +729,7 @@ authTaskForm.addEventListener("submit", (event) => {
   if (!validateCoreAuthForm(authTaskForm, authTaskStatus)) return;
   authTaskStatus.textContent = authTaskForm.closest('[lang="en"]')
     ? "This is a local interface reference. Connect a real identity service before resuming the save action."
-    : "这是本地界面参考；连接真实身份服务后才能恢复保存操作。";
+    : "这是本地界面示例；连接真实身份服务后才能恢复保存操作。";
   authTaskStatus.focus();
 });
 authTaskDialog.addEventListener("cancel", (event) => {
@@ -833,6 +838,197 @@ async function getCoreSonner() {
   return coreSonnerModulePromise;
 }
 
+const buttonLab = document.querySelector("[data-button-lab]");
+if (buttonLab) {
+  const buttonStage = buttonLab.querySelector("[data-button-stage]");
+  const buttonStatus = buttonLab.querySelector("[data-button-status]");
+  const buttonPreview = buttonLab.querySelector("[data-button-preview]");
+  const buttonPreviewPanel = buttonLab.querySelector("[data-button-preview-panel]");
+  const buttonPreviewLabel = buttonLab.querySelector("[data-button-preview-label]");
+  const buttonSizeSelect = buttonLab.querySelector("[data-button-size-select]");
+  const buttonOutcome = buttonLab.querySelector("[data-button-outcome]");
+  const buttonAsync = buttonLab.querySelector("[data-button-async]");
+  const buttonAsyncLabel = buttonLab.querySelector("[data-button-async-label]");
+  const buttonCopy = buttonLab.querySelector("[data-button-copy]");
+  const buttonNotify = buttonLab.querySelector("[data-button-notify]");
+  const buttonMenuTrigger = buttonLab.querySelector("[data-button-menu-trigger]");
+  const buttonMenu = buttonLab.querySelector("[data-button-menu]");
+  const buttonMenuItems = [...buttonMenu.querySelectorAll('[role="menuitem"]')];
+  const buttonDangerOpen = buttonLab.querySelector("[data-button-danger-open]");
+  const buttonDangerResult = buttonLab.querySelector("[data-button-danger-result]");
+  const buttonDangerUndo = buttonLab.querySelector("[data-button-danger-undo]");
+  const buttonConfirmDialog = buttonLab.querySelector("[data-button-confirm-dialog]");
+  const buttonConfirmCancel = buttonLab.querySelector("[data-button-confirm-cancel]");
+  const buttonConfirmCommit = buttonLab.querySelector("[data-button-confirm-commit]");
+  let asyncCommitTimer;
+  let asyncResetTimer;
+  let dangerCommitPending = false;
+
+  function setButtonStatus(message) {
+    buttonStatus.textContent = message;
+  }
+
+  function setAsyncButtonState(state, label) {
+    buttonAsync.dataset.controlState = state;
+    buttonAsync.setAttribute("aria-busy", String(state === "pending"));
+    buttonAsync.disabled = state === "pending";
+    buttonAsync.classList.toggle("is-pending", state === "pending");
+    buttonAsync.classList.toggle("is-complete", state === "success");
+    buttonAsyncLabel.textContent = label;
+  }
+
+  buttonPreview.addEventListener("click", () => {
+    const active = buttonPreview.getAttribute("aria-pressed") !== "true";
+    buttonPreview.setAttribute("aria-pressed", String(active));
+    buttonPreview.dataset.controlState = active ? "active" : "default";
+    buttonPreviewLabel.textContent = active ? "返回编辑" : "预览";
+    buttonPreviewPanel.dataset.preview = String(active);
+    setButtonStatus(active ? "已进入只读预览；保存操作仍保持当前草稿。" : "已返回编辑状态。");
+  });
+
+  buttonSizeSelect.addEventListener("change", () => {
+    buttonStage.dataset.buttonSize = buttonSizeSelect.value;
+    const selected = buttonSizeSelect.options[buttonSizeSelect.selectedIndex].textContent;
+    setButtonStatus(`操作密度已切换为${selected}；移动端仍保持至少 44px 的触控目标。`);
+  });
+
+  buttonAsync.addEventListener("click", () => {
+    if (buttonAsync.disabled) return;
+    window.clearTimeout(asyncCommitTimer);
+    window.clearTimeout(asyncResetTimer);
+    setAsyncButtonState("pending", "正在保存");
+    setButtonStatus("正在保存规则；按钮宽度和图标槽保持稳定。");
+    asyncCommitTimer = window.setTimeout(async () => {
+      const failed = buttonOutcome.value === "error";
+      const sonner = await getCoreSonner();
+      if (failed) {
+        setAsyncButtonState("error", "重试保存");
+        setButtonStatus("保存失败；操作保留在原位，可直接重试。");
+        sonner.showKinToast({
+          title: "规则未保存",
+          description: "本地样例模拟请求失败，可在原按钮上重试。",
+          theme: document.documentElement.dataset.theme,
+          locale: coreLocale,
+          tone: "error",
+        });
+        return;
+      }
+
+      setAsyncButtonState("success", "已保存");
+      setButtonStatus("规则已保存；完成状态短暂确认结果。");
+      sonner.showKinToast({
+        title: "规则已保存",
+        description: "触发条件和复核方式已更新。",
+        theme: document.documentElement.dataset.theme,
+        locale: coreLocale,
+        tone: "success",
+      });
+      asyncResetTimer = window.setTimeout(() => setAsyncButtonState("default", "保存规则"), 1100);
+    }, 650);
+  });
+
+  buttonCopy.addEventListener("click", async () => {
+    try {
+      await navigator.clipboard.writeText("https://kin.example/rules/channel-price-sync");
+      setButtonStatus("示例规则链接已复制。");
+      const sonner = await getCoreSonner();
+      sonner.showKinToast({
+        title: "链接已复制",
+        description: "示例地址已写入剪贴板。",
+        theme: document.documentElement.dataset.theme,
+        locale: coreLocale,
+      });
+    } catch {
+      setButtonStatus("浏览器未允许写入剪贴板；按钮仍保留明确的可访问名称。");
+    }
+  });
+
+  buttonNotify.addEventListener("click", async () => {
+    setButtonStatus("已发送一条可撤销的 Sonner 操作反馈。");
+    const sonner = await getCoreSonner();
+    sonner.showKinToast({
+      title: "规则已加入关注",
+      description: "这里只反馈用户刚刚执行的操作。",
+      actionLabel: "撤销",
+      undoTitle: "关注已撤销",
+      theme: document.documentElement.dataset.theme,
+      locale: coreLocale,
+      tone: "success",
+    });
+  });
+
+  function closeButtonMenu(restoreFocus = true) {
+    setTransientSurface(buttonMenu, false, { trigger: buttonMenuTrigger, restoreFocus });
+  }
+
+  buttonMenuTrigger.addEventListener("click", () => {
+    const open = buttonMenu.hidden || buttonMenu.dataset.state === "closing";
+    setTransientSurface(buttonMenu, open, { trigger: buttonMenuTrigger, focusTarget: buttonMenuItems[0] });
+  });
+  buttonMenu.addEventListener("keydown", (event) => {
+    const index = buttonMenuItems.indexOf(document.activeElement);
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      event.preventDefault();
+      buttonMenuItems[(index + (event.key === "ArrowDown" ? 1 : -1) + buttonMenuItems.length) % buttonMenuItems.length].focus();
+    }
+    if (event.key === "Escape") {
+      event.preventDefault();
+      closeButtonMenu();
+    }
+  });
+  for (const item of buttonMenuItems) {
+    item.addEventListener("click", () => {
+      const messages = {
+        duplicate: "已创建规则副本；原规则保持不变。",
+        history: "已定位到最近一次变更记录。",
+        pause: "同步已暂停；可从同一菜单恢复。",
+      };
+      setButtonStatus(messages[item.dataset.buttonMenuAction]);
+      closeButtonMenu();
+    });
+  }
+
+  buttonDangerOpen.addEventListener("click", () => {
+    openManagedDialog(buttonConfirmDialog, { trigger: buttonDangerOpen, focusTarget: buttonConfirmCancel });
+  });
+  buttonConfirmCancel.addEventListener("click", () => {
+    closeManagedDialog(buttonConfirmDialog, { trigger: buttonDangerOpen });
+  });
+  buttonConfirmCommit.addEventListener("click", () => {
+    dangerCommitPending = true;
+    closeManagedDialog(buttonConfirmDialog, {
+      trigger: buttonDangerOpen,
+      returnValue: "confirm",
+      restoreFocus: false,
+    });
+  });
+  buttonConfirmDialog.addEventListener("cancel", (event) => {
+    event.preventDefault();
+    closeManagedDialog(buttonConfirmDialog, { trigger: buttonDangerOpen });
+  });
+  buttonConfirmDialog.addEventListener("close", () => {
+    if (!dangerCommitPending) return;
+    dangerCommitPending = false;
+    buttonDangerOpen.hidden = true;
+    setTransientSurface(buttonDangerResult, true, { focusTarget: buttonDangerUndo });
+    setButtonStatus("规则已停用；恢复入口仍在当前上下文中。");
+  });
+  buttonDangerUndo.addEventListener("click", async () => {
+    setTransientSurface(buttonDangerResult, false, { trigger: buttonDangerOpen, restoreFocus: true });
+    buttonDangerOpen.hidden = false;
+    buttonDangerOpen.focus();
+    setButtonStatus("已撤销停用，规则恢复运行。");
+    const sonner = await getCoreSonner();
+    sonner.showKinToast({
+      title: "停用已撤销",
+      description: "渠道价格同步已恢复。",
+      theme: document.documentElement.dataset.theme,
+      locale: coreLocale,
+      tone: "success",
+    });
+  });
+}
+
 const motionToggle = document.querySelector("[data-motion-toggle]");
 motionToggle.addEventListener("click", () => {
   const active = motionToggle.getAttribute("aria-pressed") !== "true";
@@ -879,7 +1075,7 @@ document.querySelector("[data-motion-toast]").addEventListener("click", async ()
     description: "完成后可在下载中心查看。",
     theme: document.documentElement.dataset.theme,
     locale: coreLocale,
-    duration: 850,
+    duration: 1400,
   });
 });
 
@@ -920,18 +1116,36 @@ let drawerPhaseTimer;
 
 function setDrawer(open, restoreFocus = true) {
   window.clearTimeout(drawerPhaseTimer);
-  drawerLayer.dataset.state = open ? "open" : "closed";
-  drawerLayer.dataset.phase = open ? "opening" : "closing";
-  drawerLayer.setAttribute("aria-hidden", String(!open));
-  drawerLayer.inert = !open;
-  referenceHeader.inert = open;
-  coreReference.inert = open;
-  document.body.classList.toggle("drawer-modal-open", open);
-  drawerOpen.setAttribute("aria-expanded", String(open));
-  if (open) drawerClose.focus();
-  else if (restoreFocus) drawerOpen.focus();
+  if (open) {
+    drawerLayer.dataset.state = "open";
+    drawerLayer.dataset.phase = "opening";
+    drawerLayer.setAttribute("aria-hidden", "false");
+    drawerLayer.inert = false;
+    referenceHeader.inert = true;
+    coreReference.inert = true;
+    document.body.classList.add("drawer-modal-open");
+    drawerOpen.setAttribute("aria-expanded", "true");
+    drawerClose.focus();
+    drawerPhaseTimer = window.setTimeout(() => {
+      if (drawerLayer.dataset.state === "open") drawerLayer.dataset.phase = "open";
+    }, reducedMotion.matches ? 90 : 240);
+    return;
+  }
+
+  if (drawerLayer.dataset.state === "closed") return;
+  drawerLayer.dataset.state = "closing";
+  drawerLayer.dataset.phase = "closing";
+  drawerOpen.setAttribute("aria-expanded", "false");
   drawerPhaseTimer = window.setTimeout(() => {
-    if (drawerLayer.dataset.state === (open ? "open" : "closed")) drawerLayer.dataset.phase = open ? "open" : "closed";
+    if (drawerLayer.dataset.state !== "closing") return;
+    drawerLayer.dataset.state = "closed";
+    drawerLayer.dataset.phase = "closed";
+    drawerLayer.setAttribute("aria-hidden", "true");
+    drawerLayer.inert = true;
+    referenceHeader.inert = false;
+    coreReference.inert = false;
+    document.body.classList.remove("drawer-modal-open");
+    if (restoreFocus) drawerOpen.focus();
   }, reducedMotion.matches ? 90 : 240);
 }
 drawerLayer.inert = true;

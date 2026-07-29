@@ -59,7 +59,7 @@
     "showcased": "A dedicated Atlas presentation exposes checked state, viewport, and theme controls."
   },
   "known_gaps": [
-    "The Scenario Atlas discovery and inspection interfaces are currently English-only.",
+    "Simplified Chinese Atlas and Lab copy is a non-normative presentation layer over the English canonical catalog; language-specific assistive-technology review remains open.",
     "Motion follows each reference and the user motion preference; the Atlas does not claim a separate scenario motion control."
   ],
   "scenarios": [
@@ -847,7 +847,7 @@
           "assertion": {
             "kind": "text",
             "selector": "[data-commerce-edit-status]",
-            "value": "本地参考已保存为修订 R19"
+            "value": "本地示例已保存为修订 R19"
           }
         },
         {

@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#f6f7f8" />
-    <title>KIN Information Site Reference</title>
+    <title>KIN 信息网站示例</title>
     <script>
       (()=>{const p=localStorage.getItem("kin-reference-theme")||"system";const t=p==="system"?(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light"):p;document.documentElement.dataset.theme=t;document.documentElement.dataset.themePreference=p;document.documentElement.dataset.contrast=localStorage.getItem("kin-reference-contrast")==="more"?"more":"normal"})();
     </script>
@@ -41,7 +41,7 @@
         <p class="object-id">记录集 INF-2026-0712</p>
         <h1>区域公共网络节点状态记录</h1>
         <p class="deck">汇总公开状态页、证书记录和运营公告，用于查阅 2026 年第二季度的可验证变化。</p>
-        <div class="article-meta"><span>发布：2026-07-12</span><span>最近修订：2026-07-12 14:32 CST</span><span>来源：12</span><span>状态：已复核</span></div>
+        <div class="article-meta"><span>发布：2026-07-12</span><span>最近修订：2026-07-12 14:32 UTC+8</span><span>来源：12</span><span>状态：已复核</span></div>
 
         <section id="summary">
           <h2>摘要</h2>
@@ -52,7 +52,7 @@
         <section id="records">
           <h2>关键记录</h2>
           <table class="record-table">
-            <thead><tr><th>日期</th><th>对象</th><th>记录</th><th>验证状态</th></tr></thead>
+            <thead><tr><th>日期</th><th>记录</th><th>变更</th><th>核验状态</th></tr></thead>
             <tbody>
               <tr><td>06-18</td><td>HK-02</td><td>计划维护 42 分钟</td><td><i class="status-dot positive"></i>已证实</td></tr>
               <tr><td>06-26</td><td>SG-04</td><td>证书完成续期</td><td><i class="status-dot positive"></i>已证实</td></tr>
@@ -63,19 +63,19 @@
 
         <section id="method">
           <h2>采集与限制</h2>
-          <p>系统每 15 分钟读取公开状态页，并保存响应时间、证书和 DNS 结果。公告内容由人工复核后关联到相应记录。来源无法访问时，已有记录保留并标记为陈旧。</p>
+          <p>系统每 15 分钟读取公开状态页，并保存响应时间、证书和 DNS 结果。公告内容由人工复核后关联到相应记录。来源无法访问时，已有记录保留并标记为可能已过期。</p>
           <p>记录中的时间按来源提供的时区保存，同时显示统一的绝对时间。相对时间仅作为浏览辅助。</p>
         </section>
 
-        <aside class="source-note"><strong>解释边界：</strong>“已证实”表示记录得到两个独立来源或一个官方来源支持，不代表相关服务的整体安全等级。</aside>
+        <aside class="source-note"><strong>状态说明：</strong>“已证实”表示记录得到两个独立来源或一个官方来源支持，不代表相关服务的整体安全等级。</aside>
       </main>
 
       <aside class="source-rail" aria-label="来源与修订">
         <h2>主要来源</h2>
         <ol>
-          <li id="source-1"><strong>公开状态页</strong><br />采集于 14:30 CST</li>
-          <li id="source-2"><strong>证书透明度记录</strong><br />采集于 14:18 CST</li>
-          <li id="source-3"><strong>公开维护公告</strong><br />复核于 13:55 CST</li>
+          <li id="source-1"><strong>公开状态页</strong><br />采集于 14:30 UTC+8</li>
+          <li id="source-2"><strong>证书透明度记录</strong><br />采集于 14:18 UTC+8</li>
+          <li id="source-3"><strong>公开维护公告</strong><br />复核于 13:55 UTC+8</li>
         </ol>
         <div id="revisions" class="revision"><h2>修订</h2><p>v1.2 补充 JP-01 来源冲突说明。</p><p>v1.1 修正 SG-04 证书日期。</p></div>
       </aside>

@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#08090a" />
-    <title>KIN Core Component Reference</title>
+    <title>KIN 核心组件示例</title>
     <script>
       (() => {
         const preference = localStorage.getItem("kin-reference-theme") || "system";
@@ -29,12 +29,12 @@
 
     <header class="reference-header">
       <div>
-        <p>KIN reference</p>
-        <h1>核心组件合同</h1>
+        <p>KIN 示例</p>
+        <h1>核心组件规范</h1>
       </div>
       <div class="reference-actions">
-        <a class="reference-back icon-action" href="./motion.html"><i data-lucide="activity"></i><span>Motion Lab</span></a>
-        <a class="reference-back" href="./states.html">状态基准</a>
+        <a class="reference-back icon-action" href="./motion.html"><i data-lucide="activity"></i><span>动效实验室</span></a>
+        <a class="reference-back" href="./states.html">状态示例</a>
         <div class="kin-preference-controls" data-preference-controls><button type="button" class="kin-theme-switch" role="switch" data-theme-switch aria-checked="false" aria-label="切换为夜间模式"><span class="kin-theme-switch-icon"><i data-lucide="sun"></i></span><span class="kin-theme-switch-track" aria-hidden="true"><span class="kin-theme-switch-thumb"></span></span><span class="kin-theme-switch-icon"><i data-lucide="moon"></i></span></button><div class="kin-theme-menu-control"><button type="button" class="kin-theme-menu-trigger" data-theme-menu-trigger aria-haspopup="menu" aria-expanded="false" aria-label="外观选项"><i data-lucide="chevron-down"></i></button><div class="kin-theme-menu" data-theme-menu data-state="closed" role="menu" aria-label="外观选项" hidden><button type="button" role="menuitemradio" aria-checked="false" data-theme-preference="light"><i class="kin-theme-menu-item-icon" data-lucide="sun"></i><span>日间</span><i class="kin-theme-menu-check" data-lucide="check"></i></button><button type="button" role="menuitemradio" aria-checked="false" data-theme-preference="dark"><i class="kin-theme-menu-item-icon" data-lucide="moon"></i><span>夜间</span><i class="kin-theme-menu-check" data-lucide="check"></i></button><button type="button" role="menuitemradio" aria-checked="true" data-theme-preference="system"><i class="kin-theme-menu-item-icon" data-lucide="monitor"></i><span>跟随系统</span><i class="kin-theme-menu-check" data-lucide="check"></i></button></div></div></div>
         <button type="button" data-contrast-toggle aria-pressed="false">高对比</button>
       </div>
@@ -54,7 +54,7 @@
       <section id="actions" aria-labelledby="actions-title">
         <header class="reference-section-heading">
           <div><h2 id="actions-title">操作与选择</h2><p>执行、开关、单选和模式选择使用不同语义。</p></div>
-          <span>Actions + selection</span>
+          <span>操作与选择</span>
         </header>
         <div class="component-grid action-grid">
           <article class="component-sample">
@@ -64,7 +64,7 @@
               <button type="button">预览</button>
               <button type="button" disabled aria-describedby="disabled-reason">发布</button>
             </div>
-            <p id="disabled-reason" class="sample-note">完成审核后才能发布。</p>
+            <p id="disabled-reason" class="sample-note">审批通过后才能发布。</p>
           </article>
           <article class="component-sample">
             <h3>布尔设置</h3>
@@ -72,10 +72,10 @@
             <button class="switch-row" type="button" role="switch" aria-checked="true" data-core-switch><span>自动刷新</span><i aria-hidden="true"></i></button>
           </article>
           <article class="component-sample">
-            <h3 id="review-mode-label">审核模式</h3>
+            <h3 id="review-mode-label">复核模式</h3>
             <div class="radio-stack" role="radiogroup" aria-labelledby="review-mode-label">
               <label><input type="radio" name="review-mode" value="manual" checked /> 人工确认</label>
-              <label><input type="radio" name="review-mode" value="assisted" /> 辅助审核</label>
+              <label><input type="radio" name="review-mode" value="assisted" /> 辅助复核</label>
             </div>
           </article>
           <article class="component-sample">
@@ -87,61 +87,101 @@
             </div>
           </article>
         </div>
-        <div class="button-contract" aria-labelledby="button-contract-title">
+        <div class="button-contract" aria-labelledby="button-contract-title" data-button-lab>
           <div class="button-contract-heading">
             <div>
-              <h3 id="button-contract-title">按钮变体与状态</h3>
-              <p>变体表达操作层级，状态表达当前进程。图标、标签和按钮宽度在状态变化时保持稳定。</p>
+              <h3 id="button-contract-title">按钮行为实验台</h3>
+              <p>按钮的差异来自任务，不来自换一组颜色。下面把层级、异步反馈、菜单、危险确认和图标说明放进同一个真实工作流。</p>
             </div>
-            <span>Variant × state × icon</span>
+            <span>4 类任务 · 1 个主要操作</span>
           </div>
-          <div class="button-matrix" role="table" aria-label="按钮变体与状态矩阵">
-            <div class="button-matrix-row button-matrix-header" role="row">
-              <span role="columnheader">变体</span><span role="columnheader">默认</span><span role="columnheader">带图标</span><span role="columnheader">状态</span><span role="columnheader">禁用</span>
-            </div>
-            <div class="button-matrix-row" role="row">
-              <strong role="rowheader">主要操作</strong>
-              <span role="cell"><button type="button" class="primary-action">保存更改</button></span>
-              <span role="cell"><button type="button" class="primary-action icon-action"><i data-lucide="save"></i><span>保存视图</span></button></span>
-              <span role="cell"><button type="button" class="primary-action icon-action stateful-action" data-control-state="pending" aria-busy="true" disabled><span class="motion-icon-slot" aria-hidden="true"><i data-lucide="save" data-icon-state="default"></i><i data-lucide="loader-circle" data-icon-state="pending"></i></span><span>正在保存</span></button></span>
-              <span role="cell"><button type="button" class="primary-action" disabled>保存更改</button></span>
-            </div>
-            <div class="button-matrix-row" role="row">
-              <strong role="rowheader">次要操作</strong>
-              <span role="cell"><button type="button" class="secondary-action">预览</button></span>
-              <span role="cell"><button type="button" class="secondary-action icon-action"><i data-lucide="external-link"></i><span>打开预览</span></button></span>
-              <span role="cell"><button type="button" class="secondary-action icon-action" data-control-state="success"><span class="motion-icon-slot" aria-hidden="true"><i data-lucide="check" data-icon-state="success"></i></span><span>已更新</span></button></span>
-              <span role="cell"><button type="button" class="secondary-action" disabled>预览</button></span>
-            </div>
-            <div class="button-matrix-row" role="row">
-              <strong role="rowheader">弱化操作</strong>
-              <span role="cell"><button type="button" class="ghost-action">更多操作</button></span>
-              <span role="cell"><button type="button" class="ghost-action icon-action"><i data-lucide="ellipsis"></i><span>更多操作</span></button></span>
-              <span role="cell"><span class="matrix-note">仅在当前上下文需要时显示</span></span>
-              <span role="cell"><button type="button" class="ghost-action" disabled>更多操作</button></span>
-            </div>
-            <div class="button-matrix-row" role="row">
-              <strong role="rowheader">破坏性操作</strong>
-              <span role="cell"><button type="button" class="destructive-action">移除记录</button></span>
-              <span role="cell"><button type="button" class="destructive-action icon-action"><i data-lucide="circle-alert"></i><span>停用规则</span></button></span>
-              <span role="cell"><button type="button" class="destructive-action icon-action" data-control-state="error"><span class="motion-icon-slot" aria-hidden="true"><i data-lucide="circle-alert" data-icon-state="error"></i></span><span>重试移除</span></button></span>
-              <span role="cell"><button type="button" class="destructive-action" disabled>移除记录</button></span>
-            </div>
-            <div class="button-matrix-row" role="row">
-              <strong role="rowheader">图标按钮</strong>
-              <span role="cell"><span class="icon-button-example"><button type="button" class="icon-only-control" aria-label="复制对象链接" title="复制对象链接"><i data-lucide="copy"></i></button><small>复制</small></span></span>
-              <span role="cell"><span class="icon-button-example"><button type="button" class="icon-only-control" aria-label="更多对象操作" title="更多对象操作"><i data-lucide="ellipsis"></i></button><small>更多</small></span></span>
-              <span role="cell"><span class="matrix-note">必须提供可访问名称和 Tooltip</span></span>
-              <span role="cell"><button type="button" class="icon-only-control" aria-label="关闭（不可用）" disabled><i data-lucide="x"></i></button></span>
-            </div>
+          <div class="button-lab-layout">
+            <section class="button-lab-stage" aria-labelledby="button-lab-stage-title" data-button-stage data-button-size="default">
+              <header class="button-lab-toolbar">
+                <div class="button-lab-entity">
+                  <span>价格规则</span>
+                  <div><h4 id="button-lab-stage-title">渠道价格同步</h4><span class="button-lab-draft">草稿</span></div>
+                  <p>官网与两个销售渠道 · 最近编辑于 2 分钟前</p>
+                </div>
+                <div class="button-lab-actions" aria-label="规则操作">
+                  <button type="button" class="secondary-action icon-action" aria-pressed="false" data-control-state="default" data-button-preview>
+                    <span class="motion-icon-slot" aria-hidden="true"><i data-lucide="eye" data-icon-state="default"></i><i data-lucide="eye-off" data-icon-state="active"></i></span>
+                    <span data-button-preview-label>预览</span>
+                  </button>
+                  <span class="tooltip-sample button-tooltip-anchor">
+                    <button type="button" class="icon-only-control" aria-label="复制规则链接" aria-describedby="button-copy-tooltip" data-button-copy><i data-lucide="copy"></i></button>
+                    <span id="button-copy-tooltip" role="tooltip" data-state="closed" hidden>复制规则链接</span>
+                  </span>
+                  <span class="tooltip-sample button-tooltip-anchor">
+                    <button type="button" class="icon-only-control" aria-label="预览通知反馈" aria-describedby="button-notify-tooltip" data-button-notify><i data-lucide="bell"></i></button>
+                    <span id="button-notify-tooltip" role="tooltip" data-state="closed" hidden>预览 Sonner 通知</span>
+                  </span>
+                  <span class="button-overflow-anchor">
+                    <button type="button" class="icon-only-control" aria-label="更多规则操作" aria-haspopup="menu" aria-expanded="false" data-button-menu-trigger><i data-lucide="ellipsis"></i></button>
+                    <span class="button-lab-menu" role="menu" aria-label="更多规则操作" data-button-menu data-state="closed" hidden>
+                      <button type="button" role="menuitem" data-button-menu-action="duplicate"><span class="menu-item-icon"><i data-lucide="copy"></i></span><span>复制规则</span></button>
+                      <button type="button" role="menuitem" data-button-menu-action="history"><span class="menu-item-icon"><i data-lucide="history"></i></span><span>查看变更记录</span></button>
+                      <button type="button" role="menuitem" data-button-menu-action="pause"><span class="menu-item-icon"><i data-lucide="pause"></i></span><span>暂停同步</span></button>
+                    </span>
+                  </span>
+                  <button type="button" class="primary-action icon-action stateful-action button-lab-save" data-control-state="default" data-button-async aria-busy="false">
+                    <span class="motion-icon-slot" aria-hidden="true"><i data-lucide="save" data-icon-state="default"></i><i data-lucide="loader-circle" data-icon-state="pending"></i><i data-lucide="check" data-icon-state="success"></i><i data-lucide="circle-alert" data-icon-state="error"></i></span>
+                    <span data-button-async-label>保存规则</span>
+                  </button>
+                </div>
+              </header>
+              <div class="button-lab-body">
+                <div class="button-lab-record" data-button-preview-panel>
+                  <div><span>触发条件</span><strong>渠道价格偏差超过 8%</strong></div>
+                  <div><span>执行方式</span><strong>先由人工复核</strong></div>
+                  <div><span>生效范围</span><strong>在售商品 · 148 项</strong></div>
+                </div>
+                <div class="button-lab-controls" role="group" aria-label="按钮实验设置">
+                  <label><span>操作密度</span><select data-button-size-select><option value="compact">紧凑 · 30px</option><option value="default" selected>默认 · 34px</option><option value="touch">触控 · 44px</option></select></label>
+                  <label><span>下一次保存</span><select data-button-outcome><option value="success" selected>成功</option><option value="error">失败，可重试</option></select></label>
+                </div>
+              </div>
+              <footer class="button-lab-status-line"><i data-lucide="activity" aria-hidden="true"></i><p role="status" aria-live="polite" data-button-status>所有操作只影响本页示例。</p></footer>
+            </section>
+            <aside class="button-lab-principles" aria-labelledby="button-lab-principles-title">
+              <p id="button-lab-principles-title">行为原则</p>
+              <ol>
+                <li><span>01</span><div><strong>每个区域只有一个主要操作</strong><p>“保存规则”承担推进任务的职责，其余操作降低视觉权重。</p></div></li>
+                <li><span>02</span><div><strong>状态变化不改变几何结构</strong><p>处理中、完成和失败共用稳定的图标槽与按钮宽度。</p></div></li>
+                <li><span>03</span><div><strong>风险进入确认和恢复流程</strong><p>危险操作不会和日常保存并列，也不会在一次点击后失去恢复路径。</p></div></li>
+              </ol>
+            </aside>
           </div>
+          <div class="button-lab-secondary">
+            <section class="button-danger-flow" aria-labelledby="button-danger-title" data-button-danger-flow>
+              <div><span>危险操作</span><h4 id="button-danger-title">停用当前同步规则</h4><p>确认信息解释影响；完成后提供撤销，而不是把错误状态伪装成另一个按钮变体。</p></div>
+              <button type="button" class="destructive-action icon-action" data-button-danger-open><i data-lucide="circle-alert"></i><span>停用规则</span></button>
+              <div class="button-danger-result" role="status" data-button-danger-result hidden><span><i data-lucide="check"></i>规则已停用</span><button type="button" class="secondary-action icon-action" data-button-danger-undo><i data-lucide="history"></i><span>撤销</span></button></div>
+            </section>
+            <section class="button-semantics" aria-labelledby="button-semantics-title">
+              <header><span>按钮层级规范</span><h4 id="button-semantics-title">按任务选择，不按装饰选择</h4></header>
+              <dl>
+                <div><dt><i data-button-swatch="primary"></i>主要</dt><dd>推进当前任务；同一区域只保留一个。</dd></div>
+                <div><dt><i data-button-swatch="secondary"></i>次要</dt><dd>支持主任务，但不改变用户当前承诺。</dd></div>
+                <div><dt><i data-button-swatch="ghost"></i>弱化</dt><dd>上下文操作；需要时出现，不抢占层级。</dd></div>
+                <div><dt><i data-button-swatch="danger"></i>危险</dt><dd>不可逆或高影响操作；必须说明后果。</dd></div>
+              </dl>
+            </section>
+          </div>
+          <dialog class="core-dialog button-lab-confirm-dialog" aria-labelledby="button-lab-confirm-title" data-button-confirm-dialog data-state="closed">
+            <form>
+              <header><div><p>确认危险操作</p><h2 id="button-lab-confirm-title">停用渠道价格同步？</h2></div></header>
+              <p>新价格将不再自动进入复核队列。已有记录和审计历史会保留。</p>
+              <div class="dialog-actions"><button type="button" data-button-confirm-cancel>取消</button><button type="button" class="destructive-action" data-button-confirm-commit>停用规则</button></div>
+            </form>
+          </dialog>
         </div>
       </section>
 
       <section id="authentication" aria-labelledby="authentication-title">
         <header class="reference-section-heading">
           <div><h2 id="authentication-title">登录与身份验证</h2><p>登录页、页面内重新验证和一次性密码属于同一访问体系，但承担不同任务。</p></div>
-          <span>Authentication + access</span>
+          <span>身份验证与访问</span>
         </header>
         <div class="auth-reference-grid">
           <form class="auth-demo-form" data-auth-form novalidate aria-describedby="auth-fixture-note">
@@ -150,7 +190,7 @@
             <label class="core-field"><span>密码</span><span class="password-field"><input id="core-auth-password" type="password" name="password" value="reference-only" autocomplete="current-password" required aria-invalid="false" data-auth-password /><button type="button" class="icon-only-control" data-password-toggle data-control-state="default" aria-label="显示密码" aria-pressed="false"><span class="motion-icon-slot" aria-hidden="true"><i data-lucide="eye" data-icon-state="default"></i><i data-lucide="eye-off" data-icon-state="active"></i></span></button></span><span id="core-auth-password-error" class="field-error" hidden></span></label>
             <label class="check-row"><input type="checkbox" name="remember" /> <span>在这台设备上保持登录</span></label>
             <div class="auth-demo-actions"><button class="primary-action icon-action" type="submit"><i data-lucide="log-in"></i><span>登录</span></button><a href="../page-patterns/access.html">打开完整访问流程</a></div>
-            <p id="auth-fixture-note" class="fixture-note">本地交互参考：不会发送、保存或验证任何凭据。</p>
+            <p id="auth-fixture-note" class="fixture-note">本地交互示例：不会发送、保存或验证任何凭据。</p>
             <p class="auth-demo-status" role="status" aria-live="polite" tabindex="-1" data-auth-status></p>
           </form>
           <div class="auth-pattern-list" aria-labelledby="auth-patterns-title">
@@ -158,7 +198,7 @@
             <div class="auth-pattern-row"><span>完整登录</span><p>独立页面；处理登录、恢复、SSO 与会话错误。</p><a href="../page-patterns/access.html">查看页面</a></div>
             <div class="auth-pattern-row"><span>任务中登录弹窗</span><p>认证过期时保留当前草稿，并只恢复用户已经请求的保存操作。</p><button type="button" class="text-action" data-auth-dialog-open><i data-lucide="log-in"></i><span>打开登录弹窗</span></button></div>
             <div class="auth-pattern-row"><span>页面内重新验证</span><p>在敏感操作前保留当前任务和上下文。</p><button type="button" class="text-action" data-reauth-open><i data-lucide="lock-keyhole"></i><span>打开示例</span></button></div>
-            <div class="auth-pattern-row"><span>一次性密码</span><p>仅当真实认证后端要求时使用；不提供伪造倒计时。</p><a href="../page-patterns/access.html">查看边界</a></div>
+            <div class="auth-pattern-row"><span>一次性密码</span><p>仅当身份服务确实要求时使用；不提供虚假的倒计时。</p><a href="../page-patterns/access.html">查看使用条件</a></div>
           </div>
         </div>
       </section>
@@ -166,16 +206,16 @@
       <section id="forms" aria-labelledby="forms-core-title">
         <header class="reference-section-heading">
           <div><h2 id="forms-core-title">表单与输入</h2><p>标签、输入值、帮助、错误和提交结果由对应字段或表单拥有。</p></div>
-          <span>Forms + entry</span>
+          <span>表单与输入</span>
         </header>
         <form class="core-form" data-core-form novalidate>
           <label class="core-field">
             <span>规则名称</span>
             <input name="rule-name" value="价格异常复核" autocomplete="off" />
-            <small>名称会显示在审核记录中。</small>
+            <small>名称会显示在复核记录中。</small>
           </label>
           <label class="core-field">
-            <span>审核说明</span>
+            <span>复核说明</span>
             <textarea name="description" rows="3">价格变化超过阈值时请求人工确认。</textarea>
             <small>说明为什么需要这条规则。</small>
           </label>
@@ -201,8 +241,8 @@
           </label>
           <div class="core-field file-upload-sample" data-file-upload role="group" aria-labelledby="evidence-upload-label" aria-describedby="evidence-upload-help evidence-upload-fixture">
             <span id="evidence-upload-label">补充证据</span>
-            <small id="evidence-upload-help">PDF、PNG 或 JPG，单个文件不超过 10 MB。文件会先验证，再进入上传流程。</small>
-            <small id="evidence-upload-fixture" class="fixture-note">本地交互 fixture：不会连接服务器，也不会把模拟完成描述成真实上传。</small>
+            <small id="evidence-upload-help">PDF、PNG 或 JPG，单个文件不超过 10 MB。文件会先校验，再进入上传流程。</small>
+            <small id="evidence-upload-fixture" class="fixture-note">本地交互样例：不会连接服务器，也不会把模拟完成描述成真实上传。</small>
             <input class="visually-hidden" id="evidence-upload" type="file" name="evidence" accept=".pdf,.png,.jpg,.jpeg,application/pdf,image/png,image/jpeg" aria-label="补充证据文件" data-file-input />
             <div class="file-dropzone" data-file-dropzone>
               <p>将一个文件拖放到这里，或使用文件选择器。</p>
@@ -225,10 +265,10 @@
 
       <section id="navigation" aria-labelledby="navigation-title">
         <header class="reference-section-heading">
-          <div><h2 id="navigation-title">导航与 Disclosure</h2><p>位置、视图、命令和展开状态保持各自语义。</p></div>
-          <span>Navigation + disclosure</span>
+          <div><h2 id="navigation-title">导航与展开</h2><p>位置、视图、命令和展开状态保持各自语义。</p></div>
+          <span>导航与展开</span>
         </header>
-        <nav class="breadcrumb-sample" aria-label="面包屑"><a href="./">工作区</a><span aria-hidden="true">/</span><a href="#navigation">审核规则</a><span aria-hidden="true">/</span><span aria-current="page">价格异常</span></nav>
+        <nav class="breadcrumb-sample" aria-label="面包屑"><a href="./">工作区</a><span aria-hidden="true">/</span><a href="#navigation">复核规则</a><span aria-hidden="true">/</span><span aria-current="page">价格异常</span></nav>
         <div class="navigation-demo">
           <div class="tab-list" role="tablist" aria-label="规则视图" data-core-tabs>
             <button id="tab-summary" type="button" role="tab" aria-selected="true" aria-controls="panel-summary">摘要</button>
@@ -242,24 +282,24 @@
         <div class="disclosure-row">
           <details><summary>查看规则条件</summary><p>价格变化超过 12%，并且渠道状态不是维护中。</p></details>
           <div class="menu-sample"><button type="button" class="icon-action" aria-haspopup="menu" aria-expanded="false" data-menu-trigger><i data-lucide="ellipsis"></i><span>更多操作</span></button><div class="sample-menu" role="menu" data-state="closed" hidden><button type="button" role="menuitem"><span class="menu-item-icon"><i data-lucide="copy"></i></span><span>复制规则</span></button><button type="button" role="menuitem"><span class="menu-item-icon"><i data-lucide="history"></i></span><span>查看审计记录</span></button><button type="button" role="menuitem"><span class="menu-item-icon"><i data-lucide="circle-pause"></i></span><span>停用规则</span></button></div></div>
-          <div class="menu-sample"><button type="button" class="icon-action" aria-haspopup="menu" aria-expanded="false" data-context-target><i data-lucide="sliders-horizontal"></i><span>当前对象操作</span></button><div class="sample-menu context-menu" role="menu" data-state="closed" hidden><button type="button" role="menuitem"><span class="menu-item-icon"><i data-lucide="external-link"></i></span><span>打开详情</span></button><button type="button" role="menuitem"><span class="menu-item-icon"><i data-lucide="link"></i></span><span>复制对象链接</span></button></div></div>
+            <div class="menu-sample"><button type="button" class="icon-action" aria-haspopup="menu" aria-expanded="false" data-context-target><i data-lucide="sliders-horizontal"></i><span>当前记录操作</span></button><div class="sample-menu context-menu" role="menu" data-state="closed" hidden><button type="button" role="menuitem"><span class="menu-item-icon"><i data-lucide="external-link"></i></span><span>打开详情</span></button><button type="button" role="menuitem"><span class="menu-item-icon"><i data-lucide="link"></i></span><span>复制记录链接</span></button></div></div>
           <span class="tooltip-sample"><button type="button" aria-describedby="rule-help">?</button><span id="rule-help" role="tooltip" data-state="closed" hidden>规则只处理新进入队列的记录。</span></span>
         </div>
-        <nav class="pagination-sample" aria-label="审核记录分页"><button type="button" disabled>上一页</button><a href="#navigation" aria-current="page">1</a><a href="#navigation">2</a><a href="#navigation">3</a><button type="button">下一页</button></nav>
+        <nav class="pagination-sample" aria-label="复核记录分页"><button type="button" disabled>上一页</button><a href="#navigation" aria-current="page">1</a><a href="#navigation">2</a><a href="#navigation">3</a><button type="button">下一页</button></nav>
       </section>
 
       <section id="data-display" aria-labelledby="data-title">
         <header class="reference-section-heading">
           <div><h2 id="data-title">数据展示</h2><p>结构、来源、新鲜度和状态在扫描时保持可比较。</p></div>
-          <span>Data display</span>
+          <span>数据展示</span>
         </header>
         <div class="data-display-grid">
-          <div class="table-wrap"><table class="core-table"><caption>等待审核的价格变化</caption><thead><tr><th scope="col">商品</th><th scope="col">变化</th><th scope="col">状态</th><th scope="col">更新</th></tr></thead><tbody><tr><th scope="row">Field Jacket</th><td>+12.4%</td><td><span class="status-text warning"><i></i>待复核</span></td><td>4 分钟前</td></tr><tr><th scope="row">Canvas Tote</th><td>−3.1%</td><td><span class="status-text positive"><i></i>已验证</span></td><td>18 分钟前</td></tr><tr class="stale-row"><th scope="row">Studio Lamp</th><td>未知</td><td><span class="status-text neutral"><i></i>来源不可用</span></td><td>2 天前</td></tr></tbody></table></div>
-          <div class="data-side-samples"><dl class="property-sample"><div><dt>规则 ID</dt><dd class="mono">RULE-024</dd></div><div><dt>负责人</dt><dd><span class="avatar-sample" aria-hidden="true">林</span> 林晨</dd></div><div><dt>标签</dt><dd><span class="tag-sample">价格</span><span class="tag-sample">人工复核</span></dd></div><div><dt>数据完整度</dt><dd>86 / 100</dd></div><div><dt>来源</dt><dd>3 个已验证来源</dd></div></dl><div class="tree-sample" role="tree" aria-label="规则分组"><div role="treeitem" aria-expanded="true" aria-selected="true" tabindex="0">价格规则<div role="group"><div role="treeitem" tabindex="-1">异常变化</div><div role="treeitem" tabindex="-1">渠道折扣</div></div></div><div role="treeitem" tabindex="-1">库存规则</div></div></div>
+          <div class="table-wrap"><table class="core-table"><caption>待复核的价格变化</caption><thead><tr><th scope="col">商品</th><th scope="col">变化</th><th scope="col">状态</th><th scope="col">更新</th></tr></thead><tbody><tr><th scope="row">Field Jacket</th><td>+12.4%</td><td><span class="status-text warning"><i></i>待复核</span></td><td>4 分钟前</td></tr><tr><th scope="row">Canvas Tote</th><td>−3.1%</td><td><span class="status-text positive"><i></i>已核验</span></td><td>18 分钟前</td></tr><tr class="stale-row"><th scope="row">Studio Lamp</th><td>未知</td><td><span class="status-text neutral"><i></i>来源不可用</span></td><td>2 天前</td></tr></tbody></table></div>
+          <div class="data-side-samples"><dl class="property-sample"><div><dt>规则 ID</dt><dd class="mono">RULE-024</dd></div><div><dt>负责人</dt><dd><span class="avatar-sample" aria-hidden="true">林</span> 林晨</dd></div><div><dt>标签</dt><dd><span class="tag-sample">价格</span><span class="tag-sample">人工复核</span></dd></div><div><dt>数据完整度</dt><dd>86 / 100</dd></div><div><dt>来源</dt><dd>3 个已核验来源</dd></div></dl><div class="tree-sample" role="tree" aria-label="规则分组"><div role="treeitem" aria-expanded="true" aria-selected="true" tabindex="0">价格规则<div role="group"><div role="treeitem" tabindex="-1">异常变化</div><div role="treeitem" tabindex="-1">渠道折扣</div></div></div><div role="treeitem" tabindex="-1">库存规则</div></div></div>
         </div>
-        <div class="skeleton-sample" aria-label="正在载入下一批审核记录" aria-busy="true"><span></span><span></span><span></span></div>
+        <div class="skeleton-sample" aria-label="正在加载下一批复核记录" aria-busy="true"><span></span><span></span><span></span></div>
         <div class="truncation-grid" aria-labelledby="truncation-title">
-          <div class="truncation-heading"><strong id="truncation-title">截断与完整值</strong><span>End · Middle · Line clamp · RTL</span></div>
+          <div class="truncation-heading"><strong id="truncation-title">截断与完整值</strong><span>尾部截断 · 中间截断 · 多行截断 · RTL</span></div>
           <div class="truncation-sample">
             <span>域名</span>
             <span class="truncate-end" data-truncation-preview aria-label="monitoring-primary-endpoint.alpha-network.example.com">monitoring-primary-endpoint.alpha-network.example.com</span>
@@ -285,33 +325,33 @@
         <span id="motion" class="anchor-target" aria-hidden="true"></span>
         <header class="reference-section-heading">
           <div><h2 id="feedback-core-title">动效、反馈与进度</h2><p>动效解释状态和空间关系；反馈出现在能够解释结果的最小范围内。</p></div>
-          <span>Motion + feedback</span>
+          <span>动效与反馈</span>
         </header>
         <div class="motion-demo-grid">
           <article class="motion-sample"><h3>成对状态</h3><button type="button" class="icon-action" data-control-state="default" aria-pressed="false" data-motion-toggle><span class="motion-icon-slot" aria-hidden="true"><i data-lucide="circle-play" data-icon-state="default"></i><i data-lucide="pause" data-icon-state="active"></i></span><span data-action-label>开始监测</span></button><p>标签描述下一步操作；两枚图标保留在同一光学槽内，快速反向不会引起布局变化。</p></article>
           <article class="motion-sample"><h3>异步操作</h3><button type="button" class="primary-action icon-action stateful-action" data-control-state="default" data-motion-save><span class="motion-icon-slot" aria-hidden="true"><i data-lucide="save" data-icon-state="default"></i><i data-lucide="loader-circle" data-icon-state="pending"></i><i data-lucide="check" data-icon-state="success"></i></span><span data-action-label>保存视图</span></button><p>等待、完成与恢复发生在同一控件内，不移除图标节点，也不改变布局。</p></article>
           <article class="motion-sample"><h3>临时通知</h3><button type="button" class="icon-action" data-motion-toast><i data-lucide="bell"></i><span>创建导出任务</span></button><p>Sonner 在首次需要时加载，并更新同一条任务通知。</p></article>
-          <article class="motion-sample"><h3>Disclosure</h3><button type="button" class="icon-action disclosure-trigger" aria-expanded="false" aria-controls="motion-details" data-motion-disclosure><i data-lucide="chevron-down"></i><span>查看变更范围</span></button><div id="motion-details" class="motion-disclosure" data-state="closed" aria-hidden="true" inert hidden><p>将更新筛选条件和列顺序；不会修改源数据。</p></div></article>
+          <article class="motion-sample"><h3>展开内容</h3><button type="button" class="icon-action disclosure-trigger" aria-expanded="false" aria-controls="motion-details" data-motion-disclosure><i data-lucide="chevron-down"></i><span>查看变更范围</span></button><div id="motion-details" class="motion-disclosure" data-state="closed" aria-hidden="true" inert hidden><p>将更新筛选条件和列顺序；不会修改源数据。</p></div></article>
         </div>
         <div class="feedback-stack">
-          <div class="banner-sample" role="status"><span><strong>审核服务将在 18:00 维护</strong> 已打开的记录仍可查看，提交操作将在维护结束后恢复。</span><button type="button" aria-label="关闭维护通知">关闭</button></div>
+          <div class="banner-sample" role="status"><span><strong>复核服务将在 18:00 维护</strong> 已打开的记录仍可查看，提交操作将在维护结束后恢复。</span><button type="button" aria-label="关闭维护通知">关闭</button></div>
           <div class="inline-alert" role="status"><div><strong>2 条记录需要复核</strong><p>价格变化超过当前规则阈值，现有发布状态不受影响。</p></div><button type="button">打开队列</button></div>
-          <div class="inline-alert error-alert" role="alert"><div><strong>来源同步失败</strong><p>保留最近一次成功结果。重试不会重复创建审核任务。</p></div><button type="button">重试</button></div>
-          <div class="progress-sample"><div><span>正在验证来源</span><strong data-progress-label>3 / 5</strong></div><progress max="5" value="3">3 / 5</progress></div>
+          <div class="inline-alert error-alert" role="alert"><div><strong>来源同步失败</strong><p>保留最近一次成功结果。重试不会重复创建复核任务。</p></div><button type="button">重试</button></div>
+          <div class="progress-sample"><div><span>正在核验来源</span><strong data-progress-label>3 / 5</strong></div><progress max="5" value="3">3 / 5</progress></div>
           <div class="progress-sample"><div><span>本月自动化额度</span><strong>68%</strong></div><meter min="0" max="100" low="20" high="80" optimum="50" value="68">68%</meter></div>
-          <div class="loading-row" role="status"><span class="spinner-sample" aria-hidden="true"></span><span>正在读取审核历史</span></div>
+          <div class="loading-row" role="status"><span class="spinner-sample" aria-hidden="true"></span><span>正在读取复核记录</span></div>
           <div class="empty-sample"><strong>没有更多待复核记录</strong><p>当前筛选条件下的记录已经处理完成。</p><button type="button">清除筛选</button></div>
         </div>
       </section>
 
       <section id="overlays" aria-labelledby="overlays-title">
         <header class="reference-section-heading">
-          <div><h2 id="overlays-title">浮层</h2><p>Dialog、Drawer 与 Popover 根据任务范围和空间关系选择。</p></div>
-          <span>Overlays</span>
+          <div><h2 id="overlays-title">浮层</h2><p>根据任务范围和空间关系选择对话框、抽屉或弹出层。</p></div>
+          <span>浮层</span>
         </header>
         <div class="sample-row overlay-triggers">
-          <button type="button" class="icon-action" data-dialog-open><i data-lucide="circle-alert"></i>打开确认 Dialog</button>
-          <button type="button" class="icon-action" data-drawer-open aria-controls="core-drawer" aria-expanded="false"><i data-lucide="panel-right-open"></i>打开属性 Drawer</button>
+          <button type="button" class="icon-action" data-dialog-open><i data-lucide="circle-alert"></i>打开确认对话框</button>
+          <button type="button" class="icon-action" data-drawer-open aria-controls="core-drawer" aria-expanded="false"><i data-lucide="panel-right-open"></i>打开属性抽屉</button>
           <span class="popover-anchor"><button type="button" class="icon-action" aria-haspopup="dialog" aria-expanded="false" data-popover-trigger><i data-lucide="list-filter"></i><span>筛选说明</span></button><div class="sample-popover" role="dialog" aria-label="筛选说明" data-state="closed" hidden><strong>当前筛选</strong><p>只显示价格变化超过 12% 的在售商品。</p><button type="button" data-popover-close>关闭</button></div></span>
         </div>
       </section>
@@ -328,20 +368,20 @@
         <label class="core-field"><span>工作邮箱</span><input id="auth-dialog-email" type="email" name="auth-dialog-email" value="reviewer@example.com" autocomplete="email" required aria-invalid="false" /><span id="auth-dialog-email-error" class="field-error" hidden></span></label>
         <label class="core-field"><span>密码</span><span class="password-field"><input id="auth-dialog-password" type="password" name="auth-dialog-password" value="reference-only" autocomplete="current-password" required aria-invalid="false" /><button type="button" class="icon-only-control" data-password-toggle data-control-state="default" aria-label="显示密码" aria-pressed="false"><span class="motion-icon-slot" aria-hidden="true"><i data-lucide="eye" data-icon-state="default"></i><i data-lucide="eye-off" data-icon-state="active"></i></span></button></span><span id="auth-dialog-password-error" class="field-error" hidden></span></label>
         <button type="button" class="secondary-action icon-action unavailable-provider" disabled aria-describedby="auth-dialog-sso-reason"><i data-lucide="key-round"></i><span>使用组织 SSO</span></button>
-        <p id="auth-dialog-sso-reason" class="fixture-note">本地参考未配置组织身份提供方。</p>
+        <p id="auth-dialog-sso-reason" class="fixture-note">本地示例未接入组织登录服务。</p>
         <p class="auth-demo-status" role="alert" tabindex="-1" data-auth-dialog-status></p>
         <div class="dialog-actions"><button type="button" data-auth-dialog-cancel>取消</button><button type="submit" class="primary-action">继续保存</button></div>
       </form>
     </dialog>
 
     <dialog class="core-dialog reauth-dialog" aria-labelledby="reauth-title" data-reauth-dialog data-state="closed">
-      <form data-reauth-form novalidate><header><div><p>敏感操作</p><h2 id="reauth-title">重新验证身份</h2></div></header><p>当前页面保持不变。连接真实身份服务后，再允许用户继续执行敏感操作。</p><label class="core-field"><span>密码</span><input id="core-reauth-password" type="password" name="reauth-password" autocomplete="current-password" required aria-invalid="false" /><span id="core-reauth-password-error" class="field-error" hidden></span></label><p class="fixture-note">本地交互参考：不会发送或记录输入。</p><p class="auth-demo-status" role="alert" tabindex="-1" data-reauth-status></p><div class="dialog-actions"><button type="button" data-reauth-cancel>取消</button><button type="submit" class="primary-action">验证</button></div></form>
+      <form data-reauth-form novalidate><header><div><p>敏感操作</p><h2 id="reauth-title">重新验证身份</h2></div></header><p>当前页面保持不变。连接真实身份服务后，再允许用户继续执行敏感操作。</p><label class="core-field"><span>密码</span><input id="core-reauth-password" type="password" name="reauth-password" autocomplete="current-password" required aria-invalid="false" /><span id="core-reauth-password-error" class="field-error" hidden></span></label><p class="fixture-note">本地交互示例：不会发送或记录输入。</p><p class="auth-demo-status" role="alert" tabindex="-1" data-reauth-status></p><div class="dialog-actions"><button type="button" data-reauth-cancel>取消</button><button type="submit" class="primary-action">验证</button></div></form>
     </dialog>
 
     <div class="drawer-layer" data-state="closed" data-phase="closed" data-drawer-layer aria-hidden="true" inert>
-      <button class="drawer-scrim" type="button" aria-label="关闭属性 Drawer" data-drawer-scrim></button>
+      <button class="drawer-scrim" type="button" aria-label="关闭属性抽屉" data-drawer-scrim></button>
       <aside id="core-drawer" class="core-drawer" role="dialog" aria-modal="true" aria-labelledby="drawer-title">
-        <header><div><p>RULE-024</p><h2 id="drawer-title">规则属性</h2></div><button type="button" class="icon-only-control" aria-label="关闭属性 Drawer" data-drawer-close><i data-lucide="x"></i></button></header>
+        <header><div><p>RULE-024</p><h2 id="drawer-title">规则属性</h2></div><button type="button" class="icon-only-control" aria-label="关闭属性抽屉" data-drawer-close><i data-lucide="x"></i></button></header>
         <dl class="property-sample"><div><dt>状态</dt><dd>已启用</dd></div><div><dt>阈值</dt><dd>12%</dd></div><div><dt>负责人</dt><dd>林晨</dd></div><div><dt>最近修改</dt><dd>今天 09:42</dd></div></dl>
       </aside>
     </div>

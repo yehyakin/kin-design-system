@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-theme="dark" data-contrast="normal">
+<html lang="en" data-theme="dark" data-theme-preference="system" data-contrast="normal">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -12,32 +12,85 @@
   <link rel="canonical" href="https://yehyakin.github.io/kin-design-system/scenarios/lab.html">
   <title>Scenario Inspection Lab - KIN Design System</title>
   <link rel="icon" href="../assets/mark.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../assets/sonner.css">
   <link rel="stylesheet" href="../assets/site.css">
+  <script>
+    (() => {
+      if (new URLSearchParams(location.search).get("lang") === "zh-CN") {
+        document.documentElement.lang = "zh-CN";
+      }
+      let storedTheme;
+      let storedContrast;
+      try {
+        storedTheme = localStorage.getItem("kin-site-theme");
+        storedContrast = localStorage.getItem("kin-site-contrast");
+      } catch {}
+      const preference = ["light", "dark", "system"].includes(storedTheme) ? storedTheme : "system";
+      const theme = preference === "system"
+        ? (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")
+        : preference;
+      document.documentElement.dataset.themePreference = preference;
+      document.documentElement.dataset.theme = theme;
+      document.documentElement.dataset.contrast = storedContrast === "more" ? "more" : "normal";
+      document.documentElement.style.colorScheme = theme;
+      document.querySelector('meta[name="theme-color"]').content = theme === "dark" ? "#08090a" : "#f6f7f8";
+    })();
+  </script>
 </head>
-<body class="scenario-lab-page">
+<body class="showcase-shell-page scenario-lab-page" data-showcase-route="lab">
   <a class="skip-link" href="#main">Skip to scenario inspection</a>
 
-  <header class="lab-topbar">
-    <a class="lab-brand" href="./" aria-label="Back to the Scenario Atlas">
-      <img src="../assets/mark.svg" alt="" width="22" height="22">
-      <span><strong>KIN</strong><small>Scenario Atlas</small></span>
+  <header class="site-header global-header">
+    <a class="brand" href="../" aria-label="KIN Design System home">
+      <span class="brand-mark" aria-hidden="true">KIN</span>
+      <span class="brand-copy"><strong>KIN</strong><small>Design System</small></span>
     </a>
-    <div class="lab-topbar-end">
-      <button class="lab-controls-trigger" type="button" data-lab-controls-trigger aria-controls="lab-controls" aria-expanded="true">Controls</button>
-      <span class="lab-phase">Phase 3 inspection</span>
-      <a class="lab-back" href="./"><span aria-hidden="true">&larr;</span> All scenarios</a>
+    <nav class="showcase-nav" id="showcase-nav" data-mobile-nav aria-label="Primary navigation">
+      <a href="../" data-global-nav-key="showcase">Showcase</a>
+      <a href="../components/" data-global-nav-key="components">Components</a>
+      <a href="../patterns/" data-global-nav-key="patterns">Patterns</a>
+      <a href="./" data-global-nav-key="scenarios">Scenarios</a>
+      <a href="./lab.html" data-global-nav-key="lab" aria-current="page">Lab</a>
+      <a href="../docs/" data-global-nav-key="docs">Documentation</a>
+      <a href="https://github.com/yehyakin/kin-design-system">GitHub</a>
+    </nav>
+    <div class="header-actions">
+      <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="showcase-nav" aria-label="Open navigation"><i data-lucide="menu"></i></button>
+      <button class="command-trigger showcase-command-trigger" type="button" data-command-trigger aria-haspopup="dialog" aria-label="Search KIN"><i data-lucide="search"></i><span class="visually-hidden">Search KIN</span></button>
+      <div class="language-control" data-language-control>
+        <button class="language-trigger" type="button" data-language-trigger aria-haspopup="menu" aria-expanded="false" aria-label="Choose language"><i data-lucide="languages"></i></button>
+        <div class="language-menu" data-language-menu role="menu" data-state="closed" hidden>
+          <a href="./lab.html" role="menuitem" lang="en" hreflang="en" data-lab-language="en"><span>English</span></a>
+          <a href="./lab.html?lang=zh-CN" role="menuitem" lang="zh-CN" hreflang="zh-CN" data-lab-language="zh-CN"><span>中文</span></a>
+        </div>
+      </div>
+      <button class="theme-switch" type="button" role="switch" data-theme-switch aria-checked="true" aria-label="Switch to light mode"><i class="theme-sun" data-lucide="sun"></i><i class="theme-moon" data-lucide="moon"></i></button>
+      <button class="contrast-toggle" type="button" data-contrast-toggle aria-pressed="false" aria-label="Increase contrast"><i data-lucide="contrast"></i></button>
     </div>
   </header>
 
-  <main id="main" class="lab-shell" data-scenario-lab data-load-state="loading">
+  <header class="lab-topbar" data-nav-background aria-label="Scenario Lab toolbar">
+    <a class="lab-brand" href="./" aria-label="Back to the Scenario Atlas">
+      <i data-lucide="arrow-left"></i>
+      <span><strong>Scenario Lab</strong><small>Back to scenarios</small></span>
+    </a>
+    <div class="lab-topbar-end">
+      <div class="lab-mode-switch" data-lab-mode-group role="group" aria-label="Lab mode">
+        <button type="button" data-lab-mode="present" aria-pressed="true">Present</button>
+        <button type="button" data-lab-mode="inspect" data-lab-controls-trigger aria-controls="lab-controls" aria-expanded="false" aria-pressed="false">Inspect</button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="lab-shell" data-showcase-main data-scenario-lab data-load-state="loading">
     <div class="lab-controls-scrim" data-lab-controls-scrim aria-hidden="true"></div>
 
     <aside id="lab-controls" class="lab-controls" data-lab-controls aria-labelledby="lab-controls-title">
       <header class="lab-controls-heading">
         <div class="lab-controls-heading-row">
           <div>
-            <p class="eyebrow">Inspection controls</p>
-            <h1 id="lab-controls-title">Review the reference in context.</h1>
+            <p class="eyebrow">Inspection settings</p>
+            <h1 id="lab-controls-title">Choose a preview state.</h1>
           </div>
           <button class="lab-controls-close" type="button" data-lab-controls-close aria-label="Close inspection controls">Close</button>
         </div>
@@ -47,7 +100,7 @@
       <div class="lab-field">
         <label for="lab-scenario">Scenario</label>
         <select id="lab-scenario" data-lab-scenario aria-describedby="lab-scenario-help"></select>
-        <p id="lab-scenario-help" class="lab-field-help">Seventeen checked scenarios: six P0 pilots, five stable shared workflows, and six product-family P1 scenarios.</p>
+        <p id="lab-scenario-help" class="lab-field-help">Seventeen scenarios are available to preview.</p>
       </div>
 
       <div class="lab-field">
@@ -95,7 +148,7 @@
           <ul data-lab-gaps></ul>
         </div>
         <p class="lab-motion-note">Motion follows the reference and the user's reduced-motion preference; this phase does not claim a separate motion fixture.</p>
-          <a class="lab-direct-link" data-lab-direct-link href="./" target="_blank" rel="noopener" hidden>Open this state directly <span aria-hidden="true">&nearr;</span></a>
+        <a class="lab-direct-link" data-lab-direct-link href="./" target="_blank" rel="noopener" hidden>Open this state directly <span aria-hidden="true">&nearr;</span></a>
       </section>
     </aside>
 
@@ -117,7 +170,7 @@
             <span data-lab-scale-readout>Fit</span>
             <span data-lab-viewport-readout>Viewport</span>
             <span data-lab-theme-readout>Theme</span>
-            <span class="lab-verification" data-lab-verification data-state="loading" role="status" aria-live="polite">Checking fixture</span>
+            <span class="lab-verification" data-lab-verification data-state="loading" role="status" aria-live="polite">Preparing preview</span>
           </div>
         </div>
         <p class="visually-hidden" data-lab-scale-status role="status" aria-live="polite" aria-atomic="true"></p>
@@ -126,7 +179,28 @@
       <div class="lab-stage" data-lab-stage tabindex="0" aria-label="Scrollable scenario preview">
         <div class="lab-frame-sizing" data-lab-frame-sizing>
           <div class="lab-frame-shell" data-lab-frame-shell>
-            <div class="lab-frame-label" aria-hidden="true"><span data-lab-frame-size></span><span>Local deterministic reference</span></div>
+            <div class="lab-frame-label" aria-hidden="true"><span data-lab-frame-size></span><span>Interactive reference</span></div>
+            <div class="lab-frame-placeholder" data-lab-frame-placeholder data-kind="neutral">
+              <img
+                class="lab-frame-poster"
+                data-lab-frame-poster
+                src="../assets/posters/int-02-normal-dark.png"
+                width="1180"
+                height="760"
+                alt="Presentation poster for INT-02 in its normal, wide, dark state; not live verification."
+                hidden
+              >
+              <p class="lab-frame-poster-note" data-lab-frame-poster-note hidden>Presentation poster only · INT-02 normal / wide / dark</p>
+              <div class="lab-frame-neutral" data-lab-frame-neutral>
+                <p class="eyebrow">Live reference</p>
+                <strong data-lab-placeholder-title>Preparing Scenario Lab</strong>
+                <span data-lab-placeholder-state>Waiting for a catalog-backed selection.</span>
+              </div>
+              <div class="lab-frame-loading" data-lab-frame-loading role="status" aria-live="polite" aria-atomic="true">
+                <span class="lab-frame-loading-dot" aria-hidden="true"></span>
+                <span data-lab-frame-loading-label>Checking the live same-origin reference</span>
+              </div>
+            </div>
             <iframe data-lab-frame title="Scenario reference" loading="eager"></iframe>
           </div>
         </div>
@@ -141,6 +215,29 @@
     </section>
   </main>
 
+  <dialog class="command-dialog" data-command-dialog data-state="closed" aria-label="Search KIN">
+    <div class="command-shell">
+      <div class="command-input"><i data-lucide="search"></i><input type="search" data-command-search aria-label="Search KIN" placeholder="Search pages and sources"></div>
+      <div class="command-results">
+        <section><h2>Pages</h2>
+          <a href="../" data-command-item data-lab-command-key="showcase"><i data-lucide="circle-play"></i><span>Showcase</span></a>
+          <a href="../components/" data-command-item data-lab-command-key="components"><i data-lucide="circle-play"></i><span>Components</span></a>
+          <a href="../patterns/" data-command-item data-lab-command-key="patterns"><i data-lucide="circle-play"></i><span>Patterns</span></a>
+          <a href="./" data-command-item data-lab-command-key="scenarios"><i data-lucide="circle-play"></i><span>Scenarios</span></a>
+          <a href="./lab.html" data-command-item data-lab-command-key="lab"><i data-lucide="circle-play"></i><span>Lab</span></a>
+          <a href="../docs/" data-command-item data-lab-command-key="docs"><i data-lucide="circle-play"></i><span>Documentation</span></a>
+        </section>
+        <section><h2>Sources</h2>
+          <a href="catalog.json" data-command-item><i data-lucide="book-open"></i><span>Scenario catalog</span><small>scenarios/catalog.json</small></a>
+          <a href="https://github.com/yehyakin/kin-design-system/blob/main/DESIGN.md" data-command-item><i data-lucide="book-open"></i><span>Design contract</span><small>DESIGN.md</small></a>
+        </section>
+        <p class="command-empty" data-command-empty hidden>No matching page or source.</p>
+      </div>
+      <button class="command-system-theme" type="button" data-theme-system><i data-lucide="monitor-cog"></i>Use system theme</button>
+    </div>
+  </dialog>
+
+  <script type="module" src="../assets/site.js"></script>
   <script type="module" src="../assets/scenario-lab.js"></script>
 </body>
 </html>

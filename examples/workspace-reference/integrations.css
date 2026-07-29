@@ -109,3 +109,39 @@
 @media (prefers-reduced-transparency: reduce) {
   .integration-header { background: var(--canvas); }
 }
+
+@media (any-pointer: coarse) {
+  .integration-lab-page button,
+  .integration-lab-page select,
+  .integration-lab-page textarea,
+  .integration-lab-page input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="hidden"]) {
+    min-height: 44px;
+  }
+
+  .integration-lab-page button {
+    min-width: 44px;
+  }
+
+  .integration-actions button,
+  .integration-section > .icon-action {
+    min-height: 44px;
+  }
+
+  .integration-section .reference-section-heading > a {
+    display: inline-flex;
+    min-width: 44px;
+    min-height: 44px;
+    align-items: center;
+  }
+
+  .integration-lab-page .icon-only-control {
+    width: 44px;
+    min-width: 44px;
+  }
+
+  .integration-lab-page label:has(input[type="checkbox"]),
+  .integration-lab-page label:has(input[type="radio"]) {
+    min-height: 44px;
+    align-items: center;
+  }
+}

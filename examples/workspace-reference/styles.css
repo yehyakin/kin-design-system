@@ -734,3 +734,43 @@ h1 { margin: 0; font-size: 22px; line-height: 1.25; letter-spacing: -0.015em; }
   [data-theme] { --line: var(--line-strong); }
   :focus-visible { outline-width: 3px; }
 }
+
+@media (any-pointer: coarse) {
+  .app-shell button,
+  .app-shell select,
+  .app-shell textarea,
+  .app-shell input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="hidden"]) {
+    min-height: 44px;
+  }
+
+  .app-shell button {
+    min-width: 44px;
+  }
+
+  .app-shell .brand-mark {
+    width: 44px;
+    height: 44px;
+  }
+
+  .app-shell .primary-nav a,
+  .app-shell .saved-views a,
+  .app-shell .view-bar a {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .app-shell .view-bar {
+    height: 44px;
+  }
+
+  .library-link {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .app-shell label:has(input[type="checkbox"]),
+  .app-shell label:has(input[type="radio"]) {
+    min-height: 44px;
+    align-items: center;
+  }
+}

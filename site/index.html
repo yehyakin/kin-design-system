@@ -18,7 +18,7 @@
   <link rel="icon" href="assets/mark.svg" type="image/svg+xml">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="stylesheet" href="assets/site.css">
-  <link rel="stylesheet" href="assets/showcase.css">
+  <link rel="stylesheet" href="assets/showcase.css?v=3.0.1">
   <script>
     (() => {
       let storedTheme;
@@ -47,17 +47,20 @@
       <span class="brand-copy"><strong>KIN</strong><small>Design System</small></span>
     </a>
 
-    <nav class="showcase-nav" aria-label="Primary">
-      <a href="./" aria-current="page">Showcase</a>
-      <a href="components/">Components</a>
-      <a href="patterns/">Patterns</a>
-      <a href="scenarios/">Scenarios</a>
-      <a href="lab/">Lab</a>
-      <a href="docs/">Documentation</a>
+    <nav class="showcase-nav" id="showcase-nav" data-mobile-nav aria-label="Primary">
+      <a href="./" data-global-nav-key="showcase" aria-current="page">Showcase</a>
+      <a href="components/" data-global-nav-key="components">Components</a>
+      <a href="patterns/" data-global-nav-key="patterns">Patterns</a>
+      <a href="scenarios/" data-global-nav-key="scenarios">Scenarios</a>
+      <a href="scenarios/lab.html" data-global-nav-key="lab">Lab</a>
+      <a href="docs/" data-global-nav-key="docs">Documentation</a>
       <a href="https://github.com/yehyakin/kin-design-system">GitHub</a>
     </nav>
 
     <div class="header-actions">
+      <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="showcase-nav" aria-label="Open navigation">
+        <i data-lucide="menu"></i>
+      </button>
       <button class="command-trigger showcase-command-trigger" type="button" data-command-trigger aria-haspopup="dialog" aria-label="Search KIN">
         <i data-lucide="search"></i><span class="visually-hidden">Search KIN</span>
       </button>
@@ -74,204 +77,209 @@
   </header>
 
   <main class="showcase-main" id="main" data-showcase-route="home">
-    <section class="showcase-lead" id="overview" aria-labelledby="overview-title">
-      <div class="showcase-intro">
-        <p class="showcase-label">Showcase · catalog-backed references</p>
-        <h1 id="overview-title">Design rules and runnable references for clear, information-rich products.</h1>
-        <p class="lead">KIN is a framework-neutral design contract for teams building websites and software where people need to read, compare, decide, and act without losing context.</p>
-        <div class="showcase-actions">
-          <a class="showcase-button primary" href="scenarios/"><i data-lucide="panels-top-left"></i>Browse Scenarios</a>
-          <a class="showcase-button secondary" href="docs/"><i data-lucide="book-open"></i>Read Documentation</a>
+    <section class="showcase-hero" id="overview" aria-labelledby="overview-title">
+      <div class="showcase-hero-copy">
+        <p class="showcase-label">KIN Design System</p>
+        <h1 id="overview-title">Clear interfaces for complex work.</h1>
+        <p class="lead">KIN is a design system for information-heavy products: research tools, operations workspaces, and technical editors.</p>
+        <div class="showcase-hero-actions">
+          <a class="showcase-button primary" href="scenarios/lab.html?scenario=INT-02&amp;state=normal&amp;viewport=wide&amp;theme=dark&amp;mode=present"><i data-lucide="panels-top-left"></i>Explore the investigation workspace</a>
+          <a class="showcase-text-action" href="components/">Browse components <i data-lucide="arrow-right"></i></a>
         </div>
-        <p class="showcase-intro-note">The references use fixed local fixtures so the same states can be inspected repeatedly. They are not production services or proof that another product has adopted KIN. KIN 3.0.0 development is in progress; use v2.3.0 for production adoption.</p>
       </div>
 
-      <article
-        class="featured-reference"
-        data-showcase-preview
-        data-scenario-id="INT-02"
-        data-state="idle"
-        data-label-enter="Enter interactive preview"
-        data-label-loading="Loading preview"
-        data-label-retry="Retry interactive preview"
-        data-label-narrow="Open preview in Lab"
-        data-status-idle="Poster shown. The interactive reference is not loaded."
-        data-status-loading="Loading the same-origin interactive reference…"
-        data-status-active="Interactive preview active. Press Escape to return to the poster."
-        data-status-fallback="The embedded preview did not load. Open the same state in Lab."
-        aria-labelledby="featured-title"
-      >
-        <header class="reference-heading">
-          <div>
-            <p class="reference-code">INT-02 / Intelligence workspace</p>
-            <h2 id="featured-title" data-showcase-feature-name="INT-02">Investigation and Evidence Review</h2>
-            <p class="reference-job" data-showcase-feature-job="INT-02">Compare chronology, sources, conflicts, and uncertainty before recording a finding.</p>
+      <article class="showcase-product-stage" data-scenario-stage data-stage-ready="false" aria-labelledby="stage-title">
+        <span class="stage-sweep" data-stage-sweep aria-hidden="true"></span>
+        <header class="stage-toolbar">
+          <div class="stage-tabs" role="tablist" aria-label="Product scenario">
+            <button
+              id="scenario-tab-investigation"
+              type="button"
+              role="tab"
+              aria-controls="showcase-stage-panel"
+              aria-selected="true"
+              data-scenario-stage-option="INT-02"
+              data-showcase-stage-reference="INT-02"
+              data-showcase-stage-lab="INT-02"
+              data-reference="examples/workspace-reference/index.html?view=investigation&amp;lang=en&amp;state=normal"
+              data-lab="scenarios/lab.html?scenario=INT-02&amp;state=normal&amp;viewport=wide&amp;theme=dark&amp;mode=present"
+              data-title="Investigation and Evidence Review"
+              data-job="Compare chronology, sources, conflicts, and uncertainty before recording a finding."
+              data-source="Stable"
+              data-presentation="Showcased"
+              data-entry="An analyst opens an entity investigation from a queue or direct URL."
+              data-dominant-region="Evidence and event chronology."
+              data-completion="The analyst records an attributable finding or leaves the investigation unchanged."
+              data-boundary="The local fixture has no live sources, authoritative permission service, or durable finding record."
+              data-reference-language="English reference"
+              data-ready-selector="[data-investigation]"
+              data-poster="assets/posters/int-02-normal-dark.png"
+            >Investigation</button>
+            <button
+              id="scenario-tab-commerce"
+              type="button"
+              role="tab"
+              aria-controls="showcase-stage-panel"
+              aria-selected="false"
+              data-scenario-stage-option="COM-02"
+              data-reference="examples/product-patterns/ecommerce.html?edit=normal#product-context"
+              data-lab="scenarios/lab.html?scenario=COM-02&amp;state=normal&amp;viewport=wide&amp;theme=dark&amp;mode=present"
+              data-title="Product Detail and Edit"
+              data-job="Edit a product while sellable state, price, inventory, channel status, and activity stay visible."
+              data-source="Stable"
+              data-presentation="Showcased"
+              data-entry="An operator opens a product from a scoped catalog view."
+              data-dominant-region="Product detail and editable operational fields."
+              data-completion="The product change is saved, rejected, or left as a recoverable draft."
+              data-boundary="The local fixture has no product backend, authorization service, approval engine, or channel publication."
+              data-reference-language="Chinese reference"
+              data-ready-selector=".commerce-main"
+            >Commerce</button>
+            <button
+              id="scenario-tab-canvas"
+              type="button"
+              role="tab"
+              aria-controls="showcase-stage-panel"
+              aria-selected="false"
+              data-scenario-stage-option="ENG-01"
+              data-reference="examples/product-patterns/canvas.html"
+              data-lab="scenarios/lab.html?scenario=ENG-01&amp;state=normal&amp;viewport=wide&amp;theme=dark&amp;mode=present"
+              data-title="Canvas Edit and Undo"
+              data-job="Select, modify, commit, and undo a structured object with precise context."
+              data-source="Stable"
+              data-presentation="Showcased"
+              data-entry="A user opens a document and selects an object or tool."
+              data-dominant-region="Precision canvas."
+              data-completion="The change is committed to document history or safely cancelled."
+              data-boundary="Committed, cancelled, undo, and revision-history states are not URL-addressable yet."
+              data-reference-language="Chinese reference"
+              data-ready-selector=".canvas-shell"
+            >Canvas</button>
           </div>
-          <dl class="reference-status">
-            <div><dt>Source</dt><dd data-showcase-feature-source="INT-02">Stable</dd></div>
-            <div><dt>Presentation</dt><dd data-showcase-feature-presentation="INT-02">Showcased</dd></div>
-          </dl>
+          <div class="stage-toolbar-actions">
+            <span class="stage-language" data-stage-language><i data-lucide="languages"></i><span data-stage-language-text data-showcase-feature-language="INT-02">English reference</span></span>
+            <a class="stage-lab-link" data-stage-lab-link data-showcase-lab-link data-showcase-feature-lab="INT-02" href="scenarios/lab.html?scenario=INT-02&amp;state=normal&amp;viewport=wide&amp;theme=dark&amp;mode=present">Open in Lab <i data-lucide="arrow-up-right"></i></a>
+          </div>
         </header>
 
-        <div class="preview-viewport">
+        <div
+          class="stage-frame"
+          id="showcase-stage-panel"
+          role="tabpanel"
+          aria-labelledby="scenario-tab-investigation"
+        >
           <img
-            class="preview-poster"
-            data-preview-poster
+            class="stage-poster"
+            data-stage-poster
             src="assets/posters/int-02-normal-dark.png"
             width="1180"
             height="760"
-            alt="KIN investigation reference showing the Alpha Network certificate change investigation, an evidence chronology, source availability, and verification states in a dark workspace."
+            alt="KIN investigation workspace showing an evidence chronology and verification states."
           >
+          <div class="stage-loading" data-stage-loading role="status" aria-live="polite"><span aria-hidden="true"></span>Preparing the reference</div>
           <iframe
-            class="preview-frame"
-            data-preview-frame
+            data-stage-frame
             data-showcase-feature-reference="INT-02"
-            data-src="examples/workspace-reference/index.html?view=investigation&amp;lang=en&amp;state=normal"
-            data-preview-ready="[data-investigation]"
-            title="Interactive INT-02 Investigation and Evidence Review reference"
-            tabindex="-1"
-            aria-hidden="true"
-            inert
+            src="examples/workspace-reference/index.html?view=investigation&amp;lang=en&amp;state=normal"
+            title="Investigation and Evidence Review reference"
+            scrolling="no"
           ></iframe>
         </div>
 
-        <div class="preview-controls">
-          <p class="preview-status" data-preview-status data-state="idle" role="status" aria-live="polite">Poster shown. The interactive reference is not loaded.</p>
-          <div class="preview-actions">
-            <button class="preview-action primary" type="button" data-preview-activate hidden><i data-lucide="circle-play"></i><span data-preview-trigger-label>Enter interactive preview</span></button>
-            <button class="preview-action" type="button" data-preview-deactivate hidden>Exit preview <kbd>Esc</kbd></button>
-            <a class="preview-action" data-showcase-lab-link data-showcase-feature-lab="INT-02" href="scenarios/lab.html?scenario=INT-02&amp;state=normal&amp;viewport=wide&amp;theme=dark"><i data-lucide="external-link"></i>Open in Lab</a>
+        <footer class="stage-caption">
+          <div>
+            <p class="reference-code">INT-02 / Intelligence workspace</p>
+            <h2 id="stage-title" data-stage-title data-showcase-feature-name="INT-02">Investigation and Evidence Review</h2>
+            <p data-stage-job data-showcase-feature-job="INT-02">Compare chronology, sources, conflicts, and uncertainty before recording a finding.</p>
           </div>
-        </div>
-
-        <dl class="reference-boundaries">
-          <div><dt>Poster evidence</dt><dd>Normal state · wide viewport · dark appearance · source commit <code>4efb996</code></dd></div>
-          <div><dt>Reference boundary</dt><dd>Deterministic local fixture. No live sources, authoritative permission service, durable finding record, or production investigation data are connected.</dd></div>
-          <div><dt>Verification boundary</dt><dd>Manual screen-reader, browser-zoom, and physical touch-device review are not represented by Scenario Atlas evidence.</dd></div>
-        </dl>
+          <details class="reference-disclosure">
+            <summary>About this reference</summary>
+            <dl>
+              <div><dt>Source</dt><dd data-stage-source>Stable</dd></div>
+              <div><dt>Presentation</dt><dd data-stage-presentation>Showcased</dd></div>
+              <div><dt>Fixture</dt><dd data-stage-boundary>The local fixture has no live sources, authoritative permission service, or durable finding record.</dd></div>
+              <div><dt>Verification</dt><dd>Automated reference checks do not replace a real screen-reader, browser-zoom, or physical-device review.</dd></div>
+            </dl>
+          </details>
+        </footer>
       </article>
     </section>
 
-    <section class="catalog-proof" aria-label="Catalog evidence">
-      <div class="proof-heading"><strong>Catalog proof</strong><span>Injected from canonical registries at build time</span></div>
-      <div class="proof-cell"><strong><span data-showcase-count="showcased-scenarios">—</span></strong><span>Showcased Scenarios</span></div>
-      <div class="proof-cell"><strong><span data-showcase-count="planned-scenarios">—</span></strong><span>Planned Scenarios</span></div>
-      <div class="proof-cell"><strong><span data-showcase-count="stable-components">—</span></strong><span>Stable component contracts</span></div>
-      <div class="proof-cell"><strong><span data-showcase-count="stable-pages">—</span></strong><span>Stable page families</span></div>
-      <div class="proof-cell appearance"><strong>Light · Dark · System · More contrast</strong><span>Named appearance modes, not a quality score</span></div>
+    <section class="showcase-manifesto" id="patterns" aria-labelledby="manifesto-title">
+      <span class="legacy-fragment-anchor" id="principles" aria-hidden="true"></span>
+      <span class="legacy-fragment-anchor" id="foundations" aria-hidden="true"></span>
+      <header class="showcase-section-intro">
+        <div>
+          <p class="showcase-label">Four product contexts</p>
+          <h2 id="manifesto-title">One system. Four kinds of work.</h2>
+        </div>
+        <p>KIN changes its composition with the task. Reading, investigation, operations, and precision editing do not share one dashboard template.</p>
+      </header>
+      <div class="context-atlas">
+        <a class="context-entry context-entry--information" data-scenario-id="INF-01" data-showcase-lab-link data-showcase-scenario-link="INF-01" href="scenarios/lab.html?scenario=INF-01&amp;mode=present">
+          <span class="context-symbol" aria-hidden="true"><i data-lucide="book-open-text"></i></span>
+          <div><strong>Read with provenance</strong><p>Keep the record, source, revision, and next related item in one reading path.</p></div>
+          <small data-showcase-scenario-meta="INF-01">INF-01 · stable source · showcased</small>
+        </a>
+        <a class="context-entry context-entry--intelligence" data-scenario-id="INT-02" data-showcase-lab-link data-showcase-scenario-link="INT-02" href="scenarios/lab.html?scenario=INT-02&amp;mode=present">
+          <span class="context-symbol" aria-hidden="true"><i data-lucide="scan-search"></i></span>
+          <div><strong>Investigate before deciding</strong><p>Compare chronology, conflicts, and uncertainty without collapsing them into one score.</p></div>
+          <small data-showcase-scenario-meta="INT-02">INT-02 · stable source · showcased</small>
+        </a>
+        <a class="context-entry context-entry--commerce" data-scenario-id="COM-02" data-showcase-lab-link data-showcase-scenario-link="COM-02" href="scenarios/lab.html?scenario=COM-02&amp;mode=present">
+          <span class="context-symbol" aria-hidden="true"><i data-lucide="package-check"></i></span>
+          <div><strong>Operate with context</strong><p>Keep price, inventory, channels, approval, and history distinct while editing.</p></div>
+          <small data-showcase-scenario-meta="COM-02">COM-02 · stable source · showcased</small>
+        </a>
+        <a class="context-entry context-entry--engineering" data-scenario-id="ENG-01" data-showcase-lab-link data-showcase-scenario-link="ENG-01" href="scenarios/lab.html?scenario=ENG-01&amp;mode=present">
+          <span class="context-symbol" aria-hidden="true"><i data-lucide="box-select"></i></span>
+          <div><strong>Build with precision</strong><p>Let the canvas lead while tools, selection, properties, and recovery remain available.</p></div>
+          <small data-showcase-scenario-meta="ENG-01">ENG-01 · stable source · showcased</small>
+        </a>
+      </div>
+      <a class="section-route" href="patterns/">Compare the four product patterns <i data-lucide="arrow-right"></i></a>
     </section>
 
-    <section class="showcase-section" id="patterns" aria-labelledby="patterns-title">
-      <div class="showcase-section-heading">
-        <div>
-          <h2 id="patterns-title">Browse by the task you need to inspect.</h2>
-          <a class="section-route" href="scenarios/">Open the complete Scenario Atlas <span aria-hidden="true">→</span></a>
-        </div>
-        <p>Each row opens a catalog-backed state in the existing Scenario Lab. The Lab and Scenario Atlas are English-first in this release.</p>
+    <section class="showcase-signature" id="components" aria-labelledby="components-title">
+      <span class="legacy-fragment-anchor" id="flows" aria-hidden="true"></span>
+      <span class="legacy-fragment-anchor" id="ai-contract" aria-hidden="true"></span>
+      <div class="signature-heading">
+        <p class="showcase-label">One continuous task</p>
+        <h2 id="components-title">The interface keeps the thread.</h2>
+        <p>A task should remain legible from entry to action, including the evidence used, the result recorded, and the limits that remain.</p>
       </div>
-      <div class="task-list">
-        <a class="task-row" data-scenario-id="INT-02" data-showcase-lab-link data-showcase-scenario-link="INT-02" href="scenarios/lab.html?scenario=INT-02&amp;state=normal&amp;viewport=wide&amp;theme=dark">
-          <span class="task-kind">Review evidence</span>
-          <span class="task-copy"><strong>Compare chronology before recording a finding</strong><span>Keep source availability, verification state, conflict, and human judgment separate.</span></span>
-          <span class="row-meta" data-showcase-scenario-meta="INT-02">INT-02 · stable source · showcased</span>
-          <span class="row-action">Inspect →</span>
-        </a>
-        <a class="task-row" data-scenario-id="INF-01" data-showcase-lab-link data-showcase-scenario-link="INF-01" href="scenarios/lab.html?scenario=INF-01&amp;state=normal&amp;viewport=wide&amp;theme=dark">
-          <span class="task-kind">Verify a record</span>
-          <span class="task-copy"><strong>Find a public record and identify its source and currency</strong><span>Search, filter, open, and return without losing the stable information path.</span></span>
-          <span class="row-meta" data-showcase-scenario-meta="INF-01">INF-01 · stable source · showcased</span>
-          <span class="row-action">Inspect →</span>
-        </a>
-        <a class="task-row" data-scenario-id="COM-02" data-showcase-lab-link data-showcase-scenario-link="COM-02" href="scenarios/lab.html?scenario=COM-02&amp;state=normal&amp;viewport=wide&amp;theme=dark">
-          <span class="task-kind">Edit a product</span>
-          <span class="task-copy"><strong>Change product data while operational context stays visible</strong><span>Price, inventory, channels, approval, and activity remain distinct.</span></span>
-          <span class="row-meta" data-showcase-scenario-meta="COM-02">COM-02 · stable source · showcased</span>
-          <span class="row-action">Inspect →</span>
-        </a>
-        <a class="task-row" data-scenario-id="ENG-01" data-showcase-lab-link data-showcase-scenario-link="ENG-01" href="scenarios/lab.html?scenario=ENG-01&amp;state=normal&amp;viewport=wide&amp;theme=dark">
-          <span class="task-kind">Edit a canvas</span>
-          <span class="task-copy"><strong>Select, modify, commit, and undo a structured object</strong><span>The canvas remains dominant while tools, selection, units, and recovery stay available.</span></span>
-          <span class="row-meta" data-showcase-scenario-meta="ENG-01">ENG-01 · stable source · showcased</span>
-          <span class="row-action">Inspect →</span>
-        </a>
+      <div class="decision-trace" data-decision-trace aria-live="polite">
+        <div><span><i data-lucide="log-in"></i>Entry</span><p data-stage-trace="entry">An analyst opens an entity investigation from a queue or direct URL.</p></div>
+        <div><span><i data-lucide="scan-search"></i>Work</span><p data-stage-trace="dominant">Evidence and event chronology.</p></div>
+        <div><span><i data-lucide="circle-check-big"></i>Commitment</span><p data-stage-trace="completion">The analyst records an attributable finding or leaves the investigation unchanged.</p></div>
+        <div><span><i data-lucide="shield-alert"></i>Known limit</span><p data-stage-trace="boundary">The local fixture has no live sources, authoritative permission service, or durable finding record.</p></div>
       </div>
+      <p class="decision-trace__current">Following <strong data-stage-trace-scenario>Investigation and Evidence Review</strong></p>
+      <a class="section-route" href="components/">Explore the component system <i data-lucide="arrow-right"></i></a>
     </section>
 
-    <section class="showcase-section" id="components" aria-labelledby="components-title">
-      <div class="showcase-section-heading">
-        <div>
-          <h2 id="components-title">Signature interactions keep evidence, review, execution, and durable work inspectable.</h2>
-          <a class="section-route" href="components/">Browse Component discovery <span aria-hidden="true">→</span></a>
+    <section class="showcase-evidence" id="resources" aria-labelledby="resources-title">
+      <span class="legacy-fragment-anchor" id="agents" aria-hidden="true"></span>
+      <div>
+        <p class="showcase-label">Built to be inspected</p>
+        <h2 id="resources-title">The proof is available when you need it.</h2>
+      </div>
+      <div class="evidence-copy">
+        <p>Normative contracts, runnable fixtures, generated artifacts, and verification records remain separate. The public surface stays focused; the evidence stays one step away.</p>
+        <div class="evidence-actions">
+          <a href="docs/">Read the contracts <span aria-hidden="true">→</span></a>
+          <a href="https://github.com/yehyakin/kin-design-system">Inspect the repository <span aria-hidden="true">→</span></a>
         </div>
-        <p>These rows point to stable canonical contracts. Stability records behavior and evidence; it does not claim a universal runtime package.</p>
-      </div>
-      <div class="component-list">
-        <a class="component-row" data-component-id="evidence-list" href="components/evidence-list/">
-          <strong data-showcase-component-name="evidence-list">Evidence List</strong>
-          <span>Map claims or decisions to supporting, missing, stale, and conflicting sources.</span>
-          <span class="component-maturity" data-showcase-component-status="evidence-list">Stable contract</span>
-          <span class="row-action">Inspect →</span>
-        </a>
-        <a class="component-row" data-component-id="suggested-change-review" href="components/suggested-change-review/">
-          <strong data-showcase-component-name="suggested-change-review">Suggested Change Review</strong>
-          <span>Compare current and proposed values before accepting, rejecting, or editing a change.</span>
-          <span class="component-maturity" data-showcase-component-status="suggested-change-review">Stable contract</span>
-          <span class="row-action">Inspect →</span>
-        </a>
-        <a class="component-row" data-component-id="execution-preview" href="components/execution-preview/">
-          <strong data-showcase-component-name="execution-preview">Execution Preview</strong>
-          <span>Expose targets, writes, permissions, external effects, irreversibility, and rollback before execution.</span>
-          <span class="component-maturity" data-showcase-component-status="execution-preview">Stable contract</span>
-          <span class="row-action">Inspect →</span>
-        </a>
-        <a class="component-row" data-component-id="background-task-queue" href="components/background-task-queue/">
-          <strong data-showcase-component-name="background-task-queue">Background Task Queue</strong>
-          <span>Keep durable accepted work identifiable through progress, cancellation, recovery, and results.</span>
-          <span class="component-maturity" data-showcase-component-status="background-task-queue">Stable contract</span>
-          <span class="row-action">Inspect →</span>
-        </a>
-      </div>
-    </section>
-
-    <section class="showcase-section" id="resources" aria-labelledby="resources-title">
-      <div class="showcase-section-heading">
-        <div>
-          <h2 id="resources-title">System evidence stays close to the source of truth.</h2>
-          <a class="section-route" href="docs/">Open Documentation <span aria-hidden="true">→</span></a>
-        </div>
-        <p>Normative contracts, generated interoperability files, deterministic references, and verification records are separate evidence surfaces.</p>
-      </div>
-      <div class="evidence-list">
-        <a class="evidence-row" id="principles" href="docs/#principles">
-          <strong>Principles and visual signature</strong>
-          <span>Task-first composition, one dominant region, continuous structure, semantic separation, and purposeful motion.</span>
-          <span class="evidence-kind">Normative</span>
-          <span class="row-action">Read →</span>
-        </a>
-        <a class="evidence-row" id="foundations" href="docs/#foundations">
-          <strong>Foundations and semantic Tokens</strong>
-          <span>Theme, contrast, typography, spacing, surfaces, focus, and generated interoperability outputs.</span>
-          <span class="evidence-kind">Contract + generated files</span>
-          <span class="row-action">Inspect →</span>
-        </a>
-        <a class="evidence-row" id="ai-contract" href="docs/#ai-contract">
-          <strong>AI interaction contract</strong>
-          <span>Conclusion, evidence, uncertainty, scope, human approval, audit, and rollback remain distinct.</span>
-          <span class="evidence-kind">Normative</span>
-          <span class="row-action">Read →</span>
-        </a>
-        <a class="evidence-row" id="agents" href="docs/#agents">
-          <strong>Coding-tool delivery</strong>
-          <span>Pin the reviewed contract and keep project-owned routes, data, implementation, evidence, and rollback explicit.</span>
-          <span class="evidence-kind">Contract-first</span>
-          <span class="row-action">Use →</span>
-        </a>
-        <a class="evidence-row" id="flows" href="docs/#flows">
-          <strong>Page and workflow contracts</strong>
-          <span>Complete user jobs, state families, responsive behavior, return context, and product-owned backend boundaries.</span>
-          <span class="evidence-kind">Catalog-backed</span>
-          <span class="row-action">Browse →</span>
-        </a>
+        <details class="catalog-disclosure">
+          <summary>Catalog and release evidence</summary>
+          <div class="catalog-proof" aria-label="Catalog evidence">
+            <div class="proof-cell"><strong><span data-showcase-count="showcased-scenarios">—</span></strong><span>Showcased scenarios</span></div>
+            <div class="proof-cell"><strong><span data-showcase-count="planned-scenarios">—</span></strong><span>Planned scenarios</span></div>
+            <div class="proof-cell"><strong><span data-showcase-count="stable-components">—</span></strong><span>Stable component contracts</span></div>
+            <div class="proof-cell"><strong><span data-showcase-count="stable-pages">—</span></strong><span>Stable page families</span></div>
+            <div class="proof-cell appearance"><strong>Light · Dark · System · More contrast</strong><span>Named appearance modes, not a quality score</span></div>
+          </div>
+        </details>
       </div>
     </section>
 
@@ -294,7 +302,7 @@
       <a class="command-item" data-command-item href="components/">Components <span>Discovery</span></a>
       <a class="command-item" data-command-item href="patterns/">Patterns <span>Discovery</span></a>
       <a class="command-item" data-command-item href="scenarios/">Scenarios <span>Atlas</span></a>
-      <a class="command-item" data-command-item href="lab/">Lab <span>Inspection</span></a>
+      <a class="command-item" data-command-item href="scenarios/lab.html">Lab <span>Inspection</span></a>
       <a class="command-item" data-command-item href="docs/">Documentation <span>Contracts</span></a>
       <div class="command-group-label">Inspect</div>
       <a class="command-item" data-command-item data-showcase-lab-link href="scenarios/lab.html?scenario=INT-02&amp;state=normal&amp;viewport=wide&amp;theme=dark">Investigation and Evidence Review <span>INT-02</span></a>
@@ -309,6 +317,6 @@
   </dialog>
 
   <script type="module" src="assets/site.js"></script>
-  <script type="module" src="assets/showcase.js"></script>
+  <script type="module" src="assets/showcase.js?v=3.0.1"></script>
 </body>
 </html>

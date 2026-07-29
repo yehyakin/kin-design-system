@@ -114,3 +114,32 @@
 @media (max-width: 760px) {
   .motion-theme-control > button { min-width: 44px; min-height: 44px; }
 }
+
+@media (any-pointer: coarse) {
+  .motion-lab-page button,
+  .motion-lab-page select,
+  .motion-lab-page textarea,
+  .motion-lab-page input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="hidden"]) {
+    min-height: 44px;
+  }
+
+  .motion-lab-page button {
+    min-width: 44px;
+  }
+
+  .motion-anchor-row > button,
+  .motion-anchor-row .menu-sample > button,
+  .motion-anchor-row .popover-anchor > button,
+  .frequency-actions button,
+  .gesture-handle,
+  .gesture-sheet > .icon-action {
+    min-height: 44px;
+  }
+
+  .frequency-surface .icon-only-control,
+  .lab-tooltip-item > button {
+    width: 44px;
+    min-width: 44px;
+    height: 44px;
+  }
+}

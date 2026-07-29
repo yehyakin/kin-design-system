@@ -192,3 +192,16 @@
     border-width: 2px;
   }
 }
+
+@media (any-pointer: coarse) {
+  .kin-theme-switch,
+  .kin-theme-menu-trigger,
+  .kin-theme-menu button {
+    min-height: 44px;
+  }
+
+  .kin-theme-menu-trigger {
+    width: 44px;
+    min-width: 44px;
+  }
+}

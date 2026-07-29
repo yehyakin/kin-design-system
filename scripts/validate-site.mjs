@@ -2,6 +2,11 @@ import fs from "node:fs";
 import path from "node:path";
 import process from "node:process";
 import { expectedAgentResponses, validateAgentSiteOutput } from "./lib/agent-pages.mjs";
+import {
+  materializePagePatternChineseSource,
+  PAGE_PATTERN_IDS,
+  readPagePatternChineseLocale,
+} from "./lib/page-pattern-locales.mjs";
 import { showcaseProofCounts } from "./lib/showcase-home.mjs";
 import { SHOWCASE_COMPONENT_IDS, SHOWCASE_GENERATED_PATHS } from "./lib/showcase-pages.mjs";
 import { validateSiteOutputAllowlist } from "./lib/site-artifacts.mjs";
@@ -9,6 +14,7 @@ import { validateSiteOutputAllowlist } from "./lib/site-artifacts.mjs";
 const root = process.cwd();
 const output = path.join(root, ".site-dist");
 const failures = [];
+const pagePatternIds = PAGE_PATTERN_IDS;
 const required = [
   "index.html",
   "zh/index.html",
@@ -54,6 +60,89 @@ const required = [
   "tokens/kin.tokens.json",
   ...SHOWCASE_GENERATED_PATHS,
 ];
+
+function sortedKeys(value) {
+  return Object.keys(value ?? {}).sort((left, right) => left.localeCompare(right, "en"));
+}
+
+function validatePagePatternLocales() {
+  const controllerPath = path.join(root, "examples", "page-patterns", "reference.js");
+  let locale;
+
+  try {
+    locale = readPagePatternChineseLocale(root);
+  } catch (error) {
+    failures.push(`examples/page-patterns/locale.zh-CN.json: ${error.message}`);
+    return;
+  }
+
+  if (locale.locale !== "zh-CN") failures.push("examples/page-patterns/locale.zh-CN.json: locale must be zh-CN");
+  if (!locale.common || typeof locale.common !== "object" || Array.isArray(locale.common)) {
+    failures.push("examples/page-patterns/locale.zh-CN.json: common translations must be an object");
+  }
+  if (!locale.pages || typeof locale.pages !== "object" || Array.isArray(locale.pages)) {
+    failures.push("examples/page-patterns/locale.zh-CN.json: pages must be an object");
+    return;
+  }
+
+  const actualPages = sortedKeys(locale.pages);
+  const expectedPages = [...pagePatternIds].sort((left, right) => left.localeCompare(right, "en"));
+  if (JSON.stringify(actualPages) !== JSON.stringify(expectedPages)) {
+    failures.push("examples/page-patterns/locale.zh-CN.json: page IDs must match the governed page-pattern set");
+  }
+
+  for (const id of pagePatternIds) {
+    const sourcePath = path.join(root, "examples", "page-patterns", `${id}.html`);
+    const source = fs.readFileSync(sourcePath, "utf8");
+    const match = source.match(/<script type="application\/json" data-i18n-dictionary>\s*([\s\S]*?)\s*<\/script>/u);
+    if (!match) {
+      failures.push(`examples/page-patterns/${id}.html: inline English dictionary is missing`);
+      continue;
+    }
+
+    let inline;
+    try {
+      inline = JSON.parse(match[1]);
+    } catch (error) {
+      failures.push(`examples/page-patterns/${id}.html: inline dictionary is invalid -> ${error.message}`);
+      continue;
+    }
+
+    if (JSON.stringify(sortedKeys(inline)) !== JSON.stringify(["en"])) {
+      failures.push(`examples/page-patterns/${id}.html: inline dictionary must contain English only`);
+    }
+    const english = inline.en ?? {};
+    const chinesePage = locale.pages[id] ?? {};
+    const englishPageKeys = sortedKeys(Object.fromEntries(Object.entries(english).filter(([key]) => !key.startsWith("common."))));
+    const chinesePageKeys = sortedKeys(chinesePage);
+    if (JSON.stringify(englishPageKeys) !== JSON.stringify(chinesePageKeys)) {
+      failures.push(`examples/page-patterns/${id}.html: English and Chinese page-copy keys differ`);
+    }
+    for (const key of sortedKeys(english).filter((candidate) => candidate.startsWith("common."))) {
+      if (!(key in (locale.common ?? {}))) {
+        failures.push(`examples/page-patterns/${id}.html: Chinese common translation is missing for ${key}`);
+      }
+    }
+    if (chinesePageKeys.some((key) => key.startsWith("common."))) {
+      failures.push(`examples/page-patterns/locale.zh-CN.json: ${id} must not duplicate common translations`);
+    }
+    if (materializePagePatternChineseSource({ source, id, locale }) !== source) {
+      failures.push(
+        `examples/page-patterns/${id}.html: Chinese no-script text, title, placeholder, or accessible name is stale; run node scripts/materialize-page-pattern-locales.mjs`,
+      );
+    }
+  }
+
+  const controller = fs.readFileSync(controllerPath, "utf8");
+  if (!controller.includes('import chineseLocale from "./locale.zh-CN.json"')) {
+    failures.push("examples/page-patterns/reference.js: canonical Chinese locale import is missing");
+  }
+  if (controller.includes("PAGE_CHINESE_COPY") || controller.includes("SHARED_CHINESE_COPY")) {
+    failures.push("examples/page-patterns/reference.js: legacy Chinese copy overlay must not return");
+  }
+}
+
+validatePagePatternLocales();
 
 function findTarget(file, rawTarget) {
   const withoutFragment = rawTarget.split("#")[0].split("?")[0];
@@ -156,6 +245,34 @@ for (const [englishPath, chinesePath] of showcaseRoutePairs) {
     if (!new RegExp(`<html\\b[^>]*\\blang=["']${locale}["']`, "iu").test(source)) {
       failures.push(`${publicPath}: expected locale ${locale}`);
     }
+  }
+}
+
+const globalNavigationPaths = new Set([
+  ...showcaseRoutePairs.flat(),
+  "scenarios/index.html",
+  "scenarios/lab.html",
+]);
+for (const publicPath of globalNavigationPaths) {
+  const file = path.join(output, publicPath);
+  if (!fs.existsSync(file)) continue;
+  const source = fs.readFileSync(file, "utf8");
+  const hasPersistentGlobalHeader = source.includes('class="site-header global-header"')
+    || source.includes('class="showcase-header"');
+  if (!hasPersistentGlobalHeader) {
+    failures.push(`${publicPath}: persistent global header is missing`);
+  }
+  if (!source.includes("data-mobile-nav")) failures.push(`${publicPath}: global navigation drawer is missing`);
+  for (const key of ["showcase", "components", "patterns", "scenarios", "lab", "docs"]) {
+    if (!source.includes(`data-global-nav-key="${key}"`)) {
+      failures.push(`${publicPath}: global navigation key ${key} is missing`);
+    }
+  }
+  const currentGlobalItems = [
+    ...source.matchAll(/<a(?=[^>]*\bdata-global-nav-key=["'][^"']+["'])(?=[^>]*\baria-current=["']page["'])[^>]*>/giu),
+  ];
+  if (currentGlobalItems.length !== 1) {
+    failures.push(`${publicPath}: expected exactly one current global navigation item`);
   }
 }
 
@@ -356,6 +473,11 @@ const scenarioLabHtmlPath = path.join(output, "scenarios/lab.html");
 if (fs.existsSync(scenarioLabHtmlPath)) {
   const scenarioLabHtml = fs.readFileSync(scenarioLabHtmlPath, "utf8");
   for (const marker of [
+    'class="site-header global-header"',
+    "data-mobile-nav",
+    'data-global-nav-key="lab" aria-current="page"',
+    "data-nav-background",
+    "data-showcase-main",
     "data-lab-scenario",
     "data-lab-state",
     "data-lab-viewport-group",
@@ -370,6 +492,7 @@ if (fs.existsSync(scenarioLabHtmlPath)) {
   ]) {
     if (!scenarioLabHtml.includes(marker)) failures.push("scenarios/lab.html: missing inspection marker " + marker);
   }
+  if (!scenarioLabHtml.includes('src="../assets/site.js"')) failures.push("scenarios/lab.html: global site controller is missing");
   if (!scenarioLabHtml.includes('src="../assets/scenario-lab.js"')) failures.push("scenarios/lab.html: bundled lab controller is missing");
 }
 

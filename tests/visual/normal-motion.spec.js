@@ -14,11 +14,23 @@ test("normal motion keeps feedback visible without replacing state", async ({ pa
   const transition = await motionButton.evaluate((element) => getComputedStyle(element).transitionDuration);
   expect(transition.split(",").some((duration) => duration.trim() !== "0s")).toBe(true);
 
+  await motionButton.evaluate((element) => {
+    window.__kinMotionButtonPending = new Promise((resolve) => {
+      const observer = new MutationObserver(() => {
+        if (!element.classList.contains("is-loading")) return;
+        observer.disconnect();
+        const loader = element.querySelector(".button-icon-loading");
+        resolve({
+          animationName: getComputedStyle(loader).animationName,
+          visible: getComputedStyle(loader).display !== "none",
+        });
+      });
+      observer.observe(element, { attributes: true, attributeFilter: ["class"] });
+    });
+  });
   await motionButton.click();
-  await expect(motionButton).toHaveClass(/is-loading/);
-  const loader = motionButton.locator(".button-icon-loading");
-  await expect(loader).toBeVisible();
-  await expect(loader.evaluate((element) => getComputedStyle(element).animationName)).resolves.toBe("button-spin");
+  const pendingState = await page.evaluate(() => window.__kinMotionButtonPending);
+  expect(pendingState).toEqual({ animationName: "button-spin", visible: true });
   await expect(motionButton).toHaveClass(/is-success/, { timeout: 2_000 });
   await expect(page.getByText("View saved", { exact: true })).toBeVisible();
 });
@@ -53,12 +65,12 @@ test("normal motion preserves spatial direction for Inspector and Drawer", async
   await expect(page.locator("[data-drawer-layer]")).toHaveAttribute("data-state", "closed");
 });
 
-test("normal motion keeps the mobile documentation Drawer edge path reversible", async ({ page }) => {
+test("normal motion keeps the mobile global navigation Drawer edge path reversible", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/components/evidence-list/");
 
   const trigger = page.locator("[data-nav-toggle]");
-  const navigation = page.locator(".docs-nav");
+  const navigation = page.locator("[data-mobile-nav]");
   await trigger.click();
   await expect(page.locator("body")).toHaveClass(/nav-open/);
   const properties = await navigation.evaluate((element) =>
@@ -66,10 +78,21 @@ test("normal motion keeps the mobile documentation Drawer edge path reversible",
   );
   expect(properties).toContain("transform");
   expect(properties).toContain("opacity");
+  await expect(navigation).toHaveCSS("opacity", "1");
+  await expect
+    .poll(() => navigation.evaluate((element) => getComputedStyle(element).transform))
+    .toMatch(/matrix\(1, 0, 0, 1, 0, 0\)|none/);
 
-  await trigger.click();
-  await expect(page.locator("body")).toHaveClass(/nav-closing/);
-  await trigger.click();
+  const reversal = await trigger.evaluate((element) => {
+    element.click();
+    const enteredClosingPhase = document.body.classList.contains("nav-closing");
+    element.click();
+    return {
+      enteredClosingPhase,
+      reopened: document.body.classList.contains("nav-open"),
+    };
+  });
+  expect(reversal).toEqual({ enteredClosingPhase: true, reopened: true });
   await expect(page.locator("body")).toHaveClass(/nav-open/);
   await page.waitForTimeout(260);
   await expect(page.locator("body")).toHaveClass(/nav-open/);
@@ -94,11 +117,23 @@ test("normal motion core controls expose visible state transitions", async ({ pa
   expect(detailsTransitionProperty.split(",").map((value) => value.trim())).not.toContain("grid-template-rows");
 
   const asyncButton = page.locator("[data-motion-save]");
+  await asyncButton.evaluate((element) => {
+    window.__kinCoreButtonPending = new Promise((resolve) => {
+      const observer = new MutationObserver(() => {
+        if (!element.classList.contains("is-pending")) return;
+        observer.disconnect();
+        const icon = element.querySelector('[data-icon-state="pending"]');
+        resolve({
+          animationName: getComputedStyle(icon).animationName,
+          rendered: getComputedStyle(icon).display !== "none" && getComputedStyle(icon).visibility !== "hidden",
+        });
+      });
+      observer.observe(element, { attributes: true, attributeFilter: ["class"] });
+    });
+  });
   await asyncButton.click();
-  await expect(asyncButton).toHaveClass(/is-pending/);
-  const pendingIcon = asyncButton.locator('[data-icon-state="pending"]');
-  await expect(pendingIcon).toBeVisible();
-  await expect(pendingIcon.evaluate((element) => getComputedStyle(element).animationName)).resolves.toBe("core-spin");
+  const pendingState = await page.evaluate(() => window.__kinCoreButtonPending);
+  expect(pendingState).toEqual({ animationName: "core-spin", rendered: true });
   await expect(asyncButton).toHaveClass(/is-complete/, { timeout: 2_000 });
 });
 
@@ -111,8 +146,23 @@ test("normal motion authentication dialogs retain an explicit exit phase", async
   await expect(dialog).toHaveAttribute("data-state", "open");
   const duration = await dialog.evaluate((element) => getComputedStyle(element).transitionDuration);
   expect(duration.split(",").some((value) => value.trim() !== "0s")).toBe(true);
+  await dialog.evaluate((element) => {
+    window.__kinAuthDialogClosing = new Promise((resolve) => {
+      const observer = new MutationObserver(() => {
+        if (element.dataset.state !== "closing") return;
+        observer.disconnect();
+        resolve({
+          inert: element.inert,
+          open: element.open,
+          state: element.dataset.state,
+        });
+      });
+      observer.observe(element, { attributes: true, attributeFilter: ["data-state"] });
+    });
+  });
   await dialog.getByRole("button", { name: "取消" }).click();
-  await expect(dialog).toHaveAttribute("data-state", "closing");
+  const closingState = await page.evaluate(() => window.__kinAuthDialogClosing);
+  expect(closingState).toEqual({ inert: true, open: true, state: "closing" });
   await expect(dialog).toBeHidden();
   await expect(trigger).toBeFocused();
 });
@@ -127,10 +177,25 @@ test("normal motion menus keep their exit phase and cancel stale cleanup on reop
   const durations = await menu.evaluate((element) => getComputedStyle(element).transitionDuration);
   expect(durations.split(",").some((duration) => duration.trim() !== "0s")).toBe(true);
 
+  await menu.evaluate((element) => {
+    window.__kinCoreMenuReversal = new Promise((resolve) => {
+      const trigger = document.querySelector("#navigation [data-menu-trigger]");
+      const observer = new MutationObserver(() => {
+        if (element.dataset.state !== "closing") return;
+        observer.disconnect();
+        const snapshot = {
+          focusedTrigger: document.activeElement === trigger,
+          state: element.dataset.state,
+        };
+        trigger.click();
+        resolve(snapshot);
+      });
+      observer.observe(element, { attributes: true, attributeFilter: ["data-state"] });
+    });
+  });
   await page.keyboard.press("Escape");
-  await expect(menu).toHaveAttribute("data-state", "closing");
-  await expect(trigger).toBeFocused();
-  await trigger.click();
+  const closingState = await page.evaluate(() => window.__kinCoreMenuReversal);
+  expect(closingState).toEqual({ focusedTrigger: true, state: "closing" });
   await expect(menu).toHaveAttribute("data-state", "open");
   await page.waitForTimeout(230);
   await expect(menu).toHaveAttribute("data-state", "open");
@@ -147,9 +212,25 @@ test("normal motion primary workspace menus share the interruptible surface cont
   await expect(menu.getByRole("menuitemcheckbox")).toBeFocused();
   const duration = await menu.evaluate((element) => getComputedStyle(element).transitionDuration);
   expect(duration.split(",").some((value) => value.trim() !== "0s")).toBe(true);
+  await menu.evaluate((element) => {
+    window.__kinWorkspaceMenuReversal = new Promise((resolve) => {
+      const trigger = document.querySelector("[data-location-overflow-trigger]");
+      const observer = new MutationObserver(() => {
+        if (element.dataset.state !== "closing") return;
+        observer.disconnect();
+        const snapshot = {
+          focusedTrigger: document.activeElement === trigger,
+          state: element.dataset.state,
+        };
+        trigger.click();
+        resolve(snapshot);
+      });
+      observer.observe(element, { attributes: true, attributeFilter: ["data-state"] });
+    });
+  });
   await page.keyboard.press("Escape");
-  await expect(menu).toHaveAttribute("data-state", "closing");
-  await trigger.click();
+  const closingState = await page.evaluate(() => window.__kinWorkspaceMenuReversal);
+  expect(closingState).toEqual({ focusedTrigger: true, state: "closing" });
   await expect(menu).toHaveAttribute("data-state", "open");
   await page.waitForTimeout(230);
   await expect(menu).toBeVisible();
@@ -243,7 +324,7 @@ test("Motion Lab exposes slow review and deterministic gesture-settling evidence
   await expect(handle).toHaveAttribute("data-captured", "true");
   await page.mouse.up();
   await expect(sheet).toHaveAttribute("data-state", "collapsed", { timeout: 4_000 });
-  await expect(page.getByRole("button", { name: "拖动或切换 Sheet" })).toHaveAttribute("aria-expanded", "false");
+  await expect(page.getByRole("button", { name: "拖动或切换底部面板" })).toHaveAttribute("aria-expanded", "false");
 
   await page.locator("[data-gesture-toggle]").click();
   await expect(sheet).toHaveAttribute("data-state", "expanded", { timeout: 4_000 });
@@ -255,14 +336,16 @@ test("normal motion streaming can be stopped without losing input", async ({ pag
 
   const instruction = page.getByLabel("说明");
   const originalValue = await instruction.inputValue();
-  await page.getByRole("button", { name: "生成参考结果" }).click();
+  await page.getByRole("button", { name: "生成示例分析" }).click();
 
   const caret = page.locator(".stream-caret");
   await expect(caret).toBeVisible();
-  await expect
-    .poll(() => caret.evaluate((element) => getComputedStyle(element).animationName))
-    .toBe("caret-pulse");
-  await page.getByRole("button", { name: "停止" }).click();
+  const animationName = await caret.evaluate((element) => {
+    const value = getComputedStyle(element).animationName;
+    document.querySelector("[data-composer-stop]")?.click();
+    return value;
+  });
+  expect(animationName).toBe("caret-pulse");
 
   await expect(caret).toHaveCount(0);
   await expect(instruction).toHaveValue(originalValue);

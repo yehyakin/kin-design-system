@@ -30,6 +30,9 @@ const KinLiveChart = React.lazy(() => import("@kin-design/react/experimental/liv
 const copy = {
   zh: {
     back: "工作台",
+    referenceLabel: "KIN 示例",
+    labTitle: "运行时集成实验室",
+    motionLab: "动效实验室",
     themeToLight: "切换为日间模式",
     themeToDark: "切换为夜间模式",
     appearance: "外观选项",
@@ -39,7 +42,7 @@ const copy = {
     language: "切换语言",
     eyebrow: "直接使用官方运行时",
     title: "第三方能力成为 KIN 的一部分",
-    intro: "以下交互直接运行官方包。KIN 统一语义、Token、主题和验收边界，不重写成熟项目的动效与核心引擎。",
+    intro: "以下交互直接运行官方包。KIN 统一语义、Token、主题和接入要求，不重写成熟项目的动效与核心引擎。",
     statusTitle: "集成状态",
     statusBody: "“运行时集成”要求依赖、KIN API、可操作示例和自动化证据同时存在。",
     package: "官方包",
@@ -47,7 +50,7 @@ const copy = {
     evidence: "当前证据",
     live: "已运行",
     devOnly: "仅开发环境",
-    loadingRuntime: "正在载入官方运行时…",
+    loadingRuntime: "正在加载官方运行时…",
     sonnerTitle: "操作反馈",
     sonnerBody: "Sonner 保留原生堆叠、更新、关闭和手势动效；KIN 只约束何时通知以及如何表达恢复。",
     save: "保存视图",
@@ -77,13 +80,13 @@ const copy = {
       "bottom-right": "右下",
     },
     numberTitle: "数值连续性",
-    numberBody: "NumberFlow 只在已有值真实变化时运行；首次渲染、主题切换和 Reduced Motion 不制造计数动画。",
+    numberBody: "NumberFlow 只在已有值真实变化时运行；首次渲染、主题切换和减弱动效模式下不制造计数动画。",
     sample: "记录下一组样本",
     availability: "可用率",
     latency: "平均延迟",
     events: "新增事件",
     commandTitle: "命令与搜索",
-    commandBody: "cmdk 负责组合、筛选、选中和焦点；KIN 保持键盘调用即时、分组清楚并恢复焦点。",
+    commandBody: "cmdk 负责命令组合、筛选、选中状态和焦点管理；KIN 保持键盘调用即时、分组清楚并恢复焦点。",
     openCommand: "打开命令菜单",
     commandLabel: "KIN 命令菜单",
     commandInput: "搜索命令",
@@ -93,9 +96,13 @@ const copy = {
     actions: "操作",
     virtualTitle: "长列表",
     virtualBody: "React Virtuoso 维护真实虚拟化与滚动测量；J、K 或方向键移动当前项。",
-    listLabel: "虚拟化对象列表",
+    listLabel: "虚拟化记录列表",
+    listCount: (count) => `${count.toLocaleString("zh-CN")} 条记录`,
+    listItemName: (index) => `示例记录 ${index}`,
+    listItemReview: "待复核",
+    listItemAvailable: "可用",
     sortableTitle: "可控排序",
-    sortableBody: "dnd kit 保留指针、触控、键盘传感器和 Drop 动效；拖动只发生在专用手柄。",
+    sortableBody: "dnd kit 保留指针、触控、键盘传感器和放置动效；拖动只发生在专用手柄。",
     sortWatch: "关注列表",
     sortReview: "待复核",
     sortRecent: "最近变化",
@@ -109,18 +116,21 @@ const copy = {
     otpTitle: "验证码输入",
     otpBody: "input-otp 负责粘贴、自动填充和焦点行为。本地样例不发送、不验证也不记录验证码。",
     otpLabel: "六位验证码",
-    otpDescription: "本地输入夹具 · 不连接认证服务",
+    otpDescription: "本地输入样例 · 不连接认证服务",
     chartTitle: "实时趋势",
     chartBody: "Liveline 保留 Canvas 实时插值；KIN 关闭粒子、发光和娱乐化效果，并提供文字摘要与数据表。",
     chartSummary: "过去 12 个样本的延迟在 82–126ms 之间；当前值为 94ms。",
     viewData: "查看数据表",
     time: "时间",
     latencyValue: "延迟（ms）",
-    boundaryTitle: "边界",
-    boundaryBody: "Leva 已有真实适配入口，但只允许通过 @kin-design/react/dev/leva 在开发构建中加载；公开展示页不会打包它。",
+    boundaryTitle: "开发环境限制",
+    boundaryBody: "Leva 的适配入口仅供开发构建使用，公开展示页不会加载它。",
   },
   en: {
     back: "Workspace",
+    referenceLabel: "KIN reference",
+    labTitle: "Integration Lab",
+    motionLab: "Motion Lab",
     themeToLight: "Switch to light mode",
     themeToDark: "Switch to dark mode",
     appearance: "Appearance options",
@@ -185,6 +195,10 @@ const copy = {
     virtualTitle: "Long lists",
     virtualBody: "React Virtuoso retains real virtualization and scroll measurement. Use J, K, or arrow keys to move the active item.",
     listLabel: "Virtualized entity list",
+    listCount: (count) => `${count.toLocaleString("en")} objects`,
+    listItemName: (index) => `Reference object ${index}`,
+    listItemReview: "Review",
+    listItemAvailable: "Available",
     sortableTitle: "Controlled ordering",
     sortableBody: "dnd kit keeps pointer, touch, keyboard sensors, and drop motion. Drag starts only from the dedicated handle.",
     sortWatch: "Watchlist",
@@ -222,12 +236,6 @@ const chartEnd = Date.now() / 1_000;
 const chartData = [126, 118, 121, 109, 103, 98, 101, 92, 88, 82, 91, 94].map((value, index) => ({
   time: chartEnd - (11 - index) * 5,
   value,
-}));
-
-const listItems = Array.from({ length: 1000 }, (_, index) => ({
-  id: `ENT-${String(index + 1).padStart(4, "0")}`,
-  name: `Reference object ${index + 1}`,
-  state: index % 9 === 0 ? "Review" : "Available",
 }));
 
 const toastPositions = ["top-left", "top-center", "top-right", "bottom-left", "bottom-center", "bottom-right"];
@@ -417,7 +425,12 @@ function LazyMount({ label, force = false, children }) {
 function App() {
   const commandTriggerRef = React.useRef(null);
   const systemTheme = React.useMemo(() => matchMedia("(prefers-color-scheme: dark)"), []);
-  const [locale, setLocale] = React.useState(() => localStorage.getItem("kin-integration-locale") === "en" ? "en" : "zh");
+  const [locale, setLocale] = React.useState(() => {
+    const requested = new URLSearchParams(window.location.search).get("lang");
+    if (requested === "en") return "en";
+    if (requested === "zh" || requested === "zh-CN") return "zh";
+    return localStorage.getItem("kin-integration-locale") === "en" ? "en" : "zh";
+  });
   const [themePreference, setThemePreference] = React.useState(() => {
     const preference = document.documentElement.dataset.themePreference;
     return ["light", "dark", "system"].includes(preference) ? preference : "system";
@@ -437,6 +450,11 @@ function App() {
   ]);
   const [otp, setOtp] = React.useState("");
   const c = copy[locale];
+  const listItems = React.useMemo(() => Array.from({ length: 1000 }, (_, index) => ({
+    id: `ENT-${String(index + 1).padStart(4, "0")}`,
+    name: c.listItemName(index + 1),
+    state: index % 9 === 0 ? c.listItemReview : c.listItemAvailable,
+  })), [c]);
   const theme = themePreference === "system" ? (systemDark ? "dark" : "light") : themePreference;
   const sample = metricSamples[sampleIndex];
   const sortLabels = React.useMemo(() => ({
@@ -455,6 +473,10 @@ function App() {
   React.useEffect(() => {
     document.documentElement.lang = locale === "zh" ? "zh-CN" : "en";
     localStorage.setItem("kin-integration-locale", locale);
+    const url = new URL(window.location.href);
+    url.searchParams.set("lang", locale === "zh" ? "zh-CN" : "en");
+    window.history.replaceState(null, "", `${url.pathname}${url.search}${url.hash}`);
+    document.title = locale === "zh" ? "KIN 运行时集成实验室" : "KIN Integration Lab";
   }, [locale]);
 
   React.useEffect(() => {
@@ -500,7 +522,7 @@ function App() {
       heading: c.navigate,
       items: [
         { id: "workspace", label: <><PanelLeft size={15} /> {c.back}</>, keywords: ["workspace"], onSelect: () => location.assign("./index.html") },
-        { id: "motion", label: <><RefreshCw size={15} /> Motion Lab</>, keywords: ["motion", "animation"], onSelect: () => location.assign("./motion.html") },
+        { id: "motion", label: <><RefreshCw size={15} /> {c.motionLab}</>, keywords: ["motion", "animation"], onSelect: () => location.assign(`./motion.html?lang=${locale === "zh" ? "zh-CN" : "en"}`) },
       ],
     },
     {
@@ -523,7 +545,7 @@ function App() {
   return (
     <>
       <header className="reference-header integration-header">
-        <div><p>KIN reference</p><h1>Integration Lab</h1></div>
+        <div><p>{c.referenceLabel}</p><h1>{c.labTitle}</h1></div>
         <div className="reference-actions">
           <a className="reference-back icon-action" href="./index.html"><PanelLeft size={15} /><span>{c.back}</span></a>
           <PreferenceMenu
@@ -683,7 +705,7 @@ function App() {
         <Section id="virtuoso" title={c.virtualTitle} body={c.virtualBody} source={{ href: "https://github.com/petyosi/react-virtuoso", label: "React Virtuoso" }}>
           <LazyMount label={c.loadingRuntime}>
             <div data-integration-virtual className="integration-virtual-shell" tabIndex={0} onKeyDown={moveActive} aria-label={c.listLabel}>
-              <div className="integration-list-toolbar"><Search size={14} /><span>{listItems.length.toLocaleString()} objects</span><span>J / K</span></div>
+              <div className="integration-list-toolbar"><Search size={14} /><span>{c.listCount(listItems.length)}</span><span>J / K</span></div>
               <KinVirtualList
                 items={listItems}
                 getKey={(item) => item.id}

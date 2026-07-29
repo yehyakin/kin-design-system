@@ -38,8 +38,8 @@ function setComposerControls(state) {
 function startFixtureGeneration() {
   clearComposerTimers();
   generatedResult.dataset.state = "streaming";
-  resultState.textContent = "生成中 · 本地基准";
-  composerStatus.textContent = "正在生成本地参考结果";
+  resultState.textContent = "生成中 · 本地预置结果";
+  composerStatus.textContent = "正在生成示例分析";
   resultBody.innerHTML = '<p>内部价格记录显示，Field Jacket 当前价格为 CNY 1,299.00 <a href="#evidence-1">[1]</a>。<span class="stream-caret" aria-hidden="true"></span></p>';
   uncertainty.hidden = true;
   setComposerControls("streaming");
@@ -48,12 +48,12 @@ function startFixtureGeneration() {
   }, 280));
   composerTimers.push(setTimeout(() => {
     generatedResult.dataset.state = "complete";
-    resultState.textContent = "已完成 · 本地基准";
-    composerStatus.textContent = "参考结果已完成，尚未批准或执行";
+    resultState.textContent = "已完成 · 本地预置结果";
+    composerStatus.textContent = "示例分析已生成，尚未批准或执行";
     resultBody.innerHTML = '<p>内部价格记录显示，Field Jacket 当前价格为 CNY 1,299.00 <a href="#evidence-1">[1]</a>。</p><p>外部渠道快照仍显示 CNY 1,399.00 <a href="#evidence-3">[3]</a>。建议在发布前确认渠道活动状态 <a href="#evidence-2">[2]</a>。</p>';
     uncertainty.hidden = false;
     setComposerControls("complete");
-  }, 760));
+  }, 1800));
 }
 
 composer.addEventListener("submit", (event) => { event.preventDefault(); startFixtureGeneration(); });
@@ -74,7 +74,7 @@ const proposedValue = changeReview.querySelector(".proposed-value strong");
 
 document.querySelector("[data-review-accept]").addEventListener("click", () => {
   changeReview.dataset.state = "accepted";
-  reviewState.textContent = "已接受 · 尚未执行";
+  reviewState.textContent = "已采纳 · 尚未执行";
   reviewMessage.textContent = "建议已进入待执行状态；源数据尚未修改。";
 });
 document.querySelector("[data-review-reject]").addEventListener("click", () => {
@@ -87,7 +87,7 @@ document.querySelector("[data-review-edit]").addEventListener("click", () => {
   proposedValue.setAttribute("role", "textbox");
   proposedValue.setAttribute("aria-label", "编辑建议值");
   proposedValue.focus();
-  reviewMessage.textContent = "正在编辑建议值；保存前需要重新审核。";
+  reviewMessage.textContent = "正在编辑建议值；保存前需要重新复核。";
 });
 
 const scopeConfirm = document.querySelector("[data-scope-confirm]");
@@ -99,7 +99,7 @@ const taskSummary = document.querySelector("[data-task-summary]");
 scopeConfirm.addEventListener("change", () => { createTask.disabled = !scopeConfirm.checked; });
 createTask.addEventListener("click", () => {
   createdTask.hidden = false;
-  executionStatus.textContent = "发布任务已在本地基准中创建，当前状态为排队中。";
+  executionStatus.textContent = "已创建本地示例发布任务，当前状态为“排队中”。";
   taskSummary.textContent = "4 个任务：1 个排队中，1 个运行中，1 个失败，1 个已完成。";
   document.querySelector("[data-created-cancel]").focus();
 });
@@ -123,7 +123,7 @@ document.querySelector("[data-created-cancel]").addEventListener("click", () => 
 document.querySelector("[data-task-cancel]").addEventListener("click", (event) => {
   event.currentTarget.closest(".task-row").querySelector("[role='cell']:nth-child(2)").textContent = "取消请求中";
   event.currentTarget.disabled = true;
-  taskSummary.textContent = "已请求取消同步任务；等待本地基准确认。";
+  taskSummary.textContent = "本地示例正在处理取消请求。";
 });
 document.querySelector("[data-task-retry]").addEventListener("click", (event) => {
   const row = event.currentTarget.closest(".task-row");

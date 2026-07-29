@@ -21,6 +21,7 @@ export const SITE_COPY_ARTIFACTS = Object.freeze([
   ["site/assets/site.css", "assets/site.css"],
   ["site/scenarios/index.html", "scenarios/index.html"],
   ["site/scenarios/lab.html", "scenarios/lab.html"],
+  ["site/scenarios/locale.zh-CN.json", "scenarios/locale.zh-CN.json"],
   ["scenarios/catalog.json", "scenarios/catalog.json"],
   ["scenarios/catalog.schema.json", "scenarios/catalog.schema.json"],
   ["tokens/kin.tokens.json", "tokens/kin.tokens.json"],
@@ -60,6 +61,7 @@ export const SITE_COPY_ARTIFACTS = Object.freeze([
 
 export const SITE_GENERATED_ARTIFACTS = Object.freeze([
   "assets/kin-react.css",
+  "assets/scenario-atlas.js",
   "assets/scenario-lab.js",
   "assets/showcase.js",
   "assets/site.js",

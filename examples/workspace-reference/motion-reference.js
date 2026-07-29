@@ -101,8 +101,8 @@ function setReviewSpeed(slow) {
   const enabled = slow && !reducedMotion.matches;
   document.body.dataset.reviewSpeed = enabled ? "slow" : "normal";
   speedButton.setAttribute("aria-pressed", String(enabled));
-  speedButton.querySelector("span").textContent = enabled ? "恢复正常" : "4× 慢速";
-  speedStatus.textContent = reducedMotion.matches ? "减少动态优先" : enabled ? "4× 慢速" : "1× 正常";
+  speedButton.querySelector("span").textContent = enabled ? "恢复正常" : "4 倍慢放";
+  speedStatus.textContent = reducedMotion.matches ? "减少动态优先" : enabled ? "4 倍慢放" : "1× 正常";
 }
 
 speedButton.addEventListener("click", () => {
@@ -368,9 +368,9 @@ function showLabTooltip(trigger, input) {
     tooltip.dataset.input = input;
     tooltip.dataset.state = instant || reducedMotion.matches ? "open" : "opening";
     tooltipStatus.textContent = input === "keyboard"
-      ? "键盘焦点：Tooltip 即时可见。"
+      ? "键盘焦点：工具提示即时可见。"
       : instant
-        ? "连续指针：同组 Tooltip 即时切换。"
+        ? "连续指针：同组工具提示即时切换。"
         : "首次指针：等待 500ms 后，以 125ms 反馈出现。";
     if (tooltip.dataset.state === "opening") {
       requestAnimationFrame(() => {
@@ -400,7 +400,7 @@ for (const trigger of tooltipTriggers) {
     event.preventDefault();
     trigger.dataset.tooltipDismissed = "true";
     hideLabTooltip(trigger, false);
-    tooltipStatus.textContent = "Tooltip 已关闭；焦点离开后恢复正常序列。";
+    tooltipStatus.textContent = "工具提示已关闭；焦点离开后恢复正常序列。";
   });
 }
 
@@ -462,8 +462,8 @@ function finishGestureSheet(target) {
   gestureSheet.dataset.state = collapsed ? "collapsed" : "expanded";
   gestureHandle.setAttribute("aria-expanded", String(!collapsed));
   gestureToggle.setAttribute("aria-expanded", String(!collapsed));
-  gestureToggle.querySelector("span").textContent = collapsed ? "展开 Sheet" : "收起 Sheet";
-  gestureStatus.textContent = collapsed ? "Sheet 已收起；按钮或反向拖动可重新展开。" : "Sheet 已展开；等待拖动。";
+  gestureToggle.querySelector("span").textContent = collapsed ? "展开底部面板" : "收起底部面板";
+  gestureStatus.textContent = collapsed ? "底部面板已收起；按钮或反向拖动可重新展开。" : "底部面板已展开；等待拖动。";
 }
 
 function settleGestureSheet(target, initialVelocity = 0, fromGesture = false) {
@@ -526,7 +526,7 @@ gestureHandle.addEventListener("pointermove", (event) => {
     gestureHandle.setPointerCapture(event.pointerId);
     gestureHandle.dataset.captured = "true";
     gestureSheet.dataset.state = "dragging";
-    gestureStatus.textContent = "手势已接管；Sheet 与指针 1:1 跟随，越界后逐渐增加阻力。";
+    gestureStatus.textContent = "手势已接管；底部面板与指针 1:1 跟随，越界后逐渐增加阻力。";
   }
   gestureHistory.push({ y: event.clientY, time: event.timeStamp });
   gestureHistory = gestureHistory.filter((sample) => event.timeStamp - sample.time <= 120).slice(-8);
@@ -537,7 +537,7 @@ function releaseGesture(event, cancelled = false) {
   if (event.pointerId !== gesturePointer) return;
   if (!gestureCommitted) {
     gesturePointer = undefined;
-    gestureStatus.textContent = "未达到操作阈值；Sheet 状态保持不变。";
+    gestureStatus.textContent = "未达到操作阈值；底部面板状态保持不变。";
     return;
   }
 
