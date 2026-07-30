@@ -974,7 +974,7 @@ summary:focus-visible {
   background: var(--text-muted);
 }
 
-.trace-step[data-state="complete"] .trace-node {
+.trace-step[data-state="completed"] .trace-node {
   background: var(--positive);
 }
 

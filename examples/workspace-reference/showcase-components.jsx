@@ -223,7 +223,7 @@ const copy = {
     trace: {
       title: "Agent activity trace",
       body: "Expose actions, tools, inputs, and results that can be audited. Never reveal hidden chain-of-thought.",
-      complete: "Complete",
+      completed: "Complete",
       running: "Running",
       waiting: "Waiting",
       failed: "Failed",
@@ -457,7 +457,7 @@ const copy = {
     trace: {
       title: "智能体活动记录",
       body: "展示可审计的操作、工具、输入和结果；不要暴露隐藏推理过程。",
-      complete: "已完成",
+      completed: "已完成",
       running: "运行中",
       waiting: "等待中",
       failed: "失败",
@@ -1188,19 +1188,19 @@ function AppShellSpecimen({ c }) {
 
 function AgentActivityTraceSpecimen({ c }) {
   const steps = [
-    { id: "received", state: "complete", time: "09:40:11", title: c.trace.received, body: c.trace.receivedBody },
-    { id: "retrieved", state: "complete", time: "09:40:12", title: c.trace.retrieved, body: c.trace.retrievedBody, tool: true },
-    { id: "compared", state: "complete", time: "09:40:13", title: c.trace.compared, body: c.trace.comparedBody },
+    { id: "received", state: "completed", time: "09:40:11", title: c.trace.received, body: c.trace.receivedBody },
+    { id: "retrieved", state: "completed", time: "09:40:12", title: c.trace.retrieved, body: c.trace.retrievedBody, tool: true },
+    { id: "compared", state: "completed", time: "09:40:13", title: c.trace.compared, body: c.trace.comparedBody },
     { id: "proposed", state: "waiting", time: "09:40:14", title: c.trace.proposed, body: c.trace.proposedBody },
   ];
   const stateLabels = {
-    complete: c.trace.complete,
+    completed: c.trace.completed,
     running: c.trace.running,
     waiting: c.trace.waiting,
     failed: c.trace.failed,
   };
   const stateTones = {
-    complete: "positive",
+    completed: "positive",
     running: "warning",
     waiting: "warning",
     failed: "negative",
@@ -1325,11 +1325,11 @@ function CodeBlockSpecimen({ c }) {
 
 function StoryTimelineSpecimen({ c }) {
   const items = [
-    { label: "09:30", title: c.timeline.introduced, body: c.timeline.introducedBody },
-    { label: "09:34", title: c.timeline.evidence, body: c.timeline.evidenceBody },
-    { label: "09:38", title: c.timeline.mobile, body: c.timeline.mobileBody },
-    { label: "09:41", title: c.timeline.agents, body: c.timeline.agentsBody },
-    { label: "09:45", title: c.timeline.current, body: c.timeline.currentBody },
+    { id: "review-opened", label: "09:30", title: c.timeline.introduced, body: c.timeline.introducedBody },
+    { id: "evidence-gathered", label: "09:34", title: c.timeline.evidence, body: c.timeline.evidenceBody },
+    { id: "conflict-identified", label: "09:38", title: c.timeline.mobile, body: c.timeline.mobileBody },
+    { id: "decision-recorded", label: "09:41", title: c.timeline.agents, body: c.timeline.agentsBody },
+    { id: "recovery-checked", label: "09:45", title: c.timeline.current, body: c.timeline.currentBody },
   ];
   const [activeIndex, setActiveIndex] = React.useState(0);
   const [ready, setReady] = React.useState(false);
@@ -1364,9 +1364,8 @@ function StoryTimelineSpecimen({ c }) {
     if (moveFocus) {
       requestAnimationFrame(() => {
         markerRefs.current[next]?.focus({ preventScroll: true });
-        const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
         markerRefs.current[next]?.scrollIntoView({
-          behavior: reducedMotion ? "auto" : "smooth",
+          behavior: "auto",
           block: "nearest",
           inline: "center",
         });
@@ -1411,7 +1410,12 @@ function StoryTimelineSpecimen({ c }) {
           <ol className="story-timeline__track">
             <li className="story-timeline__progress" aria-hidden="true" role="presentation" />
             {items.map((item, index) => (
-              <li className="story-milestone" data-active={activeIndex === index} key={item.label}>
+              <li
+                className="story-milestone"
+                data-active={activeIndex === index}
+                data-milestone-id={item.id}
+                key={item.id}
+              >
                 <time>{item.label}</time>
                 <button
                   ref={(node) => { markerRefs.current[index] = node; }}

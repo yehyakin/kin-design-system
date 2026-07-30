@@ -184,7 +184,16 @@ test("Story Timeline keeps one ordered model across keyboard and narrow orientat
   await page.goto(specimenUrl("story-timeline"));
   const timeline = page.locator(".story-timeline");
   const markers = page.locator(".story-marker");
+  const milestones = page.locator(".story-milestone");
   await expect(markers).toHaveCount(5);
+  await expect(milestones).toHaveCount(5);
+  expect(await milestones.evaluateAll((items) => items.map((item) => item.dataset.milestoneId))).toEqual([
+    "review-opened",
+    "evidence-gathered",
+    "conflict-identified",
+    "decision-recorded",
+    "recovery-checked",
+  ]);
   await markers.first().focus();
   await page.keyboard.press("ArrowDown");
   await expect(markers.first()).toBeFocused();
