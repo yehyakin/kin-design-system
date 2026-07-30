@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
-  "terminology_version": "1.2.0",
-  "reviewed_on": "2026-07-16",
+  "terminology_version": "1.3.0",
+  "reviewed_on": "2026-07-30",
   "entries": [
     {
       "canonical_name": "Tooltip",
@@ -362,6 +362,33 @@
       "plain_definition": "A visual representation of trend, comparison, distribution, relationship, or composition with an accessible data path.",
       "use_when": "A visual relationship is materially easier to understand than the same values in prose or a small table.",
       "do_not_use_when": "The chart is decorative, exact values are the only need, or data quality cannot support the visual claim."
+    },
+    {
+      "canonical_name": "Agent Activity Trace",
+      "catalog_id": "agent-activity-trace",
+      "aliases": ["agent run log", "tool activity trace", "action trace"],
+      "not_synonyms": ["Activity Feed", "Background Task Queue", "Streaming Response", "Chain of Thought", "Terminal"],
+      "plain_definition": "An ordered inspectable record of externally observable stages, tools, permissions, approvals, and outcomes for one real Agent run.",
+      "use_when": "Users need to audit, debug, verify, or recover a real Agent run at stage level.",
+      "do_not_use_when": "The content is internal reasoning, simulated activity, general product history, a durable task queue, or an unredacted raw log."
+    },
+    {
+      "canonical_name": "Code Block",
+      "catalog_id": "code-block",
+      "aliases": ["code snippet", "preformatted code"],
+      "not_synonyms": ["Inline Code", "Code Editor", "Terminal", "Log Viewer", "Diff Review"],
+      "plain_definition": "A read-only preformatted region that preserves code or command text and may expose language, filename, copy, wrapping, line numbering, or line emphasis.",
+      "use_when": "Users need to read, select, or copy exact code, configuration, or commands while retaining meaningful whitespace.",
+      "do_not_use_when": "The content is editable or executable, represents a live terminal or log stream, or is a short inline technical value."
+    },
+    {
+      "canonical_name": "Story Timeline",
+      "catalog_id": "story-timeline",
+      "aliases": ["lifeline", "narrative timeline", "milestone chronology"],
+      "not_synonyms": ["Activity Feed", "Timeline View", "Progress Indicator", "Schedule", "Audit Log"],
+      "plain_definition": "A sourced ordered set of milestones that explains how one subject changed over time without implying unsupported causality or progress.",
+      "use_when": "Time-ordered milestones are the primary reading structure and each milestone has meaningful date, identity, detail, and provenance.",
+      "do_not_use_when": "Users need a live operational event log, comparable durations or dependencies, governed audit history, or a decorative progress line."
     }
   ]
 }

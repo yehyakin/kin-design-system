@@ -69,15 +69,18 @@ const DISCOVERY_UI_COPY = Object.freeze({
 });
 
 export const SHOWCASE_COMPONENT_IDS = Object.freeze([
-  "button",
-  "command-menu",
+  "app-shell",
   "evidence-list",
   "suggested-change-review",
   "execution-preview",
+  "agent-activity-trace",
   "background-task-queue",
+  "story-timeline",
   "data-table",
+  "command-menu",
   "authentication-dialog",
-  "app-shell",
+  "code-block",
+  "button",
 ]);
 
 export const SHOWCASE_PATTERN_IDS = Object.freeze([
@@ -585,7 +588,17 @@ function validateConfiguration(root, configuration, components, pages, scenarios
   for (const id of SHOWCASE_COMPONENT_IDS) {
     const component = components.get(id);
     if (!component) fail(`Explorer component "${id}" is missing from components/catalog.json.`);
-    if (component.status !== "stable") fail(`Explorer component "${id}" must be stable in components/catalog.json.`);
+    if (!["stable", "candidate"].includes(component.status)) {
+      fail(`Explorer component "${id}" must be stable or candidate in components/catalog.json.`);
+    }
+    if (component.status === "candidate") {
+      if (component.contract_paths.length === 0 || component.reference_paths.length === 0 || component.test_paths.length === 0) {
+        fail(`Candidate Explorer component "${id}" requires a contract, runnable reference, and automated test path.`);
+      }
+      for (const [capability, supported] of Object.entries(component.support)) {
+        if (!supported) fail(`Candidate Explorer component "${id}" must record ${capability} support before receiving a deep route.`);
+      }
+    }
 
     const locator = configuration.locators.components[id];
     assertExactKeys(locator, ["path", "query", "fragment", "state_id"], `locators.components.${id}`);
@@ -968,27 +981,24 @@ function componentRow({ component, locale, publicPath, configuration, copy }) {
 }
 
 const COMPONENT_ICONS = Object.freeze({
-  "button": "mouse-pointer-click",
-  "command-menu": "command",
+  "app-shell": "panels-top-left",
   "evidence-list": "list-tree",
   "suggested-change-review": "git-compare-arrows",
   "execution-preview": "scan-eye",
+  "agent-activity-trace": "bot",
   "background-task-queue": "list-restart",
+  "story-timeline": "list-tree",
   "data-table": "table-2",
+  "command-menu": "command",
   "authentication-dialog": "log-in",
-  "app-shell": "panels-top-left",
+  "code-block": "code-2",
+  "button": "mouse-pointer-click",
 });
 
-const COMPONENT_STAGE_FOCUS_SELECTORS = Object.freeze({
-  "button": ".button-contract",
-  "command-menu": ".command-dialog",
-  "evidence-list": ".evidence-list",
-  "suggested-change-review": ".change-review",
-  "execution-preview": ".execution-preview",
-  "background-task-queue": "#background-work",
-  "data-table": ".table-wrap",
-  "authentication-dialog": "[data-auth-dialog]",
-});
+// Every showcase-components reference renders exactly one specimen, so the
+// iframe itself is already the isolation boundary. A second DOM focus crop
+// would hide portalled overlays such as cmdk and Sonner.
+const COMPONENT_STAGE_FOCUS_SELECTORS = Object.freeze({});
 
 const PATTERN_ICONS = Object.freeze({
   "information-site": "book-open-text",

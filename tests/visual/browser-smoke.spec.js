@@ -41,6 +41,17 @@ test("cross-browser smoke preserves navigation focus and advanced states", async
   await accept.click();
   await expect(page.getByText("已采纳 · 尚未执行", { exact: true })).toBeVisible();
 
+  await page.goto(
+    "/examples/workspace-reference/showcase-components.html?lang=en&specimen=story-timeline",
+    { waitUntil: "domcontentloaded" },
+  );
+  const storyMarkers = page.locator(".story-marker");
+  await expect(storyMarkers).toHaveCount(5);
+  await storyMarkers.first().focus();
+  await page.keyboard.press("ArrowRight");
+  await expect(storyMarkers.nth(1)).toBeFocused();
+  await expect(page.locator(".timeline-detail")).toContainText("09:34");
+
   await page.goto("/examples/page-patterns/access.html", { waitUntil: "domcontentloaded" });
   await expect(page.locator("[data-sign-in-view]")).toBeVisible();
   await page.locator("[data-recovery-open]").click();

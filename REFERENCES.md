@@ -48,6 +48,7 @@ Third-party component defaults always have the lowest visual priority.
 | [Interfaces](https://interfaces.dev/) | interactive component demonstrations that expose behavior in context rather than relying on prose alone | copied source, screenshots, default aesthetics, or claiming a demonstration is a production component package |
 | [Rico Bookmark Manager](https://github.com/ricocc/rico-bookmark-manager) | separation of source data, generated site, reusable instructions, and adoption entry points | bookmark-specific architecture, visual styling, or treating Agent installation as KIN's product direction |
 | [Serena](https://serena.miladmo.me/) | scheduling-workspace observation: coordinated Sidebar collapse, task-scoped adjacent context, anchored item detail, and container-aware schedule density | hosted fonts or assets, copied source or styling, simulated AI, desktop-only rejection, or treating a deployed prototype as verified production behavior |
+| [Lifeline](https://github.com/evilrabbit/lifeline) | responsive narrative chronology, horizontal-to-vertical orientation, bounded wheel handoff, keyboard scrub, and media-expansion review | copied Next.js or Tailwind source, bundled assets, decorative fireworks, random image tilt, unbounded year materialization, or inheriting its observed focus and semantic gaps |
 
 ## Reference translation matrix
 
@@ -61,6 +62,7 @@ External projects MUST influence KIN through an explicit translation, not visual
 | Skeleton and reference-site projects | loading geometry shaped by real content and examples that expose source behavior | deterministic loading/empty/error fixtures and discoverable showcase links | framework dependency, decorative shimmer, or universal skeleton templates |
 | Agent-installable repositories | a clear adoption entry point, pinned contract, migration brief, and evidence stages | `kin.config`, implementation brief, validation record, and rollback ownership | making Agent integration the product direction or accepting generated output without review |
 | Scheduling-workspace observations | KIN-owned Schedule page contract, Context Sidecar distinction, reversible Sidebar collapse, and container-aware density rules | deterministic period/selection reference, wide reflow and narrow overlay checks, focus return, URL state, and Reduced Motion | copied calendar visuals, fake AI responses, hosted product assets, desktop-only behavior, or unsupported real-time claims |
+| Lifeline timeline interaction | conditional Story Timeline contract with one ordered data model, wide horizontal and narrow vertical projections, boundary-aware scroll ownership, roving keyboard selection, focus return, and Reduced Motion | deterministic sparse chronology fixture plus keyboard, touch, wheel handoff, reflow, theme, contrast, and Reduced Motion checks | copied source or assets, decorative effects, empty-year materialization, replacing Activity Feed, or treating upstream accessibility gaps as acceptable |
 
 ## Page-flow references
 

@@ -31,7 +31,7 @@ source:
   contract_path: "DESIGN.md"
   checksum_algorithm: "sha256"
   checksum: "c1fbae50d28cfdb37285a8ec4ba9e89f1c121a86e8589d750c0a88a581c6bda3"
-  input_set_checksum: "a3908427eaba69bc5656710dd250420bef89d9c96e0212f30de7683a2eedabca"
+  input_set_checksum: "34aa0e9df6b09852e43fdaca4130076d021ad07fb1bb5498342d8e67581a19df"
   ref: "main"
   revision_status: "mutable"
 manifest_locator: "design-manifest.json"

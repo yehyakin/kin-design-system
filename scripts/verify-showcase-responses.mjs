@@ -51,6 +51,9 @@ const STATIC_ASSETS = Object.freeze([
   "assets/showcase.css",
   "assets/showcase.js",
   "assets/posters/int-02-normal-dark.png",
+  "examples/workspace-reference/showcase-components.html",
+  "examples/workspace-reference/showcase-components.css",
+  "examples/workspace-reference/showcase-components.js",
 ]);
 
 function parseArguments(args) {

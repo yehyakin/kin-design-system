@@ -51,11 +51,11 @@
         "page": {
           "eyebrow": "KIN COMPONENTS",
           "title": "Find a component by task and evidence.",
-          "lead": "Browse stable KIN components by catalog tier, then open a bounded Explorer when a deep reference is available.",
+          "lead": "Start with a real interaction, then open its usage, support, and implementation contract when you need the detail.",
           "stable_heading": "Stable components by catalog tier",
           "stable_intro": "Names, tiers, maturity, support, references, tests, and gaps are read from the canonical Component catalog at build time.",
           "other_heading": "Candidate and draft records",
-          "other_intro": "These records remain discoverable but are not presented as complete components and do not receive deep Explorer routes.",
+          "other_intro": "Candidate records with a complete contract, runnable reference, and automated checks can open an Explorer while their remaining gaps stay visible.",
           "explorer_available": "Open Explorer",
           "catalog_only": "Catalog only",
           "empty_group": "No records in this group.",
@@ -123,11 +123,23 @@
             "boundary": "The reference creates no external side effect. Authorization, scope validation, execution, and rollback remain product-owned.",
             "state_label": "Confirmation required"
           },
+          "agent-activity-trace": {
+            "display_name": "Agent Activity Trace",
+            "job": "Inspect observable Agent stages, permitted tool activity, results, and recovery without exposing hidden reasoning.",
+            "boundary": "The trace uses deterministic local stages. It does not contact a model or tool, establish authorization, or prove production observability.",
+            "state_label": "Read-only stages complete; waiting for operator approval"
+          },
           "background-task-queue": {
             "display_name": "Background Task Queue",
             "job": "Keep accepted long-running work identifiable through progress, cancellation, failure, recovery, and result access.",
             "boundary": "The queue uses deterministic local tasks. It does not prove backend persistence, idempotency, cancellation, or retry.",
             "state_label": "Mixed running, failed, and completed tasks"
+          },
+          "story-timeline": {
+            "display_name": "Story Timeline",
+            "job": "Present a small ordered narrative horizontally on wide screens and vertically on narrow screens without changing its facts.",
+            "boundary": "The milestones are local example content. They do not establish product history, live events, or adoption evidence.",
+            "state_label": "Responsive ordered milestones"
           },
           "command-menu": {
             "display_name": "Command Menu",
@@ -146,6 +158,12 @@
             "job": "Compare related records through named columns, stable row semantics, selection, and keyboard-accessible actions.",
             "boundary": "The fixture is bounded. Real datasets, virtualization, authorization, responsive priority, and assistive-technology evidence remain product responsibilities.",
             "state_label": "Default comparable-record table"
+          },
+          "code-block": {
+            "display_name": "Code Block",
+            "job": "Preserve source order, whitespace, long-line navigation, wrapping, and honest copy feedback.",
+            "boundary": "The source is fixed local text. It is not generated, validated, saved, compiled, or executed.",
+            "state_label": "Scrollable TypeScript with wrap and copy"
           }
         }
       },
@@ -357,11 +375,23 @@
             "boundary": "预览不会产生外部影响；授权、范围校验、执行和回退由产品实现。",
             "state_label": "需要确认"
           },
+          "agent-activity-trace": {
+            "display_name": "智能体活动记录",
+            "job": "查看可观察的运行阶段、获准工具活动、结果和恢复路径，不暴露隐藏推理。",
+            "boundary": "记录使用固定的本地步骤，不会调用模型或工具，也不代表已经具备正式授权与运行监测。",
+            "state_label": "只读步骤已完成，等待运营人员批准"
+          },
           "background-task-queue": {
             "display_name": "后台任务队列",
             "job": "让耗时任务在运行、取消、失败、重试和完成后都可追踪。",
             "boundary": "队列使用本地样例，不代表后端已经支持持久化、幂等、取消或重试。",
             "state_label": "运行中、失败与已完成"
+          },
+          "story-timeline": {
+            "display_name": "故事时间线",
+            "job": "用同一组有序事实在宽屏横向讲述，在窄屏纵向阅读，不改变内容含义。",
+            "boundary": "里程碑是本地示例，不代表产品历史、实时事件或实际接入记录。",
+            "state_label": "随屏幕方向变化的有序里程碑"
           },
           "command-menu": {
             "display_name": "命令菜单",
@@ -380,6 +410,12 @@
             "job": "用清楚的列和行语义比较记录，并支持选择、排序与键盘操作。",
             "boundary": "预览数据量有限；真实数据、虚拟列表、权限、移动端优先级和辅助技术验证由产品负责。",
             "state_label": "默认数据表格"
+          },
+          "code-block": {
+            "display_name": "代码块",
+            "job": "保留源码顺序、空白、长行浏览、换行方式和真实的复制反馈。",
+            "boundary": "源码是固定的本地文本，不代表已经生成、校验、保存、编译或执行。",
+            "state_label": "支持换行与复制的 TypeScript"
           }
         }
       },
@@ -496,6 +532,19 @@
       "production identity-provider and task-resume evidence": "尚未验证正式登录与任务恢复流程",
       "screen-reader table navigation": "屏幕阅读器表格导航",
       "large dataset": "大数据集",
+      "Agent Activity Trace": "智能体活动记录",
+      "screen-reader step and nested tool-detail reading order": "屏幕阅读器中的步骤顺序与嵌套工具详情阅读顺序",
+      "production permission, redaction, stop, retry, and recovery behavior": "正式环境中的权限、脱敏、停止、重试与恢复行为",
+      "production adoption with stable run identity, redacted tool input and output, authorization, cancellation, and retry evidence": "仍缺少稳定运行标识、工具输入输出脱敏、授权、取消和重试的正式接入证据",
+      "Code Block": "代码块",
+      "screen-reader long-code navigation": "屏幕阅读器浏览长代码",
+      "bidirectional text, very long lines, and production copy-policy review": "双向文本、超长行与正式复制策略检查",
+      "production adoption evidence for long files, bidirectional text, safe copy, and assistive-technology navigation": "仍缺少长文件、双向文本、安全复制和辅助技术浏览的正式接入证据",
+      "Story Timeline": "故事时间线",
+      "screen-reader ordered-story comprehension": "屏幕阅读器理解有序故事",
+      "desktop wheel handoff, touch scrolling, and 200% zoom": "桌面滚轮交接、触控滚动与 200% 缩放",
+      "sparse and long real datasets": "稀疏和较长的真实数据集",
+      "production adoption with sparse or long timelines and manual cross-input, zoom, and assistive-technology evidence": "仍缺少稀疏或长时间线以及跨输入、缩放和辅助技术的正式接入证据",
       "Information Record Page": "信息记录页",
       "Intelligence Workspace Page": "情报工作台页",
       "Ecommerce Operations Page": "电商运营页",
@@ -524,15 +573,18 @@
   },
   "display_order": {
     "component_explorers": [
-      "button",
-      "command-menu",
+      "app-shell",
       "evidence-list",
       "suggested-change-review",
       "execution-preview",
+      "agent-activity-trace",
       "background-task-queue",
+      "story-timeline",
       "data-table",
+      "command-menu",
       "authentication-dialog",
-      "app-shell"
+      "code-block",
+      "button"
     ],
     "component_tiers": [
       "core",
@@ -554,124 +606,113 @@
   },
   "locators": {
     "components": {
-      "button": {
-        "path": "examples/workspace-reference/core-components.html",
-        "query": {
-          "en": {
-            "lang": "zh-CN"
-          },
-          "zh-CN": {
-            "lang": "zh-CN"
-          }
-        },
-        "fragment": "button-contract-title",
-        "state_id": "variants-and-states"
-      },
       "app-shell": {
-        "path": "examples/workspace-reference/index.html",
+        "path": "examples/workspace-reference/showcase-components.html",
         "query": {
-          "en": {
-            "lang": "en"
-          },
-          "zh-CN": {
-            "lang": "zh-CN"
-          }
+          "en": { "lang": "en", "specimen": "app-shell" },
+          "zh-CN": { "lang": "zh-CN", "specimen": "app-shell" }
         },
-        "fragment": "workspace",
+        "fragment": "showcase-specimen-app",
         "state_id": "default"
       },
       "evidence-list": {
-        "path": "examples/workspace-reference/advanced-components.html",
+        "path": "examples/workspace-reference/showcase-components.html",
         "query": {
-          "en": {
-            "lang": "zh-CN"
-          },
-          "zh-CN": {
-            "lang": "zh-CN"
-          }
+          "en": { "lang": "en", "specimen": "evidence-list" },
+          "zh-CN": { "lang": "zh-CN", "specimen": "evidence-list" }
         },
-        "fragment": "evidence-title",
+        "fragment": "showcase-specimen-app",
         "state_id": "conflict"
       },
       "suggested-change-review": {
-        "path": "examples/workspace-reference/advanced-components.html",
+        "path": "examples/workspace-reference/showcase-components.html",
         "query": {
-          "en": {
-            "lang": "zh-CN"
-          },
-          "zh-CN": {
-            "lang": "zh-CN"
-          }
+          "en": { "lang": "en", "specimen": "suggested-change-review" },
+          "zh-CN": { "lang": "zh-CN", "specimen": "suggested-change-review" }
         },
-        "fragment": "review",
+        "fragment": "showcase-specimen-app",
         "state_id": "pending"
       },
       "execution-preview": {
-        "path": "examples/workspace-reference/advanced-components.html",
+        "path": "examples/workspace-reference/showcase-components.html",
         "query": {
-          "en": {
-            "lang": "zh-CN"
-          },
-          "zh-CN": {
-            "lang": "zh-CN"
-          }
+          "en": { "lang": "en", "specimen": "execution-preview" },
+          "zh-CN": { "lang": "zh-CN", "specimen": "execution-preview" }
         },
-        "fragment": "execution-title",
+        "fragment": "showcase-specimen-app",
         "state_id": "confirmation-required"
       },
-      "background-task-queue": {
-        "path": "examples/workspace-reference/advanced-components.html",
+      "agent-activity-trace": {
+        "path": "examples/workspace-reference/showcase-components.html",
         "query": {
-          "en": {
-            "lang": "zh-CN"
-          },
-          "zh-CN": {
-            "lang": "zh-CN"
-          }
+          "en": { "lang": "en", "specimen": "agent-activity-trace" },
+          "zh-CN": { "lang": "zh-CN", "specimen": "agent-activity-trace" }
         },
-        "fragment": "background-work",
+        "fragment": "showcase-specimen-app",
+        "state_id": "waiting-for-operator-approval"
+      },
+      "background-task-queue": {
+        "path": "examples/workspace-reference/showcase-components.html",
+        "query": {
+          "en": { "lang": "en", "specimen": "background-task-queue" },
+          "zh-CN": { "lang": "zh-CN", "specimen": "background-task-queue" }
+        },
+        "fragment": "showcase-specimen-app",
         "state_id": "mixed"
       },
-      "command-menu": {
-        "path": "examples/workspace-reference/states.html",
+      "story-timeline": {
+        "path": "examples/workspace-reference/showcase-components.html",
         "query": {
-          "en": {
-            "lang": "zh-CN"
-          },
-          "zh-CN": {
-            "lang": "zh-CN"
-          }
+          "en": { "lang": "en", "specimen": "story-timeline" },
+          "zh-CN": { "lang": "zh-CN", "specimen": "story-timeline" }
         },
-        "fragment": "state-reference",
+        "fragment": "showcase-specimen-app",
+        "state_id": "responsive-orientation"
+      },
+      "data-table": {
+        "path": "examples/workspace-reference/showcase-components.html",
+        "query": {
+          "en": { "lang": "en", "specimen": "data-table" },
+          "zh-CN": { "lang": "zh-CN", "specimen": "data-table" }
+        },
+        "fragment": "showcase-specimen-app",
+        "state_id": "sortable-selection"
+      },
+      "command-menu": {
+        "path": "examples/workspace-reference/showcase-components.html",
+        "query": {
+          "en": { "lang": "en", "specimen": "command-menu" },
+          "zh-CN": { "lang": "zh-CN", "specimen": "command-menu" }
+        },
+        "fragment": "showcase-specimen-app",
         "state_id": "open"
       },
       "authentication-dialog": {
-        "path": "examples/workspace-reference/core-components.html",
+        "path": "examples/workspace-reference/showcase-components.html",
         "query": {
-          "en": {
-            "lang": "en",
-            "dialog": "authentication"
-          },
-          "zh-CN": {
-            "lang": "zh-CN",
-            "dialog": "authentication"
-          }
+          "en": { "lang": "en", "specimen": "authentication-dialog" },
+          "zh-CN": { "lang": "zh-CN", "specimen": "authentication-dialog" }
         },
-        "fragment": "authentication",
+        "fragment": "showcase-specimen-app",
         "state_id": "open"
       },
-      "data-table": {
-        "path": "examples/workspace-reference/core-components.html",
+      "code-block": {
+        "path": "examples/workspace-reference/showcase-components.html",
         "query": {
-          "en": {
-            "lang": "zh-CN"
-          },
-          "zh-CN": {
-            "lang": "zh-CN"
-          }
+          "en": { "lang": "en", "specimen": "code-block" },
+          "zh-CN": { "lang": "zh-CN", "specimen": "code-block" }
         },
-        "fragment": "data-display",
-        "state_id": "default"
+        "fragment": "showcase-specimen-app",
+        "state_id": "scroll-wrap-copy"
+      },
+      "button": {
+        "path": "examples/workspace-reference/showcase-components.html",
+        "query": {
+          "en": { "lang": "en", "specimen": "button" },
+          "zh-CN": { "lang": "zh-CN", "specimen": "button" }
+        },
+        "fragment": "showcase-specimen-app",
+        "state_id": "hierarchy-feedback-recovery"
       }
     },
     "patterns": {
