@@ -53,6 +53,8 @@ export const SITE_COPY_ARTIFACTS = Object.freeze([
   ["examples/workspace-reference/investigation-reference.js", "examples/workspace-reference/investigation-reference.js"],
   ["examples/workspace-reference/motion.css", "examples/workspace-reference/motion.css"],
   ["examples/workspace-reference/motion.html", "examples/workspace-reference/motion.html"],
+  ["examples/workspace-reference/showcase-components.css", "examples/workspace-reference/showcase-components.css"],
+  ["examples/workspace-reference/showcase-components.html", "examples/workspace-reference/showcase-components.html"],
   ["examples/workspace-reference/states.css", "examples/workspace-reference/states.css"],
   ["examples/workspace-reference/states.html", "examples/workspace-reference/states.html"],
   ["examples/workspace-reference/states.js", "examples/workspace-reference/states.js"],
@@ -72,6 +74,7 @@ export const SITE_GENERATED_ARTIFACTS = Object.freeze([
   "examples/workspace-reference/integration-reference.js",
   "examples/workspace-reference/motion-reference.js",
   "examples/workspace-reference/reference.js",
+  "examples/workspace-reference/showcase-components.js",
   ...SHOWCASE_GENERATED_PATHS,
 ]);
 

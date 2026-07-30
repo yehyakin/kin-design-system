@@ -83,6 +83,8 @@ The machine-readable source is [`terminology.json`](./terminology.json). Compone
 | Data Table | Comparable records arranged in named columns and rows | visual grid with no tabular relationship, Data List |
 | Tree View | A hierarchical list whose nodes can expand, collapse, and be selected | Accordion, nested Sidebar without tree interaction |
 | Inspector | A contextual property panel for the current selection | Dashboard, modal Dialog, permanent navigation Sidebar |
+| Code Block | Read-only preformatted code or command content with exact-value access | Inline Code, Code Editor, Terminal, Log Viewer |
+| Story Timeline | A sourced ordered set of milestones describing how one subject changed over time | Activity Feed, Timeline View, Progress Indicator, Audit Log |
 
 ## Layout and desktop-workspace terms
 
@@ -115,6 +117,7 @@ The machine-readable source is [`terminology.json`](./terminology.json). Compone
 | Media Review | Media selection and approval with provenance, rights, metadata, accessibility, and channel constraints | Gallery, File Upload, media viewer |
 | Background Task Queue | Durable accepted work with identity, state, progress, cancellation, recovery, and result | Toast, Spinner, Activity Feed |
 | Chart | A visual analytical relationship with units, scope, source, state, and accessible data | Live Chart, decorative Sparkline, Metric |
+| Agent Activity Trace | Observable stages, tools, permissions, approvals, and outcomes for one real Agent run | Activity Feed, Background Task Queue, Chain of Thought |
 
 ## Authentication and access terms
 

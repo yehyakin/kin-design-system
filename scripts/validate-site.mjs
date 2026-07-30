@@ -47,6 +47,9 @@ const required = [
   "examples/workspace-reference/motion-reference.js",
   "examples/workspace-reference/integrations.html",
   "examples/workspace-reference/integration-reference.js",
+  "examples/workspace-reference/showcase-components.html",
+  "examples/workspace-reference/showcase-components.css",
+  "examples/workspace-reference/showcase-components.js",
   "examples/page-patterns/access.html",
   "examples/page-patterns/onboarding.html",
   "examples/page-patterns/search.html",
@@ -174,6 +177,7 @@ if (fs.existsSync(output)) {
     "examples/workspace-reference/core-components.html",
     "examples/workspace-reference/motion.html",
     "examples/workspace-reference/integrations.html",
+    "examples/workspace-reference/showcase-components.html",
     "examples/page-patterns/access.html",
     "examples/page-patterns/onboarding.html",
     "examples/page-patterns/search.html",
@@ -345,6 +349,7 @@ if (fs.existsSync(workspaceAssetDirectory)) {
   const coreBundle = path.join(workspaceAssetDirectory, "core-components.js");
   const motionBundle = path.join(workspaceAssetDirectory, "motion-reference.js");
   const integrationBundle = path.join(workspaceAssetDirectory, "integration-reference.js");
+  const showcaseComponentsBundle = path.join(workspaceAssetDirectory, "showcase-components.js");
   const chunks = fs.existsSync(path.join(workspaceAssetDirectory, "chunks"))
     ? fs.readdirSync(path.join(workspaceAssetDirectory, "chunks"))
     : [];
@@ -353,6 +358,9 @@ if (fs.existsSync(workspaceAssetDirectory)) {
   if (fs.existsSync(coreBundle) && fs.statSync(coreBundle).size > 50_000) failures.push("workspace-reference/core-components.js: initial JavaScript bundle exceeds 50 KB");
   if (fs.existsSync(motionBundle) && fs.statSync(motionBundle).size > 50_000) failures.push("workspace-reference/motion-reference.js: initial JavaScript bundle exceeds 50 KB");
   if (fs.existsSync(integrationBundle) && fs.statSync(integrationBundle).size > 90_000) failures.push("workspace-reference/integration-reference.js: initial integration bundle exceeds 90 KB");
+  if (fs.existsSync(showcaseComponentsBundle) && fs.statSync(showcaseComponentsBundle).size > 55_000) {
+    failures.push("workspace-reference/showcase-components.js: initial component specimen bundle exceeds 55 KB");
+  }
 }
 
 const assetDirectory = path.join(output, "assets");

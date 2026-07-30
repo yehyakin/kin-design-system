@@ -46,7 +46,7 @@ Verification evidence MUST follow [`principles/verification.md`](../principles/v
 
 ## Current stable components
 
-The catalog currently contains 65 stable, 6 candidate, and 6 draft components. The machine-readable registry remains the source of truth for each component's exact paths and support fields.
+The catalog currently contains 65 stable, 9 candidate, and 6 draft components. The machine-readable registry remains the source of truth for each component's exact paths and support fields.
 
 | Contract group | Stable components | Primary reference |
 |---|---|---|
@@ -72,13 +72,18 @@ Current candidates have named completion or adoption gaps:
 - OTP;
 - Live Chart;
 - Number Transition;
-- Verification Challenge.
+- Verification Challenge;
+- Agent Activity Trace;
+- Code Block;
+- Story Timeline.
 
 See [`catalog.json`](./catalog.json) for exact contract, reference, test, and gap fields.
 
 Context Sidecar is a workspace candidate rather than a package integration. Its contract and deterministic scheduling reference cover wide-screen reflow, narrow-screen overlay adaptation, focus return, URL selection, and Reduced Motion. It remains candidate until one adopting product records production workflow and manual assistive-technology evidence.
 
 Drag and Drop, OTP, Live Chart, and Number Transition now have real official-package adapters, runnable Integration Lab examples, and automated evidence. They remain candidates because runtime availability does not close their named backend, manual accessibility, cross-input, recovery, or consuming-product gaps.
+
+Agent Activity Trace, Code Block, and Story Timeline have dedicated contracts and runnable local specimens. They remain candidates until adopting products provide production state, long-content, cross-input, zoom, and assistive-technology evidence. Story Timeline is a conditional narrative component and MUST NOT replace a flat Activity Feed, durable Background Task Queue, progress, or governed audit history.
 
 ## Draft gaps
 

@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en" data-theme="dark" data-contrast="normal">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#08090a" />
+    <title>KIN component showcase reference</title>
+    <script>
+      (() => {
+        const params = new URLSearchParams(location.search);
+        const locale = params.get("lang") === "zh-CN" ? "zh-CN" : "en";
+        const requestedTheme = params.get("theme");
+        const storedTheme = localStorage.getItem("kin-reference-theme") || "system";
+        const preference = ["light", "dark", "system"].includes(requestedTheme)
+          ? requestedTheme
+          : storedTheme;
+        const resolved = preference === "system"
+          ? (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")
+          : preference;
+        document.documentElement.lang = locale;
+        document.documentElement.dataset.theme = resolved;
+        document.documentElement.dataset.themePreference = preference;
+        document.documentElement.dataset.contrast = localStorage.getItem("kin-reference-contrast") === "more" ? "more" : "normal";
+        document.documentElement.style.colorScheme = resolved;
+        document.querySelector('meta[name="theme-color"]')?.setAttribute(
+          "content",
+          resolved === "dark" ? "#08090a" : "#f7f8fa",
+        );
+      })();
+    </script>
+    <link rel="stylesheet" href="../../assets/kin-react.css" />
+    <link rel="stylesheet" href="./showcase-components.css" />
+    <script type="module" src="./showcase-components.js"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#showcase-specimen-app">Skip to component</a>
+    <div id="showcase-specimen-app"></div>
+  </body>
+</html>

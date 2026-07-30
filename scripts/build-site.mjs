@@ -59,6 +59,7 @@ await build({
     path.join(root, "examples", "workspace-reference", "core-components.js"),
     path.join(root, "examples", "workspace-reference", "motion-reference.js"),
     path.join(root, "examples", "workspace-reference", "integration-reference.jsx"),
+    path.join(root, "examples", "workspace-reference", "showcase-components.jsx"),
   ],
   outdir: path.join(output, "examples", "workspace-reference"),
   bundle: true,

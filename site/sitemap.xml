@@ -138,4 +138,34 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://yehyakin.github.io/kin-design-system/components/data-table/" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://yehyakin.github.io/kin-design-system/zh/components/data-table/" />
   </url>
+  <url>
+    <loc>https://yehyakin.github.io/kin-design-system/components/agent-activity-trace/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://yehyakin.github.io/kin-design-system/components/agent-activity-trace/" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://yehyakin.github.io/kin-design-system/zh/components/agent-activity-trace/" />
+  </url>
+  <url>
+    <loc>https://yehyakin.github.io/kin-design-system/zh/components/agent-activity-trace/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://yehyakin.github.io/kin-design-system/components/agent-activity-trace/" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://yehyakin.github.io/kin-design-system/zh/components/agent-activity-trace/" />
+  </url>
+  <url>
+    <loc>https://yehyakin.github.io/kin-design-system/components/code-block/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://yehyakin.github.io/kin-design-system/components/code-block/" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://yehyakin.github.io/kin-design-system/zh/components/code-block/" />
+  </url>
+  <url>
+    <loc>https://yehyakin.github.io/kin-design-system/zh/components/code-block/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://yehyakin.github.io/kin-design-system/components/code-block/" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://yehyakin.github.io/kin-design-system/zh/components/code-block/" />
+  </url>
+  <url>
+    <loc>https://yehyakin.github.io/kin-design-system/components/story-timeline/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://yehyakin.github.io/kin-design-system/components/story-timeline/" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://yehyakin.github.io/kin-design-system/zh/components/story-timeline/" />
+  </url>
+  <url>
+    <loc>https://yehyakin.github.io/kin-design-system/zh/components/story-timeline/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://yehyakin.github.io/kin-design-system/components/story-timeline/" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://yehyakin.github.io/kin-design-system/zh/components/story-timeline/" />
+  </url>
 </urlset>

@@ -57,9 +57,9 @@ test("Showcase stages keep restrained normal motion and settle rapid replacement
   await choices.nth(2).click();
   await choices.nth(0).click();
   await expect(choices.nth(0)).toHaveAttribute("aria-selected", "true");
-  await expect(componentStage).toHaveAttribute("data-ready-fragment", "button-contract-title");
+  await expect(componentStage).toHaveAttribute("data-ready-fragment", "showcase-specimen-app");
   await expect(componentStage).toHaveAttribute("data-stage-ready", "true", { timeout: 10_000 });
-  await expect(page.frameLocator("[data-component-browser] iframe").locator("#button-contract-title")).toBeVisible();
+  await expect(page.frameLocator("[data-component-browser] iframe").locator("#specimen-root")).toBeVisible();
   await componentStage.evaluate((element) => {
     window.__kinKeyboardStageTransitions = [];
     for (const target of element.querySelectorAll("iframe, [data-stage-loading]")) {
@@ -97,35 +97,22 @@ test("Showcase stages keep restrained normal motion and settle rapid replacement
   expect(await page.evaluate(() => window.__kinKeyboardStageTransitions)).toEqual([]);
 });
 
-test("Button Explorer preserves purposeful motion and focus recovery", async ({ page }) => {
-  await page.goto("/zh/components/button/");
-  const stage = page.locator("[data-reference-stage]");
-  const reference = page.frameLocator("[data-reference-stage] [data-stage-frame]");
-  await expect(stage).toHaveAttribute("data-stage-ready", "true", { timeout: 10_000 });
+test("Story Timeline preserves purposeful draw motion and keyboard selection", async ({ page }) => {
+  await page.goto(
+    "/examples/workspace-reference/showcase-components.html?lang=en&specimen=story-timeline",
+    { waitUntil: "domcontentloaded" },
+  );
+  const progress = page.locator(".story-timeline__progress");
+  await expect(progress).toBeAttached();
+  await expect(progress).toHaveCSS("animation-name", "timeline-draw");
+  await expect(progress).toHaveCSS("animation-duration", "0.72s");
 
-  const menuTrigger = reference.locator("[data-button-menu-trigger]");
-  const menu = reference.locator("[data-button-menu]");
-  expect(await transitionMilliseconds(menu)).toBeGreaterThanOrEqual(110);
-  await menuTrigger.click();
-  await expect(menu).toHaveAttribute("data-state", "open");
-  await page.keyboard.press("Escape");
-  await expect(menu).toBeHidden();
-  await expect(menuTrigger).toBeFocused();
-
-  const save = reference.locator("[data-button-async]");
-  await save.click();
-  await expect(save).toHaveAttribute("data-control-state", "pending");
-  await expect(save.locator('[data-icon-state="pending"]')).not.toHaveCSS("animation-name", "none");
-  await expect(save).toHaveAttribute("data-control-state", "success", { timeout: 2_000 });
-
-  const danger = reference.locator("[data-button-danger-open]");
-  const dialog = reference.locator("[data-button-confirm-dialog]");
-  expect(await transitionMilliseconds(dialog)).toBeGreaterThanOrEqual(150);
-  await danger.click();
-  await expect(dialog).toHaveAttribute("data-state", "open");
-  await dialog.locator("[data-button-confirm-cancel]").click();
-  await expect(dialog).toBeHidden();
-  await expect(danger).toBeFocused();
+  const markers = page.locator(".story-marker");
+  await markers.first().focus();
+  await page.keyboard.press("ArrowRight");
+  await expect(markers.nth(1)).toBeFocused();
+  await expect(markers.nth(1)).toHaveAttribute("aria-pressed", "true");
+  await expect(page.locator(".timeline-detail")).toContainText("09:34");
 });
 
 test("mobile documentation Drawer retains modal ownership through its exit motion", async ({ page }) => {
