@@ -25,6 +25,7 @@ export interface KinCommandMenuProps {
   onOpenChange: (open: boolean) => void;
   groups: KinCommandGroup[];
   label: string;
+  listLabel?: string;
   inputLabel: string;
   placeholder?: string;
   emptyLabel?: React.ReactNode;
@@ -41,6 +42,7 @@ export function KinCommandMenu({
   onOpenChange,
   groups,
   label,
+  listLabel,
   inputLabel,
   placeholder,
   emptyLabel = "No results",
@@ -76,7 +78,7 @@ export function KinCommandMenu({
       <div className="kin-command__input-row">
         <Command.Input aria-label={inputLabel} autoFocus placeholder={placeholder} />
       </div>
-      <Command.List className="kin-command__list" aria-label={label}>
+      <Command.List className="kin-command__list" label={listLabel ?? label}>
         {loading ? <Command.Loading>{loadingLabel}</Command.Loading> : null}
         <Command.Empty>{emptyLabel}</Command.Empty>
         {groups.map((group) => (

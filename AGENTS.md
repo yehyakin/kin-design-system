@@ -2,10 +2,21 @@
 
 These instructions apply to the entire repository.
 
+## Default orchestration
+
+- Use the `sol-luna` Skill by default for complex, multi-stage, parallelizable, or high-consequence work in this repository.
+- Sol is the single controller: it defines the concrete goal, observable `done_when` criteria, dependency stages, file ownership, verification, and the final `PASS`, `FIX`, or `BLOCKED` decision.
+- Use the minimum useful number of Luna Max workers. Planning-only or review-only work MAY use Sol without a Luna worker; ordinary small, single-file, or single-fact work SHOULD remain direct.
+- Every Luna assignment MUST include a stable task ID, one bounded task, exact write scope, explicit exclusions, an observable expected result, and an exact verification procedure.
+- One writable file MUST have one owner for the entire run. Tasks with overlapping or uncertain write scopes MUST run sequentially or be merged under one owner.
+- Luna workers MUST NOT broaden scope, create subagents, approve the overall task, or modify files outside their assignment. Sol MUST inspect the real files, complete diff, verification output, and preserved unrelated user changes before accepting the result.
+- If the runtime cannot prove the requested Sol or Luna role, model, reasoning effort, and effective permission boundary, fail closed instead of silently substituting another agent.
+- Deletion, deployment, production changes, accounts, payment, credentials, and other external side effects still require explicit user authorization; `sol-luna` does not widen project or user permissions.
+
 ## Required reading
 
 1. Read `DESIGN.md` completely.
-2. Read `VISION.md` and `principles/visual-signature.md` before changing product direction, page composition, a complete workflow, showcase structure or visible KIN adoption requirements.
+2. Read `VISION.md`, `principles/visual-signature.md` and `principles/context-thread.md` before changing product direction, page composition, a complete workflow, showcase structure or visible KIN adoption requirements.
 3. Read `DELIVERY.md` and `adoption/implementation-brief.md` before changing adoption, Figma, runtime-package, generated-artifact or repository boundaries.
 4. Read `REFERENCES.md` before using external design claims or packages.
 5. Read `components/catalog.md` and `components/terminology.md` before adding, renaming or claiming completion of a component.

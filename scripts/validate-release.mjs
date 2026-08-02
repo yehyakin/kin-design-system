@@ -280,7 +280,29 @@ if (adoptionEvidence.kinVersion !== version) fail("adoption/kin.evidence.example
 if (adoptionEvidence.profile !== adoption.profile) fail("adoption evidence example profile differs from the adoption configuration example");
 if (adoptionEvidence.status !== "initialized") fail("adoption evidence example must not claim unperformed verification");
 if (adoptionEvidence.visualReview?.status !== "not-run") fail("adoption evidence example must include an unperformed representative workflow visual review");
-if (adoptionEvidence.visualReview?.criteria?.length !== 9) fail("adoption evidence example must include the complete visual-review criteria matrix");
+const expectedVisualCriteria = [
+  "task-first",
+  "dominant-region",
+  "continuous-structure",
+  "density-without-repetition",
+  "semantic-separation",
+  "theme-integrity",
+  "motion-continuity",
+  "responsive-priority",
+  "no-fabricated-data-or-behavior",
+  "context-thread",
+  "receding-chrome",
+  "product-family-silhouette",
+];
+const actualVisualCriteria =
+  adoptionEvidence.visualReview?.criteria?.map((criterion) => criterion.id) ??
+  [];
+if (
+  JSON.stringify(actualVisualCriteria) !==
+  JSON.stringify(expectedVisualCriteria)
+) {
+  fail("adoption evidence example must include the exact visual-review criteria matrix");
+}
 
 const staleReferencePattern = /\bKIN\s+(\d+\.\d+(?:\.\d+)?)\b/g;
 for (const file of ["examples/workspace-reference/index.html", "examples/workspace-reference/states.html", "examples/product-patterns/information.html", "examples/product-patterns/ecommerce.html", "examples/product-patterns/canvas.html"]) {

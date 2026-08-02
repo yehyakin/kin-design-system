@@ -534,13 +534,15 @@ content_priority: 10
 
 ### 2.4 视觉签名
 
-KIN 的辨识度来自构图、层级、密度、材质、语义和动效共同形成的视觉签名，而不是固定布局或品牌换色。完整要求见 [`principles/visual-signature.md`](./principles/visual-signature.md)。
+KIN 的辨识度来自构图、层级、密度、材质、语义和动效共同形成的视觉签名，而不是固定布局或品牌换色。它的正向跨产品签名是 [`Context Thread`](./principles/context-thread.md)：在真实任务适用时，让来源、比较、判断、提交和恢复保持连续。完整要求见 [`principles/visual-signature.md`](./principles/visual-signature.md)。
 
 - 页面 MUST 让真实任务、内容或当前对象先于产品说明和装饰出现。
 - 每个状态 MUST 有一个主导工作或阅读区域；导航、属性与全局动作在完成定位后主动后退。
 - Token、主题、图标和组件映射只建立基础，不足以证明页面已呈现 KIN。
 - Agent MUST NOT 用设计实验页、组件画廊或少数低优先级页面代替一个真实生产流程的视觉验收。
 - 项目 MAY 采用不同品牌、内容结构和技术实现，但 MUST 保留适用产品模式的可观察设计决策。
+- Context Thread 是工作流关系，不是组件、固定 Stepper、时间线、装饰线或五张等权卡片；不存在的阶段 MUST NOT 被编造。
+- Information Site、Intelligence Workspace、Ecommerce Operations 和 Engineering Canvas MUST 使用不同的任务剪影，不能只替换字段后复用同一套三栏壳。
 
 ---
 
@@ -908,7 +910,28 @@ App Shell
 
 Sidebar 在用户到达目标后应退后，不应持续成为页面最亮的区域。
 
-### 7.3 视图类型
+“退后”表示降低视觉显著度，不表示消失。位置、权限、安全退出、唯一可用动作和当前提交边界必须仍可发现；焦点位于 chrome 内时不得将其动画移走。
+
+### 7.3 Context Thread
+
+页面或工作流开始编码前，必须映射：
+
+```text
+Source:
+Compare:
+Decide:
+Commit:
+Recover:
+Carrier:
+Signature punctuation:
+Receding chrome:
+Narrow-screen transformation:
+Non-applicable phases and reason:
+```
+
+Context Thread 可以由来源侧栏、比较列、证据轨、选中行与详情关系、审批边界、结果记录或空间连续动效承载。KIN 的可选标点包括真实引用编号、判断边线、提交边界和恢复回声，但每一种可见标记都必须表达真实关系，不能成为装饰编号、发光边框或固定步骤条。完整合同见 [`principles/context-thread.md`](./principles/context-thread.md)。
+
+### 7.4 视图类型
 
 KIN 支持但不强制以下结构：
 
@@ -923,7 +946,7 @@ KIN 支持但不强制以下结构：
 
 不得把所有业务强行做成 Dashboard cards。
 
-### 7.4 响应式
+### 7.5 响应式
 
 - `>= 1280px`：可使用 Sidebar + Workspace + Inspector；Context Sidecar 仅在 Workspace 仍满足最小任务宽度时重排布局。
 - `1024–1279px`：Inspector 可收起或覆盖；Context Sidecar 通常适配为 Drawer。
@@ -1332,6 +1355,8 @@ AI 不默认常驻占据主工作区。优先使用上下文入口、侧面板�
 
 信息网站优先解决查找、阅读、验证、引用和返回。公开内容必须保留稳定 URL、语义标题、来源、更新时间、搜索索引和必要的修订历史；不得用营销 Hero、等宽卡片墙或无来源 AI 摘要替代信息结构。
 
+默认任务剪影：安静的公共导航；搜索或主题身份；阅读区与来源/修订侧栏；相关记录或下一条阅读路径。只读任务 MAY 省略判断、提交与恢复，不得伪造审批流程。
+
 ### 13.1 Intelligence Workspace
 
 核心对象：服务商、域名、频道、风险信号、证据、监测任务。
@@ -1344,6 +1369,8 @@ AI 不默认常驻占据主工作区。优先使用上下文入口、侧面板�
 - Relationship：关联域名、频道和实体。
 
 默认视图：高密度列表、Split view、对象档案、Activity、Inspector。
+
+默认任务剪影：队列或实体列表；主导的证据/事件工作区；判断 Inspector。来源、冲突、结论、提交与审计/恢复在适用时必须保持连续。
 
 ### 13.2 Ecommerce Operations
 
@@ -1358,11 +1385,15 @@ AI 不默认常驻占据主工作区。优先使用上下文入口、侧面板�
 
 工作台可共享同一 App Shell、主题、表格、Inspector、Activity 和 Command Layer，但不能复制代理情报字段或风险模型。
 
+默认任务剪影：范围与渠道栏；异常/运营队列；商品或订单判断区；明确的审批或发布边界。金额、单位、库存、渠道、权限、审批、执行与回滚不得折叠成一个状态。
+
 ### 13.3 Engineering Canvas
 
 核心对象：文件、模型、图层、构件、版本、仿真、评审。
 
 Canvas 是主工作区；Sidebar 与 Inspector 服务画布，不与画布竞争。选择、测量、版本与约束必须精确，动效不能妨碍空间判断。
+
+默认任务剪影：紧凑文档命令；工具/图层 Dock；主导画布；选择属性；文档历史或导出提交边界。不得把工作台卡片或通用证据栏覆盖在精密画布上。
 
 ---
 
@@ -1491,6 +1522,9 @@ Canvas 是主工作区；Sidebar 与 Inspector 服务画布，不与画布竞争
 - 中文小字是否清晰、紧凑但不拥挤？
 - 第一屏是否先展示真实任务、内容或当前对象，而不是 Hero、说明面板或组件演示？
 - 是否已经用一个真实生产流程证明视觉签名，而不是只证明 Token、主题和组件可用？
+- 是否能沿真实界面跟随适用的来源、比较、判断、提交和恢复，而无需先阅读说明文档？
+- 不适用的 Context Thread 阶段是否明确省略，而不是用装饰性 Stepper 或卡片补齐？
+- 当前产品是否呈现其产品族的任务剪影，而不是复用无关产品的 Sidebar / Main / Inspector 壳？
 
 ### 19.2 产品
 
@@ -1525,7 +1559,7 @@ Canvas 是主工作区；Sidebar 与 Inspector 服务画布，不与画布竞争
 3. Shell：Sidebar、Chrome、Workspace、Inspector、响应式。
 4. Core flow：先完成一个高价值真实生产流程的列表—详情—操作闭环；设计实验页与组件画廊不计入该阶段。
 5. Stress test：用长名称、缺失数据、冲突状态、极端数量和小屏测试。
-6. Visual signature review：以相同内容、状态与视口对比基线和候选实现，按 [`principles/visual-signature.md`](./principles/visual-signature.md) 记录人工评审。
+6. Visual signature review：以相同内容、状态与视口对比基线和候选实现，按 [`principles/visual-signature.md`](./principles/visual-signature.md) 与 [`principles/context-thread.md`](./principles/context-thread.md) 记录人工评审。
 7. Behavior definition：记录 Sidebar、Header、View Bar、Inspector 和浮层行为。
 8. Feature flag：与旧版并行比较。
 9. Incremental rollout：逐模块迁移，不一次复制模板。
@@ -1561,7 +1595,8 @@ KIN 的 Token、业务扩展、AI 合同和组件行为必须根据自身产品�
 ## 22. 最小 Agent 提示词
 
 ```md
-Read DESIGN.md, DELIVERY.md, and principles/visual-signature.md completely before changing a page or workflow.
+Read DESIGN.md, DELIVERY.md, principles/visual-signature.md, and
+principles/context-thread.md completely before changing a page or workflow.
 
 Treat it as a normative product design contract. Start from the real user task,
 entity model, data states, and existing components. Keep the workspace calm,
@@ -1586,6 +1621,12 @@ If kin.config.json exists, read its implementation brief and route/profile map.
 Do not implement the representative workflow while the brief is draft, contains
 TODO, or substitutes a component gallery for production work. Report the KIN
 composition checkpoint before coding the page.
+
+Map the real Context Thread before selecting components: source, comparison,
+decision, commitment, recovery, carrier, signature punctuation, receding
+chrome, narrow-screen transformation, and non-applicable phases. Do not turn these terms into a
+decorative Stepper. Do not reuse one generic application shell across unrelated
+product families.
 
 Do not claim visible KIN adoption from Tokens, a component lab, or isolated page
 styling. Select one representative production workflow, compare baseline and

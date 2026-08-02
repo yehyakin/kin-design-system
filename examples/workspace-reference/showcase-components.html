@@ -18,6 +18,9 @@
           ? (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")
           : preference;
         document.documentElement.lang = locale;
+        document.title = locale === "zh-CN"
+          ? "KIN 组件展示参考"
+          : "KIN component showcase reference";
         document.documentElement.dataset.theme = resolved;
         document.documentElement.dataset.themePreference = preference;
         document.documentElement.dataset.contrast = localStorage.getItem("kin-reference-contrast") === "more" ? "more" : "normal";
@@ -28,12 +31,20 @@
         );
       })();
     </script>
+    <style>
+      [data-locale-zh] { display: none; }
+      html:lang(zh-CN) [data-locale-en] { display: none; }
+      html:lang(zh-CN) [data-locale-zh] { display: inline; }
+    </style>
     <link rel="stylesheet" href="../../assets/kin-react.css" />
     <link rel="stylesheet" href="./showcase-components.css" />
     <script type="module" src="./showcase-components.js"></script>
   </head>
   <body>
-    <a class="skip-link" href="#showcase-specimen-app">Skip to component</a>
+    <a class="skip-link" href="#showcase-specimen-app">
+      <span data-locale-en>Skip to component</span>
+      <span data-locale-zh>跳到组件</span>
+    </a>
     <div id="showcase-specimen-app"></div>
   </body>
 </html>

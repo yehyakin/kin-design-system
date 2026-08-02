@@ -123,10 +123,10 @@ test("English and Chinese roots lead with a catalog-backed workflow", async ({ p
       path: "/",
       lang: "en",
       title: "KIN Showcase — Design rules and runnable references",
-      heading: "Clear interfaces for complex work.",
+      heading: "Interfaces for consequential work.",
       workflow: "Investigation and Evidence Review",
       job: "Compare chronology, sources, conflicts, and uncertainty before recording a finding.",
-      tabs: ["Investigation", "Commerce", "Canvas"],
+      tabs: ["Information", "Intelligence", "Ecommerce", "Engineering"],
       reference: "examples/workspace-reference/index.html?view=investigation&lang=en&state=normal",
       source: "Stable",
     },
@@ -134,10 +134,10 @@ test("English and Chinese roots lead with a catalog-backed workflow", async ({ p
       path: "/zh/",
       lang: "zh-CN",
       title: "KIN 设计系统 — 规则、组件与交互预览",
-      heading: "复杂工作，也能一目了然。",
+      heading: "为关键工作构建界面。",
       workflow: "调查与证据复核",
       job: "在记录结论前比较时间顺序、来源、冲突与不确定性。",
-      tabs: ["调查", "电商", "画布"],
+      tabs: ["信息", "情报", "电商", "工程"],
       reference: "../examples/workspace-reference/index.html?view=investigation&lang=zh-CN&state=normal",
       source: "稳定",
     },
@@ -157,10 +157,10 @@ test("English and Chinese roots lead with a catalog-backed workflow", async ({ p
     await expect(workflow).toBeVisible();
     await expect(workflow.getByRole("heading", { level: 2 })).toHaveText(locale.workflow);
     await expect(workflow.locator("[data-stage-job]")).toHaveText(locale.job);
-    await expect(workflow.getByRole("tab")).toHaveCount(3);
+    await expect(workflow.getByRole("tab")).toHaveCount(4);
     await expect(workflow.getByRole("tab").allTextContents()).resolves.toEqual(locale.tabs);
-    await expect(workflow.getByRole("tab").first()).toHaveAttribute("aria-selected", "true");
-    await expect(workflow.getByRole("tab").first()).toHaveAttribute("aria-controls", "showcase-stage-panel");
+    await expect(workflow.getByRole("tab").nth(1)).toHaveAttribute("aria-selected", "true");
+    await expect(workflow.getByRole("tab").nth(1)).toHaveAttribute("aria-controls", "showcase-stage-panel");
     await expect(workflow.getByRole("tabpanel")).toHaveAttribute("aria-labelledby", "scenario-tab-investigation");
     await expect(frame).toHaveAttribute("src", locale.reference);
     await expect(workflow).toHaveAttribute("data-stage-ready", "true", { timeout: 10_000 });
@@ -188,6 +188,28 @@ test("English and Chinese roots lead with a catalog-backed workflow", async ({ p
   }
 
   expect(consoleWarnings).toEqual([]);
+});
+
+test("homepage composition lets the live product stage dominate the first viewport", async ({ page }) => {
+  for (const viewport of [
+    { width: 1440, height: 900, maximumStageTop: 380, minimumVisibleStage: 500 },
+    { width: 390, height: 844, maximumStageTop: 500, minimumVisibleStage: 300 },
+  ]) {
+    await page.setViewportSize({ width: viewport.width, height: viewport.height });
+    await page.goto("/");
+    const stage = page.locator("[data-scenario-stage]");
+    await expect(stage).toHaveAttribute("data-stage-ready", "true", { timeout: 10_000 });
+    const geometry = await stage.evaluate((element) => {
+      const bounds = element.getBoundingClientRect();
+      return {
+        bottom: bounds.bottom,
+        top: bounds.top,
+        visibleHeight: Math.max(0, Math.min(bounds.bottom, window.innerHeight) - Math.max(bounds.top, 0)),
+      };
+    });
+    expect(geometry.top).toBeLessThanOrEqual(viewport.maximumStageTop);
+    expect(geometry.visibleHeight).toBeGreaterThanOrEqual(viewport.minimumVisibleStage);
+  }
 });
 
 test("home stage auto-loads and keyboard tabs replace the live reference", async ({ page }) => {
@@ -228,10 +250,10 @@ test("home stage auto-loads and keyboard tabs replace the live reference", async
   await expect(loader).toBeHidden();
   await expect(page.frameLocator("[data-stage-frame]").locator("[data-investigation]")).toBeVisible();
 
-  await tabs.first().focus();
+  await tabs.nth(1).focus();
   await page.keyboard.press("ArrowRight");
-  await expect(tabs.nth(1)).toBeFocused();
-  await expect(tabs.nth(1)).toHaveAttribute("aria-selected", "true");
+  await expect(tabs.nth(2)).toBeFocused();
+  await expect(tabs.nth(2)).toHaveAttribute("aria-selected", "true");
   await expect(stage.getByRole("tabpanel")).toHaveAttribute("aria-labelledby", "scenario-tab-commerce");
   await expect(stage).toHaveAttribute("data-stage-ready", "false");
   await expect(loader).toBeVisible();
@@ -251,7 +273,7 @@ test("home stage auto-loads and keyboard tabs replace the live reference", async
   await expect(loader).toBeHidden();
   await expect(page.frameLocator("[data-stage-frame]").locator(".commerce-main")).toBeVisible();
 
-  await tabs.nth(2).click();
+  await tabs.nth(3).click();
   await expect(frame).toHaveAttribute("src", "examples/product-patterns/canvas.html");
   await expect(stage).toHaveAttribute("data-stage-ready", "true", { timeout: 10_000 });
   await expect(page.frameLocator("[data-stage-frame]").locator(".canvas-shell")).toBeVisible();
@@ -286,7 +308,7 @@ test("Reduced Motion stages use opacity-only transitions and settle rapid replac
   await page.goto("/");
   const homeStage = page.locator("[data-scenario-stage]");
   const homeFrame = homeStage.locator("iframe[data-stage-frame]");
-  const homeSweep = homeStage.locator("[data-stage-sweep]");
+  await expect(homeStage.locator("[data-stage-sweep]")).toHaveCount(0);
   await expect
     .poll(() =>
       homeFrame.evaluate((element) => {
@@ -297,18 +319,15 @@ test("Reduced Motion stages use opacity-only transitions and settle rapid replac
     .toBe("opacity 0.08s");
 
   const tabs = homeStage.getByRole("tab");
-  await tabs.nth(1).click();
-  expect(await homeSweep.evaluate((element) => element.getAnimations().length)).toBe(0);
   await tabs.nth(2).click();
-  await tabs.nth(0).click();
-  await expect(tabs.nth(0)).toHaveAttribute("aria-selected", "true");
+  await tabs.nth(3).click();
+  await tabs.nth(1).click();
+  await expect(tabs.nth(1)).toHaveAttribute("aria-selected", "true");
   await expect(homeStage).toHaveAttribute("data-stage-ready", "true", { timeout: 10_000 });
   await expect(page.frameLocator("[data-scenario-stage] iframe").locator("[data-investigation]")).toBeVisible();
 
-  await page.goto("/components/");
-  const browser = page.locator("[data-component-browser]");
-  const choices = browser.locator("[data-component-choice]");
-  const componentStage = browser.locator("[data-reference-stage]");
+  await page.goto("/components/evidence-list/");
+  const componentStage = page.locator("[data-reference-stage]");
   const componentFrame = componentStage.locator("iframe[data-stage-frame]");
   await expect
     .poll(() =>
@@ -319,12 +338,10 @@ test("Reduced Motion stages use opacity-only transitions and settle rapid replac
     )
     .toBe("opacity 0.08s");
 
-  await choices.nth(1).click();
-  await choices.nth(2).click();
-  await choices.nth(0).click();
-  await expect(choices.nth(0)).toHaveAttribute("aria-selected", "true");
+  await componentStage.getByRole("button", { name: "Light" }).click();
+  await componentStage.getByRole("button", { name: "Dark" }).click();
   await expect(componentStage).toHaveAttribute("data-stage-ready", "true", { timeout: 10_000 });
-  await expect(page.frameLocator("[data-component-browser] iframe").locator("#specimen-root")).toBeVisible();
+  await expect(page.frameLocator("[data-reference-stage] iframe").locator("#specimen-root")).toBeVisible();
 });
 
 test("global navigation preserves the same spatial model across public routes", async ({ page }) => {
@@ -565,27 +582,50 @@ test("compact documentation and Lab metadata retain AA text contrast", async ({ 
   }
 });
 
-test("component discovery presents twelve distinct live specimens and a closed full catalog", async ({ page }) => {
+test("component discovery presents eight deterministic local posters and a closed full catalog", async ({ page }) => {
   await page.goto("/components/");
   await expect(page).toHaveTitle("Find a component by task and evidence. · KIN Design System");
-  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Featured components");
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Components you can feel before you read.");
   await expect(page.locator("main")).toHaveAttribute("data-showcase-route", "components");
-  const browser = page.locator("[data-component-browser]");
-  const choices = browser.locator("[data-component-choice]");
-  const stage = browser.locator("[data-reference-stage]");
+  const browser = page.locator("[data-component-gallery]");
+  const cards = browser.locator("[data-component-card]");
   const catalog = page.locator("details.catalog-disclosure");
   const catalogRows = catalog.locator(".discovery-row[data-component-id]");
 
-  await expect(choices).toHaveCount(12);
-  await expect(choices.first()).toHaveAttribute("data-component-id", "app-shell");
-  await expect(choices.first()).toHaveAttribute("aria-selected", "true");
-  await expect(stage).toHaveAttribute("data-stage-ready", "true", { timeout: 10_000 });
-  await expect(stage.locator("[data-stage-loading]")).toBeHidden();
-  await expect(stage.locator("[data-stage-frame]")).toHaveAttribute(
-    "src",
-    "../examples/workspace-reference/showcase-components.html?lang=en&specimen=app-shell",
+  await expect(cards).toHaveCount(8);
+  await expect(cards.evaluateAll((items) => items.map((item) => item.dataset.componentId))).resolves.toEqual([
+    "command-menu",
+    "evidence-list",
+    "suggested-change-review",
+    "execution-preview",
+    "background-task-queue",
+    "data-table",
+    "authentication-dialog",
+    "app-shell",
+  ]);
+  await expect(browser.locator("[data-reference-stage], iframe")).toHaveCount(0);
+  await expect(browser.locator("[data-component-choice]")).toHaveCount(0);
+  await expect(browser.locator(".component-fixture-poster")).toHaveCount(8);
+  await expect(browser.locator('.component-fixture-poster[role="img"]')).toHaveCount(8);
+  await expect(browser.locator(".component-gallery-card__provenance")).toHaveCount(8);
+  await expect(
+    cards.evaluateAll((items) => new Set(items.map((item) => item.dataset.posterSource)).size),
+  ).resolves.toBe(8);
+  await expect(
+    browser.locator(".component-fixture-poster").evaluateAll((items) => new Set(items.map((item) => item.className)).size),
+  ).resolves.toBe(8);
+  await expect(cards.nth(1)).toHaveAttribute(
+    "data-poster-source",
+    "../examples/workspace-reference/showcase-components.html?lang=en&specimen=evidence-list",
   );
-  await expect(stage.locator("[data-stage-language]")).toBeHidden();
+  await expect(cards.nth(1).getByRole("link", { name: "Open: Evidence List" })).toHaveAttribute(
+    "href",
+    "evidence-list/",
+  );
+  await expect(cards.nth(1).getByRole("img")).toHaveAttribute(
+    "aria-label",
+    "Deterministic poster derived from the local component fixture: Evidence List",
+  );
   await expect(catalog).not.toHaveAttribute("open", "");
   await expect(catalogRows).toHaveCount(80);
   await expect(catalogRows.locator(".status-badge--stable")).toHaveCount(65);
@@ -593,35 +633,6 @@ test("component discovery presents twelve distinct live specimens and a closed f
   await expect(catalog.locator("#source-boundary-title")).toHaveText("Source boundary");
   await expect(catalogRows.first()).toBeHidden();
 
-  await choices.first().focus();
-  await page.keyboard.press("ArrowDown");
-  await expect(choices.nth(1)).toBeFocused();
-  await expect(choices.nth(1)).toHaveAttribute("data-component-id", "evidence-list");
-  await expect(choices.nth(1)).toHaveAttribute("aria-selected", "true");
-  await expect(stage.locator("[data-stage-title]")).toHaveText("Evidence List");
-  await expect(stage.locator("[data-stage-explorer]")).toHaveAttribute("href", "evidence-list/");
-  await expect(stage.locator("[data-stage-frame]")).toHaveAttribute(
-    "src",
-    "../examples/workspace-reference/showcase-components.html?lang=en&specimen=evidence-list",
-  );
-  await expect(stage).toHaveAttribute("data-stage-ready", "true", { timeout: 10_000 });
-  await expect(page.frameLocator("[data-component-browser] [data-stage-frame]").locator("#specimen-root")).toBeVisible();
-  await expect(page.frameLocator("[data-component-browser] [data-stage-frame]").locator(".evidence-layout")).toBeVisible();
-
-  await page.keyboard.press("ArrowDown");
-  await expect(choices.nth(2)).toBeFocused();
-  await expect(choices.nth(2)).toHaveAttribute("data-component-id", "suggested-change-review");
-  await expect(choices.nth(2)).toHaveAttribute("aria-selected", "true");
-  await expect(stage.locator("[data-stage-title]")).toHaveText("Suggested Change Review");
-  await expect(stage).toHaveAttribute("data-stage-ready", "true", { timeout: 10_000 });
-  await expect(page.frameLocator("[data-component-browser] [data-stage-frame]").locator(".change-review")).toBeVisible();
-
-  await stage.getByRole("button", { name: "Light" }).click();
-  await expect(stage.getByRole("button", { name: "Light" })).toHaveAttribute("aria-pressed", "true");
-  await expect(page.frameLocator("[data-component-browser] [data-stage-frame]").locator("html")).toHaveAttribute(
-    "data-theme",
-    "light",
-  );
   await catalog.locator("summary").click();
   await expect(catalog).toHaveAttribute("open", "");
   await expect(catalogRows.first()).toBeVisible();
@@ -632,23 +643,23 @@ test("component discovery presents twelve distinct live specimens and a closed f
   await expect(page.locator('.language-menu a[hreflang="zh-CN"]')).toHaveAttribute("href", "../zh/components/");
 });
 
-test("component stages reject a reference without the intended fixture mount", async ({ page }) => {
+test("Component Explorer rejects a reference without the intended fixture mount", async ({ page }) => {
   await page.route("**/examples/workspace-reference/showcase-components.html?lang=en&specimen=app-shell", async (route) => {
     await route.fulfill({
       contentType: "text/html",
       body: "<!doctype html><html><head><title>Valid but unrelated reference</title></head><body><main>Unrelated</main></body></html>",
     });
   });
-  await page.goto("/components/");
+  await page.goto("/components/app-shell/");
 
-  const stage = page.locator("[data-component-browser] [data-reference-stage]");
+  const stage = page.locator("[data-reference-stage]");
   await expect(stage).toHaveAttribute("data-ready-fragment", "showcase-specimen-app");
   await expect(stage).toHaveAttribute("data-stage-ready", "false");
   await expect(stage.locator("[data-stage-loading]")).toHaveText("Reference unavailable", { timeout: 10_000 });
   await expect(stage.locator("[data-stage-loading]")).toBeVisible();
 });
 
-test("Component Explorer prioritizes local navigation, stage controls, and lower evidence tabs", async ({ page }) => {
+test("Component Explorer prioritizes a featured rail, live specimen, and lower evidence tabs", async ({ page }) => {
   await page.goto("/components/evidence-list/");
   await expect(page).toHaveTitle("Evidence List · KIN Design System");
   await expect(page.locator("main")).toHaveAttribute("data-showcase-route", "component-explorer");
@@ -658,8 +669,22 @@ test("Component Explorer prioritizes local navigation, stage controls, and lower
   await expect(explorer.getByRole("heading", { level: 1 })).toHaveText("Evidence List");
   await expect(explorer).toContainText("Stable");
   await expect(explorer).toContainText("Map a claim or decision to supporting, missing, stale, or conflicting sources");
-  await expect(localNavigation.locator("nav a")).toHaveCount(12);
-  await expect(localNavigation.locator('a[aria-current="page"]')).toHaveText("Evidence List");
+  const featuredLinks = localNavigation.locator("nav a");
+  await expect(featuredLinks).toHaveCount(8);
+  await expect(featuredLinks.allTextContents()).resolves.toEqual([
+    "Command Menu",
+    "Evidence List",
+    "Suggested Change Review",
+    "Execution Preview",
+    "Background Task Queue",
+    "Data Table",
+    "Authentication Dialog",
+    "App Shell",
+  ]);
+  await expect(featuredLinks.first()).toHaveAttribute("href", "../command-menu/");
+  await expect(featuredLinks.nth(1)).toHaveAttribute("href", "./");
+  await expect(featuredLinks.nth(1)).toHaveAttribute("aria-current", "page");
+  await expect(featuredLinks.last()).toHaveAttribute("href", "../app-shell/");
   await expect(stage).toHaveAttribute("data-stage-ready", "true", { timeout: 10_000 });
   await expect(stage.locator("[data-stage-loading]")).toBeHidden();
   await expect(stage).not.toHaveAttribute("data-focus-selector", /.+/);
@@ -720,6 +745,7 @@ test("Component Explorer prioritizes local navigation, stage controls, and lower
   const tabs = page.locator("[data-component-tabs]");
   await expect(tabs.getByRole("tab")).toHaveCount(4);
   await expect(tabs.getByRole("tab", { name: "Usage" })).toHaveAttribute("aria-selected", "true");
+  await expect(tabs.locator("#usage-panel .contract-boundary")).toHaveCount(0);
   await tabs.getByRole("tab", { name: "Usage" }).focus();
   await page.keyboard.press("ArrowRight");
   await expect(tabs.getByRole("tab", { name: "States" })).toBeFocused();
@@ -736,6 +762,10 @@ test("Component Explorer prioritizes local navigation, stage controls, and lower
   await expect(tabs.getByText(/do not establish assistive-technology/)).toBeVisible();
   await tabs.getByRole("tab", { name: "Contract" }).click();
   await expect(tabs.getByRole("tabpanel", { name: "Contract" })).toBeVisible();
+  await expect(tabs.locator("#contract-panel .contract-boundary")).toBeVisible();
+  await expect(tabs.getByRole("heading", { name: "Governing contracts" })).toBeVisible();
+  await expect(tabs.getByRole("heading", { name: "Automated checks" })).toBeVisible();
+  await expect(tabs.getByRole("heading", { name: "Named manual checks" })).toBeVisible();
   await expect(tabs.getByRole("heading", { name: "Known gaps" })).toBeVisible();
   await expect(tabs.getByText("No gap is recorded for this component in the canonical catalog.")).toBeVisible();
   await expect(page.locator('.language-menu a[hreflang="zh-CN"]')).toHaveAttribute(
@@ -908,9 +938,9 @@ test("public product stages expose a native iframe focus entry and return path",
       previous: "[data-scenario-stage] [data-stage-lab-link]",
     },
     {
-      path: "/components/",
-      stage: "[data-component-browser] [data-reference-stage]",
-      previous: '[data-component-browser] button[data-stage-theme="dark"]',
+      path: "/components/evidence-list/",
+      stage: "[data-reference-stage]",
+      previous: 'button[data-stage-viewport="narrow"]',
     },
     {
       path: "/patterns/",
@@ -938,47 +968,59 @@ test("public product stages expose a native iframe focus entry and return path",
 test("Chinese Component and Pattern discovery preserve machine-fact parity", async ({ page }) => {
   await page.goto("/zh/components/");
   await expect(page).toHaveTitle("组件与交互 · KIN 设计系统");
-  await expect(page.getByRole("heading", { level: 1 })).toHaveText("精选组件");
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("先感受组件，再阅读规范。");
   await expect(page.locator("html")).toHaveAttribute("lang", "zh-CN");
-  const browser = page.locator("[data-component-browser]");
+  const browser = page.locator("[data-component-gallery]");
   const catalog = page.locator("details.catalog-disclosure");
   const catalogRows = catalog.locator(".discovery-row[data-component-id]");
-  await expect(browser.locator("[data-component-choice]")).toHaveCount(12);
-  await expect(browser.locator("[data-reference-stage]")).toHaveAttribute("data-stage-ready", "true", {
-    timeout: 10_000,
-  });
+  await expect(browser.locator("[data-component-card]")).toHaveCount(8);
+  await expect(browser.locator("[data-reference-stage], iframe")).toHaveCount(0);
+  await expect(browser.locator(".component-fixture-poster")).toHaveCount(8);
   await expect(catalog).not.toHaveAttribute("open", "");
   await expect(catalogRows).toHaveCount(80);
   await expect(catalogRows.locator(".status-badge--stable")).toHaveCount(65);
   await expect(catalogRows.locator("a.discovery-row__name")).toHaveCount(12);
   await expect(catalog).toContainText("通用的交互或内容组件。");
+  await catalog.locator("summary").click();
+  await expect(catalog).toHaveAttribute("open", "");
+  await expect(catalogRows.first()).toBeVisible();
+  await expect(catalogRows.locator('.discovery-row__name[lang="zh-CN"]')).toHaveCount(80);
+  await expect(catalogRows.locator('.discovery-row__name[lang="en"]')).toHaveCount(0);
+  await expect(catalog.locator('[data-component-id="empty-state"] .discovery-row__name')).toHaveText("空状态");
+  await expect(catalog.locator('[data-component-id="activity-feed"] .discovery-row__name')).toHaveText("活动记录");
+  await expect(catalog.locator('[data-component-id="live-chart"] .discovery-row__name')).toHaveText("实时图表");
   await expect(catalog.locator('[data-component-id="evidence-list"] a')).toHaveAttribute("href", "evidence-list/");
   await expect(catalog.locator('[data-component-id="evidence-list"] a')).toHaveAttribute("lang", "zh-CN");
   await expect(page.locator('.language-menu a[hreflang="en"]')).toHaveAttribute("href", "../../components/");
   await expect(browser.locator('[data-component-id="evidence-list"]')).toHaveAttribute("data-component-name", "证据列表");
-  await browser.locator('[data-component-id="evidence-list"]').click();
-  await expect(browser.locator("[data-stage-title]")).toHaveText("证据列表");
+  await expect(
+    browser.locator('[data-component-id="evidence-list"]').getByRole("link", { name: "打开: 证据列表" }),
+  ).toHaveAttribute("href", "evidence-list/");
+  await expect(browser.locator('[data-component-id="evidence-list"]').getByRole("img")).toHaveAttribute(
+    "aria-label",
+    "根据本地组件样例制作的确定性海报: 证据列表",
+  );
   await expect(page.locator('a[href="../../scenarios/?lang=zh-CN"]').first()).toContainText("场景");
   await expect(page.locator('a[href="../../scenarios/lab.html?lang=zh-CN"]').first()).toContainText("场景检查台");
 
   await page.goto("/zh/components/evidence-list/");
   await expect(page).toHaveTitle("证据列表 · KIN 设计系统");
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("证据列表");
-  await expect(page.locator(".component-studio__navigation nav a")).toHaveCount(12);
-  await expect(page.locator(".component-studio__navigation nav a")).toHaveText([
-    "应用框架",
+  const chineseFeaturedLinks = page.locator(".component-studio__navigation nav a");
+  await expect(chineseFeaturedLinks).toHaveCount(8);
+  await expect(chineseFeaturedLinks.allTextContents()).resolves.toEqual([
+    "命令菜单",
     "证据列表",
     "建议变更复核",
     "执行预览",
-    "智能体活动记录",
     "后台任务队列",
-    "故事时间线",
     "数据表格",
-    "命令菜单",
     "身份验证对话框",
-    "代码块",
-    "按钮",
+    "应用框架",
   ]);
+  await expect(chineseFeaturedLinks.first()).toHaveAttribute("href", "../command-menu/");
+  await expect(chineseFeaturedLinks.nth(1)).toHaveAttribute("aria-current", "page");
+  await expect(chineseFeaturedLinks.last()).toHaveAttribute("href", "../app-shell/");
   await expect(page.locator("[data-reference-stage]")).toHaveAttribute("data-stage-ready", "true", {
     timeout: 10_000,
   });
@@ -986,13 +1028,19 @@ test("Chinese Component and Pattern discovery preserve machine-fact parity", asy
   const explorerReference = page.frameLocator("[data-reference-stage] [data-stage-frame]");
   await expect(explorerStage).toHaveAttribute("data-stage-context", "isolated");
   await expect(explorerReference.locator("html")).not.toHaveAttribute("data-showcase-component-focus", "true");
+  await expect(explorerReference.locator("body")).toContainText("渠道快照");
+  await expect(explorerReference.locator("body")).toContainText("今天 09:31");
+  await expect(explorerReference.locator("body")).not.toContainText("Channel snapshot");
+  await expect(explorerReference.locator("body")).not.toContainText("Today, 09:31");
   await page.getByRole("button", { name: "工作流中" }).click();
   await expect(explorerStage).toHaveAttribute("data-stage-context", "workflow");
   await expect(explorerReference.locator("html")).not.toHaveAttribute("data-showcase-component-focus", "true");
   await page.getByRole("button", { name: "单独查看" }).click();
   await expect(explorerStage).toHaveAttribute("data-stage-context", "isolated");
   await expect(explorerReference.locator("html")).not.toHaveAttribute("data-showcase-component-focus", "true");
+  await expect(page.locator("#usage-panel .contract-boundary")).toHaveCount(0);
   await page.getByRole("tab", { name: "规范" }).click();
+  await expect(page.locator("#contract-panel .contract-boundary")).toBeVisible();
   await expect(page.getByRole("heading", { name: "人工检查" })).toBeVisible();
   await expect(page.getByText("冲突证据", { exact: true })).toBeVisible();
   await page.getByRole("tab", { name: "无障碍" }).click();
@@ -1026,6 +1074,42 @@ test("Chinese Component and Pattern discovery preserve machine-fact parity", asy
     );
   }
   await expect(page.locator('.language-menu a[hreflang="en"]')).toHaveAttribute("href", "../../patterns/");
+});
+
+test("Chinese component fixtures localize table values and cmdk suggestion semantics", async ({ page }) => {
+  await page.goto("/zh/components/data-table/");
+  await expect(page.locator("[data-reference-stage]")).toHaveAttribute("data-stage-ready", "true", {
+    timeout: 10_000,
+  });
+  const tableReference = page.frameLocator("[data-reference-stage] [data-stage-frame]");
+  await expect(tableReference.getByText("官网 + 2", { exact: true })).toBeVisible();
+  await expect(tableReference.getByText("官网", { exact: true })).toBeVisible();
+  await expect(tableReference.getByText("官网 + 1", { exact: true })).toBeVisible();
+  await expect(tableReference.getByText("昨天", { exact: true })).toBeVisible();
+  await expect(tableReference.getByText("Yesterday", { exact: true })).toHaveCount(0);
+
+  await page.goto("/zh/components/command-menu/");
+  await expect(page.locator("[data-reference-stage]")).toHaveAttribute("data-stage-ready", "true", {
+    timeout: 10_000,
+  });
+  const commandReference = page.frameLocator("[data-reference-stage] [data-stage-frame]");
+  await expect(commandReference.getByRole("dialog", { name: "KIN 命令菜单" })).toBeVisible();
+  await expect(commandReference.getByRole("listbox", { name: "命令建议" })).toBeVisible();
+  await expect(commandReference.getByRole("listbox", { name: "Suggestions" })).toHaveCount(0);
+});
+
+test("Chinese component fixture bootstrap localizes before the React module loads", async ({ page }) => {
+  await page.route("**/showcase-components.js", (route) => route.abort("failed"));
+  await page.goto(
+    "/examples/workspace-reference/showcase-components.html?lang=zh-CN&specimen=button",
+    { waitUntil: "domcontentloaded" },
+  );
+
+  await expect(page.locator("html")).toHaveAttribute("lang", "zh-CN");
+  await expect(page).toHaveTitle("KIN 组件展示参考");
+  await expect(page.getByRole("link", { name: "跳到组件" })).toBeVisible();
+  await expect(page.getByText("Skip to component", { exact: true })).toBeHidden();
+  await expect(page.locator("#showcase-specimen-app")).toBeEmpty();
 });
 
 test("scenario atlas exposes honest coverage and seventeen inspectable scenarios", async ({ page }) => {
@@ -1481,7 +1565,7 @@ test("Showcase routes avoid mobile overflow and expose 44px primary touch target
   }
 
   await page.goto("/");
-  await expect(page.getByRole("link", { name: "Explore the investigation workspace" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Explore components" })).toHaveAttribute("href", "components/");
   await expect(page.locator("[data-preview-activate], [data-preview-deactivate]")).toHaveCount(0);
 
   const touchTargets = await page
@@ -1516,7 +1600,7 @@ test("Showcase routes avoid mobile overflow and expose 44px primary touch target
         return { width: box.width, height: box.height };
       }),
     );
-  expect(stageTouchTargets).toHaveLength(4);
+  expect(stageTouchTargets).toHaveLength(5);
   expect(stageTouchTargets.every((target) => target.width >= 44 && target.height >= 44)).toBe(true);
 
   for (const route of ["/docs/", "/components/evidence-list/"]) {
@@ -1530,6 +1614,12 @@ test("Showcase routes avoid mobile overflow and expose 44px primary touch target
   }
 
   await page.goto("/components/evidence-list/");
+  const mobileExplorerStage = await page.locator("[data-reference-stage]").boundingBox();
+  expect(mobileExplorerStage).not.toBeNull();
+  expect(mobileExplorerStage.y).toBeLessThanOrEqual(360);
+  expect(
+    Math.min(mobileExplorerStage.y + mobileExplorerStage.height, 844) - mobileExplorerStage.y,
+  ).toBeGreaterThanOrEqual(420);
   const explorerTargets = await page
     .locator(
       ".reference-stage__toolbar button, .stage-state-readout, .component-studio__navigation nav a",
@@ -1542,13 +1632,17 @@ test("Showcase routes avoid mobile overflow and expose 44px primary touch target
           return { width: box.width, height: box.height, text: item.textContent.trim() };
         }),
     );
-  expect(explorerTargets.length).toBeGreaterThan(10);
+  expect(explorerTargets.length).toBeGreaterThan(7);
   expect(explorerTargets.every((target) => target.height >= 44)).toBe(true);
   expect(
     explorerTargets
       .filter((target) => target.text === "" || ["Light", "Dark", "Wide", "Narrow"].includes(target.text))
       .every((target) => target.width >= 44),
   ).toBe(true);
+  const explorerNavigationTargets = await page
+    .locator(".component-studio__navigation nav a")
+    .evaluateAll((items) => items.map((item) => item.getBoundingClientRect()).map(({ width, height }) => ({ width, height })));
+  expect(explorerNavigationTargets.every((target) => target.width >= 44 && target.height >= 44)).toBe(true);
 
   await page.locator("[data-language-trigger]").click();
   const languageTargets = await page.locator("[data-language-menu] a").evaluateAll((items) =>
@@ -1597,6 +1691,18 @@ test.describe("coarse-pointer explorer controls", () => {
       ).toBe(true);
     }
 
+    await page.goto("/components/");
+    const galleryActions = await page
+      .locator("[data-component-gallery] .component-gallery-card__header a")
+      .evaluateAll((items) =>
+        items.map((item) => {
+          const box = item.getBoundingClientRect();
+          return { height: box.height, width: box.width };
+        }),
+      );
+    expect(galleryActions).toHaveLength(8);
+    expect(galleryActions.every((target) => target.width >= 44 && target.height >= 44)).toBe(true);
+
     await page.goto("/components/evidence-list/");
 
     const targets = await page
@@ -1614,13 +1720,17 @@ test.describe("coarse-pointer explorer controls", () => {
           }),
       );
 
-    expect(targets.length).toBeGreaterThan(10);
+    expect(targets.length).toBeGreaterThan(7);
     expect(targets.every((target) => target.height >= 44)).toBe(true);
     expect(
       targets
         .filter((target) => target.text === "" || ["Light", "Dark", "Wide", "Narrow"].includes(target.text))
         .every((target) => target.width >= 44),
     ).toBe(true);
+    const navigationTargets = await page
+      .locator(".component-studio__navigation nav a")
+      .evaluateAll((items) => items.map((item) => item.getBoundingClientRect()).map(({ width, height }) => ({ width, height })));
+    expect(navigationTargets.every((target) => target.width >= 44 && target.height >= 44)).toBe(true);
 
     await page.goto("/components/button/");
     await expect(page.locator("[data-reference-stage]")).toHaveAttribute("data-stage-ready", "true", {

@@ -80,18 +80,37 @@
     <section class="showcase-hero" id="overview" aria-labelledby="overview-title">
       <div class="showcase-hero-copy">
         <p class="showcase-label">KIN Design System</p>
-        <h1 id="overview-title">Clear interfaces for complex work.</h1>
-        <p class="lead">KIN is a design system for information-heavy products: research tools, operations workspaces, and technical editors.</p>
+        <h1 id="overview-title">Interfaces for consequential work.</h1>
+        <p class="lead">A design contract for products where source, state, decision, and recovery must remain visible.</p>
         <div class="showcase-hero-actions">
-          <a class="showcase-button primary" href="scenarios/lab.html?scenario=INT-02&amp;state=normal&amp;viewport=wide&amp;theme=dark&amp;mode=present"><i data-lucide="panels-top-left"></i>Explore the investigation workspace</a>
-          <a class="showcase-text-action" href="components/">Browse components <i data-lucide="arrow-right"></i></a>
+          <a class="showcase-button primary" href="components/">Explore components</a>
+          <a class="showcase-text-action" href="docs/">Read the contract <i data-lucide="arrow-right"></i></a>
         </div>
       </div>
 
       <article class="showcase-product-stage" data-scenario-stage data-stage-ready="false" aria-labelledby="stage-title">
-        <span class="stage-sweep" data-stage-sweep aria-hidden="true"></span>
         <header class="stage-toolbar">
           <div class="stage-tabs" role="tablist" aria-label="Product scenario">
+            <button
+              id="scenario-tab-information"
+              type="button"
+              role="tab"
+              aria-controls="showcase-stage-panel"
+              aria-selected="false"
+              data-scenario-stage-option="INF-01"
+              data-reference="examples/product-patterns/information.html"
+              data-lab="scenarios/lab.html?scenario=INF-01&amp;state=normal&amp;viewport=wide&amp;theme=dark&amp;mode=present"
+              data-title="Find and Verify a Record"
+              data-job="Search, filter, open a record, and identify its source and currency."
+              data-source="Stable"
+              data-presentation="Showcased"
+              data-entry="A reader arrives with a query, topic, or stable record URL."
+              data-dominant-region="Result list or reading content."
+              data-completion="The reader can identify the subject, source, update state, and next navigation step."
+              data-boundary="Search-result, empty, stale, and unavailable states are not URL-addressable in this product-pattern reference."
+              data-reference-language="Chinese reference"
+              data-ready-selector="main.article h1"
+            >Information</button>
             <button
               id="scenario-tab-investigation"
               type="button"
@@ -114,7 +133,7 @@
               data-reference-language="English reference"
               data-ready-selector="[data-investigation]"
               data-poster="assets/posters/int-02-normal-dark.png"
-            >Investigation</button>
+            >Intelligence</button>
             <button
               id="scenario-tab-commerce"
               type="button"
@@ -134,7 +153,7 @@
               data-boundary="The local fixture has no product backend, authorization service, approval engine, or channel publication."
               data-reference-language="Chinese reference"
               data-ready-selector=".commerce-main"
-            >Commerce</button>
+            >Ecommerce</button>
             <button
               id="scenario-tab-canvas"
               type="button"
@@ -154,7 +173,7 @@
               data-boundary="Committed, cancelled, undo, and revision-history states are not URL-addressable yet."
               data-reference-language="Chinese reference"
               data-ready-selector=".canvas-shell"
-            >Canvas</button>
+            >Engineering</button>
           </div>
           <div class="stage-toolbar-actions">
             <span class="stage-language" data-stage-language><i data-lucide="languages"></i><span data-stage-language-text data-showcase-feature-language="INT-02">English reference</span></span>

@@ -13,23 +13,14 @@ test("Showcase stages keep restrained normal motion and settle rapid replacement
   await page.goto("/");
   const homeStage = page.locator("[data-scenario-stage]");
   const homeFrame = homeStage.locator("iframe[data-stage-frame]");
-  const homeSweep = homeStage.locator("[data-stage-sweep]");
+  await expect(homeStage.locator("[data-stage-sweep]")).toHaveCount(0);
   expect(await transitionMilliseconds(homeFrame)).toBeGreaterThanOrEqual(180);
 
   const tabs = homeStage.getByRole("tab");
-  await homeSweep.evaluate((element) => {
-    const animate = element.animate.bind(element);
-    window.__kinStageSweepDurations = [];
-    element.animate = (keyframes, options) => {
-      window.__kinStageSweepDurations.push(options.duration);
-      return animate(keyframes, options);
-    };
-  });
-  await tabs.nth(1).click();
-  expect(await page.evaluate(() => window.__kinStageSweepDurations)).toEqual([160]);
   await tabs.nth(2).click();
-  await tabs.nth(0).click();
-  await expect(tabs.nth(0)).toHaveAttribute("aria-selected", "true");
+  await tabs.nth(3).click();
+  await tabs.nth(1).click();
+  await expect(tabs.nth(1)).toHaveAttribute("aria-selected", "true");
   await expect(homeStage.getByRole("tabpanel")).toHaveAttribute("aria-labelledby", "scenario-tab-investigation");
   await expect(homeStage).toHaveAttribute("data-stage-ready", "true", { timeout: 10_000 });
   await expect(page.frameLocator("[data-scenario-stage] iframe").locator("[data-investigation]")).toBeVisible();
@@ -41,38 +32,19 @@ test("Showcase stages keep restrained normal motion and settle rapid replacement
       });
     }
   });
-  await tabs.nth(0).focus();
+  await tabs.nth(1).focus();
   await page.keyboard.press("ArrowRight");
-  await expect(tabs.nth(1)).toHaveAttribute("aria-selected", "true");
+  await expect(tabs.nth(2)).toHaveAttribute("aria-selected", "true");
   await expect(homeStage).toHaveAttribute("data-stage-ready", "true", { timeout: 10_000 });
   expect(await page.evaluate(() => window.__kinKeyboardStageTransitions)).toEqual([]);
 
-  await page.goto("/components/");
-  const browser = page.locator("[data-component-browser]");
-  const componentStage = browser.locator("[data-reference-stage]");
-  const choices = browser.locator("[data-component-choice]");
+  await page.goto("/components/evidence-list/");
+  const componentStage = page.locator("[data-reference-stage]");
   expect(await transitionMilliseconds(componentStage.locator("iframe[data-stage-frame]"))).toBeGreaterThanOrEqual(160);
 
-  await choices.nth(1).click();
-  await choices.nth(2).click();
-  await choices.nth(0).click();
-  await expect(choices.nth(0)).toHaveAttribute("aria-selected", "true");
   await expect(componentStage).toHaveAttribute("data-ready-fragment", "showcase-specimen-app");
   await expect(componentStage).toHaveAttribute("data-stage-ready", "true", { timeout: 10_000 });
-  await expect(page.frameLocator("[data-component-browser] iframe").locator("#specimen-root")).toBeVisible();
-  await componentStage.evaluate((element) => {
-    window.__kinKeyboardStageTransitions = [];
-    for (const target of element.querySelectorAll("iframe, [data-stage-loading]")) {
-      target.addEventListener("transitionrun", (event) => {
-        window.__kinKeyboardStageTransitions.push(`${target.tagName}:${event.propertyName}`);
-      });
-    }
-  });
-  await choices.nth(0).focus();
-  await page.keyboard.press("ArrowDown");
-  await expect(choices.nth(1)).toHaveAttribute("aria-selected", "true");
-  await expect(componentStage).toHaveAttribute("data-stage-ready", "true", { timeout: 10_000 });
-  expect(await page.evaluate(() => window.__kinKeyboardStageTransitions)).toEqual([]);
+  await expect(page.frameLocator("[data-reference-stage] iframe").locator("#specimen-root")).toBeVisible();
 
   await page.goto("/patterns/");
   const patternBrowser = page.locator("[data-pattern-browser]");
@@ -95,6 +67,49 @@ test("Showcase stages keep restrained normal motion and settle rapid replacement
   await expect(patternChoices.nth(1)).toHaveAttribute("aria-selected", "true");
   await expect(patternStage).toHaveAttribute("data-stage-ready", "true", { timeout: 10_000 });
   expect(await page.evaluate(() => window.__kinKeyboardStageTransitions)).toEqual([]);
+});
+
+test("component gallery actions expose a restrained hover response", async ({ page }) => {
+  await page.goto("/components/");
+  const action = page.locator("[data-component-gallery] .component-gallery-card__header a").nth(1);
+  await expect(action).toBeVisible();
+  const before = await action.evaluate((element) => getComputedStyle(element).backgroundColor);
+  expect(await transitionMilliseconds(action)).toBeGreaterThanOrEqual(140);
+  await action.hover();
+  await expect
+    .poll(() => action.evaluate((element) => getComputedStyle(element).backgroundColor))
+    .not.toBe(before);
+});
+
+test("component fixtures use physical button feedback and transform-only progress", async ({ page }) => {
+  await page.goto(
+    "/examples/workspace-reference/showcase-components.html?lang=en&specimen=button",
+    { waitUntil: "domcontentloaded" },
+  );
+  const save = page.getByRole("button", { name: "Save changes" });
+  await expect(save).toBeVisible();
+  await expect(save).toHaveCSS("transition-property", /transform/);
+  await save.hover();
+  await page.mouse.down();
+  await expect
+    .poll(() => save.evaluate((element) => getComputedStyle(element).transform))
+    .not.toBe("none");
+  await page.mouse.up();
+
+  await page.goto(
+    "/examples/workspace-reference/showcase-components.html?lang=en&specimen=background-task-queue",
+    { waitUntil: "domcontentloaded" },
+  );
+  const progress = page.locator(".progress-track > span").nth(1);
+  await expect(progress).toHaveCSS("transition-property", "transform");
+  await expect(progress).toHaveCSS("transform", "matrix(0, 0, 0, 1, 0, 0)");
+  await page.getByRole("button", { name: "Retry" }).click();
+  await expect
+    .poll(() => progress.evaluate((element) => element.style.getPropertyValue("--progress-ratio")))
+    .toBe("0.18");
+  await expect
+    .poll(() => progress.evaluate((element) => getComputedStyle(element).transform))
+    .not.toBe("matrix(0, 0, 0, 1, 0, 0)");
 });
 
 test("Story Timeline preserves purposeful draw motion and keyboard selection", async ({ page }) => {

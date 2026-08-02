@@ -39,6 +39,18 @@ Command layer: menus, dialogs, review and long-task progress
 - Narrow screens MUST choose a focused edit, inspect, or review mode rather than compressing every rail around a tiny canvas.
 - Generated changes appear in preview/review context before they become document history.
 
+### Context Thread mapping
+
+The engineering-canvas silhouette is a dominant spatial document joined to compact tool chrome, selection properties, revision state, and a controlled commit boundary. The canvas MUST remain the primary carrier instead of being replaced by workspace cards.
+
+- `Source`: active document, revision, selection, units, constraints, and referenced geometry or data.
+- `Compare`: original and proposed geometry, revision diff, simulation result, measured delta, or constraint conflict.
+- `Decide`: accept, reject, edit, constrain, select an export, or choose another explicit technical action.
+- `Commit`: the accepted document revision, saved model state, generated artifact, or queued operation with attributable scope.
+- `Recover`: undo, redo, revert revision, cancel, resolve conflict, or restore an autosaved state.
+
+Selection, preview, decision, document history, and recovery MUST form one Context Thread without permanently crowding the canvas. The thread MUST NOT become a decorative Stepper, a generic activity rail, or a motion sequence that obscures precision.
+
 ## Visual register
 
 - Chrome is compact and neutral so geometry and selection dominate.
@@ -70,7 +82,7 @@ Command layer: menus, dialogs, review and long-task progress
 
 ## Visual-signature requirement
 
-Apply the common and engineering-canvas requirements in [`principles/visual-signature.md`](../principles/visual-signature.md). A representative production workflow MUST be visually reviewed before a product claims visible KIN adoption.
+Apply [`principles/context-thread.md`](../principles/context-thread.md) and the common and engineering-canvas requirements in [`principles/visual-signature.md`](../principles/visual-signature.md). A representative production workflow MUST show a traceable source/selection, comparison, decision, committed revision, and recovery relationship before a product claims visible KIN adoption.
 
 ## Acceptance
 

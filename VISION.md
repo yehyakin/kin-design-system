@@ -8,7 +8,7 @@ KIN is not an Agent product. Agent support is one way to deliver and apply the s
 
 ## Mission
 
-KIN should make a finished product visibly more coherent, useful, and deliberate. A consuming product should gain:
+KIN should make a finished product visibly more coherent, useful, and deliberate. Its recognizable positive signature is a visible consequential path: source, comparison, decision, commitment, and recovery remain connected when the real task contains them. A consuming product should gain:
 
 - a recognizable hierarchy and visual register without losing its own brand;
 - complete page and workflow behavior rather than isolated component styling;
@@ -40,7 +40,9 @@ Migration guidance, evidence records, review tools, Agent Skills, visual compari
 
 ## Recognizable without becoming uniform
 
-KIN products do not need identical navigation, colors, routes, or component implementations. They MUST share observable design decisions: content owns attention, one work area dominates, chrome recedes, surfaces remain continuous, density comes from removing repetition, semantic states stay distinct, and motion explains spatial or committed change.
+KIN products do not need identical navigation, colors, routes, or component implementations. They MUST share observable design decisions: content owns attention, one work area dominates, chrome recedes, surfaces remain continuous, density comes from removing repetition, semantic states stay distinct, motion explains spatial or committed change, and the applicable Context Thread remains legible.
+
+The shared signature does not make every product look like one application. Information sites, intelligence workspaces, ecommerce operations, and engineering canvases MUST retain materially different task silhouettes. The normative Context Thread contract is in [`principles/context-thread.md`](./principles/context-thread.md).
 
 The normative definition is in [`principles/visual-signature.md`](./principles/visual-signature.md).
 

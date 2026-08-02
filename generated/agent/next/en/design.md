@@ -30,8 +30,8 @@ locale_review:
 source:
   contract_path: "DESIGN.md"
   checksum_algorithm: "sha256"
-  checksum: "c1fbae50d28cfdb37285a8ec4ba9e89f1c121a86e8589d750c0a88a581c6bda3"
-  input_set_checksum: "34aa0e9df6b09852e43fdaca4130076d021ad07fb1bb5498342d8e67581a19df"
+  checksum: "2a53ed7a94b4dba26f7fc114ad72f274a28f4cc644022b07cba3342f1b847a10"
+  input_set_checksum: "8d0dbad1f05ee01a9157c2309cfbbe5f913f583726a5dd8ad991ff375b478268"
   ref: "main"
   revision_status: "mutable"
 manifest_locator: "design-manifest.json"
@@ -224,7 +224,7 @@ component_recipes: null
 ## Status and source
 
 - This compact file is generated from the current KIN contract. It is non-normative, must not be edited, and does not replace the linked source documents.
-- Contract checksum: `c1fbae50d28cfdb37285a8ec4ba9e89f1c121a86e8589d750c0a88a581c6bda3`
+- Contract checksum: `2a53ed7a94b4dba26f7fc114ad72f274a28f4cc644022b07cba3342f1b847a10`
 - Resolved mode: `light` / `normal`
 - Locale copy review: `reviewed`
 - Publication state: `published-development`

@@ -83,7 +83,31 @@ test("adoption initializer is non-destructive and checker accepts a completed re
   assert.equal(evidence.status, "initialized");
   assert.equal(evidence.visualReview.status, "not-run");
   assert.equal(evidence.visualReview.profile, "information-site");
-  assert.equal(evidence.visualReview.criteria.length, 9);
+  assert.deepEqual(
+    evidence.visualReview.criteria.map((criterion) => criterion.id),
+    [
+      "task-first",
+      "dominant-region",
+      "continuous-structure",
+      "density-without-repetition",
+      "semantic-separation",
+      "theme-integrity",
+      "motion-continuity",
+      "responsive-priority",
+      "no-fabricated-data-or-behavior",
+      "context-thread",
+      "receding-chrome",
+      "product-family-silhouette",
+    ],
+  );
+  assert.match(
+    fs.readFileSync(path.join(project, config.scope.implementationBrief), "utf8"),
+    /Narrow-screen Context Thread transformation: TODO/,
+  );
+  assert.match(
+    fs.readFileSync(path.join(project, config.scope.implementationBrief), "utf8"),
+    /Signature punctuation and purpose: TODO/,
+  );
   const incomplete = spawnSync(process.execPath, [path.join(root, "scripts", "check-adoption.mjs"), project, "--json"], { encoding: "utf8" });
   assert.equal(incomplete.status, 1);
   assert.ok(JSON.parse(incomplete.stdout).errors.some((message) => message.includes("Pinned contract is missing")));
@@ -106,6 +130,32 @@ test("adoption initializer requires an explicit product profile", () => {
   const run = spawnSync(process.execPath, [path.join(root, "scripts", "init-adoption.mjs"), project], { encoding: "utf8" });
   assert.equal(run.status, 2);
   assert.match(run.stderr, /--profile is required/);
+});
+
+test("adoption checker preserves pinned KIN 2.x visual-review evidence", () => {
+  const project = fs.mkdtempSync(path.join(os.tmpdir(), "kin-2x-evidence-"));
+  initAdoption(project);
+  fs.mkdirSync(path.join(project, "src", "styles"), { recursive: true });
+  fs.writeFileSync(path.join(project, "src", "styles", "tokens.css"), ":root {}\n");
+
+  const pinnedContract = "---\nkin_version: 2.3.0\n---\n";
+  fs.writeFileSync(path.join(project, "docs", "KIN-DESIGN.md"), pinnedContract);
+
+  const configPath = path.join(project, "kin.config.json");
+  const config = JSON.parse(fs.readFileSync(configPath, "utf8"));
+  config.kinVersion = "2.3.0";
+  config.contract.checksum = contractChecksum(pinnedContract);
+  fs.writeFileSync(configPath, `${JSON.stringify(config, null, 2)}\n`);
+
+  const evidencePath = path.join(project, "docs", "kin-evidence.json");
+  const evidence = JSON.parse(fs.readFileSync(evidencePath, "utf8"));
+  evidence.kinVersion = "2.3.0";
+  evidence.visualReview.criteria = evidence.visualReview.criteria.slice(0, 9);
+  fs.writeFileSync(evidencePath, `${JSON.stringify(evidence, null, 2)}\n`);
+
+  const run = spawnSync(process.execPath, [path.join(root, "scripts", "check-adoption.mjs"), project, "--json"], { encoding: "utf8" });
+  assert.equal(run.status, 0);
+  assert.equal(JSON.parse(run.stdout).valid, true);
 });
 
 test("adoption checker blocks mapped evidence while the composition brief is unresolved", () => {
@@ -161,6 +211,48 @@ test("adoption checker rejects a passed visual review with unreviewed criteria",
   const run = spawnSync(process.execPath, [path.join(root, "scripts", "check-adoption.mjs"), project, "--json"], { encoding: "utf8" });
   assert.equal(run.status, 1);
   assert.ok(JSON.parse(run.stdout).errors.some((message) => message.includes("every visual criterion to pass")));
+});
+
+test("KIN 3 visual signature criteria cannot be marked not-applicable", () => {
+  const project = fs.mkdtempSync(path.join(os.tmpdir(), "kin-signature-required-"));
+  initAdoption(project);
+  fs.mkdirSync(path.join(project, "src", "styles"), { recursive: true });
+  fs.writeFileSync(path.join(project, "src", "styles", "tokens.css"), ":root {}\n");
+
+  const contract = `---\nkin_version: ${kinVersion}\n---\n`;
+  fs.writeFileSync(path.join(project, "docs", "KIN-DESIGN.md"), contract);
+  const configPath = path.join(project, "kin.config.json");
+  const config = JSON.parse(fs.readFileSync(configPath, "utf8"));
+  config.contract.checksum = contractChecksum(contract);
+  fs.writeFileSync(configPath, `${JSON.stringify(config, null, 2)}\n`);
+
+  const evidencePath = path.join(project, "docs", "kin-evidence.json");
+  const evidence = JSON.parse(fs.readFileSync(evidencePath, "utf8"));
+  for (const criterion of evidence.visualReview.criteria) {
+    criterion.status = "passed";
+  }
+  const contextThread = evidence.visualReview.criteria.find(
+    (criterion) => criterion.id === "context-thread",
+  );
+  contextThread.status = "not-applicable";
+  contextThread.notes = "The reviewer incorrectly omitted the shared signature.";
+  evidence.visualReview.status = "passed";
+  evidence.visualReview.workflow = "Find and verify a record";
+  evidence.visualReview.routes = ["TODO"];
+  evidence.visualReview.baseline = "artifacts/baseline.png";
+  evidence.visualReview.candidate = "artifacts/candidate.png";
+  evidence.visualReview.environment = "Chromium 1440x900 light";
+  evidence.visualReview.reviewer = "Reviewer";
+  evidence.visualReview.reviewedOn = "2026-07-31";
+  fs.writeFileSync(evidencePath, `${JSON.stringify(evidence, null, 2)}\n`);
+
+  const run = spawnSync(process.execPath, [path.join(root, "scripts", "check-adoption.mjs"), project, "--json"], { encoding: "utf8" });
+  assert.equal(run.status, 1);
+  assert.ok(
+    JSON.parse(run.stdout).errors.some((message) =>
+      message.includes("context-thread must pass"),
+    ),
+  );
 });
 
 test("adoption JSON Schema and example are valid JSON", () => {

@@ -17,7 +17,7 @@ const mappingStates = new Set(["pending", "mapped", "verified", "not-applicable"
 const automatedStates = new Set(["not-run", "passed", "failed", "blocked"]);
 const manualStates = new Set(["not-run", "passed", "failed", "blocked", "not-applicable"]);
 const visualCriterionStates = new Set(["not-run", "passed", "failed", "not-applicable"]);
-const requiredVisualCriteria = new Set([
+const baseVisualCriteria = [
   "task-first",
   "dominant-region",
   "continuous-structure",
@@ -27,7 +27,12 @@ const requiredVisualCriteria = new Set([
   "motion-continuity",
   "responsive-priority",
   "no-fabricated-data-or-behavior",
-]);
+];
+const kin3VisualCriteria = [
+  "context-thread",
+  "receding-chrome",
+  "product-family-silhouette",
+];
 const requiredBriefHeadings = [
   "Product truth",
   "Route and profile map",
@@ -38,6 +43,15 @@ const requiredBriefHeadings = [
   "Evidence, rollout, and approval",
 ];
 let evidenceStatus = null;
+
+function requiredVisualCriteriaForVersion(version) {
+  const major = Number.parseInt(String(version).split(".")[0], 10);
+  return major >= 3 ? [...baseVisualCriteria, ...kin3VisualCriteria] : baseVisualCriteria;
+}
+
+function isKin3OrLater(version) {
+  return Number.parseInt(String(version).split(".")[0], 10) >= 3;
+}
 
 function validateEvidence(evidence, config, evidenceFile) {
   if (evidence.kinVersion !== config.kinVersion) errors.push(`${evidenceFile}: kinVersion must match kin.config.json.`);
@@ -172,8 +186,17 @@ function validateEvidence(evidence, config, evidenceFile) {
         if (criterion.status === "not-applicable" && criterion.notes.trim().length < 12) {
           errors.push(`${evidenceFile}: visualReview criterion ${criterion.id} marked not-applicable requires a specific reason.`);
         }
+        if (
+          criterion.status === "not-applicable" &&
+          isKin3OrLater(evidence.kinVersion) &&
+          kin3VisualCriteria.includes(criterion.id)
+        ) {
+          errors.push(
+            `${evidenceFile}: KIN 3 visualReview criterion ${criterion.id} must pass and cannot be marked not-applicable.`,
+          );
+        }
       }
-      for (const id of requiredVisualCriteria) {
+      for (const id of requiredVisualCriteriaForVersion(evidence.kinVersion)) {
         if (!criterionIds.has(id)) errors.push(`${evidenceFile}: visualReview criteria are missing ${id}.`);
       }
       if (visualReview.status === "passed" && visualReview.criteria.some((criterion) => !["passed", "not-applicable"].includes(criterion.status))) {
