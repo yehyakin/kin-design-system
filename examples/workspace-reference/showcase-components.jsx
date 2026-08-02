@@ -86,6 +86,7 @@ const copy = {
       body: "Search, navigation, and contextual actions share one keyboard path.",
       open: "Open command menu",
       label: "KIN command menu",
+      suggestions: "Command suggestions",
       input: "Search commands",
       placeholder: "Search pages or actions…",
       empty: "No matching command",
@@ -117,6 +118,12 @@ const copy = {
       observed: "Observed",
       status: "Status",
       next: "Next step",
+      internalSource: "Pricing ledger",
+      internalObserved: "Today, 09:40",
+      campaignSource: "Campaign record",
+      campaignObserved: "Yesterday, 17:20",
+      externalSource: "Channel snapshot",
+      externalObserved: "Today, 09:31",
       nextInternal: "Use as the approved baseline.",
       nextCampaign: "Confirm whether the promotion is still active.",
       nextExternal: "Do not publish until the source is reconciled.",
@@ -189,6 +196,10 @@ const copy = {
       draft: "Draft",
       selected: "Selected",
       count: "3 records",
+      web: "Web",
+      webPlusOne: "Web + 1",
+      webPlusTwo: "Web + 2",
+      yesterday: "Yesterday",
     },
     auth: {
       contextTitle: "Authentication belongs to the interrupted task",
@@ -320,6 +331,7 @@ const copy = {
       body: "搜索、导航和当前操作共用一条键盘路径。",
       open: "打开命令菜单",
       label: "KIN 命令菜单",
+      suggestions: "命令建议",
       input: "搜索命令",
       placeholder: "搜索页面或操作…",
       empty: "没有匹配的命令",
@@ -351,6 +363,12 @@ const copy = {
       observed: "记录时间",
       status: "状态",
       next: "下一步",
+      internalSource: "价格台账",
+      internalObserved: "今天 09:40",
+      campaignSource: "活动记录",
+      campaignObserved: "昨天 17:20",
+      externalSource: "渠道快照",
+      externalObserved: "今天 09:31",
       nextInternal: "作为已批准基准使用。",
       nextCampaign: "确认活动是否仍在进行。",
       nextExternal: "来源完成核对前不要发布。",
@@ -423,6 +441,10 @@ const copy = {
       draft: "草稿",
       selected: "已选择",
       count: "3 条记录",
+      web: "官网",
+      webPlusOne: "官网 + 1",
+      webPlusTwo: "官网 + 2",
+      yesterday: "昨天",
     },
     auth: {
       contextTitle: "身份验证属于被中断的任务",
@@ -792,6 +814,7 @@ function CommandMenuSpecimen({ c }) {
         onOpenChange={setOpen}
         groups={groups}
         label={c.command.label}
+        listLabel={c.command.suggestions}
         inputLabel={c.command.input}
         placeholder={c.command.placeholder}
         emptyLabel={c.command.empty}
@@ -810,8 +833,8 @@ function EvidenceSpecimen({ c }) {
       body: c.evidence.internalBody,
       status: c.evidence.verified,
       tone: "positive",
-      source: "Pricing ledger",
-      observed: "Today, 09:40",
+      source: c.evidence.internalSource,
+      observed: c.evidence.internalObserved,
       next: c.evidence.nextInternal,
     },
     {
@@ -820,8 +843,8 @@ function EvidenceSpecimen({ c }) {
       body: c.evidence.campaignBody,
       status: c.evidence.partial,
       tone: "warning",
-      source: "Campaign record",
-      observed: "Yesterday, 17:20",
+      source: c.evidence.campaignSource,
+      observed: c.evidence.campaignObserved,
       next: c.evidence.nextCampaign,
     },
     {
@@ -830,8 +853,8 @@ function EvidenceSpecimen({ c }) {
       body: c.evidence.externalBody,
       status: c.evidence.conflict,
       tone: "negative",
-      source: "Channel snapshot",
-      observed: "Today, 09:31",
+      source: c.evidence.externalSource,
+      observed: c.evidence.externalObserved,
       next: c.evidence.nextExternal,
     },
   ];
@@ -967,7 +990,7 @@ function ExecutionPreviewSpecimen({ c }) {
                 : c.execution.ready
           }
         >
-          <span style={{ "--progress": `${progress}%` }} />
+          <span style={{ "--progress-ratio": progress / 100 }} />
         </div>
         <div className="review-actions">
           {state === "complete" ? (
@@ -1023,7 +1046,7 @@ function BackgroundTaskSpecimen({ c }) {
             <span><strong>{task.title}</strong><p>{task.body}</p></span>
             <span className="task-progress">
               <span>{labels[task.state]}</span>
-              <span className="progress-track" aria-hidden="true"><span style={{ "--progress": `${task.progress}%` }} /></span>
+              <span className="progress-track" aria-hidden="true"><span style={{ "--progress-ratio": task.progress / 100 }} /></span>
             </span>
             {task.id === "sync" && task.state === "failed" ? (
               <button className="kin-button" type="button" onClick={() => { setSyncState("retrying"); kinToast.success(c.tasks.retryQueued); }}>
@@ -1043,9 +1066,9 @@ function DataTableSpecimen({ c }) {
   const [sortAscending, setSortAscending] = React.useState(true);
   const [selected, setSelected] = React.useState("PRD-184");
   const rows = [
-    { id: "PRD-184", name: "Field Jacket", price: 1299, channel: "Web + 2", state: c.table.review, tone: "warning", updated: "09:42" },
-    { id: "PRD-076", name: "Transit Bag", price: 899, channel: "Web", state: c.table.approved, tone: "positive", updated: "09:18" },
-    { id: "PRD-231", name: "Studio Lamp", price: 649, channel: "Web + 1", state: c.table.draft, tone: undefined, updated: "Yesterday" },
+    { id: "PRD-184", name: "Field Jacket", price: 1299, channel: c.table.webPlusTwo, state: c.table.review, tone: "warning", updated: "09:42" },
+    { id: "PRD-076", name: "Transit Bag", price: 899, channel: c.table.web, state: c.table.approved, tone: "positive", updated: "09:18" },
+    { id: "PRD-231", name: "Studio Lamp", price: 649, channel: c.table.webPlusOne, state: c.table.draft, tone: undefined, updated: c.table.yesterday },
   ].sort((a, b) => (a.price - b.price) * (sortAscending ? 1 : -1));
 
   return (

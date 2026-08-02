@@ -14,6 +14,9 @@ Token mapping, a themed header, a component gallery, or the presence of KIN-name
 - Which route uses which KIN product profile?
 - Which region owns attention?
 - What context remains visible while the task changes?
+- How do Source, Compare, Decide, Commit, and Recover remain connected through the task?
+- Which Context Thread phases are genuinely not applicable, and why?
+- Which product-family silhouette makes this workflow distinct from an unrelated KIN product?
 - Which surfaces are real boundaries, and which content stays flat?
 - What is the priority order on a narrow screen?
 - Which states and interactions must be shown with real behavior?
@@ -77,11 +80,16 @@ The project MUST write observable decisions, not adjectives:
 - `Dominant region`: the single region that owns attention.
 - `Persistent context`: identity or state that remains visible while the user works.
 - `Chrome behavior`: how navigation, toolbars, properties, and global actions recede.
+- `Context Thread`: how Source, Compare, Decide, Commit, and Recover are fulfilled by real product states, including documented non-applicable phases.
+- `Thread carrier`: the task-native relationship that keeps the thread legible, such as selection continuity, provenance, a comparison view, an approval boundary, document history, or recovery state.
+- `Signature punctuation`: any real reference index, decision edge, commit boundary, or recovery echo used to clarify the thread, plus the reason it exists.
+- `Product-family silhouette`: the composition that distinguishes this route as an information site, intelligence workspace, ecommerce operation, or engineering canvas.
 - `Surface strategy`: which boundaries deserve a Surface and which groups remain flat.
 - `Density strategy`: what aligns into rows, columns, property lists, or shared controls.
 - `Semantic separation`: domain concepts that must not collapse into one score, Badge, or color.
 - `Motion model`: origin, direction, commitment, interruption, and Reduced Motion behavior.
 - `Narrow-screen priority`: the exact information and action order after layout adaptation.
+- `Narrow-screen thread`: how the Context Thread changes orientation or route without changing order, losing source context, or hiding the safe action.
 
 The composition MUST reject any plan that could be copied unchanged into an unrelated product without changing its objects, relationships, and task sequence.
 
@@ -149,8 +157,15 @@ Representative workflow:
 First meaningful view:
 Dominant region:
 Persistent context:
+Context Thread:
+Non-applicable phases and reasons:
+Thread carrier:
+Signature punctuation:
+Product-family silhouette:
+Receding chrome:
 Surface and density strategy:
 Narrow-screen priority:
+Narrow-screen Context Thread transformation:
 Required states and interactions:
 Runtime integration decisions:
 Prohibited substitutions:

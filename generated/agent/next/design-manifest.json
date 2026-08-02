@@ -17,8 +17,8 @@
   "source": {
     "contract_path": "DESIGN.md",
     "checksum_algorithm": "sha256",
-    "checksum": "c1fbae50d28cfdb37285a8ec4ba9e89f1c121a86e8589d750c0a88a581c6bda3",
-    "input_set_checksum": "34aa0e9df6b09852e43fdaca4130076d021ad07fb1bb5498342d8e67581a19df",
+    "checksum": "2a53ed7a94b4dba26f7fc114ad72f274a28f4cc644022b07cba3342f1b847a10",
+    "input_set_checksum": "8d0dbad1f05ee01a9157c2309cfbbe5f913f583726a5dd8ad991ff375b478268",
     "ref": "main",
     "revision_status": "mutable",
     "inputs": [
@@ -30,7 +30,7 @@
       {
         "path": "DESIGN.md",
         "role": "normative-contract",
-        "sha256": "c1fbae50d28cfdb37285a8ec4ba9e89f1c121a86e8589d750c0a88a581c6bda3"
+        "sha256": "2a53ed7a94b4dba26f7fc114ad72f274a28f4cc644022b07cba3342f1b847a10"
       },
       {
         "path": "components/catalog.json",
@@ -110,27 +110,27 @@
       {
         "path": "patterns/ecommerce-operations.md",
         "role": "normative-pattern",
-        "sha256": "0d0509f6ebd58526e48678da1ca9a05d8508448333a40cc897dd0038c8461562"
+        "sha256": "32b223dfc181e0dbd012aba1c01714f27990bd2b7b3f46e16d6e41525eebdad8"
       },
       {
         "path": "patterns/engineering-canvas.md",
         "role": "normative-pattern",
-        "sha256": "21d097c6d2325a9792b29570acea76dc1cacf10eec4b091639e70b7c87bd302c"
+        "sha256": "7c2045160a464ced6e9ba4461ee63c6d6e95c677398334f19ddb8fb61db97e0a"
       },
       {
         "path": "patterns/information-site.md",
         "role": "normative-pattern",
-        "sha256": "3c884aa4d77bfa718fbd3b945c57f5ff77e2bc527d1805056e2d6de1f6c2ba3c"
+        "sha256": "b2aaf54a2bbaa5306f84cd53264ee689ab8354056934a650e6e7ae84279bf5c2"
       },
       {
         "path": "patterns/intelligence-workspace.md",
         "role": "normative-pattern",
-        "sha256": "466eacdd6b1940275b16eb9a5964b5abed9ce0eced59185449d72589209aaee2"
+        "sha256": "8e46e684f95b564a5ce2d659502ccf3cf4a2540866d4dfd95a5b081968622dd8"
       },
       {
         "path": "principles/visual-signature.md",
         "role": "normative-contract",
-        "sha256": "34176492402ce0d3cfcb623f66c87e999eac87665c65caa40f8294e30799a14b"
+        "sha256": "f183b339aa098234f2ecff0a755fca72277753c5705b13be76f177c205539d57"
       },
       {
         "path": "tokens/kin.tokens.json",
@@ -329,7 +329,7 @@
       "public_url": "https://yehyakin.github.io/kin-design-system/next/design.dark.high-contrast.md",
       "media_type": "text/markdown; charset=utf-8",
       "normative": false,
-      "sha256": "966e8316b2a9d1f776a7218e90259a6d04f2d58a5cd8c9aa7cab1531eb6e5db0"
+      "sha256": "ca8a1e70612fb4cebdbe9a1a6a580dc4cb012a1f812ea54e28265ae0da02912d"
     },
     {
       "id": "design-en-dark",
@@ -342,7 +342,7 @@
       "public_url": "https://yehyakin.github.io/kin-design-system/next/design.dark.md",
       "media_type": "text/markdown; charset=utf-8",
       "normative": false,
-      "sha256": "e5467ea54a940fca9b60d639584c38ceedac3a0be3eb38edda61246f2b8f31be"
+      "sha256": "cf0fa7a880f7d6585ffdc721d156f61d87aacf65617e0da89d19641ae95a31aa"
     },
     {
       "id": "design-en-light-high-contrast",
@@ -355,7 +355,7 @@
       "public_url": "https://yehyakin.github.io/kin-design-system/next/design.high-contrast.md",
       "media_type": "text/markdown; charset=utf-8",
       "normative": false,
-      "sha256": "217520953d996a2bd6dd409f706083c364d92d232546bb5e180528045653c537"
+      "sha256": "cbcd902f5c56eda1c11325bf51fae74d3fffde307904b19efa181e49e13ff657"
     },
     {
       "id": "design-en-light",
@@ -368,7 +368,7 @@
       "public_url": "https://yehyakin.github.io/kin-design-system/next/design.md",
       "media_type": "text/markdown; charset=utf-8",
       "normative": false,
-      "sha256": "ca40e567e4f591fba65fd8f7275f065f9b5e4cbfda64826552c4de2c958237f4"
+      "sha256": "f6572d73c449df81749e39afbddb17bd506008ae40f19f6153fdf43454ba1c7e"
     },
     {
       "id": "schema-alias_manifest",
@@ -451,7 +451,7 @@
       "public_url": "https://yehyakin.github.io/kin-design-system/next/zh/design.dark.high-contrast.md",
       "media_type": "text/markdown; charset=utf-8",
       "normative": false,
-      "sha256": "b1db369258ca0a022280cd1f062c9380182d8d7545838421796a7559a5b2cca6"
+      "sha256": "1fab6be78d742e26cf650775558fa704b8dbff9828954266ee7f16dbaa609788"
     },
     {
       "id": "design-zh-cn-dark",
@@ -464,7 +464,7 @@
       "public_url": "https://yehyakin.github.io/kin-design-system/next/zh/design.dark.md",
       "media_type": "text/markdown; charset=utf-8",
       "normative": false,
-      "sha256": "f4c93ea2054dbc386ace69454e5dacc12801bb3227392f9d27c94b3f407bd690"
+      "sha256": "a9688633480a68819066be630809f7ac7578417bf4ffa7eb69514d9c811978c1"
     },
     {
       "id": "design-zh-cn-light-high-contrast",
@@ -477,7 +477,7 @@
       "public_url": "https://yehyakin.github.io/kin-design-system/next/zh/design.high-contrast.md",
       "media_type": "text/markdown; charset=utf-8",
       "normative": false,
-      "sha256": "09781510814345d3132d3124dab0088f728cf0d018425aa9c546bdeb4385197b"
+      "sha256": "7707d1e76e444defc1640c05d32bdce2c2b09d605808474941bb7226d70cc8e6"
     },
     {
       "id": "design-zh-cn-light",
@@ -490,7 +490,7 @@
       "public_url": "https://yehyakin.github.io/kin-design-system/next/zh/design.md",
       "media_type": "text/markdown; charset=utf-8",
       "normative": false,
-      "sha256": "b6807ae7a37d86b025c7283cdba9fe1d0bfeb9ac7018dbf05c059491ab9b94c0"
+      "sha256": "d1234f058898da11d021cd83eb91b6498eaec1e1391838c03a3b496ae1ad02d8"
     }
   ]
 }

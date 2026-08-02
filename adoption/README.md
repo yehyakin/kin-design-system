@@ -2,7 +2,7 @@
 
 KIN is a design contract, not a package that should silently rewrite a product. Adoption starts by pinning a reviewed contract version, choosing the closest product profile, and recording local paths, delivery boundaries, evidence, owners, and exceptions. The core delivery decision is defined in [`DELIVERY.md`](../DELIVERY.md).
 
-Adoption is not complete when a project only maps Tokens, creates wrapper components, or builds a design lab. Page and workflow work MUST also follow the [`KIN visual signature`](../principles/visual-signature.md).
+Adoption is not complete when a project only maps Tokens, creates wrapper components, or builds a design lab. Page and workflow work MUST also follow the [`KIN visual signature`](../principles/visual-signature.md) and map the applicable [`Context Thread`](../principles/context-thread.md).
 
 ## Start
 
@@ -87,7 +87,9 @@ New evidence records include `visualReview`. Before moving to `verified`, the pr
 - the review environment, reviewer, date, findings, and unresolved issues;
 - a `passed` result only after the common and selected product-family visual signatures have been reviewed.
 
-The generated visual review contains explicit criteria for task priority, dominant region, continuous structure, density, semantic separation, theme integrity, motion continuity, responsive priority, and fabricated behavior. A review cannot pass while any required criterion remains `not-run` or `failed`.
+The generated visual review contains explicit criteria for task priority, dominant region, continuous structure, density, semantic separation, theme integrity, motion continuity, responsive priority, fabricated behavior, Context Thread continuity, receding chrome, and a distinct product-family silhouette. A review cannot pass while any required criterion remains `not-run` or `failed`.
+
+The three signature criteria added for KIN 3.0 are migration-sensitive. A project moving from a KIN 2.x contract MUST regenerate or manually extend its visual-review matrix before claiming `verified`; existing 2.x evidence remains evidence for its pinned 2.x contract and MUST NOT be relabeled as 3.0 evidence without review.
 
 A component gallery, Storybook, design lab, static fixture, or isolated migrated header MUST NOT be used as the representative production workflow. A project MAY remain partially adopted, but it MUST name covered routes and exclusions instead of claiming whole-product adoption.
 

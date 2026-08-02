@@ -15,8 +15,15 @@ Representative workflow: <user starts here, does this, finishes when...>
 First meaningful view: <task/object/query/document/queue/canvas>
 Dominant region: <one region>
 Persistent context: <identity/selection/filter/task state>
+Context Thread: <Source -> Compare -> Decide -> Commit -> Recover, using only applicable real phases>
+Non-applicable phases and reasons: <explicit list; never invent a phase>
+Thread carrier: <selection/provenance/comparison/approval/history/recovery relationship>
+Signature punctuation: <reference index/decision edge/commit boundary/recovery echo, only when meaningful>
+Product-family silhouette: <task-specific composition that differs from unrelated profiles>
+Receding chrome: <what remains available but loses salience after orientation>
 Surface and density strategy: <flat rows/reading flow/canvas/property list and real boundaries>
 Narrow-screen priority: <ordered content and actions>
+Narrow-screen Context Thread transformation: <orientation/route/carrier change without priority loss>
 Required states and interactions: <real list>
 Prohibited substitutions: <specific failure patterns>
 Evidence and rollback: <baseline, target views, safe rollback>
@@ -29,6 +36,8 @@ Reject a checkpoint that uses adjectives such as “premium,” “modern,” or
 ### Information site
 
 - Lead with search, subject identity, reading content, or a record list.
+- Use a reading or discovery field with provenance adjacent to the information it qualifies.
+- Preserve the applicable Source, Compare, and Decide relationship; omit and explain any phase the real reading task does not contain. Include Commit or recovery only when the product has a real durable action or continuity requirement.
 - Put provenance, currency, stable location, and navigation near the information they qualify.
 - Keep ordinary prose, metadata, definitions, and citations flat.
 - Do not put a marketing Hero or equal CTA row before the information task.
@@ -36,6 +45,8 @@ Reject a checkpoint that uses adjectives such as “premium,” “modern,” or
 ### Intelligence workspace
 
 - Lead with an entity list, selected entity, signal queue, evidence/history region, or monitor task.
+- Use an evidence queue or entity list joined to one dominant investigation field and a decision Inspector.
+- Keep selection, evidence, judgment, committed result, and recovery traceable as one Context Thread.
 - Preserve current identity and state while selection, history, evidence, or properties change.
 - Prefer List, Split View, Detail, Activity, and Inspector relationships over Dashboard cards.
 - Keep risk, evidence confidence, completeness, availability, progress, and AI confidence separate.
@@ -43,6 +54,8 @@ Reject a checkpoint that uses adjectives such as “premium,” “modern,” or
 ### Ecommerce operations
 
 - Lead with the catalog, order, inventory, campaign, creative review, approval, or exception task.
+- Join operating scope and an actionable exception queue to selected commercial context and an explicit approval or execution boundary.
+- Keep money, quantity, channel, permission, commit scope, and rollback visible through the Context Thread.
 - Align money, units, time, channel, ownership, and state for comparison.
 - Give imagery space only when identity or media review is part of the decision.
 - Place AI suggestions inside review and execution context, not in a generic assistant panel.
@@ -50,6 +63,8 @@ Reject a checkpoint that uses adjectives such as “premium,” “modern,” or
 ### Engineering canvas
 
 - Let the document, canvas, model, or measured selection dominate.
+- Join the dominant canvas to compact tool chrome, selection properties, revision state, and a controlled commit boundary.
+- Keep source/selection, comparison, accepted revision, and recovery connected without crowding the canvas.
 - Keep tool chrome, layers, and properties available but secondary.
 - Preserve mode, unit, revision, save state, and selection context.
 - Do not add workspace cards or decorative grids inside the canvas.
@@ -102,5 +117,8 @@ Compare baseline and candidate with realistic, equivalent content and named view
 - spatial and committed-result motion;
 - preserved narrow-screen priority;
 - no fabricated data or behavior.
+- a traceable Context Thread with no invented phases;
+- chrome that recedes without hiding the only safe action;
+- a product-family silhouette that could not be copied unchanged into another profile.
 
 Do not mark the visual review passed while any required criterion is `not-run`, `failed`, or unsupported by the recorded artifacts.

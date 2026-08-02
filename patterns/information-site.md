@@ -43,6 +43,20 @@ Source, revision, related records, and supporting explanation
 
 This composition does not require an application Sidebar. Public navigation, SEO, reading flow, and stable URLs remain product-owned.
 
+### Context Thread mapping
+
+The information-site silhouette is a reading or discovery field with provenance kept next to the claim, record, or revision it qualifies. It MUST NOT be converted into an application shell merely to resemble another KIN product family.
+
+Map only the applicable parts of the shared Context Thread:
+
+- `Source`: subject identity, author or publisher, collection time, revision state, and stable location.
+- `Compare`: related records, earlier revisions, corrections, citations, or search-result differences when comparison is part of the reading task.
+- `Decide`: the reader selects a record, citation, filter, interpretation, or next route.
+- `Commit`: saving, exporting, subscribing, copying a citation, or another real durable action. If the page has no mutation, record this phase as not applicable instead of inventing approval theater.
+- `Recover`: restore query, reading position, opened citation, or prior revision context. A read-only flow needs continuity, not a fake rollback action.
+
+The thread MAY be carried by a source gutter, revision strip, anchored citation path, result-to-record transition, or another task-native relationship. It MUST NOT appear as five equal cards, a decorative Stepper, or an explanatory diagram before the information itself.
+
 ## Visual register
 
 - Content leads; navigation and metadata recede after orientation.
@@ -73,7 +87,7 @@ This composition does not require an application Sidebar. Public navigation, SEO
 
 ## Visual-signature requirement
 
-The first meaningful view MUST expose search, subject identity, reading content, or the record list before promotional explanation. Token parity, a themed header, or a card restyle does not establish the information-site signature. Apply the common and information-site requirements in [`principles/visual-signature.md`](../principles/visual-signature.md).
+The first meaningful view MUST expose search, subject identity, reading content, or the record list before promotional explanation. Token parity, a themed header, or a card restyle does not establish the information-site signature. The applicable Source, Compare, Decide, Commit, and Recover relationship MUST remain traceable without inventing missing phases. Apply [`principles/context-thread.md`](../principles/context-thread.md) and the common and information-site requirements in [`principles/visual-signature.md`](../principles/visual-signature.md).
 
 ## Acceptance
 

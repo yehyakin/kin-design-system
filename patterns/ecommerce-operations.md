@@ -39,6 +39,18 @@ Inspector: state, ownership, money/quantity/channel, approval, activity
 - Product imagery remains subordinate in operational lists and expands only for identity or media-review decisions.
 - Narrow screens preserve `identity -> blocking state -> affected money/quantity/channel -> safe action -> activity`.
 
+### Context Thread mapping
+
+The ecommerce-operations silhouette is an operating scope and exception queue joined to a selected commercial record and an explicit approval or execution boundary. It MUST not inherit the intelligence-workspace silhouette unchanged.
+
+- `Source`: product, order, campaign, channel, inventory location, currency, owner, and upstream record.
+- `Compare`: current and proposed price, stock, channel state, creative, schedule, or fulfillment outcome.
+- `Decide`: approve, reject, edit, pause, retry, or choose the exact batch scope.
+- `Commit`: the externally visible or financially meaningful result, including affected count, channel, actor, and time.
+- `Recover`: undo, rollback, restore prior values, resume a failed task, or hand off to a safe manual path.
+
+Money, quantity, channel, permission, approval, execution, and rollback MUST stay legible across the Context Thread. Do not visualize the relationship as a generic funnel or a row of equal status cards.
+
 ## Visual register
 
 - Use compact rows for comparison and exception handling.
@@ -70,7 +82,7 @@ Inspector: state, ownership, money/quantity/channel, approval, activity
 
 ## Visual-signature requirement
 
-Apply the common and ecommerce requirements in [`principles/visual-signature.md`](../principles/visual-signature.md). A representative production workflow MUST be visually reviewed before a product claims visible KIN adoption.
+Apply [`principles/context-thread.md`](../principles/context-thread.md) and the common and ecommerce requirements in [`principles/visual-signature.md`](../principles/visual-signature.md). A representative production workflow MUST show how commercial source, comparison, human decision, committed scope, and recovery remain connected before a product claims visible KIN adoption.
 
 ## Acceptance
 

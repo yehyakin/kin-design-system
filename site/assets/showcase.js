@@ -181,7 +181,6 @@ function initializeScenarioStage(container) {
   const frame = container.querySelector("[data-stage-frame]");
   const poster = container.querySelector("[data-stage-poster]");
   const loader = container.querySelector("[data-stage-loading]");
-  const sweep = container.querySelector("[data-stage-sweep]");
   const title = container.querySelector("[data-stage-title]");
   const job = container.querySelector("[data-stage-job]");
   const code = container.querySelector(".reference-code");
@@ -199,29 +198,12 @@ function initializeScenarioStage(container) {
 
   let selected = options.find((option) => option.getAttribute("aria-selected") === "true") || options[0];
   let loadRevision = 0;
-  let sweepAnimation = null;
 
   function syncStageLabLink() {
     syncLabLinkAppearance(labLink);
     const url = new URL(labLink.href, window.location.href);
     url.searchParams.set("theme", "dark");
     labLink.href = `${url.pathname}${url.search}${url.hash}`;
-  }
-
-  function playSweep() {
-    if (!sweep || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    sweepAnimation?.cancel();
-    sweepAnimation = sweep.animate(
-      [
-        { opacity: 0, transform: "translateX(0)" },
-        { opacity: 0.38, transform: "translateX(0)", offset: 0.35 },
-        { opacity: 0, transform: "translateX(0)" },
-      ],
-      {
-        duration: 160,
-        easing: "cubic-bezier(0.32, 0.72, 0, 1)",
-      },
-    );
   }
 
   function setLoading(label) {
@@ -235,7 +217,6 @@ function initializeScenarioStage(container) {
   function selectOption(option, { moveFocus = false, invocation = "pointer" } = {}) {
     if (!option || option === selected && container.dataset.stageReady === "true") return;
     container.dataset.stageInput = invocation;
-    if (invocation === "pointer") playSweep();
     selected = option;
     loadRevision += 1;
     const revision = loadRevision;
@@ -470,91 +451,6 @@ function initializeReferenceStage(container) {
   if (frame.contentDocument?.readyState === "complete") reveal();
 }
 
-function initializeComponentBrowser(browser) {
-  const choices = [...browser.querySelectorAll("[data-component-choice]")];
-  const stageContainer = browser.querySelector("[data-reference-stage]");
-  const frame = browser.querySelector("[data-stage-frame]");
-  const title = browser.querySelector("[data-stage-title]");
-  const job = browser.querySelector("[data-stage-job]");
-  const explorer = browser.querySelector("[data-stage-explorer]");
-  const language = browser.querySelector("[data-stage-language]");
-  if (!stageContainer || !frame || !title || !job || !explorer || choices.length === 0) return;
-
-  let selected = choices.find((choice) => choice.getAttribute("aria-selected") === "true") || choices[0];
-  let restoreChoiceFocus = false;
-
-  function activate(choice, { focus = false, invocation = "pointer" } = {}) {
-    if (choice === selected && stageContainer.dataset.stageReady === "true") {
-      if (focus) choice.focus();
-      return;
-    }
-    stageContainer.dataset.stageInput = invocation;
-    selected = choice;
-    for (const candidate of choices) {
-      const active = candidate === choice;
-      candidate.setAttribute("aria-selected", String(active));
-      candidate.tabIndex = active ? 0 : -1;
-    }
-    title.textContent = choice.dataset.componentName;
-    job.textContent = choice.dataset.componentJob;
-    if (language) {
-      const languageLabel = choice.dataset.componentReferenceLanguage || "";
-      language.lastChild.textContent = languageLabel;
-      language.hidden = languageLabel === "";
-    }
-    explorer.href = choice.dataset.componentExplorer;
-    stageContainer.dataset.readyFragment = choice.dataset.componentReadyFragment;
-    const focusSelector = choice.dataset.componentFocusSelector;
-    if (focusSelector) stageContainer.dataset.focusSelector = focusSelector;
-    else delete stageContainer.dataset.focusSelector;
-    frame.title = `${choice.dataset.componentName}: ${choice.dataset.componentState}`;
-    const nextReference = new URL(choice.dataset.componentReference, window.location.href).href;
-    const reusesCurrentReference = frame.src === nextReference;
-    stageContainer.dispatchEvent(new CustomEvent("kin:reference-change"));
-    if (reusesCurrentReference) {
-      stageContainer.dispatchEvent(new CustomEvent("kin:reference-refresh"));
-    } else {
-      frame.src = choice.dataset.componentReference;
-    }
-    if (focus) {
-      restoreChoiceFocus = true;
-      choice.focus();
-    }
-  }
-
-  for (const choice of choices) choice.addEventListener("click", () => activate(choice, { invocation: "pointer" }));
-  browser.querySelector('[role="listbox"]')?.addEventListener("keydown", (event) => {
-    if (!["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)) return;
-    const index = choices.indexOf(document.activeElement);
-    if (index < 0) return;
-    event.preventDefault();
-    let next = index;
-    if (event.key === "Home") next = 0;
-    else if (event.key === "End") next = choices.length - 1;
-    else if (event.key === "ArrowUp") next = (index - 1 + choices.length) % choices.length;
-    else next = (index + 1) % choices.length;
-    activate(choices[next], { focus: true, invocation: "keyboard" });
-  });
-
-  frame.addEventListener("kin:stage-ready", () => {
-    const returnFocusToChoice = restoreChoiceFocus;
-    if (returnFocusToChoice) {
-      restoreChoiceFocus = false;
-      requestAnimationFrame(() => selected.focus());
-    }
-    if (selected.dataset.componentId !== "command-menu" || stageContainer.dataset.focusSelector) return;
-    frame.contentDocument?.querySelector("[data-command-open]")?.click();
-    if (returnFocusToChoice) requestAnimationFrame(() => selected.focus());
-  });
-  if (
-    selected.dataset.componentId === "command-menu"
-    && !stageContainer.dataset.focusSelector
-    && frame.contentDocument?.readyState === "complete"
-  ) {
-    frame.contentDocument.querySelector("[data-command-open]")?.click();
-  }
-}
-
 function initializeComponentTabs(container) {
   const tabs = [...container.querySelectorAll('[role="tab"]')];
   const panels = [...container.querySelectorAll('[role="tabpanel"]')];
@@ -666,9 +562,6 @@ function initializePatternBrowser(browser) {
 
 for (const referenceStage of document.querySelectorAll("[data-reference-stage]")) {
   initializeReferenceStage(referenceStage);
-}
-for (const browser of document.querySelectorAll("[data-component-browser]")) {
-  initializeComponentBrowser(browser);
 }
 for (const tabset of document.querySelectorAll("[data-component-tabs]")) {
   initializeComponentTabs(tabset);

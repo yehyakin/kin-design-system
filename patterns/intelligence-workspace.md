@@ -45,6 +45,18 @@ Command layer: command menu, menus, dialogs, toast
 
 A public homepage in the same product MAY use the `information-site` profile. That does not permit the database route to retain a marketing-page composition.
 
+### Context Thread mapping
+
+The intelligence-workspace silhouette is an evidence queue or entity list joined to one dominant investigation field and a decision Inspector. It MUST remain recognizably different from an ecommerce queue, reading page, or engineering canvas.
+
+- `Source`: selected entity, signal origin, observation time, evidence provenance, and verification state.
+- `Compare`: chronology, conflicting evidence, prior monitor runs, related entities, or baseline-versus-current state.
+- `Decide`: finding, review disposition, escalation, watch state, or another explicitly owned judgment.
+- `Commit`: the durable reviewed result, including actor, scope, reason, and timestamp.
+- `Recover`: undo, reopen, retry, restore the prior verified context, or return to the preserved queue position.
+
+The list selection, evidence chronology, decision boundary, and committed result MUST read as one Context Thread even when they occupy different columns or routes. The thread MUST NOT be reduced to a single score, a decorative timeline, or five equal workflow cards.
+
 ## Visual register
 
 - Dense, calm, and source-forward.
@@ -75,7 +87,7 @@ A public homepage in the same product MAY use the `information-site` profile. Th
 
 ## Visual-signature requirement
 
-Apply the common and intelligence-workspace requirements in [`principles/visual-signature.md`](../principles/visual-signature.md). A representative production workflow MUST demonstrate persistent identity, one dominant work region, flat activity or property structure, and distinct risk/evidence/completeness semantics before the adoption can be described as visibly KIN.
+Apply [`principles/context-thread.md`](../principles/context-thread.md) and the common and intelligence-workspace requirements in [`principles/visual-signature.md`](../principles/visual-signature.md). A representative production workflow MUST demonstrate persistent identity, one dominant work region, a traceable Source-to-Recover Context Thread, flat activity or property structure, and distinct risk/evidence/completeness semantics before the adoption can be described as visibly KIN.
 
 ## Acceptance
 

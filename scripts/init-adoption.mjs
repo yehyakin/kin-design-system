@@ -264,11 +264,18 @@ Profile starting point: ${profileGuidance[profile]}
 - Dominant region: TODO
 - Persistent context: TODO
 - Chrome behavior: TODO
+- Context Thread (Source -> Compare -> Decide -> Commit -> Recover): TODO
+- Non-applicable Context Thread phases and reasons: TODO
+- Thread carrier: TODO
+- Signature punctuation and purpose: TODO
+- Product-family silhouette: TODO
+- Receding chrome behavior: TODO
 - Surface strategy: TODO
 - Density and alignment strategy: TODO
 - Semantic concepts that must remain separate: TODO
 - Motion model and Reduced Motion alternative: TODO
 - Narrow-screen priority order: TODO
+- Narrow-screen Context Thread transformation: TODO
 
 ## Required interactions and states
 
@@ -322,6 +329,9 @@ const visualCriteria = [
   "motion-continuity",
   "responsive-priority",
   "no-fabricated-data-or-behavior",
+  "context-thread",
+  "receding-chrome",
+  "product-family-silhouette",
 ];
 
 const evidence = {

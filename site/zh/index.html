@@ -80,18 +80,37 @@
     <section class="showcase-hero" id="overview" aria-labelledby="overview-title">
       <div class="showcase-hero-copy">
         <p class="showcase-label">KIN 设计系统</p>
-        <h1 id="overview-title"><span class="showcase-title-line">复杂工作，</span><span class="showcase-title-line">也能</span><span class="showcase-title-line">一目了然。</span></h1>
-        <p class="lead">KIN 是面向信息密集型产品的设计系统，适用于信息网站、运营工作台和专业编辑工具。</p>
+        <h1 id="overview-title">为关键工作构建界面。</h1>
+        <p class="lead">一份面向专业产品的设计合同，让来源、状态、决策和恢复路径始终可见。</p>
         <div class="showcase-hero-actions">
-          <a class="showcase-button primary" href="../scenarios/lab.html?scenario=INT-02&amp;state=normal&amp;viewport=wide&amp;theme=dark&amp;mode=present&amp;lang=zh-CN"><i data-lucide="panels-top-left"></i>体验调查工作台</a>
-          <a class="showcase-text-action" href="components/">浏览组件 <i data-lucide="arrow-right"></i></a>
+          <a class="showcase-button primary" href="components/">探索组件</a>
+          <a class="showcase-text-action" href="docs/">阅读设计规范 <i data-lucide="arrow-right"></i></a>
         </div>
       </div>
 
       <article class="showcase-product-stage" data-scenario-stage data-stage-ready="false" aria-labelledby="stage-title">
-        <span class="stage-sweep" data-stage-sweep aria-hidden="true"></span>
         <header class="stage-toolbar">
           <div class="stage-tabs" role="tablist" aria-label="产品场景">
+            <button
+              id="scenario-tab-information"
+              type="button"
+              role="tab"
+              aria-controls="showcase-stage-panel"
+              aria-selected="false"
+              data-scenario-stage-option="INF-01"
+              data-reference="../examples/product-patterns/information.html"
+              data-lab="../scenarios/lab.html?scenario=INF-01&amp;state=normal&amp;viewport=wide&amp;theme=dark&amp;mode=present&amp;lang=zh-CN"
+              data-title="查找并核验记录"
+              data-job="搜索、筛选并打开记录，确认它的来源和时效。"
+              data-source="稳定"
+              data-presentation="可预览"
+              data-entry="读者带着查询、主题或稳定记录链接进入。"
+              data-dominant-region="结果列表或阅读正文。"
+              data-completion="读者能够确认主题、来源、更新状态和下一步导航。"
+              data-boundary="此产品布局样例尚未提供可通过 URL 直接打开的搜索结果、空、过期与不可用状态。"
+              data-reference-language="中文预览"
+              data-ready-selector="main.article h1"
+            >信息</button>
             <button
               id="scenario-tab-investigation"
               type="button"
@@ -114,7 +133,7 @@
               data-reference-language="中文预览"
               data-ready-selector="[data-investigation]"
               data-poster="../assets/posters/int-02-normal-dark.png"
-            >调查</button>
+            >情报</button>
             <button
               id="scenario-tab-commerce"
               type="button"
@@ -154,7 +173,7 @@
               data-boundary="提交、取消、撤销和修订历史尚不能通过 URL 直接打开。"
               data-reference-language="中文预览"
               data-ready-selector=".canvas-shell"
-            >画布</button>
+            >工程</button>
           </div>
           <div class="stage-toolbar-actions">
             <span class="stage-language" data-stage-language><i data-lucide="languages"></i><span data-stage-language-text data-showcase-feature-language="INT-02">中文预览</span></span>

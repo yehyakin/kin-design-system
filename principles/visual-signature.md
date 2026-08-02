@@ -2,7 +2,7 @@
 
 Status: normative
 
-The KIN visual signature is the set of observable composition, hierarchy, density, material, semantic, and motion decisions that make a finished interface feel intentional and recognizably KIN. It is not a copied layout, a fixed brand palette, or a collection of Token values.
+The KIN visual signature is the set of observable composition, hierarchy, density, material, semantic, and motion decisions that make a finished interface feel intentional and recognizably KIN. Its positive cross-product signature is the [`Context Thread`](./context-thread.md): the visible relationship between source, comparison, decision, commitment, and recovery. It is not a copied layout, a fixed brand palette, or a collection of Token values.
 
 A product can map every KIN Token and still fail this contract. A product can preserve its own brand and still satisfy it.
 
@@ -56,6 +56,14 @@ Every KIN interface MUST satisfy the following principles at the page or workflo
 - Decorative entrance sequences, repeated card lifting, automatic counting, and generic page fades MUST NOT be used to manufacture polish.
 - Reduced Motion MUST preserve the same hierarchy and final state without requiring movement.
 
+### 8. The consequential path stays connected
+
+- A consequential workflow MUST preserve the applicable relationship between source, comparison, decision, commitment, and recovery.
+- The relationship MAY use a provenance gutter, aligned comparison, evidence rail, selected-object relationship, review boundary, result row, or spatially continuous motion. It MUST NOT be reduced to a decorative Stepper or five equal Cards.
+- Phases that do not exist in the real task MUST be omitted and documented rather than invented.
+- Chrome MUST recede without hiding location, permission, safe exit, the only available action, or the current point of consequence.
+- Each product family MUST express the relationship through its own task silhouette rather than reuse one generic Sidebar / Main / Inspector shell.
+
 ## Product-family signatures
 
 The common signature is required, but composition changes with the job.
@@ -64,6 +72,8 @@ The common signature is required, but composition changes with the job.
 
 - Search, subject identity, reading content, or the record list leads the first view.
 - Source, revision, currency, and stable location remain available without promotional detours.
+- The default silhouette is a reading field with an adjacent provenance or revision gutter, not a permanent application shell.
+- A read-only page MAY omit decision, commitment, and recovery. It MUST NOT invent an approval flow to make the Context Thread complete.
 - Reading pages use a deliberate content measure; records, tables, and citations MAY expand when their content requires width.
 - Cards are reserved for independent records or collections, not ordinary paragraphs and navigation links.
 
@@ -71,6 +81,8 @@ The common signature is required, but composition changes with the job.
 
 - Current entity identity and state remain visible while the user changes list selection, evidence, history, or properties.
 - Database work SHOULD use a list, Split View, Detail view, or Inspector relationship rather than a landing-page composition.
+- The default silhouette is a queue or entity list, a dominant evidence or chronology workspace, and a decision Inspector.
+- Evidence, conflict, finding, commitment, and audit or recovery MUST remain connected when they are part of the workflow.
 - Activity is a flat chronological record; evidence and properties are structured rows, not decorative timeline and stat cards.
 - Risk, evidence confidence, completeness, online health, and AI confidence remain visually and semantically distinct.
 
@@ -78,6 +90,8 @@ The common signature is required, but composition changes with the job.
 
 - Catalog, order, inventory, campaign, creative, approval, or exception work owns the first view.
 - Money, units, inventory, deadlines, channels, ownership, and state align for comparison.
+- The default silhouette is scope and channel context, an exception or operating queue, a product or order decision workspace, and an explicit approval or release boundary.
+- Current and proposed state, permission, approval, execution, and rollback MUST remain distinct at the point of consequence.
 - AI suggestions appear inside review and execution context; a generic assistant panel does not replace the operating workflow.
 - Media receives space according to the decision being made, not as decorative merchandising inside an operations tool.
 
@@ -85,6 +99,8 @@ The common signature is required, but composition changes with the job.
 
 - The canvas, document, model, revision, or measured object dominates.
 - Tool chrome and layers remain available but visually secondary to the work.
+- The default silhouette is compact document commands, a dominant canvas, contextual layer and property docks, and an explicit document-history or export boundary.
+- Selection, preview, accept or reject, commitment, save state, and undo or conflict recovery MUST remain connected.
 - Inspector content follows the current selection; it does not become a permanent dashboard.
 - Units, constraints, saved state, generated changes, and revision history stay explicit.
 
@@ -122,7 +138,7 @@ The project-owned implementation brief MUST be complete before this review begin
 
 The baseline and candidate artifacts MUST use comparable content and viewport conditions. A polished fixture with different data is not a valid before-and-after comparison.
 
-The machine-readable review MUST record each of these criteria separately: task first, one dominant region, continuous structure, density without repeated explanation, semantic separation, theme integrity, motion continuity, responsive priority, and no fabricated data or behavior. A general comment such as “looks like KIN” cannot replace the criterion results.
+The machine-readable review MUST record each of these criteria separately: task first, one dominant region, continuous structure, density without repeated explanation, semantic separation, theme integrity, motion continuity, responsive priority, no fabricated data or behavior, Context Thread continuity, receding chrome, and product-family silhouette. A general comment such as “looks like KIN” cannot replace the criterion results.
 
 ## Review questions
 
@@ -135,6 +151,9 @@ The machine-readable review MUST record each of these criteria separately: task 
 - Does the light theme retain structure without a card wall?
 - Does the dark theme retain hierarchy without glow or hard black boxes?
 - Does motion explain origin, direction, or completion?
+- Can the applicable source, comparison, decision, commitment, and recovery relationship be followed without reading explanatory documentation?
+- Does chrome recede without hiding location, permission, safe exit, or the only safe action?
+- Would this product family still have a distinct task silhouette if its labels and brand colors were removed?
 - Would the page still be recognizably structured if accent colors and icons were removed?
 
 ## Failure patterns
@@ -145,6 +164,9 @@ The following are evidence that a visual-signature review is required:
 - a dashboard composed primarily of equal stat cards and chart cards;
 - a component laboratory presented as the redesigned product;
 - a Sidebar, Top Bar, and Inspector added around an unchanged landing-page interior;
+- the same Sidebar / Main / Inspector silhouette copied into information, operations, and canvas products;
+- `Source / Compare / Decide / Commit / Recover` rendered as decorative numbered Cards or a Stepper without real workflow state;
+- the commit action emphasized while source, scope, permission, or recovery remains hidden;
 - theme colors mapped correctly while hierarchy, typography, density, and composition remain generic;
 - large explanatory panels describing the interface instead of letting the interface perform the task;
 - invented counts, health states, versions, live labels, or graph activity used to make the design look complete;
@@ -158,6 +180,9 @@ A representative workflow passes this contract only when:
 - the primary task or reading job is visible before promotional or explanatory material;
 - one dominant region is evident in both light and dark themes;
 - the composition uses the selected product pattern rather than a generic page template;
+- the applicable Context Thread phases remain connected through a functional carrier and non-applicable phases are documented;
+- chrome recedes after orientation without hiding safe operation;
+- the page expresses the selected product-family silhouette rather than an unrelated shared shell;
 - container count and visual weight follow real boundaries;
 - realistic data and applicable failure states preserve the hierarchy;
 - desktop and narrow-screen views preserve the same priority, even when their layouts differ;

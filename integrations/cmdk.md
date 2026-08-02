@@ -17,6 +17,7 @@ Runtime-integrated adapter for the stable Command Menu contract. Use in React pr
 - For server search, disable incorrect client filtering and debounce approximately 100–180ms.
 - Limit each group to the best results; full result sets belong on a search page.
 - Pause global shortcuts inside inputs, editors and IME composition.
+- Provide localized accessible names for both the Command Dialog and its suggestion List. The runtime adapter exposes `label` for the Dialog and `listLabel` for the List; when `listLabel` is omitted, it falls back to `label`.
 - Keyboard invocation MUST expose the surface and focus search without entrance travel, scale, or a wait for animation. Filtering debounce is data behavior and MUST NOT delay surface availability.
 - Pointer invocation MAY use an opacity transition no longer than `100ms` when it preserves the same focus and state model. It MUST NOT create a second visual identity for the component.
 - Closing MUST immediately stop interaction and restore focus. A visual exit MUST NOT prevent an immediate reopen or allow stale cleanup to hide the reopened surface.
@@ -26,7 +27,7 @@ Runtime-integrated adapter for the stable Command Menu contract. Use in React pr
 ## Verification
 
 - Empty, loading, error and no-permission states.
-- Chinese, English and alias matching.
+- Chinese, English and alias matching, including localized Dialog, search-input and suggestion-List names.
 - Slow network and out-of-order responses.
 - Repeated `open → close → open` by shortcut and pointer; the latest request wins.
 - Search accepts input in the same task as a keyboard invocation.
