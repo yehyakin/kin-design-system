@@ -11,44 +11,45 @@
     <link rel="stylesheet" href="./patterns.css" />
     <link rel="stylesheet" href="../shared/preference-controls.css" />
     <script src="./theme.js" defer></script>
+    <script type="module" src="./icons.js"></script>
     <script type="module" src="../shared/preference-controls.js"></script>
   </head>
   <body>
     <main class="canvas-shell">
       <header class="canvas-topbar">
-        <div class="canvas-title"><strong>支架装配</strong><span>修订版 18 · 已保存</span></div>
+        <div class="canvas-title"><span class="identity-mark"><i data-lucide="shapes"></i></span><span class="canvas-title-copy"><strong>支架装配</strong><small>修订版 18 · 已保存</small></span></div>
         <div class="canvas-actions">
           <div class="canvas-toolbar" role="toolbar" aria-label="编辑操作" data-canvas-toolbar>
-            <button type="button" data-toolbar-item data-toolbar-action="undo">撤销</button>
-            <button type="button" data-toolbar-item data-toolbar-action="redo" tabindex="-1">重做</button>
-            <button type="button" class="mobile-only" data-toolbar-item data-canvas-layers-open aria-controls="canvas-layers" aria-expanded="false" tabindex="-1">对象</button>
-            <button type="button" class="compact-inspector-trigger" data-toolbar-item data-canvas-properties-open aria-controls="canvas-properties" aria-expanded="false" tabindex="-1">属性</button>
+            <button type="button" data-toolbar-item data-toolbar-action="undo"><i data-lucide="undo-2"></i><span>撤销</span></button>
+            <button type="button" data-toolbar-item data-toolbar-action="redo" tabindex="-1"><i data-lucide="redo-2"></i><span>重做</span></button>
+            <button type="button" class="mobile-only" data-toolbar-item data-canvas-layers-open aria-controls="canvas-layers" aria-expanded="false" tabindex="-1"><i data-lucide="layers-3"></i><span>对象</span></button>
+            <button type="button" class="compact-inspector-trigger" data-toolbar-item data-canvas-properties-open aria-controls="canvas-properties" aria-expanded="false" tabindex="-1"><i data-lucide="panel-right-open"></i><span>属性</span></button>
             <div class="toolbar-overflow" data-toolbar-overflow>
-              <button type="button" data-toolbar-item data-toolbar-overflow-trigger aria-haspopup="menu" aria-expanded="false" tabindex="-1">更多</button>
+              <button type="button" class="icon-button" data-toolbar-item data-toolbar-overflow-trigger aria-haspopup="menu" aria-expanded="false" aria-label="更多操作" title="更多操作" tabindex="-1"><i data-lucide="ellipsis"></i></button>
               <div class="toolbar-menu" data-toolbar-menu role="menu" hidden>
-                <button type="button" role="menuitem" data-toolbar-action="export">导出</button>
-                <button type="button" role="menuitem" data-toolbar-action="settings">文档设置</button>
+                <button type="button" role="menuitem" data-toolbar-action="export"><i data-lucide="download"></i><span>导出</span></button>
+                <button type="button" role="menuitem" data-toolbar-action="settings"><i data-lucide="settings-2"></i><span>文档设置</span></button>
               </div>
             </div>
           </div>
           <span class="visually-hidden" role="status" aria-live="polite" data-toolbar-status></span>
-          <div class="pattern-theme-actions"><div class="kin-preference-controls" data-preference-controls><button type="button" class="kin-theme-switch" role="switch" data-theme-switch aria-checked="false" aria-label="切换为夜间模式"><span class="kin-theme-switch-icon"><i data-lucide="sun"></i></span><span class="kin-theme-switch-track" aria-hidden="true"><span class="kin-theme-switch-thumb"></span></span><span class="kin-theme-switch-icon"><i data-lucide="moon"></i></span></button><div class="kin-theme-menu-control"><button type="button" class="kin-theme-menu-trigger" data-theme-menu-trigger aria-haspopup="menu" aria-expanded="false" aria-label="外观选项"><i data-lucide="chevron-down"></i></button><div class="kin-theme-menu" data-theme-menu data-state="closed" role="menu" aria-label="外观选项" hidden><button type="button" role="menuitemradio" aria-checked="false" data-theme-preference="light"><i class="kin-theme-menu-item-icon" data-lucide="sun"></i><span>日间</span><i class="kin-theme-menu-check" data-lucide="check"></i></button><button type="button" role="menuitemradio" aria-checked="false" data-theme-preference="dark"><i class="kin-theme-menu-item-icon" data-lucide="moon"></i><span>夜间</span><i class="kin-theme-menu-check" data-lucide="check"></i></button><button type="button" role="menuitemradio" aria-checked="true" data-theme-preference="system"><i class="kin-theme-menu-item-icon" data-lucide="monitor"></i><span>跟随系统</span><i class="kin-theme-menu-check" data-lucide="check"></i></button></div></div></div><button type="button" data-contrast-toggle aria-pressed="false">高对比</button></div>
+          <div class="pattern-theme-actions"><div class="kin-preference-controls" data-preference-controls><button type="button" class="kin-theme-switch" role="switch" data-theme-switch aria-checked="false" aria-label="切换为夜间模式"><span class="kin-theme-switch-icon"><i data-lucide="sun"></i></span><span class="kin-theme-switch-track" aria-hidden="true"><span class="kin-theme-switch-thumb"></span></span><span class="kin-theme-switch-icon"><i data-lucide="moon"></i></span></button><div class="kin-theme-menu-control"><button type="button" class="kin-theme-menu-trigger" data-theme-menu-trigger aria-haspopup="menu" aria-expanded="false" aria-label="外观选项"><i data-lucide="chevron-down"></i></button><div class="kin-theme-menu" data-theme-menu data-state="closed" role="menu" aria-label="外观选项" hidden><button type="button" role="menuitemradio" aria-checked="false" data-theme-preference="light"><i class="kin-theme-menu-item-icon" data-lucide="sun"></i><span>日间</span><i class="kin-theme-menu-check" data-lucide="check"></i></button><button type="button" role="menuitemradio" aria-checked="false" data-theme-preference="dark"><i class="kin-theme-menu-item-icon" data-lucide="moon"></i><span>夜间</span><i class="kin-theme-menu-check" data-lucide="check"></i></button><button type="button" role="menuitemradio" aria-checked="true" data-theme-preference="system"><i class="kin-theme-menu-item-icon" data-lucide="monitor"></i><span>跟随系统</span><i class="kin-theme-menu-check" data-lucide="check"></i></button></div></div></div><button type="button" class="icon-button" data-contrast-toggle aria-pressed="false" aria-label="切换高对比度" title="高对比"><i data-lucide="contrast"></i></button></div>
         </div>
       </header>
 
       <nav class="tool-rail" aria-label="绘图工具">
-        <button type="button" data-tool aria-label="选择" aria-pressed="true">S</button><button type="button" data-tool aria-label="直线" aria-pressed="false">L</button><button type="button" data-tool aria-label="矩形" aria-pressed="false">R</button><button type="button" data-tool aria-label="尺寸" aria-pressed="false">D</button><button type="button" data-tool aria-label="约束" aria-pressed="false">C</button>
+        <button type="button" data-tool aria-label="选择" title="选择" aria-pressed="true"><i data-lucide="mouse-pointer-2"></i></button><button type="button" data-tool aria-label="直线" title="直线" aria-pressed="false"><i data-lucide="pen-line"></i></button><button type="button" data-tool aria-label="矩形" title="矩形" aria-pressed="false"><i data-lucide="box"></i></button><button type="button" data-tool aria-label="尺寸" title="尺寸" aria-pressed="false"><i data-lucide="ruler"></i></button><button type="button" data-tool aria-label="约束" title="约束" aria-pressed="false"><i data-lucide="waypoints"></i></button>
       </nav>
 
       <aside id="canvas-layers" class="layer-panel" aria-label="图层和对象">
-        <header class="panel-heading"><strong>对象</strong><span>6</span><button type="button" class="mobile-layer-close" data-canvas-layers-close aria-label="关闭对象面板">关闭</button></header>
-        <div class="layer-tree"><button type="button" data-object aria-pressed="false">装配 <small>可见</small></button><div class="nested"><button type="button" data-object aria-pressed="true">Bracket-01 <small>已选</small></button><button type="button" data-object aria-pressed="false">Plate-02 <small>可见</small></button><button type="button" data-object aria-pressed="false">Bolt × 4 <small>锁定</small></button></div><button type="button" data-object aria-pressed="false">辅助构造 <small>隐藏</small></button></div>
+        <header class="panel-heading"><strong><i data-lucide="layers-3"></i>对象</strong><span>6</span><button type="button" class="mobile-layer-close icon-button" data-canvas-layers-close aria-label="关闭对象面板"><i data-lucide="x"></i></button></header>
+        <div class="layer-tree"><button type="button" data-object aria-pressed="false"><i data-lucide="boxes"></i><span>装配</span><small>可见</small></button><div class="nested"><button type="button" data-object aria-pressed="true"><i data-lucide="shapes"></i><span>Bracket-01</span><small>已选</small></button><button type="button" data-object aria-pressed="false"><i data-lucide="box"></i><span>Plate-02</span><small>可见</small></button><button type="button" data-object aria-pressed="false"><i data-lucide="lock-keyhole"></i><span>Bolt × 4</span><small>锁定</small></button></div><button type="button" data-object aria-pressed="false"><i data-lucide="eye"></i><span>辅助构造</span><small>隐藏</small></button></div>
       </aside>
 
       <div class="split-separator" role="separator" aria-label="调整对象面板宽度" aria-orientation="vertical" aria-valuemin="160" aria-valuemax="320" aria-valuenow="210" tabindex="0" data-split-resizer></div>
 
       <section class="drawing-area" aria-label="工程图画布">
-        <span class="canvas-mode">选择 · 正交视图</span>
+        <span class="canvas-mode"><i data-lucide="mouse-pointer-2"></i>选择 · 正交视图</span>
         <svg viewBox="0 0 760 500" role="img" aria-labelledby="drawing-title drawing-desc">
           <title id="drawing-title">支架装配工程图</title><desc id="drawing-desc">被选中的 L 形支架、安装板、孔位和 120 毫米尺寸标注。</desc>
           <path class="geometry" d="M160 350 L160 150 L330 150 L330 220 L245 220 L245 350 Z" />
@@ -63,13 +64,13 @@
       </section>
 
       <aside id="canvas-properties" class="property-panel" aria-label="属性">
-        <div class="mobile-property-heading"><strong>属性</strong><button type="button" data-canvas-properties-close aria-label="关闭属性面板">关闭</button></div>
+        <div class="mobile-property-heading"><strong><i data-lucide="panel-right-open"></i>属性</strong><button type="button" class="icon-button" data-canvas-properties-close aria-label="关闭属性面板"><i data-lucide="x"></i></button></div>
         <section><h2>Bracket-01</h2><div class="property-grid"><label for="x">X</label><input id="x" value="160.00 mm" /><label for="y">Y</label><input id="y" value="150.00 mm" /><label for="width">宽度</label><input id="width" value="170.00 mm" /><label for="height">高度</label><input id="height" value="200.00 mm" /></div></section>
         <section><h3>约束</h3><div class="property-grid"><label for="horizontal">水平</label><input id="horizontal" value="已约束" readonly /><label for="vertical">垂直</label><input id="vertical" value="已约束" readonly /><label for="radius">孔半径</label><input id="radius" value="24.00 mm" /></div></section>
-        <section><h3>生成的变更建议</h3><div class="generated-change"><strong>调整安装孔间距</strong><p>建议将中心距从 165.00 mm 改为 170.00 mm。尚未写入修订版 18。</p><div><button type="button">查看差异</button><button type="button" class="primary-action">应用更改</button></div></div></section>
+        <section><h3><i data-lucide="circle-dot-dashed"></i>生成的变更建议</h3><div class="generated-change"><strong>调整安装孔间距</strong><p>建议将中心距从 165.00 mm 改为 170.00 mm。尚未写入修订版 18。</p><div><button type="button"><i data-lucide="file-search"></i><span>查看差异</span></button><button type="button" class="primary-action"><i data-lucide="check-circle-2"></i><span>应用更改</span></button></div></div></section>
       </aside>
 
-      <footer class="canvas-status"><div><span>X 312.40</span><span>Y 188.20</span><span>mm</span><span>捕捉步长 1.00 mm</span></div><div><span>1 个对象</span><span>100%</span><span>修订版 18</span></div></footer>
+      <footer class="canvas-status"><div><span><i data-lucide="move"></i>X 312.40 · Y 188.20</span><span><i data-lucide="ruler"></i>mm</span><span><i data-lucide="grid-3-x-3"></i>捕捉 1.00 mm</span></div><div><span><i data-lucide="shapes"></i>1 个对象</span><span><i data-lucide="zoom-in"></i>100%</span><span><i data-lucide="history"></i>修订版 18</span></div></footer>
     </main>
   </body>
 </html>

@@ -84,6 +84,15 @@ await build({
 });
 
 await build({
+  entryPoints: [path.join(root, "examples", "product-patterns", "icons.js")],
+  outfile: path.join(output, "examples", "product-patterns", "icons.js"),
+  bundle: true,
+  format: "esm",
+  target: ["es2022"],
+  minify: true,
+});
+
+await build({
   entryPoints: [path.join(root, "examples", "page-patterns", "reference.js")],
   outdir: path.join(output, "examples", "page-patterns"),
   bundle: true,

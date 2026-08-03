@@ -70,6 +70,7 @@ export const SITE_GENERATED_ARTIFACTS = Object.freeze([
   "assets/site.js",
   "assets/sonner.css",
   "examples/page-patterns/reference.js",
+  "examples/product-patterns/icons.js",
   "examples/shared/preference-controls.js",
   "examples/workspace-reference/core-components.js",
   "examples/workspace-reference/integration-reference.js",
