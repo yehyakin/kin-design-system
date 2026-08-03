@@ -2,7 +2,7 @@
 
 Status: normative
 
-This contract defines controls that execute actions or change a bounded selection. It supplements [`DESIGN.md`](../DESIGN.md), [`core-states.md`](./core-states.md), [`micro-interactions.md`](./micro-interactions.md), and [`terminology.md`](./terminology.md).
+This contract defines controls that execute actions or change a bounded selection. It supplements [`DESIGN.md`](../DESIGN.md), [`material-hierarchy.md`](../principles/material-hierarchy.md), [`core-states.md`](./core-states.md), [`micro-interactions.md`](./micro-interactions.md), and [`terminology.md`](./terminology.md).
 
 ## Shared rules
 
@@ -14,6 +14,8 @@ This contract defines controls that execute actions or change a bounded selectio
 - A busy action MUST prevent duplicate commitment without hiding the action context.
 - Destructive appearance MUST be reserved for the point where a destructive action is actually committed.
 - Touch targets MUST be at least 44 by 44 CSS pixels on touch layouts; the visible control MAY remain smaller inside that target.
+- Ordinary controls MUST use Surface, border, and focus before elevation. They MUST NOT cast ambient shadows merely to appear clickable.
+- A selected or locally lifted control MAY use `--edge-highlight` with `--shadow-contact` when the spatial change has task meaning. Focus, checked, pressed, and selected semantics MUST remain distinct without that effect.
 
 ## Button and Icon Button
 
@@ -116,6 +118,7 @@ Use a Segmented Control for two to five peer views or modes when the whole set c
 - Light, dark, and higher-contrast themes MUST preserve hierarchy and state distinctions.
 - Checked or selected state MUST not rely only on accent color.
 - Press feedback SHOULD use short surface or sub-pixel transform changes without bounce.
+- Press feedback MAY shorten or remove a contact shadow, but MUST NOT introduce delayed floating elevation.
 - Icon transition travel MUST remain inside the icon optical box and MUST NOT move the label or surrounding controls.
 - Reduced motion MUST remove nonessential icon replacement, spin, or scale while preserving the committed state.
 

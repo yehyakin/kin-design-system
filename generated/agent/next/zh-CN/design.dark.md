@@ -30,8 +30,8 @@ locale_review:
 source:
   contract_path: "DESIGN.md"
   checksum_algorithm: "sha256"
-  checksum: "2a53ed7a94b4dba26f7fc114ad72f274a28f4cc644022b07cba3342f1b847a10"
-  input_set_checksum: "8d0dbad1f05ee01a9157c2309cfbbe5f913f583726a5dd8ad991ff375b478268"
+  checksum: "2578c442c8270e49dc62d72699cc70b2560737527540a408244af087442344e8"
+  input_set_checksum: "b8ddc79f336160e2fd7482ac7e53d5df4adc8cfed1552ba8bdbbf4f18aacaded"
   ref: "main"
   revision_status: "mutable"
 manifest_locator: "design-manifest.json"
@@ -214,6 +214,13 @@ motion:
   ease-enter: "cubic-bezier(0.16, 1, 0.3, 1)"
   ease-exit: "cubic-bezier(0.23, 1, 0.32, 1)"
   ease-standard: "cubic-bezier(0.2, 0, 0, 1)"
+material:
+  edge-highlight: "#ffffff08"
+  edge-highlight-strong: "#ffffff0d"
+  edge-contact: "#0000003d"
+  shadow-contact: "0 1px 2px rgba(0, 0, 0, 0.24)"
+  shadow-raised: "0 18px 48px rgba(0, 0, 0, 0.24), 0 2px 8px rgba(0, 0, 0, 0.20)"
+  shadow-floating: "0 18px 44px rgba(0, 0, 0, 0.42), 0 4px 14px rgba(0, 0, 0, 0.28)"
 component_recipes: null
 ---
 
@@ -224,7 +231,7 @@ component_recipes: null
 ## 状态与来源
 
 - 这份精简文件由当前 KIN 合同生成。它不是规范来源、不得直接编辑，也不能替代所链接的完整文档。
-- 合同校验和: `2a53ed7a94b4dba26f7fc114ad72f274a28f4cc644022b07cba3342f1b847a10`
+- 合同校验和: `2578c442c8270e49dc62d72699cc70b2560737527540a408244af087442344e8`
 - 已解析模式: `dark` / `normal`
 - 本地化文案审核: `reviewed`
 - 发布状态: `published-development`
@@ -262,6 +269,15 @@ component_recipes: null
 ## 表面与层级
 
 - 先用对齐、节奏、列、属性行、分隔线和细微表面差建立层级，再考虑增加容器。
+
+| 角色 | 解析值 |
+|---|---|
+| `edge-highlight` | `#ffffff08` |
+| `edge-highlight-strong` | `#ffffff0d` |
+| `edge-contact` | `#0000003d` |
+| `shadow-contact` | `0 1px 2px rgba(0, 0, 0, 0.24)` |
+| `shadow-raised` | `0 18px 48px rgba(0, 0, 0, 0.24), 0 2px 8px rgba(0, 0, 0, 0.20)` |
+| `shadow-floating` | `0 18px 44px rgba(0, 0, 0, 0.42), 0 4px 14px rgba(0, 0, 0, 0.28)` |
 
 ## 动效
 

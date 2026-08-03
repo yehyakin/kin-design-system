@@ -85,6 +85,7 @@ The project MUST write observable decisions, not adjectives:
 - `Signature punctuation`: any real reference index, decision edge, commit boundary, or recovery echo used to clarify the thread, plus the reason it exists.
 - `Product-family silhouette`: the composition that distinguishes this route as an information site, intelligence workspace, ecommerce operation, or engineering canvas.
 - `Surface strategy`: which boundaries deserve a Surface and which groups remain flat.
+- `Material hierarchy`: which regions remain continuous, which directional edges describe contact, which elements may use contact, raised, or floating roles, how all six public material Tokens map in Light and Dark, and which explicit borders replace them in Higher Contrast and Forced Colors.
 - `Density strategy`: what aligns into rows, columns, property lists, or shared controls.
 - `Semantic separation`: domain concepts that must not collapse into one score, Badge, or color.
 - `Motion model`: origin, direction, commitment, interruption, and Reduced Motion behavior.
@@ -124,6 +125,7 @@ Record the page-level shortcuts that would make the implementation fail even if 
 - invented metrics, sources, activity, AI output, or monitoring state;
 - a desktop layout merely scaled down for mobile;
 - a theme attribute that does not resolve the rendered theme and `color-scheme` together.
+- a local shadow scale, blanket Card elevation, glow, or atmospheric haze used instead of the KIN material roles.
 
 ### Evidence and approval
 
@@ -164,6 +166,7 @@ Signature punctuation:
 Product-family silhouette:
 Receding chrome:
 Surface and density strategy:
+Material hierarchy and Token mapping:
 Narrow-screen priority:
 Narrow-screen Context Thread transformation:
 Required states and interactions:

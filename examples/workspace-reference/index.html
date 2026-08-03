@@ -7,17 +7,22 @@
     <title>KIN 情报工作台示例</title>
     <script>
       (() => {
-        const savedTheme = localStorage.getItem("kin-reference-theme") || "system";
+        const params = new URLSearchParams(location.search);
+        const requestedTheme = params.get("theme");
+        const savedTheme = ["light", "dark", "system"].includes(requestedTheme)
+          ? requestedTheme
+          : localStorage.getItem("kin-reference-theme") || "system";
         const resolved = savedTheme === "system"
           ? (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")
           : savedTheme;
-        const locale = localStorage.getItem("kin-reference-locale") || "zh";
+        const requestedLocale = params.get("lang");
+        const locale = requestedLocale === "en" ? "en" : requestedLocale === "zh-CN" ? "zh" : localStorage.getItem("kin-reference-locale") || "zh";
         document.documentElement.dataset.theme = resolved;
         document.documentElement.dataset.themePreference = savedTheme;
         document.documentElement.dataset.locale = locale;
         document.documentElement.lang = locale === "zh" ? "zh-CN" : "en";
         document.documentElement.dataset.contrast = localStorage.getItem("kin-reference-contrast") === "more" ? "more" : "normal";
-        const requestedView = new URLSearchParams(location.search).get("view");
+        const requestedView = params.get("view");
         document.documentElement.dataset.workspaceView = ["risk-queue", "investigation"].includes(requestedView) ? requestedView : "entity";
       })();
     </script>
@@ -36,6 +41,10 @@
             <strong>KIN</strong>
             <small data-i18n="workspaceName">情报工作台</small>
           </span>
+          <div class="brand-actions" data-context-i18n-aria="workspaceActions">
+            <button type="button" class="icon-button" data-workspace-search data-i18n-aria="search"><i data-lucide="search"></i></button>
+            <button type="button" class="icon-button" data-context-toggle aria-controls="context-thread" aria-expanded="true" aria-label="Open context thread"><i data-lucide="square-pen"></i></button>
+          </div>
         </header>
 
         <nav class="primary-nav" data-i18n-aria="workspaceNav">
@@ -64,12 +73,21 @@
       <main id="workspace" class="workspace" tabindex="-1">
         <header class="workspace-bar">
           <div class="location-identity" data-i18n-aria="breadcrumb">
-            <span data-view="entity" data-i18n="database">记录库</span><span data-view="entity" aria-hidden="true">/</span><strong data-view="entity" aria-current="page" title="Alpha Network">Alpha Network</strong>
+            <strong data-view="entity" class="location-title" aria-current="page" title="Alpha Network">Alpha Network</strong>
+            <button type="button" class="location-favorite" data-view="entity" data-context-follow data-context-i18n-aria="follow"><i data-lucide="star"></i></button>
+            <button type="button" class="location-more" data-view="entity" data-context-more data-i18n-aria="moreActions"><i data-lucide="ellipsis"></i></button>
             <span data-view="investigation" data-i18n="investigations">调查记录</span><span data-view="investigation" aria-hidden="true">/</span><strong data-view="investigation" aria-current="page">INV-028</strong>
             <span data-view="risk-queue" data-i18n="signals">风险信号</span><span data-view="risk-queue" aria-hidden="true">/</span><strong data-view="risk-queue" aria-current="page" data-i18n="riskSavedView">高优先级待复核</strong>
           </div>
           <div class="workspace-actions">
-            <button type="button" class="search-button" data-i18n-aria="search">
+            <span class="record-position" data-view="entity"><strong>02</strong> / 145</span>
+            <button type="button" class="icon-button record-step" data-view="entity" data-context-i18n-aria="previousRecord"><i data-lucide="chevron-up"></i></button>
+            <button type="button" class="icon-button record-step" data-view="entity" data-context-i18n-aria="nextRecord"><i data-lucide="chevron-down"></i></button>
+            <span class="record-code" data-view="entity">PRX-1027</span>
+            <button type="button" class="icon-button mobile-search-action" data-workspace-search data-i18n-aria="search"><i data-lucide="search"></i></button>
+            <button type="button" class="icon-button" data-view="entity" data-context-copy data-context-i18n-aria="copyLink"><i data-lucide="link"></i></button>
+            <button type="button" class="icon-button" data-view="entity" data-context-scan data-context-i18n-aria="runScan"><i data-lucide="scan-line"></i></button>
+            <button type="button" class="search-button" data-workspace-search data-i18n-aria="search">
               <i data-lucide="search"></i><span data-i18n="search">搜索</span><kbd>⌘ K</kbd>
             </button>
             <button type="button" class="icon-label-button" data-inspector-open aria-controls="inspector" aria-expanded="true" data-i18n-aria="properties">
@@ -171,6 +189,11 @@
                 <p data-i18n="eventsDescription">变化按发生时间排列，结论与来源分开显示。</p>
               </div>
               <button type="button" class="text-button" data-i18n="viewAll">查看全部</button>
+            </div>
+
+            <div class="activity-system-log" data-context-i18n-aria="recordActivity">
+              <p><span class="activity-avatar activity-avatar--kin">K</span><span><strong>KIN</strong> <span data-context-i18n="createdRecord">根据公开来源创建了这条记录</span> · <time datetime="2026-07-12T14:24:00+08:00" data-context-i18n="twoMinutesAgo">2 分钟前</time></span></p>
+              <p><span class="activity-glyph"><i data-lucide="tag"></i></span><span><strong data-context-i18n="monitoringAgent">监测代理</strong> <span data-context-i18n="addedLabels">添加了“运行稳定”和“东亚”标签</span> · <time datetime="2026-07-12T14:24:00+08:00" data-context-i18n="twoMinutesAgo">2 分钟前</time></span></p>
             </div>
 
             <ol class="activity-list">
@@ -413,10 +436,15 @@
 
       <aside id="inspector" class="inspector" aria-labelledby="inspector-title" aria-hidden="false">
         <header>
+          <div data-view="entity" class="inspector-record-heading"><span>PRX-1027</span></div>
           <div data-view="entity"><span data-i18n="currentObject">当前记录</span><h2 id="inspector-title">Alpha Network</h2></div>
           <div data-view="investigation"><span data-i18n="investigationSelectedEvidence">选中证据</span><h2 id="investigation-inspector-title" data-investigation-inspector-title>EVT-318 · 证书签发者发生变化</h2></div>
           <div data-view="risk-queue"><span data-i18n="riskSelectedSignal">选中信号</span><h2 id="risk-inspector-title" data-risk-inspector-title>RSK-204 · Alpha Network</h2></div>
-          <button type="button" class="icon-button" data-inspector-close data-i18n-aria="closeInspector"><i data-lucide="x"></i></button>
+          <div class="inspector-header-actions">
+            <button type="button" class="icon-button" data-view="entity" data-context-copy data-context-i18n-aria="copyLink"><i data-lucide="link"></i></button>
+            <button type="button" class="icon-button" data-view="entity" data-context-toggle aria-controls="context-thread" aria-expanded="true" data-context-i18n-aria="openThread"><i data-lucide="git-pull-request-draft"></i></button>
+            <button type="button" class="icon-button" data-inspector-close data-i18n-aria="closeInspector"><i data-lucide="x"></i></button>
+          </div>
         </header>
 
         <div data-view="entity">
@@ -546,6 +574,78 @@
           </section>
         </div>
       </aside>
+
+      <dialog class="workspace-command" data-workspace-command aria-labelledby="workspace-command-title">
+        <div class="workspace-command__surface">
+          <header class="workspace-command__search">
+            <i data-lucide="search"></i>
+            <label class="visually-hidden" for="workspace-command-input" id="workspace-command-title" data-context-i18n="commandSearchLabel">搜索工作区</label>
+            <input id="workspace-command-input" type="search" data-workspace-command-input data-context-i18n-placeholder="commandSearchPlaceholder" placeholder="搜索记录或前往…" autocomplete="off" />
+            <kbd>Esc</kbd>
+          </header>
+          <div class="workspace-command__results" data-workspace-command-results>
+            <section>
+              <h2 data-context-i18n="recordsGroup">记录</h2>
+              <a href="#summary" class="workspace-command__item" data-workspace-command-item data-search-terms="alpha network prx-1027 record entity">
+                <i data-lucide="database"></i><span><strong>Alpha Network</strong><small>PRX-1027</small></span><kbd>↵</kbd>
+              </a>
+            </section>
+            <section>
+              <h2 data-context-i18n="navigateGroup">前往</h2>
+              <a href="./" class="workspace-command__item" data-workspace-command-item data-search-terms="entity database records"><i data-lucide="database"></i><span><strong data-i18n="database">记录库</strong><small data-context-i18n="databaseHint">浏览对象</small></span></a>
+              <a href="?view=investigation" class="workspace-command__item" data-workspace-command-item data-search-terms="investigations evidence"><i data-lucide="file-search"></i><span><strong data-i18n="investigations">调查记录</strong><small data-context-i18n="investigationHint">核对证据</small></span></a>
+              <a href="?view=risk-queue" class="workspace-command__item" data-workspace-command-item data-search-terms="risk signals review"><i data-lucide="triangle-alert"></i><span><strong data-i18n="signals">风险信号</strong><small data-context-i18n="riskHint">等待复核</small></span></a>
+              <a href="#activity" class="workspace-command__item" data-workspace-command-item data-search-terms="monitoring activity tasks"><i data-lucide="activity"></i><span><strong data-i18n="monitoring">监测任务</strong><small data-context-i18n="monitoringHint">最近活动</small></span></a>
+            </section>
+            <p class="workspace-command__empty" data-workspace-command-empty data-context-i18n="commandEmpty" hidden>没有匹配的记录或操作。</p>
+          </div>
+        </div>
+      </dialog>
+
+      <section id="context-thread" class="context-thread" data-view="entity" data-context-thread data-state="open" data-collapsed="false" data-expanded="false" aria-labelledby="context-thread-title">
+        <header class="context-thread__header">
+          <div class="context-thread__identity">
+            <span class="context-thread__mark" aria-hidden="true">K</span>
+            <strong id="context-thread-title">KIN</strong>
+            <span class="context-thread__model" data-context-i18n="reviewMode">复核</span>
+          </div>
+          <div class="context-thread__actions">
+            <button type="button" data-context-minimize data-context-i18n-aria="minimizeThread"><i data-lucide="minus"></i></button>
+            <button type="button" data-context-expand data-context-i18n-aria="expandThread"><i data-lucide="maximize-2"></i></button>
+            <button type="button" data-context-close data-context-i18n-aria="closeThread"><i data-lucide="x"></i></button>
+          </div>
+        </header>
+
+        <div class="context-thread__body" data-context-feed>
+          <p class="context-thread__connection"><span class="activity-avatar">YK</span><span><strong>Yehyakin</strong> <span data-context-i18n="connectedThread">将 KIN 连接到 PRX-1027</span></span></p>
+          <p class="context-thread__working" data-context-i18n="examiningRecord">正在核对最近的状态变化…</p>
+          <p class="context-thread__meta"><span data-context-i18n="workedFor">已检查 7 秒</span><i data-lucide="chevron-down"></i></p>
+          <div class="context-thread__result">
+            <p data-context-i18n="threadResult">已核对最近三条监测记录。官网和公开频道可访问；香港节点的延迟已恢复。</p>
+            <ul>
+              <li><code>monitor_runs</code> <span data-context-i18n="threadChangeOne">确认 HK-02 已恢复到 89ms</span></li>
+              <li><code>risk_signals</code> <span data-context-i18n="threadChangeTwo">保留“观察”状态，不提高风险等级</span></li>
+            </ul>
+          </div>
+          <article class="context-change-card">
+            <header><strong><span data-context-i18n="changedSources">已核对 3 个来源</span> <ins>+3</ins></strong><button type="button"><i data-lucide="scan-search"></i><span data-context-i18n="preview">预览</span></button></header>
+            <p><i data-lucide="git-pull-request-draft"></i><strong data-context-i18n="draftUpdate">状态摘要草稿已更新</strong></p>
+            <code>public sources ← PRX-1027</code>
+          </article>
+        </div>
+
+        <form class="context-composer" data-context-form>
+          <label class="visually-hidden" for="context-input" data-context-i18n="askLabel">询问当前记录</label>
+          <textarea id="context-input" rows="2" data-context-input data-context-i18n-placeholder="askPlaceholder" placeholder="询问下一步要核对什么…"></textarea>
+          <input type="file" data-context-file hidden />
+          <div class="context-composer__actions">
+            <button type="button" data-context-attach data-context-i18n-aria="attach"><i data-lucide="paperclip"></i></button>
+            <button type="submit" class="context-send" data-context-send data-context-i18n-aria="send"><i data-lucide="arrow-up"></i></button>
+          </div>
+        </form>
+      </section>
+
+      <button type="button" class="context-thread-launcher" data-view="entity" data-context-launcher data-context-toggle aria-controls="context-thread" aria-expanded="false" data-context-i18n-aria="openThread" hidden><span aria-hidden="true">K</span></button>
     </div>
 
     <div data-sonner-root></div>

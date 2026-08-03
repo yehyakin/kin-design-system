@@ -117,22 +117,22 @@
               role="tab"
               aria-controls="showcase-stage-panel"
               aria-selected="true"
-              data-scenario-stage-option="INT-02"
-              data-showcase-stage-reference="INT-02"
-              data-showcase-stage-lab="INT-02"
-              data-reference="../examples/workspace-reference/index.html?view=investigation&amp;lang=zh-CN&amp;state=normal"
-              data-lab="../scenarios/lab.html?scenario=INT-02&amp;state=normal&amp;viewport=wide&amp;theme=dark&amp;mode=present&amp;lang=zh-CN"
-              data-title="调查与证据复核"
-              data-job="在记录结论前比较时间顺序、来源、冲突与不确定性。"
+              data-scenario-stage-option="INT-01"
+              data-showcase-stage-reference="INT-01"
+              data-showcase-stage-lab="INT-01"
+              data-reference="../examples/workspace-reference/index.html?lang=zh-CN&amp;theme=dark"
+              data-lab="../scenarios/lab.html?scenario=INT-01&amp;state=normal&amp;viewport=wide&amp;theme=dark&amp;mode=present&amp;lang=zh-CN"
+              data-title="对象数据库复核"
+              data-job="选择对象，查看证据与属性，并完成可撤销的复核决定。"
               data-source="稳定"
               data-presentation="可预览"
-              data-entry="分析人员从队列或直接链接打开对象调查。"
-              data-dominant-region="证据与事件顺序。"
-              data-completion="分析人员记录可追溯的结论，或保持调查不变。"
-              data-boundary="本地样例未连接实时来源、权威权限服务或持久化结论。"
+              data-entry="分析人员从已保存的对象视图或深链接进入。"
+              data-dominant-region="对象列表与选中对象详情。"
+              data-completion="分析人员记录或退出复核决定，同时保留列表上下文。"
+              data-boundary="选择变化与复核决定可以交互，但尚未提供可直接访问的 URL 状态。"
               data-reference-language="中文预览"
-              data-ready-selector="[data-investigation]"
-              data-poster="../assets/posters/int-02-normal-dark.png"
+              data-ready-selector=".entity-content"
+              data-poster="../assets/posters/int-01-normal-dark.png"
             >情报</button>
             <button
               id="scenario-tab-commerce"
@@ -176,8 +176,8 @@
             >工程</button>
           </div>
           <div class="stage-toolbar-actions">
-            <span class="stage-language" data-stage-language><i data-lucide="languages"></i><span data-stage-language-text data-showcase-feature-language="INT-02">中文预览</span></span>
-            <a class="stage-lab-link" data-stage-lab-link data-showcase-lab-link data-showcase-feature-lab="INT-02" href="../scenarios/lab.html?scenario=INT-02&amp;state=normal&amp;viewport=wide&amp;theme=dark&amp;mode=present&amp;lang=zh-CN">在场景检查台中打开 <i data-lucide="arrow-up-right"></i></a>
+            <span class="stage-language" data-stage-language><i data-lucide="languages"></i><span data-stage-language-text data-showcase-feature-language="INT-01">中文预览</span></span>
+            <a class="stage-lab-link" data-stage-lab-link data-showcase-lab-link data-showcase-feature-lab="INT-01" href="../scenarios/lab.html?scenario=INT-01&amp;state=normal&amp;viewport=wide&amp;theme=dark&amp;mode=present&amp;lang=zh-CN">在场景检查台中打开 <i data-lucide="arrow-up-right"></i></a>
           </div>
         </header>
 
@@ -190,33 +190,33 @@
           <img
             class="stage-poster"
             data-stage-poster
-            src="../assets/posters/int-02-normal-dark.png"
+            src="../assets/posters/int-01-normal-dark.png"
             width="1180"
             height="760"
-            alt="KIN 调查工作台，显示证据时间线与核验状态。"
+            alt="KIN 对象工作台，显示对象记录、属性、活动和上下文复核线程。"
           >
           <div class="stage-loading" data-stage-loading role="status" aria-live="polite"><span aria-hidden="true"></span>正在准备交互预览</div>
           <iframe
             data-stage-frame
-            data-showcase-feature-reference="INT-02"
-            src="../examples/workspace-reference/index.html?view=investigation&amp;lang=zh-CN&amp;state=normal"
-            title="调查与证据复核交互预览"
+            data-showcase-feature-reference="INT-01"
+            src="../examples/workspace-reference/index.html?lang=zh-CN&amp;theme=dark"
+            title="对象数据库复核交互预览"
             scrolling="no"
           ></iframe>
         </div>
 
         <footer class="stage-caption">
           <div>
-            <p class="reference-code">INT-02 / 情报工作台</p>
-            <h2 id="stage-title" data-stage-title data-showcase-feature-name="INT-02">调查与证据复核</h2>
-            <p data-stage-job data-showcase-feature-job="INT-02">在记录结论前比较时间顺序、来源、冲突与不确定性。</p>
+            <p class="reference-code">INT-01 / 情报工作台</p>
+            <h2 id="stage-title" data-stage-title data-showcase-feature-name="INT-01">对象数据库复核</h2>
+            <p data-stage-job data-showcase-feature-job="INT-01">选择对象，查看证据与属性，并完成可撤销的复核决定。</p>
           </div>
           <details class="reference-disclosure">
             <summary>关于此预览</summary>
             <dl>
               <div><dt>来源</dt><dd data-stage-source>稳定</dd></div>
               <div><dt>预览</dt><dd data-stage-presentation>可预览</dd></div>
-              <div><dt>样例</dt><dd data-stage-boundary>本地样例未连接实时来源、权威权限服务或持久化结论。</dd></div>
+              <div><dt>样例</dt><dd data-stage-boundary>选择变化与复核决定可以交互，但尚未提供可直接访问的 URL 状态。</dd></div>
               <div><dt>验证</dt><dd>自动检查不能替代真实读屏、浏览器缩放和实体设备复核。</dd></div>
             </dl>
           </details>

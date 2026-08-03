@@ -23,7 +23,7 @@ Pre-release support is best effort. Breaking changes before `1.0.0` MUST include
 - Framework: React 18.2 or React 19.
 - Rendering: ESM-only subpath exports. CommonJS is not supported. Server rendering is supported only for adapters covered by the package SSR and `hydrateRoot` compatibility checks; browser-owned behavior begins after hydration.
 - Runtime floor: Node.js 20.11 or newer for package tooling and claimed server rendering.
-- Styling: a shared base plus optional per-integration CSS entries bound to KIN semantic Tokens. The full aggregate exists for the Integration Lab only. The package MUST NOT introduce a second theme system.
+- Styling: a shared base plus optional per-integration CSS entries bound to KIN semantic color, edge, elevation, radius, and motion Tokens. The full aggregate exists for the Integration Lab only. The package MUST NOT introduce a second theme or shadow system. Higher Contrast and Forced Colors MUST remove optical depth while preserving explicit boundaries.
 - Browsers: the same named modern-browser matrix used by KIN reference interfaces. Smoke coverage MUST NOT be reported as complete parity.
 - Accessibility: each adapter inherits the applicable KIN component contract and preserves upstream keyboard or assistive behavior unless a recorded KIN correction is required.
 - Localization: adapters accept product-owned labels. KIN MUST NOT ship embedded product copy as the only option.
@@ -79,7 +79,7 @@ KIN owns:
 
 - canonical component semantics and allowed use;
 - product-facing labels, error, recovery, and evidence boundaries;
-- semantic Token binding, themes, density, optical alignment, and responsive placement;
+- semantic Token binding, themes, global material roles, density, optical alignment, and responsive placement;
 - native Reduced Motion behavior where the upstream engine exposes it;
 - package subpaths, TypeScript adapters, tests, migration notes, and rollback;
 - bounded defaults that remove effects forbidden by KIN, such as decorative chart particles or false first-load counting.

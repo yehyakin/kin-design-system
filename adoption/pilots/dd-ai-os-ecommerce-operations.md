@@ -37,6 +37,7 @@ If generation, approval, publication, payment, quota, storage, or retry does not
 - **Persistent context:** product identity, source assets, draft/input state, durable task identity, selected result, and the existing navigation or URL context.
 - **Chrome behavior:** navigation and general metrics recede; task scope and safe next action remain clear.
 - **Surface strategy:** use a Surface for the current artifact, review boundary, modal task, or selected record; keep ordinary metadata, progress, activity, and properties flat.
+- **Material hierarchy:** catalog, operation, and property regions remain continuous; one current review or drag target may use contact, temporary approval and command layers use floating, embedded product frames may use raised, and Higher Contrast or Forced Colors replace subtle material with explicit boundaries.
 - **Density strategy:** product, channel, quantity, money, state, owner, and time align for comparison where they exist.
 - **Semantic separation:** AI confidence, task progress, approval, publication, payment/quota, storage, and result availability remain distinct.
 - **Motion model:** pending-to-result feedback reflects real task state; Dialog, Drawer, Toast, and result transitions preserve source, interruption, focus, and Reduced Motion outcomes.

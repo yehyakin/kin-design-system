@@ -55,7 +55,7 @@ import "@kin-design/react/styles/number-flow.css";
 
 `@kin-design/react/styles.css` is the full Integration Lab aggregate. It imports every adapter stylesheet and therefore requires all referenced optional peers. Product code SHOULD use the isolated paths instead.
 
-The styles consume product-owned semantic variables such as `--surface-*`, `--text-*`, `--line-*`, `--accent`, `--focus-ring`, `--radius-*`, and `--shadow-overlay`. They do not provide a second theme system.
+The styles consume product-owned semantic variables such as `--surface-*`, `--text-*`, `--line-*`, `--accent`, `--focus-ring`, `--radius-*`, `--edge-highlight`, `--edge-highlight-strong`, `--shadow-contact`, and `--shadow-floating`. They do not provide a second theme system. `--shadow-overlay` remains a compatibility fallback for older adopters; new mappings MUST use the semantic material roles from [`../../principles/material-hierarchy.md`](../../principles/material-hierarchy.md).
 
 ## Product-owned labels
 

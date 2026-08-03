@@ -26,7 +26,7 @@ const COUNT_SOURCES = Object.freeze({
 });
 
 const HOME_SCENARIO_IDS = Object.freeze(["INT-02", "INF-01", "COM-02", "ENG-01"]);
-const HOME_STAGE_SCENARIO_IDS = Object.freeze(["INT-02", "COM-02", "ENG-01"]);
+const HOME_STAGE_SCENARIO_IDS = Object.freeze(["INT-01", "COM-02", "ENG-01"]);
 
 const STATUS_COPY = Object.freeze({
   en: Object.freeze({
@@ -53,6 +53,16 @@ const STATUS_COPY = Object.freeze({
 
 const FEATURE_LOCALIZED_COPY = Object.freeze({
   "zh-CN": Object.freeze({
+    "INT-01": Object.freeze({
+      source_name: "Entity Database Review",
+      name: "对象数据库复核",
+      source_job: "Select an entity, inspect evidence and properties, and make a reversible decision.",
+      job: "选择对象，查看证据与属性，并完成可撤销的复核决定。",
+      entry: "分析人员从已保存的对象视图或深链接进入。",
+      dominant_region: "对象列表与选中对象详情。",
+      completion: "分析人员记录或退出复核决定，同时保留列表上下文。",
+      boundary: "选择变化与复核决定可以交互，但尚未提供可直接访问的 URL 状态。",
+    }),
     "INT-02": Object.freeze({
       source_name: "Investigation and Evidence Review",
       name: "调查与证据复核",
@@ -258,7 +268,7 @@ function injectCatalogBackedHomeFacts({ root, source, publicPath, locale, scenar
     }
   }
 
-  const featured = scenarios.get("INT-02");
+  const featured = scenarios.get("INT-01");
   const featuredCopy = localizedScenarioCopy(featured, locale, publicPath);
   const featuredReferenceLocale = scenarioReferenceLocale(root, featured, locale);
   source = replaceMarkedText(source, "data-showcase-feature-name", featured.id, featuredCopy.name, publicPath);

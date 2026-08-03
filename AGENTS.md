@@ -16,7 +16,7 @@ These instructions apply to the entire repository.
 ## Required reading
 
 1. Read `DESIGN.md` completely.
-2. Read `VISION.md`, `principles/visual-signature.md` and `principles/context-thread.md` before changing product direction, page composition, a complete workflow, showcase structure or visible KIN adoption requirements.
+2. Read `VISION.md`, `principles/visual-signature.md`, `principles/context-thread.md` and `principles/material-hierarchy.md` before changing product direction, page composition, a complete workflow, showcase structure, Surface hierarchy, edge treatment, elevation, shadow or visible KIN adoption requirements.
 3. Read `DELIVERY.md` and `adoption/implementation-brief.md` before changing adoption, Figma, runtime-package, generated-artifact or repository boundaries.
 4. Read `REFERENCES.md` before using external design claims or packages.
 5. Read `components/catalog.md` and `components/terminology.md` before adding, renaming or claiming completion of a component.

@@ -179,6 +179,25 @@ motion:
   ease-standard: "cubic-bezier(0.2, 0, 0, 1)"
   ease-enter: "cubic-bezier(0.16, 1, 0.3, 1)"
   ease-exit: "cubic-bezier(0.23, 1, 0.32, 1)"
+material:
+  dark-edge-highlight: "#ffffff08"
+  dark-edge-highlight-strong: "#ffffff0d"
+  dark-edge-contact: "#0000003d"
+  dark-shadow-contact: "0 1px 2px rgba(0, 0, 0, 0.24)"
+  dark-shadow-raised: "0 18px 48px rgba(0, 0, 0, 0.24), 0 2px 8px rgba(0, 0, 0, 0.20)"
+  dark-shadow-floating: "0 18px 44px rgba(0, 0, 0, 0.42), 0 4px 14px rgba(0, 0, 0, 0.28)"
+  light-edge-highlight: "#ffffffd6"
+  light-edge-highlight-strong: "#fffffff5"
+  light-edge-contact: "#262b341a"
+  light-shadow-contact: "0 1px 2px rgba(27, 35, 48, 0.09)"
+  light-shadow-raised: "0 18px 44px rgba(27, 35, 48, 0.11), 0 2px 8px rgba(27, 35, 48, 0.07)"
+  light-shadow-floating: "0 18px 42px rgba(27, 35, 48, 0.16), 0 4px 12px rgba(27, 35, 48, 0.10)"
+  contrast-edge-highlight: "#00000000"
+  contrast-edge-highlight-strong: "#00000000"
+  contrast-edge-contact: "#00000000"
+  contrast-shadow-contact: "none"
+  contrast-shadow-raised: "none"
+  contrast-shadow-floating: "none"
 components:
   app-shell-dark:
     backgroundColor: "{colors.dark-canvas}"
@@ -595,6 +614,17 @@ type ThemeSeed = {
   --line-default: rgba(255, 255, 255, 0.09);
   --line-strong: rgba(255, 255, 255, 0.15);
 
+  --edge-highlight: #ffffff08;
+  --edge-highlight-strong: #ffffff0d;
+  --edge-contact: #0000003d;
+  --shadow-contact: 0 1px 2px rgba(0, 0, 0, 0.24);
+  --shadow-raised:
+    0 18px 48px rgba(0, 0, 0, 0.24),
+    0 2px 8px rgba(0, 0, 0, 0.20);
+  --shadow-floating:
+    0 18px 44px rgba(0, 0, 0, 0.42),
+    0 4px 14px rgba(0, 0, 0, 0.28);
+
   --accent: #5e6ad2;
   --accent-hover: #626dcc;
   --accent-active: #515dbf;
@@ -642,6 +672,17 @@ type ThemeSeed = {
   --line-subtle: rgba(20, 22, 26, 0.06);
   --line-default: rgba(20, 22, 26, 0.10);
   --line-strong: rgba(20, 22, 26, 0.17);
+
+  --edge-highlight: #ffffffd6;
+  --edge-highlight-strong: #fffffff5;
+  --edge-contact: #262b341a;
+  --shadow-contact: 0 1px 2px rgba(27, 35, 48, 0.09);
+  --shadow-raised:
+    0 18px 44px rgba(27, 35, 48, 0.11),
+    0 2px 8px rgba(27, 35, 48, 0.07);
+  --shadow-floating:
+    0 18px 42px rgba(27, 35, 48, 0.16),
+    0 4px 12px rgba(27, 35, 48, 0.10);
 
   --accent: #5360c5;
   --accent-hover: #4653b7;
@@ -699,6 +740,12 @@ type ThemeSeed = {
   --text-secondary: #e1e4e8;
   --line-default: #747a86;
   --focus-ring: #a8b1ff;
+  --edge-highlight: #00000000;
+  --edge-highlight-strong: #00000000;
+  --edge-contact: #00000000;
+  --shadow-contact: none;
+  --shadow-raised: none;
+  --shadow-floating: none;
 }
 
 [data-theme="light"][data-contrast="more"] {
@@ -708,6 +755,12 @@ type ThemeSeed = {
   --text-secondary: #343840;
   --line-default: #6a707a;
   --focus-ring: #3946b8;
+  --edge-highlight: #00000000;
+  --edge-highlight-strong: #00000000;
+  --edge-contact: #00000000;
+  --shadow-contact: none;
+  --shadow-raised: none;
+  --shadow-floating: none;
 }
 ```
 
@@ -855,26 +908,46 @@ KIN 不依赖私有字体。优先复用产品已有的合法字体。
 - 新版界面应优先减少无意义分隔线，并软化保留的边界。
 - 区块结束可用留白替代 divider。
 
-### 6.3 阴影
+### 6.3 Material roles
 
-普通页面、表格、Inspector section 和 Sidebar 不使用外部阴影。
+KIN 使用少量、可组合的材质线索说明表面关系。它们不是装饰，也不是把所有区域抬成卡片：
 
-阴影只允许用于：
+| Role | 说明 | 允许场景 |
+|---|---|---|
+| `edge-highlight` | 表面朝向环境光的一条细微内侧边缘 | Shell 顶边、栏位顶边、选中表面 |
+| `edge-contact` | 相邻表面接触处的暗边 | Sidebar / Workspace / Inspector 的单向分界、Header 底边 |
+| `shadow-contact` | 紧贴表面的短距离接触阴影 | 当前选择、可拖动 overlay、被抬起的决策记录 |
+| `shadow-raised` | 独立框架与外部 Canvas 的环境分离 | 嵌入式 App Shell、独立工作区；全视口应用通常不使用 |
+| `shadow-floating` | 临时浮层与当前任务的明确空间分离 | Dialog、Command Menu、Popover、Toast、Drawer、浮动 Sidecar |
 
-- Dialog
-- Command menu
-- Popover / Context menu
-- Toast
-- 浮动 AI 面板
-- 移动端 Drawer
+普通正文、表格、属性组、Activity、Sidebar 和 Inspector section MUST NOT 单独使用外部阴影。相邻结构只使用一个方向的 edge cue；不得同时给四边添加亮边或暗边。
+
+材质组合 MUST 遵循以下顺序：
+
+1. 先用 Surface 明度与内容层级建立关系。
+2. 只有真实边界不够清楚时才增加 hairline 或单向 edge cue。
+3. 只有表面确实离开原层级时才增加对应 shadow role。
+4. Higher Contrast 与 Forced Colors 使用显式边界替代细微光影。
+
+参考组合：
 
 ```css
---shadow-floating:
-  0 16px 44px rgba(0, 0, 0, 0.22),
-  0 3px 10px rgba(0, 0, 0, 0.14);
+.kin-raised-region {
+  background: var(--surface-2);
+  box-shadow:
+    inset 0 1px 0 var(--edge-highlight),
+    var(--shadow-contact);
+}
+
+.kin-floating-surface {
+  background: var(--surface-3);
+  box-shadow:
+    inset 0 1px 0 var(--edge-highlight-strong),
+    var(--shadow-floating);
+}
 ```
 
-阴影必须小而紧，不得产生光晕。
+阴影必须紧凑、低噪音且没有彩色光晕。禁止用模糊黑影弥补错误的 Surface、排版、对齐或内容优先级。完整材质合同见 [`principles/material-hierarchy.md`](./principles/material-hierarchy.md)。
 
 ### 6.4 透明材质
 
@@ -1516,7 +1589,8 @@ Canvas 是主工作区；Sidebar 与 Inspector 服务画布，不与画布竞争
 - 当前任务是否是最清楚的视觉中心？
 - Sidebar 和辅助 chrome 是否主动退后？
 - 是否可以移除更多边线、图标、Badge 或容器？
-- 是否依赖阴影、渐变或颜色制造层级？
+- Surface、edge cue 与 elevation 是否对应真实结构，而不是平均分配给所有容器？
+- 是否用阴影、渐变、发光或更强颜色掩盖了错误的层级？
 - 日间是否变成白卡片墙？
 - 夜间是否变成纯黑霓虹大屏？
 - 中文小字是否清晰、紧凑但不拥挤？
@@ -1650,7 +1724,7 @@ KIN 的机器与接入输出包括以下九类：
 4. `kin-evidence.json`：记录接入映射、自动与人工验证、责任人、例外和生产观察；未执行的检查必须保持 `not-run`、`blocked` 或有理由的 `not-applicable`。
 5. `visualReview`：记录一个代表性生产流程、范围路由、可比基线与候选截图、评审环境、评审者和发现；缺少该记录时不得把接入状态提升为 `verified`。
 6. `scope.routeProfiles`：为混合产品记录路由族与 KIN 产品类型的映射，并标出一个代表性工作流。
-7. `kin-implementation-brief.md`：把真实任务、第一有效视图、主导区域、持续上下文、Surface、密度、移动优先级、状态、交互、禁止替代和回滚写成项目级构图合同。
+7. `kin-implementation-brief.md`：把真实任务、第一有效视图、主导区域、持续上下文、Surface、材质层级与主题映射、密度、移动优先级、状态、交互、禁止替代和回滚写成项目级构图合同。
 8. `generated/agent/next/`：从当前合同、Token、目录、产品类型和经过声明的本地化输入生成的精简快照与清单。它是不可编辑、非规范、可变的开发交付面，不是稳定版本、运行时组件、自动接入或视觉质量证明。
 9. `generated/agent/versions.json` 与 `generated/agent/versions/vX.Y.Z/`：记录经过门禁的不可变 Agent 版本、支持状态和稳定别名目标。归档只能在对应发布提交中创建一次；注册表晋升不得重写归档字节。
 

@@ -23,18 +23,24 @@ test("Figma export is a create-only Variables REST payload", () => {
   assert.match(dtcg.typography.body.$value.fontFamily, /PingFang SC/);
   assert.deepEqual(dtcg.motion["duration-fast"].$value, { value: 140, unit: "ms" });
   assert.deepEqual(dtcg.motion["ease-standard"].$value, [0.2, 0, 0, 1]);
+  assert.equal(dtcg.material["dark-edge-highlight"].$value.hex, "#ffffff08");
+  assert.equal(dtcg.material["dark-shadow-floating"].$value, "0 18px 44px rgba(0, 0, 0, 0.42), 0 4px 14px rgba(0, 0, 0, 0.28)");
   assert.match(tailwind, /--font-body: Inter, Geist, "SF Pro Text"/);
   assert.match(tailwind, /--duration-fast: 140ms/);
   assert.match(tailwind, /--ease-standard: cubic-bezier\(0\.2, 0, 0, 1\)/);
-  assert.equal(payload.variableCollections.length, 4);
+  assert.match(tailwind, /--shadow-floating: var\(--material-dark-shadow-floating\)/);
+  assert.equal(payload.variableCollections.length, 5);
   assert.ok(payload.variables.length > 40);
   assert.ok(payload.variableModeValues.length > payload.variables.length);
   assert.ok(payload.variableCollections.every((item) => item.action === "CREATE"));
   assert.ok(payload.variables.every((item) => item.action === "CREATE"));
   assert.ok(payload.variableModeValues.some((item) => item.modeId.includes("high_contrast")));
   assert.ok(payload.variableCollections.some((item) => item.name === "KIN Motion"));
+  assert.ok(payload.variableCollections.some((item) => item.name === "KIN Material"));
   assert.ok(payload.variables.some((item) => item.codeSyntax?.WEB === "--duration-fast" && item.resolvedType === "FLOAT"));
   assert.ok(payload.variables.some((item) => item.codeSyntax?.WEB === "--ease-standard" && item.resolvedType === "STRING"));
+  assert.ok(payload.variables.some((item) => item.codeSyntax?.WEB === "--edge-highlight" && item.resolvedType === "COLOR"));
+  assert.ok(payload.variables.some((item) => item.codeSyntax?.WEB === "--shadow-floating" && item.resolvedType === "STRING"));
 
   const collectionIds = new Set(payload.variableCollections.map((item) => item.id));
   const modeIds = new Set(payload.variableModes.map((item) => item.id));
@@ -98,6 +104,7 @@ test("adoption initializer is non-destructive and checker accepts a completed re
       "context-thread",
       "receding-chrome",
       "product-family-silhouette",
+      "material-hierarchy",
     ],
   );
   assert.match(

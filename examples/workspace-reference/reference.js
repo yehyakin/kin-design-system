@@ -1,7 +1,9 @@
 import {
   Activity,
+  ArrowUp,
   Check,
   ChevronDown,
+  ChevronUp,
   CirclePlay,
   Contrast,
   createIcons,
@@ -9,20 +11,27 @@ import {
   Ellipsis,
   ExternalLink,
   FileSearch,
+  GitPullRequestDraft,
   Languages,
   LayoutDashboard,
   Link,
   LoaderCircle,
+  Maximize2,
+  Minus,
   Moon,
+  Paperclip,
   Palette,
   PanelRight,
   Pause,
   RefreshCw,
   Save,
   ScanLine,
+  ScanSearch,
   Search,
+  SquarePen,
   Star,
   Sun,
+  Tag,
   TriangleAlert,
   X,
 } from "lucide";
@@ -53,7 +62,7 @@ const languageControl = document.querySelector("[data-language-control]");
 const languageTrigger = document.querySelector("[data-language-trigger]");
 const languageMenu = document.querySelector("[data-language-menu]");
 const localeButtons = [...document.querySelectorAll("[data-locale-value]")];
-const overlayLayout = matchMedia("(max-width: 1180px)");
+const overlayLayout = matchMedia("(max-width: 1100px)");
 const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
 const workspaceView = ["risk-queue", "investigation"].includes(root.dataset.workspaceView) ? root.dataset.workspaceView : "entity";
 const riskQueue = document.querySelector("[data-risk-queue]");
@@ -88,6 +97,7 @@ const riskLocationTitle = document.querySelector('.location-identity strong[data
 const riskScopeValue = document.querySelector('[data-risk-queue] [data-i18n="riskScopeValue"]');
 const riskStatePanels = [...document.querySelectorAll("[data-risk-state-panel]")];
 const riskScopeLinks = [...document.querySelectorAll("[data-risk-scope]")];
+let entityParityController;
 let sonnerModulePromise;
 const transientSurfaceCleanups = new WeakMap();
 
@@ -195,7 +205,7 @@ const copy = {
     healthy: "Healthy", operatingRecord: "Operating record", operatingValue: "6 years 3 months", completeness: "Data completeness",
     latestEvent: "Latest event", latestEventValue: "2 hours ago", statusSummary: "Status summary",
     statusSummaryDescription: "Based on the latest public data and monitoring result.", updatedAt: "Updated at 14:32",
-    summaryText: "The website and public channel are currently reachable. Two brief incidents were recorded in the past 30 days and both recovered; current evidence does not justify raising the risk level.",
+    summaryText: "The website and public channel are reachable. Two brief incidents in the past 30 days recovered; current evidence does not justify a higher risk level.",
     recentEvents: "Recent activity", eventsDescription: "Changes are ordered by time, with findings separated from sources.", viewAll: "View all",
     todayTime: "Today 09:42", eventOneTitle: "Hong Kong node latency recovered", eventOneBody: "HK-02 latency fell from 328ms to 89ms.",
     monitorSystem: "Monitoring system", yesterdayTime: "Yesterday 23:18", eventTwoTitle: "Maintenance notice published",
@@ -331,6 +341,7 @@ function translate(locale, persist = true) {
   const messages = copy[locale];
   root.dataset.locale = locale;
   root.lang = locale === "zh" ? "zh-CN" : "en";
+  entityParityController?.translate(locale);
   for (const element of document.querySelectorAll("[data-i18n]")) {
     const value = messages[element.dataset.i18n];
     if (value) element.textContent = value;
@@ -706,7 +717,7 @@ contrastToggle.addEventListener("click", () => {
   setLocationOverflow(false);
 });
 
-copyLocation.addEventListener("click", async () => {
+async function copyCurrentLocation() {
   try {
     await navigator.clipboard.writeText(location.href);
     locationStatus.textContent = copy[currentLocale()].copiedLink;
@@ -714,7 +725,9 @@ copyLocation.addEventListener("click", async () => {
     locationStatus.textContent = copy[currentLocale()].copyLinkFailed;
   }
   setLocationOverflow(false);
-});
+}
+
+copyLocation.addEventListener("click", copyCurrentLocation);
 
 function setLanguageMenu(open, moveFocus = true) {
   setTransientSurface(languageMenu, open, {
@@ -920,6 +933,7 @@ inspector.addEventListener("keydown", (event) => {
 });
 
 document.addEventListener("keydown", (event) => {
+  if (entityParityController?.handleKeydown(event)) return;
   if (event.key === "Escape" && transientIsOpen(languageMenu)) {
     setLanguageMenu(false);
   } else if (event.key === "Escape" && transientIsOpen(themeMenu)) {
@@ -1098,6 +1112,7 @@ overlayLayout.addEventListener("change", (event) => {
     investigationController.handleOverlayChange(event.matches);
     return;
   }
+  if (workspaceView === "entity" && event.matches) entityParityController?.setOpen(false, { moveFocus: false });
   const emptyRiskQueue = workspaceView === "risk-queue" && currentRiskState === "empty";
   setInspector(!event.matches && !emptyRiskQueue, false);
   if (workspaceView === "risk-queue") writeRiskUrl({ panel: false });
@@ -1160,6 +1175,15 @@ const initialInspectorReturnTarget = workspaceView === "risk-queue"
   : workspaceView === "investigation"
       ? investigationController.initialReturnTarget()
       : inspectorOpen;
+const { createEntityParityController } = await import("./entity-parity.js");
+entityParityController = createEntityParityController({
+  root,
+  reducedMotion,
+  overlayLayout,
+  showToast,
+  copyCurrentLocation,
+  locationOverflowTrigger,
+});
 setInspector(initialInspectorOpen, initialRiskPanelOpen || initialInvestigationPanelOpen, initialInspectorReturnTarget);
 translate(initialLocale, false);
 if (workspaceView === "risk-queue") writeRiskUrl({ panel: initialRiskPanelOpen });
@@ -1168,28 +1192,37 @@ if (workspaceView === "investigation") investigationController.writeUrl({ panel:
 createIcons({
   icons: {
     Activity,
+    ArrowUp,
     Check,
     ChevronDown,
+    ChevronUp,
     CirclePlay,
     Contrast,
     Database,
     Ellipsis,
     ExternalLink,
     FileSearch,
+    GitPullRequestDraft,
     Languages,
     LayoutDashboard,
     Link,
     LoaderCircle,
+    Maximize2,
+    Minus,
     Moon,
+    Paperclip,
     Palette,
     PanelRight,
     RefreshCw,
     Pause,
     Save,
     ScanLine,
+    ScanSearch,
     Search,
+    SquarePen,
     Star,
     Sun,
+    Tag,
     TriangleAlert,
     X,
   },

@@ -30,8 +30,8 @@ locale_review:
 source:
   contract_path: "DESIGN.md"
   checksum_algorithm: "sha256"
-  checksum: "2a53ed7a94b4dba26f7fc114ad72f274a28f4cc644022b07cba3342f1b847a10"
-  input_set_checksum: "8d0dbad1f05ee01a9157c2309cfbbe5f913f583726a5dd8ad991ff375b478268"
+  checksum: "2578c442c8270e49dc62d72699cc70b2560737527540a408244af087442344e8"
+  input_set_checksum: "b8ddc79f336160e2fd7482ac7e53d5df4adc8cfed1552ba8bdbbf4f18aacaded"
   ref: "main"
   revision_status: "mutable"
 manifest_locator: "design-manifest.json"
@@ -214,6 +214,13 @@ motion:
   ease-enter: "cubic-bezier(0.16, 1, 0.3, 1)"
   ease-exit: "cubic-bezier(0.23, 1, 0.32, 1)"
   ease-standard: "cubic-bezier(0.2, 0, 0, 1)"
+material:
+  edge-highlight: "#ffffff08"
+  edge-highlight-strong: "#ffffff0d"
+  edge-contact: "#0000003d"
+  shadow-contact: "0 1px 2px rgba(0, 0, 0, 0.24)"
+  shadow-raised: "0 18px 48px rgba(0, 0, 0, 0.24), 0 2px 8px rgba(0, 0, 0, 0.20)"
+  shadow-floating: "0 18px 44px rgba(0, 0, 0, 0.42), 0 4px 14px rgba(0, 0, 0, 0.28)"
 component_recipes: null
 ---
 
@@ -224,7 +231,7 @@ component_recipes: null
 ## Status and source
 
 - This compact file is generated from the current KIN contract. It is non-normative, must not be edited, and does not replace the linked source documents.
-- Contract checksum: `2a53ed7a94b4dba26f7fc114ad72f274a28f4cc644022b07cba3342f1b847a10`
+- Contract checksum: `2578c442c8270e49dc62d72699cc70b2560737527540a408244af087442344e8`
 - Resolved mode: `dark` / `normal`
 - Locale copy review: `reviewed`
 - Publication state: `published-development`
@@ -262,6 +269,15 @@ component_recipes: null
 ## Surface and elevation
 
 - Create hierarchy with alignment, rhythm, columns, property rows, dividers, and small surface steps before adding containers.
+
+| Role | Resolved value |
+|---|---|
+| `edge-highlight` | `#ffffff08` |
+| `edge-highlight-strong` | `#ffffff0d` |
+| `edge-contact` | `#0000003d` |
+| `shadow-contact` | `0 1px 2px rgba(0, 0, 0, 0.24)` |
+| `shadow-raised` | `0 18px 48px rgba(0, 0, 0, 0.24), 0 2px 8px rgba(0, 0, 0, 0.20)` |
+| `shadow-floating` | `0 18px 44px rgba(0, 0, 0, 0.42), 0 4px 14px rgba(0, 0, 0, 0.28)` |
 
 ## Motion
 

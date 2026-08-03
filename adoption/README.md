@@ -2,7 +2,7 @@
 
 KIN is a design contract, not a package that should silently rewrite a product. Adoption starts by pinning a reviewed contract version, choosing the closest product profile, and recording local paths, delivery boundaries, evidence, owners, and exceptions. The core delivery decision is defined in [`DELIVERY.md`](../DELIVERY.md).
 
-Adoption is not complete when a project only maps Tokens, creates wrapper components, or builds a design lab. Page and workflow work MUST also follow the [`KIN visual signature`](../principles/visual-signature.md) and map the applicable [`Context Thread`](../principles/context-thread.md).
+Adoption is not complete when a project only maps Tokens, creates wrapper components, or builds a design lab. Page and workflow work MUST also follow the [`KIN visual signature`](../principles/visual-signature.md), map the applicable [`Context Thread`](../principles/context-thread.md), and allocate the global [`material hierarchy`](../principles/material-hierarchy.md) to real containment, contact, overlap, and travel.
 
 ## Start
 
@@ -23,7 +23,7 @@ The command creates four files only when they do not already exist:
 
 It does not copy UI, install dependencies, change routes, or edit source code. Every generated evidence check begins as `not-run`; the implementation brief begins as `draft`; the initializer never fabricates a decision or pass result. Use `--force` only after reviewing the existing files.
 
-The implementation brief follows [`implementation-brief.md`](./implementation-brief.md). A consuming Agent MUST complete its product truth, route/profile map, representative workflow, composition contract, required states and interactions, prohibited substitutions, evidence, and rollback before changing the representative workflow.
+The implementation brief follows [`implementation-brief.md`](./implementation-brief.md). A consuming Agent MUST complete its product truth, route/profile map, representative workflow, composition contract, material mapping, required states and interactions, prohibited substitutions, evidence, and rollback before changing the representative workflow.
 
 Copy the exact reviewed KIN release of `DESIGN.md` to the configured local contract path. Pinning a release avoids a consuming project changing behavior merely because KIN's `main` branch moved.
 

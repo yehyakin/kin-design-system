@@ -185,7 +185,7 @@
   border: 1px solid var(--line-strong);
   border-radius: 7px;
   background: var(--surface-3);
-  box-shadow: var(--shadow);
+  box-shadow: inset 0 1px 0 var(--edge-highlight-strong), var(--shadow-floating);
   opacity: 0;
   pointer-events: none;
   transform: translateY(-4px) scale(.985);
@@ -605,7 +605,7 @@
   border-radius: 10px;
   background: var(--surface-3);
   color: var(--text);
-  box-shadow: var(--shadow);
+  box-shadow: inset 0 1px 0 var(--edge-highlight-strong), var(--shadow-floating);
   opacity: 0;
   transform: translateY(6px) scale(.985);
   transition: opacity 160ms var(--ease), transform 200ms var(--ease);
@@ -2663,7 +2663,7 @@
   border: 1px solid var(--line-strong);
   border-radius: 5px;
   background: var(--surface-3);
-  box-shadow: var(--shadow);
+  box-shadow: inset 0 1px 0 var(--edge-highlight-strong), var(--shadow-floating);
   color: var(--text);
   content: attr(data-nav-label);
   font-size: 11px;
@@ -3315,7 +3315,7 @@
     right: 0;
     bottom: 0;
     width: min(330px, calc(100vw - 48px));
-    box-shadow: var(--shadow);
+    box-shadow: inset 1px 0 0 var(--edge-highlight-strong), var(--shadow-floating);
   }
 
   .schedule-shell[data-sidecar-open="true"] .schedule-sidecar {

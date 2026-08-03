@@ -2,7 +2,7 @@
 
 Status: normative
 
-This contract defines comparable records, hierarchical data, properties, status, identity, and loading placeholders. It supplements [`DESIGN.md`](../DESIGN.md), [`core-states.md`](./core-states.md), and the applicable product pattern.
+This contract defines comparable records, hierarchical data, properties, status, identity, and loading placeholders. It supplements [`DESIGN.md`](../DESIGN.md), [`material-hierarchy.md`](../principles/material-hierarchy.md), [`core-states.md`](./core-states.md), and the applicable product pattern.
 
 ## Shared rules
 
@@ -54,6 +54,7 @@ Use List when records share a reading pattern but column comparison is secondary
 - Optional actions MAY appear on hover but MUST remain keyboard and touch accessible.
 - Selection, stale state, and source failure MUST preserve object identity.
 - Opening an Inspector MUST not reset sort, filter, scroll, or selection.
+- Rows remain flat by default. One selected or currently acted-on row MAY use the contact role; repeated ambient row shadows and four-sided highlights are prohibited.
 
 ## Tree View
 

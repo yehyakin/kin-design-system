@@ -2,7 +2,7 @@
 
 Status: normative
 
-This contract defines Dialog, Drawer, Popover, Menu, Tooltip, Hover Card, scrim, focus containment, stacking, and mobile adaptation. It supplements [`DESIGN.md`](../DESIGN.md), [`navigation-and-disclosure.md`](./navigation-and-disclosure.md), and [`micro-interactions.md`](./micro-interactions.md).
+This contract defines Dialog, Drawer, Popover, Menu, Tooltip, Hover Card, scrim, focus containment, stacking, and mobile adaptation. It supplements [`DESIGN.md`](../DESIGN.md), [`material-hierarchy.md`](../principles/material-hierarchy.md), [`navigation-and-disclosure.md`](./navigation-and-disclosure.md), and [`micro-interactions.md`](./micro-interactions.md).
 
 ## Choosing an overlay
 
@@ -112,7 +112,9 @@ When drag-to-dismiss or snap points are implemented:
 ## Themes, contrast, and motion
 
 - Overlay boundaries and focus MUST remain clear in light, dark, and higher-contrast themes.
-- Surface and border establish depth; shadow is secondary and MUST not glow.
+- Dialog, Command Menu, Popover, Context Menu, Toast, modal Drawer, and other true temporary overlays use a solid Surface, an explicit border, `--edge-highlight-strong`, and `--shadow-floating` unless the product documents a stricter platform treatment.
+- Surface and border establish depth; shadow is secondary, neutral, and MUST not glow.
+- Higher Contrast and Forced Colors MUST remove subtle highlights and shadows and replace them with explicit system-visible boundaries.
 - Motion MUST be interruptible and spatially consistent.
 - Reduced motion MUST replace large translation or scale with immediate state change or short crossfade.
 - Opening motion MUST NOT delay focus or block input.

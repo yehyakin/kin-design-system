@@ -449,6 +449,7 @@ export function validateAgentDistribution({
     typography: Object.keys(metadata.typography),
     spacing: Object.keys(metadata.spacing),
     rounded: Object.keys(metadata.rounded),
+    material: Object.keys(metadata.material),
     motion: Object.keys(metadata.motion),
   })));
   if (snapshots.length > 0 && sharedTokenShapes.size !== 1) findings.push("snapshots: non-color Token key sets differ across modes or locales");

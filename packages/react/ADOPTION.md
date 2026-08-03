@@ -40,7 +40,7 @@ import "@kin-design/react/styles/base.css";
 import "@kin-design/react/styles/sonner.css";
 ```
 
-The stylesheets consume semantic variables including `--surface-*`, `--text-*`, `--line-*`, `--accent`, `--focus-ring`, `--radius-*`, and `--shadow-overlay`. The project MUST map those names to its reviewed Token source; the package MUST NOT become a second theme provider.
+The stylesheets consume semantic variables including `--surface-*`, `--text-*`, `--line-*`, `--accent`, `--focus-ring`, `--radius-*`, `--edge-highlight`, `--edge-highlight-strong`, `--shadow-contact`, and `--shadow-floating`. The project MUST map those names to its reviewed Token source; the package MUST NOT become a second theme provider. `--shadow-overlay` is a compatibility fallback for older adopters, not the new source of truth. Higher Contrast and Forced Colors MUST resolve subtle material roles to transparent or none and retain explicit boundaries.
 
 `@kin-design/react/styles.css` is the full Integration Lab aggregate. It imports every integration stylesheet and requires all corresponding optional peers. Product code SHOULD NOT use it when evaluating one or two subpaths.
 

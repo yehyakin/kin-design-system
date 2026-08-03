@@ -2,7 +2,7 @@
 
 Status: normative
 
-This contract defines contextual notices, temporary feedback, loading, progress, and recovery. It supplements [`DESIGN.md`](../DESIGN.md), [`micro-interactions.md`](./micro-interactions.md), and [`integrations/sonner.md`](../integrations/sonner.md).
+This contract defines contextual notices, temporary feedback, loading, progress, and recovery. It supplements [`DESIGN.md`](../DESIGN.md), [`material-hierarchy.md`](../principles/material-hierarchy.md), [`micro-interactions.md`](./micro-interactions.md), and [`integrations/sonner.md`](../integrations/sonner.md).
 
 ## Feedback ownership
 
@@ -25,6 +25,7 @@ Use Inline Alert for a condition that affects the surrounding section or task.
 - It SHOULD remain visible until the condition resolves or the user dismisses a genuinely dismissible notice.
 - Critical validation or recovery guidance MUST NOT be dismissible before resolution.
 - Multiple alerts SHOULD be consolidated by scope rather than stacked repeatedly.
+- Inline Alerts remain in the surrounding continuous plane or use the contact role when their scope needs a local edge. They MUST NOT use floating elevation by default.
 
 ## Banner
 
@@ -34,6 +35,7 @@ Use Banner for a page-wide, workspace-wide, account-wide, or service-wide condit
 - It MUST not push critical controls off screen without an equivalent compact state.
 - Persistent banners SHOULD remember dismissal only when the underlying condition permits dismissal.
 - A banner MUST not be used as promotional chrome inside a task surface.
+- A Banner remains part of the page or workspace plane and MUST NOT cast an ambient floating shadow.
 
 ## Toast
 
@@ -46,6 +48,7 @@ Use Toast for a concise result of a user-initiated action when the relevant cont
 - Updating tasks SHOULD update one Toast rather than create a sequence of duplicates.
 - No more than three Toasts SHOULD be visible at once.
 - Toast content MUST be announced without moving keyboard focus.
+- Toast is a true floating layer and SHOULD use a solid Surface, explicit border, `--edge-highlight-strong`, and `--shadow-floating`.
 
 ## Progress Indicator
 
@@ -96,6 +99,7 @@ Use Spinner only for compact, indeterminate waits where preserving the current l
 
 - Severity and progress MUST remain legible in light, dark, and higher-contrast themes.
 - Reduced transparency MUST replace translucent Toast or Banner surfaces with solid surfaces.
+- Higher Contrast and Forced Colors MUST remove subtle material highlights and shadows and retain explicit borders or outlines.
 - Reduced motion MUST stop shimmer, rotation, looping path animation, and celebratory motion.
 - Progress may update instantly under reduced motion; status text and numeric values MUST remain.
 

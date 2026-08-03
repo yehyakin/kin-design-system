@@ -1,4 +1,5 @@
 import { compareCodePoints } from "./canonical-content.mjs";
+import { resolveThemeMaterial } from "../material-tokens.mjs";
 
 export const THEME_KEYS = Object.freeze([
   "canvas", "sidebar",
@@ -78,3 +79,5 @@ export function resolveSharedTokens(tokens) {
 
   return { typography, spacing, rounded, motion };
 }
+
+export { resolveThemeMaterial };

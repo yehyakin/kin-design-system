@@ -4,6 +4,7 @@ import path from "node:path";
 import process from "node:process";
 import { fileURLToPath } from "node:url";
 import { contractChecksum } from "./contract-checksum.mjs";
+import { requiredVisualCriteriaForVersion } from "./lib/visual-criteria.mjs";
 
 const args = process.argv.slice(2);
 const profiles = new Set(["information-site", "intelligence-workspace", "ecommerce-operations", "engineering-canvas"]);
@@ -271,6 +272,8 @@ Profile starting point: ${profileGuidance[profile]}
 - Product-family silhouette: TODO
 - Receding chrome behavior: TODO
 - Surface strategy: TODO
+- Material hierarchy (continuous planes, directional edges, permitted contact/raised/floating layers): TODO
+- Material Token mapping (Light, Dark, Higher Contrast, Forced Colors): TODO
 - Density and alignment strategy: TODO
 - Semantic concepts that must remain separate: TODO
 - Motion model and Reduced Motion alternative: TODO
@@ -292,12 +295,14 @@ Profile starting point: ${profileGuidance[profile]}
 - Invented metrics, sources, monitoring, AI output, or activity.
 - A desktop layout merely scaled down for mobile.
 - A theme attribute that does not resolve the rendered theme and color-scheme together.
+- A local shadow scale, blanket Card elevation, glow, or atmospheric haze used instead of KIN material roles.
 - Project-specific failure patterns: TODO
 
 ## Evidence, rollout, and approval
 
 - Baseline routes, states, viewports, and artifact locations: TODO
 - Candidate routes, states, viewports, and artifact locations: TODO
+- Comparable Light, Dark, Higher Contrast, and Forced Colors depth views: TODO
 - Product/design approver: TODO
 - Visual-signature reviewer: TODO
 - Rollout and rollback: TODO
@@ -319,20 +324,7 @@ const manualChecks = [
   ["screen-reader", ""],
 ];
 
-const visualCriteria = [
-  "task-first",
-  "dominant-region",
-  "continuous-structure",
-  "density-without-repetition",
-  "semantic-separation",
-  "theme-integrity",
-  "motion-continuity",
-  "responsive-priority",
-  "no-fabricated-data-or-behavior",
-  "context-thread",
-  "receding-chrome",
-  "product-family-silhouette",
-];
+const visualCriteria = requiredVisualCriteriaForVersion(version);
 
 const evidence = {
   $schema: "https://raw.githubusercontent.com/yehyakin/kin-design-system/main/adoption/kin.evidence.schema.json",

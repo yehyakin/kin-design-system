@@ -113,7 +113,7 @@ Use Pagination when a dataset is divided into stable pages and users need locati
 - Disclosure motion MUST originate from the controlled region and remain interruptible.
 - Anchored Menu motion SHOULD use a short opacity change with no more than a few pixels of travel from the trigger origin; it MUST NOT bounce, overshoot, or delay focus.
 - Reduced motion MUST use immediate state change or short opacity change without sliding large regions.
-- Menu and Tooltip shadows MUST remain secondary to surface and border structure.
+- Menu and Tooltip material MUST follow [`material-hierarchy.md`](../principles/material-hierarchy.md): true temporary surfaces use the floating role, while current navigation may use contact only when needed. Shadows remain secondary to Surface and border structure and disappear in Higher Contrast and Forced Colors.
 
 ## Acceptance
 

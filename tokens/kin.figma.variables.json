@@ -27,6 +27,13 @@
       "name": "KIN Motion",
       "initialModeId": "kin_kin_motion_collection_mode_default",
       "hiddenFromPublishing": false
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_material_collection",
+      "name": "KIN Material",
+      "initialModeId": "kin_kin_material_collection_mode_light",
+      "hiddenFromPublishing": false
     }
   ],
   "variableModes": [
@@ -71,6 +78,30 @@
       "id": "kin_kin_motion_collection_mode_default",
       "name": "Default",
       "variableCollectionId": "kin_motion_collection"
+    },
+    {
+      "action": "UPDATE",
+      "id": "kin_kin_material_collection_mode_light",
+      "name": "Light",
+      "variableCollectionId": "kin_material_collection"
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_material_collection_mode_dark",
+      "name": "Dark",
+      "variableCollectionId": "kin_material_collection"
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_material_collection_mode_light_high_contrast",
+      "name": "Light High Contrast",
+      "variableCollectionId": "kin_material_collection"
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_material_collection_mode_dark_high_contrast",
+      "name": "Dark High Contrast",
+      "variableCollectionId": "kin_material_collection"
     }
   ],
   "variables": [
@@ -1404,6 +1435,78 @@
       "hiddenFromPublishing": false,
       "codeSyntax": {
         "WEB": "--ease-exit"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_material_collection_variable_material_edge_highlight",
+      "name": "Material/edge highlight",
+      "resolvedType": "COLOR",
+      "variableCollectionId": "kin_material_collection",
+      "description": "Theme-resolved KIN material edge color.",
+      "hiddenFromPublishing": false,
+      "codeSyntax": {
+        "WEB": "--edge-highlight"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_material_collection_variable_material_edge_highlight_strong",
+      "name": "Material/edge highlight strong",
+      "resolvedType": "COLOR",
+      "variableCollectionId": "kin_material_collection",
+      "description": "Theme-resolved KIN material edge color.",
+      "hiddenFromPublishing": false,
+      "codeSyntax": {
+        "WEB": "--edge-highlight-strong"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_material_collection_variable_material_edge_contact",
+      "name": "Material/edge contact",
+      "resolvedType": "COLOR",
+      "variableCollectionId": "kin_material_collection",
+      "description": "Theme-resolved KIN material edge color.",
+      "hiddenFromPublishing": false,
+      "codeSyntax": {
+        "WEB": "--edge-contact"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_material_collection_variable_material_shadow_contact",
+      "name": "Material/shadow contact",
+      "resolvedType": "STRING",
+      "variableCollectionId": "kin_material_collection",
+      "description": "CSS shadow recipe for the resolved KIN material role; this is a Variable string, not a published Figma Effect Style.",
+      "hiddenFromPublishing": false,
+      "codeSyntax": {
+        "WEB": "--shadow-contact"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_material_collection_variable_material_shadow_raised",
+      "name": "Material/shadow raised",
+      "resolvedType": "STRING",
+      "variableCollectionId": "kin_material_collection",
+      "description": "CSS shadow recipe for the resolved KIN material role; this is a Variable string, not a published Figma Effect Style.",
+      "hiddenFromPublishing": false,
+      "codeSyntax": {
+        "WEB": "--shadow-raised"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "kin_kin_material_collection_variable_material_shadow_floating",
+      "name": "Material/shadow floating",
+      "resolvedType": "STRING",
+      "variableCollectionId": "kin_material_collection",
+      "description": "CSS shadow recipe for the resolved KIN material role; this is a Variable string, not a published Figma Effect Style.",
+      "hiddenFromPublishing": false,
+      "codeSyntax": {
+        "WEB": "--shadow-floating"
       }
     }
   ],
@@ -2997,6 +3100,186 @@
       "variableId": "kin_kin_motion_collection_variable_motion_ease_exit",
       "modeId": "kin_kin_motion_collection_mode_default",
       "value": "cubic-bezier(0.23, 1, 0.32, 1)"
+    },
+    {
+      "variableId": "kin_kin_material_collection_variable_material_edge_highlight",
+      "modeId": "kin_kin_material_collection_mode_light",
+      "value": {
+        "r": 1,
+        "g": 1,
+        "b": 1,
+        "a": 0.8392156862745098
+      }
+    },
+    {
+      "variableId": "kin_kin_material_collection_variable_material_edge_highlight",
+      "modeId": "kin_kin_material_collection_mode_dark",
+      "value": {
+        "r": 1,
+        "g": 1,
+        "b": 1,
+        "a": 0.03137254901960784
+      }
+    },
+    {
+      "variableId": "kin_kin_material_collection_variable_material_edge_highlight",
+      "modeId": "kin_kin_material_collection_mode_light_high_contrast",
+      "value": {
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "a": 0
+      }
+    },
+    {
+      "variableId": "kin_kin_material_collection_variable_material_edge_highlight",
+      "modeId": "kin_kin_material_collection_mode_dark_high_contrast",
+      "value": {
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "a": 0
+      }
+    },
+    {
+      "variableId": "kin_kin_material_collection_variable_material_edge_highlight_strong",
+      "modeId": "kin_kin_material_collection_mode_light",
+      "value": {
+        "r": 1,
+        "g": 1,
+        "b": 1,
+        "a": 0.9607843137254902
+      }
+    },
+    {
+      "variableId": "kin_kin_material_collection_variable_material_edge_highlight_strong",
+      "modeId": "kin_kin_material_collection_mode_dark",
+      "value": {
+        "r": 1,
+        "g": 1,
+        "b": 1,
+        "a": 0.050980392156862744
+      }
+    },
+    {
+      "variableId": "kin_kin_material_collection_variable_material_edge_highlight_strong",
+      "modeId": "kin_kin_material_collection_mode_light_high_contrast",
+      "value": {
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "a": 0
+      }
+    },
+    {
+      "variableId": "kin_kin_material_collection_variable_material_edge_highlight_strong",
+      "modeId": "kin_kin_material_collection_mode_dark_high_contrast",
+      "value": {
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "a": 0
+      }
+    },
+    {
+      "variableId": "kin_kin_material_collection_variable_material_edge_contact",
+      "modeId": "kin_kin_material_collection_mode_light",
+      "value": {
+        "r": 0.14901960784313725,
+        "g": 0.16862745098039217,
+        "b": 0.20392156862745098,
+        "a": 0.10196078431372549
+      }
+    },
+    {
+      "variableId": "kin_kin_material_collection_variable_material_edge_contact",
+      "modeId": "kin_kin_material_collection_mode_dark",
+      "value": {
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "a": 0.23921568627450981
+      }
+    },
+    {
+      "variableId": "kin_kin_material_collection_variable_material_edge_contact",
+      "modeId": "kin_kin_material_collection_mode_light_high_contrast",
+      "value": {
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "a": 0
+      }
+    },
+    {
+      "variableId": "kin_kin_material_collection_variable_material_edge_contact",
+      "modeId": "kin_kin_material_collection_mode_dark_high_contrast",
+      "value": {
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "a": 0
+      }
+    },
+    {
+      "variableId": "kin_kin_material_collection_variable_material_shadow_contact",
+      "modeId": "kin_kin_material_collection_mode_light",
+      "value": "0 1px 2px rgba(27, 35, 48, 0.09)"
+    },
+    {
+      "variableId": "kin_kin_material_collection_variable_material_shadow_contact",
+      "modeId": "kin_kin_material_collection_mode_dark",
+      "value": "0 1px 2px rgba(0, 0, 0, 0.24)"
+    },
+    {
+      "variableId": "kin_kin_material_collection_variable_material_shadow_contact",
+      "modeId": "kin_kin_material_collection_mode_light_high_contrast",
+      "value": "none"
+    },
+    {
+      "variableId": "kin_kin_material_collection_variable_material_shadow_contact",
+      "modeId": "kin_kin_material_collection_mode_dark_high_contrast",
+      "value": "none"
+    },
+    {
+      "variableId": "kin_kin_material_collection_variable_material_shadow_raised",
+      "modeId": "kin_kin_material_collection_mode_light",
+      "value": "0 18px 44px rgba(27, 35, 48, 0.11), 0 2px 8px rgba(27, 35, 48, 0.07)"
+    },
+    {
+      "variableId": "kin_kin_material_collection_variable_material_shadow_raised",
+      "modeId": "kin_kin_material_collection_mode_dark",
+      "value": "0 18px 48px rgba(0, 0, 0, 0.24), 0 2px 8px rgba(0, 0, 0, 0.20)"
+    },
+    {
+      "variableId": "kin_kin_material_collection_variable_material_shadow_raised",
+      "modeId": "kin_kin_material_collection_mode_light_high_contrast",
+      "value": "none"
+    },
+    {
+      "variableId": "kin_kin_material_collection_variable_material_shadow_raised",
+      "modeId": "kin_kin_material_collection_mode_dark_high_contrast",
+      "value": "none"
+    },
+    {
+      "variableId": "kin_kin_material_collection_variable_material_shadow_floating",
+      "modeId": "kin_kin_material_collection_mode_light",
+      "value": "0 18px 42px rgba(27, 35, 48, 0.16), 0 4px 12px rgba(27, 35, 48, 0.10)"
+    },
+    {
+      "variableId": "kin_kin_material_collection_variable_material_shadow_floating",
+      "modeId": "kin_kin_material_collection_mode_dark",
+      "value": "0 18px 44px rgba(0, 0, 0, 0.42), 0 4px 14px rgba(0, 0, 0, 0.28)"
+    },
+    {
+      "variableId": "kin_kin_material_collection_variable_material_shadow_floating",
+      "modeId": "kin_kin_material_collection_mode_light_high_contrast",
+      "value": "none"
+    },
+    {
+      "variableId": "kin_kin_material_collection_variable_material_shadow_floating",
+      "modeId": "kin_kin_material_collection_mode_dark_high_contrast",
+      "value": "none"
     }
   ]
 }

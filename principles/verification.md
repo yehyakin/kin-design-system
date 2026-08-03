@@ -44,6 +44,17 @@ The 200% reflow proxy is an automated approximation. A release that claims brows
 
 Cross-browser smoke tests MAY be narrower than the Chromium suite. The scope MUST be named, and a passing smoke test MUST NOT be reported as complete browser parity.
 
+## Material hierarchy verification
+
+A change to Surface, Edge, Elevation, shell composition, overlays, selection, or temporary feedback MUST verify the global material contract in [`material-hierarchy.md`](./material-hierarchy.md), not only the edited reference page.
+
+- Normal Light and Dark screenshots MUST include at least one continuous plane, one contact treatment, one raised bounded region, and one floating surface when those roles exist in the workflow.
+- Review MUST confirm that `--edge-highlight`, `--edge-highlight-strong`, `--edge-contact`, `--shadow-contact`, `--shadow-raised`, and `--shadow-floating` resolve from the shared Token source rather than a route-local shadow scale.
+- Higher Contrast and Forced Colors outcomes MUST remove optical shadow depth and retain readable boundaries through explicit borders, separation, text, and structure.
+- Baseline and candidate screenshots MUST use the same route, viewport, content fixture, theme, contrast, and state. A comparison with different content or a showcase-only poster is not adoption evidence.
+- A floating surface MUST remain visually separable from its parent without glow, blur haze, gradient atmosphere, or blanket shadows on every card.
+- A consuming product MUST record any local material exception, owner, reason, affected routes, and removal or review condition.
+
 ## Motion verification
 
 Normal-motion and reduced-motion behavior MUST be tested separately.
@@ -183,6 +194,7 @@ Each consuming product SHOULD maintain a dated record using this structure:
 - Automated commands:
 - Browsers and viewports:
 - Theme and contrast modes:
+- Material roles and local exceptions:
 - Normal/reduced motion:
 - 200% browser zoom:
 - Long-content locale:
@@ -220,6 +232,7 @@ Do not write:
 - Normal and reduced motion have distinct checks.
 - Chromium regression and Firefox/WebKit smoke coverage are named.
 - Narrow viewport, long content, RTL, contrast, Forced Colors, and reflow evidence are recorded where applicable.
+- Global material roles are checked in representative product structure, with optical shadows removed and structural boundaries retained in Higher Contrast and Forced Colors.
 - Required manual screen-reader and real browser-zoom work is not represented as automated.
 - Screenshots and traces are review artifacts, not the sole accessibility evidence.
 - Findings include owners and follow-up rather than being hidden to preserve a pass result.

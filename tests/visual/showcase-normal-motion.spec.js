@@ -23,7 +23,7 @@ test("Showcase stages keep restrained normal motion and settle rapid replacement
   await expect(tabs.nth(1)).toHaveAttribute("aria-selected", "true");
   await expect(homeStage.getByRole("tabpanel")).toHaveAttribute("aria-labelledby", "scenario-tab-investigation");
   await expect(homeStage).toHaveAttribute("data-stage-ready", "true", { timeout: 10_000 });
-  await expect(page.frameLocator("[data-scenario-stage] iframe").locator("[data-investigation]")).toBeVisible();
+  await expect(page.frameLocator("[data-scenario-stage] iframe").locator(".entity-content")).toBeVisible();
   await homeStage.evaluate((element) => {
     window.__kinKeyboardStageTransitions = [];
     for (const target of element.querySelectorAll("iframe, [data-stage-loading], [data-stage-poster]")) {
