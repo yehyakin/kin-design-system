@@ -170,6 +170,7 @@
     "typography",
     "spacing",
     "rounded",
+    "material",
     "motion",
     "component_recipes"
   ],
@@ -566,6 +567,9 @@
       "$ref": "#/$defs/tokenObject"
     },
     "motion": {
+      "$ref": "#/$defs/tokenObject"
+    },
+    "material": {
       "$ref": "#/$defs/tokenObject"
     },
     "component_recipes": {

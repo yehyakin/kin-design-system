@@ -48,6 +48,7 @@ Replace every `unassigned` value in the consuming product. This template MUST NO
 - Persistent context:
 - Chrome behavior:
 - Surface strategy:
+- Material hierarchy and Light/Dark/contrast Token mapping:
 - Density strategy:
 - Semantic separation:
 - Motion model:
@@ -74,6 +75,9 @@ Each artifact cell records its locator, source revision, and capture date. `Data
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | Primary task |  | Light / normal |  |  |  | not-run |  |
 | Primary task |  | Dark / normal |  |  |  | not-run |  |
+| Primary task depth |  | Light / higher contrast |  |  |  | not-run |  |
+| Primary task depth |  | Dark / higher contrast |  |  |  | not-run |  |
+| Primary task depth |  | Forced Colors |  |  |  | not-run |  |
 | Narrow-screen priority |  | Light or Dark / normal |  |  |  | not-run |  |
 | Applicable failure or recovery state |  |  |  |  |  | not-run |  |
 
@@ -88,6 +92,7 @@ Each artifact cell records its locator, source revision, and capture date. `Data
 | Task appears before explanation | not-run |  |
 | One region owns attention | not-run |  |
 | Structure is continuous | not-run |  |
+| Material roles match real containment, contact, overlap, and travel | not-run |  |
 | Density removes repetition | not-run |  |
 | Semantics remain separate | not-run |  |
 | Light and Dark retain hierarchy | not-run |  |

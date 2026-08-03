@@ -2,6 +2,11 @@ import fs from "node:fs";
 import path from "node:path";
 import process from "node:process";
 import { contractChecksum } from "./contract-checksum.mjs";
+import {
+  isKin3OrLater,
+  kin3VisualCriteria,
+  requiredVisualCriteriaForVersion,
+} from "./lib/visual-criteria.mjs";
 
 const args = process.argv.slice(2);
 const jsonOutput = args.includes("--json");
@@ -17,22 +22,6 @@ const mappingStates = new Set(["pending", "mapped", "verified", "not-applicable"
 const automatedStates = new Set(["not-run", "passed", "failed", "blocked"]);
 const manualStates = new Set(["not-run", "passed", "failed", "blocked", "not-applicable"]);
 const visualCriterionStates = new Set(["not-run", "passed", "failed", "not-applicable"]);
-const baseVisualCriteria = [
-  "task-first",
-  "dominant-region",
-  "continuous-structure",
-  "density-without-repetition",
-  "semantic-separation",
-  "theme-integrity",
-  "motion-continuity",
-  "responsive-priority",
-  "no-fabricated-data-or-behavior",
-];
-const kin3VisualCriteria = [
-  "context-thread",
-  "receding-chrome",
-  "product-family-silhouette",
-];
 const requiredBriefHeadings = [
   "Product truth",
   "Route and profile map",
@@ -43,15 +32,6 @@ const requiredBriefHeadings = [
   "Evidence, rollout, and approval",
 ];
 let evidenceStatus = null;
-
-function requiredVisualCriteriaForVersion(version) {
-  const major = Number.parseInt(String(version).split(".")[0], 10);
-  return major >= 3 ? [...baseVisualCriteria, ...kin3VisualCriteria] : baseVisualCriteria;
-}
-
-function isKin3OrLater(version) {
-  return Number.parseInt(String(version).split(".")[0], 10) >= 3;
-}
 
 function validateEvidence(evidence, config, evidenceFile) {
   if (evidence.kinVersion !== config.kinVersion) errors.push(`${evidenceFile}: kinVersion must match kin.config.json.`);

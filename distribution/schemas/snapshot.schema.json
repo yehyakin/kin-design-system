@@ -67,7 +67,7 @@
   },
   "type": "object",
   "additionalProperties": false,
-  "required": ["kind", "schema_version", "schema_locator", "generated", "normative", "artifact_status", "editable", "publication", "kin_version", "release_status", "latest_stable_contract", "channel", "locale", "direction", "theme", "contrast", "coverage", "features", "locale_review", "source", "manifest_locator", "full_contract_path", "visual_signature_path", "delivery_contract_path", "product_profiles", "rules", "colors", "typography", "spacing", "rounded", "motion", "component_recipes"],
+  "required": ["kind", "schema_version", "schema_locator", "generated", "normative", "artifact_status", "editable", "publication", "kin_version", "release_status", "latest_stable_contract", "channel", "locale", "direction", "theme", "contrast", "coverage", "features", "locale_review", "source", "manifest_locator", "full_contract_path", "visual_signature_path", "delivery_contract_path", "product_profiles", "rules", "colors", "typography", "spacing", "rounded", "material", "motion", "component_recipes"],
   "allOf": [
     {
       "oneOf": [
@@ -211,6 +211,7 @@
     "spacing": {"$ref": "#/$defs/tokenObject"},
     "rounded": {"$ref": "#/$defs/tokenObject"},
     "motion": {"$ref": "#/$defs/tokenObject"},
+    "material": {"$ref": "#/$defs/tokenObject"},
     "component_recipes": {"type": "null"}
   }
 }

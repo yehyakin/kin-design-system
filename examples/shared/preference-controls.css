@@ -92,7 +92,7 @@
   border: 1px solid var(--line-strong);
   border-radius: 8px;
   background: var(--surface-3);
-  box-shadow: var(--shadow);
+  box-shadow: inset 0 1px 0 var(--edge-highlight-strong), var(--shadow-floating);
   opacity: 0;
   pointer-events: none;
   transform: translateY(-4px) scale(0.985);

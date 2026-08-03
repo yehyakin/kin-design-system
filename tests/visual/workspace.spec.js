@@ -215,42 +215,38 @@ test("workspace localizes controls and loads Sonner on demand", async ({ page })
   await page.locator("[data-language-trigger]").click();
   await page.locator('[data-locale-value="en"]').click();
   await expect(page.locator("html")).toHaveAttribute("lang", "en");
-  await expect(page.getByText("Current status", { exact: true })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Recent activity", level: 2 })).toBeVisible();
 
-  await page.locator('[data-toast="follow"]').click();
+  await page.locator("[data-context-follow]").click();
   await expect(page.locator("[data-sonner-toast]")).toBeVisible();
   expect(await page.evaluate(() => performance.getEntriesByType("resource").some(({ name }) => name.includes("sonner-island")))).toBe(true);
 });
 
 test("workspace demonstrates button motion and Sonner result patterns", async ({ page }) => {
-  await seedPreferences(page, "dark", "normal", "en");
+  await seedPreferences(page, "dark", "normal", "zh");
   await page.setViewportSize({ width: 1440, height: 900 });
-  await page.goto("/examples/workspace-reference/");
+  await page.goto("/examples/workspace-reference/motion.html");
 
-  const toggle = page.locator("[data-motion-toggle]");
-  await expect(toggle).toContainText("Pause monitoring");
-  await expect(toggle.locator(".paired-icon-default")).toBeVisible();
+  const toggle = page.locator("[data-lab-toggle]");
+  await expect(toggle).toContainText("开始同步");
+  await expect(toggle.locator('[data-icon-state="default"]')).toBeVisible();
   await toggle.focus();
   await page.keyboard.press("Space");
   await expect(toggle).toHaveAttribute("aria-pressed", "true");
-  await expect(toggle).toContainText("Resume monitoring");
-  await expect(toggle.locator(".paired-icon-active")).toBeVisible();
+  await expect(toggle).toContainText("暂停同步");
+  await expect(toggle.locator('[data-icon-state="active"]')).toBeVisible();
 
-  const asyncButton = page.locator("[data-motion-async]");
+  const asyncButton = page.locator("[data-lab-async]");
   await asyncButton.hover();
-  await expect(asyncButton).not.toHaveClass(/is-success/);
+  await expect(asyncButton).not.toHaveAttribute("data-control-state", "success");
   await asyncButton.click();
-  await expect(asyncButton).toHaveClass(/is-loading/);
-  await expect(asyncButton).toHaveClass(/is-success/, { timeout: 2_000 });
-  await expect(page.getByText("View saved", { exact: true })).toBeVisible();
+  await expect(asyncButton).toHaveAttribute("data-control-state", "pending");
+  await expect(asyncButton).toHaveAttribute("data-control-state", "success", { timeout: 2_000 });
+  await expect(page.getByText("布局已保存", { exact: true })).toBeVisible();
 
-  await page.locator("[data-motion-task]").click();
-  await expect(page.getByText("Creating export task", { exact: true })).toBeVisible();
-  await expect(page.getByText("Export task created", { exact: true })).toBeVisible({ timeout: 2_000 });
-
-  await page.locator('[data-toast="error"]').click();
-  await expect(page.getByText("Request failed", { exact: true })).toBeVisible();
-  await expect(page.getByRole("button", { name: "Retry" })).toBeVisible();
+  await page.locator("[data-lab-task]").click();
+  await expect(page.getByText("正在创建导出任务", { exact: true })).toBeVisible();
+  await expect(page.getByText("导出任务已创建", { exact: true })).toBeVisible({ timeout: 2_000 });
 });
 
 test("workspace mobile and inspector behavior", async ({ page }, testInfo) => {

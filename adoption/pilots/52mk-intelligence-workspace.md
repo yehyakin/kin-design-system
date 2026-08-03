@@ -35,6 +35,7 @@ If the repository does not support this end-to-end task, keep the brief `draft` 
 - **Persistent context:** query, filters, saved view, selection, scroll position, current entity identity, and shareable URL where the product supports them.
 - **Chrome behavior:** global navigation and secondary actions recede after location is understood.
 - **Surface strategy:** list, property rows, evidence rows, and Activity remain continuous; Surface marks selection, overlay, or a real task boundary.
+- **Material hierarchy:** Sidebar, Workspace, Inspector, lists, and Activity remain continuous planes with at most one directional edge per responsibility boundary; only the current decision may use contact, temporary overlays use floating, and Higher Contrast or Forced Colors replace subtle material with explicit borders.
 - **Density strategy:** repeated entity facts align in columns or property rows rather than repeated cards.
 - **Semantic separation:** risk, evidence confidence, data completeness, online health, monitor state, and AI confidence remain independent.
 - **Motion model:** row selection and Inspector/Drawer continuity preserve origin, direction, interruption, focus, and the same Reduced Motion result.

@@ -11,7 +11,6 @@
   --surface-selected: var(--selected);
   --surface-overlay: color-mix(in srgb, var(--canvas) 78%, transparent);
   --focus-ring: color-mix(in srgb, var(--accent) 75%, transparent);
-  --shadow-overlay: var(--shadow);
   --radius-sm: 5px;
   --radius-md: 7px;
   --radius-lg: 10px;

@@ -151,3 +151,71 @@
   --ease-enter: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-exit: cubic-bezier(0.23, 1, 0.32, 1);
 }
+
+:root {
+  --material-dark-edge-highlight: #ffffff08;
+  --material-dark-edge-highlight-strong: #ffffff0d;
+  --material-dark-edge-contact: #0000003d;
+  --material-dark-shadow-contact: 0 1px 2px rgba(0, 0, 0, 0.24);
+  --material-dark-shadow-raised: 0 18px 48px rgba(0, 0, 0, 0.24), 0 2px 8px rgba(0, 0, 0, 0.20);
+  --material-dark-shadow-floating: 0 18px 44px rgba(0, 0, 0, 0.42), 0 4px 14px rgba(0, 0, 0, 0.28);
+  --material-light-edge-highlight: #ffffffd6;
+  --material-light-edge-highlight-strong: #fffffff5;
+  --material-light-edge-contact: #262b341a;
+  --material-light-shadow-contact: 0 1px 2px rgba(27, 35, 48, 0.09);
+  --material-light-shadow-raised: 0 18px 44px rgba(27, 35, 48, 0.11), 0 2px 8px rgba(27, 35, 48, 0.07);
+  --material-light-shadow-floating: 0 18px 42px rgba(27, 35, 48, 0.16), 0 4px 12px rgba(27, 35, 48, 0.10);
+  --material-contrast-edge-highlight: #00000000;
+  --material-contrast-edge-highlight-strong: #00000000;
+  --material-contrast-edge-contact: #00000000;
+  --material-contrast-shadow-contact: none;
+  --material-contrast-shadow-raised: none;
+  --material-contrast-shadow-floating: none;
+}
+
+[data-theme="dark"] {
+  --edge-highlight: var(--material-dark-edge-highlight);
+  --edge-highlight-strong: var(--material-dark-edge-highlight-strong);
+  --edge-contact: var(--material-dark-edge-contact);
+  --shadow-contact: var(--material-dark-shadow-contact);
+  --shadow-raised: var(--material-dark-shadow-raised);
+  --shadow-floating: var(--material-dark-shadow-floating);
+}
+
+[data-theme="light"] {
+  --edge-highlight: var(--material-light-edge-highlight);
+  --edge-highlight-strong: var(--material-light-edge-highlight-strong);
+  --edge-contact: var(--material-light-edge-contact);
+  --shadow-contact: var(--material-light-shadow-contact);
+  --shadow-raised: var(--material-light-shadow-raised);
+  --shadow-floating: var(--material-light-shadow-floating);
+}
+
+[data-contrast="more"] {
+  --edge-highlight: var(--material-contrast-edge-highlight);
+  --edge-highlight-strong: var(--material-contrast-edge-highlight-strong);
+  --edge-contact: var(--material-contrast-edge-contact);
+  --shadow-contact: var(--material-contrast-shadow-contact);
+  --shadow-raised: var(--material-contrast-shadow-raised);
+  --shadow-floating: var(--material-contrast-shadow-floating);
+}
+
+@media (forced-colors: active) {
+
+  :root {
+
+    --edge-highlight: transparent;
+
+    --edge-highlight-strong: transparent;
+
+    --edge-contact: transparent;
+
+    --shadow-contact: none;
+
+    --shadow-raised: none;
+
+    --shadow-floating: none;
+
+  }
+
+}

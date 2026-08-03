@@ -89,7 +89,7 @@
   border-radius: 10px;
   background: var(--surface-3);
   color: var(--text);
-  box-shadow: var(--shadow);
+  box-shadow: inset 0 1px 0 var(--edge-highlight-strong), var(--shadow-floating);
 }
 .command-dialog::backdrop { background: rgb(0 0 0 / 0.48); }
 .command-dialog header { display: flex; align-items: center; justify-content: space-between; min-height: 44px; padding: 0 10px 0 14px; border-bottom: 1px solid var(--line); }

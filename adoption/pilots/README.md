@@ -18,7 +18,7 @@ The product-specific briefs contain candidate workflows, not claims about curren
 
 1. **Pin the contract.** Use the exact KIN commit containing the reviewed pilot pack. Do not use moving `main` as production evidence.
 2. **Audit only.** Inspect the product repository, run the KIN evidence collector or adoption initializer when authorized, and identify the real representative route. Do not change product code in this step.
-3. **Complete the local brief.** Resolve product truth, route/profile mapping, first meaningful view, dominant region, persistent context, state matrix, runtime decisions, narrow-screen order, evidence locations, and rollback.
+3. **Complete the local brief.** Resolve product truth, route/profile mapping, first meaningful view, dominant region, persistent context, material hierarchy, state matrix, runtime decisions, narrow-screen order, evidence locations, and rollback.
 4. **Obtain human approval.** An Agent MAY mark the brief `ready`; only a named human product or design owner may mark it `approved`.
 5. **Capture the baseline.** Record the same realistic content, state, theme, viewport, and task that will be used for the candidate comparison.
 6. **Implement only after product-repository authorization.** Preserve routes, data meaning, permissions, analytics, backend behavior, and existing mature runtime engines unless the approved brief changes them.
@@ -54,7 +54,7 @@ The KIN repository does not collect product credentials, private source, custome
 ## Evidence boundary
 
 - A generated Snapshot, copied Token file, component lab, or successful build is delivery evidence, not a successful pilot.
-- `verified` requires an approved implementation brief, comparable baseline and candidate evidence, all required visual-signature criteria resolved, and the applicable automated and manual checks.
+- `verified` requires an approved implementation brief, comparable baseline and candidate evidence, all required visual-signature and material-hierarchy criteria resolved, and the applicable automated and manual checks.
 - `production-observed` additionally requires a dated product revision, observation owner, evidence location, and rollback.
 - Screen-reader, real browser-zoom, physical-touch, cross-browser, performance, and production claims remain `not-run`, `blocked`, or `not verified` until matching evidence exists.
 

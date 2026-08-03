@@ -117,22 +117,22 @@
               role="tab"
               aria-controls="showcase-stage-panel"
               aria-selected="true"
-              data-scenario-stage-option="INT-02"
-              data-showcase-stage-reference="INT-02"
-              data-showcase-stage-lab="INT-02"
-              data-reference="examples/workspace-reference/index.html?view=investigation&amp;lang=en&amp;state=normal"
-              data-lab="scenarios/lab.html?scenario=INT-02&amp;state=normal&amp;viewport=wide&amp;theme=dark&amp;mode=present"
-              data-title="Investigation and Evidence Review"
-              data-job="Compare chronology, sources, conflicts, and uncertainty before recording a finding."
+              data-scenario-stage-option="INT-01"
+              data-showcase-stage-reference="INT-01"
+              data-showcase-stage-lab="INT-01"
+              data-reference="examples/workspace-reference/index.html?lang=en&amp;theme=dark"
+              data-lab="scenarios/lab.html?scenario=INT-01&amp;state=normal&amp;viewport=wide&amp;theme=dark&amp;mode=present"
+              data-title="Entity Database Review"
+              data-job="Select an entity, inspect evidence and properties, and make a reversible decision."
               data-source="Stable"
               data-presentation="Showcased"
-              data-entry="An analyst opens an entity investigation from a queue or direct URL."
-              data-dominant-region="Evidence and event chronology."
-              data-completion="The analyst records an attributable finding or leaves the investigation unchanged."
-              data-boundary="The local fixture has no live sources, authoritative permission service, or durable finding record."
+              data-entry="An analyst opens a saved entity view or deep link."
+              data-dominant-region="Entity list and selected detail."
+              data-completion="The analyst records or exits a review decision without losing list context."
+              data-boundary="Selection changes and review decisions are interactive but are not URL-addressable fixtures yet."
               data-reference-language="English reference"
-              data-ready-selector="[data-investigation]"
-              data-poster="assets/posters/int-02-normal-dark.png"
+              data-ready-selector=".entity-content"
+              data-poster="assets/posters/int-01-normal-dark.png"
             >Intelligence</button>
             <button
               id="scenario-tab-commerce"
@@ -176,8 +176,8 @@
             >Engineering</button>
           </div>
           <div class="stage-toolbar-actions">
-            <span class="stage-language" data-stage-language><i data-lucide="languages"></i><span data-stage-language-text data-showcase-feature-language="INT-02">English reference</span></span>
-            <a class="stage-lab-link" data-stage-lab-link data-showcase-lab-link data-showcase-feature-lab="INT-02" href="scenarios/lab.html?scenario=INT-02&amp;state=normal&amp;viewport=wide&amp;theme=dark&amp;mode=present">Open in Lab <i data-lucide="arrow-up-right"></i></a>
+            <span class="stage-language" data-stage-language><i data-lucide="languages"></i><span data-stage-language-text data-showcase-feature-language="INT-01">English reference</span></span>
+            <a class="stage-lab-link" data-stage-lab-link data-showcase-lab-link data-showcase-feature-lab="INT-01" href="scenarios/lab.html?scenario=INT-01&amp;state=normal&amp;viewport=wide&amp;theme=dark&amp;mode=present">Open in Lab <i data-lucide="arrow-up-right"></i></a>
           </div>
         </header>
 
@@ -190,33 +190,33 @@
           <img
             class="stage-poster"
             data-stage-poster
-            src="assets/posters/int-02-normal-dark.png"
+            src="assets/posters/int-01-normal-dark.png"
             width="1180"
             height="760"
-            alt="KIN investigation workspace showing an evidence chronology and verification states."
+            alt="KIN entity workspace showing an entity record, properties, activity, and contextual review thread."
           >
           <div class="stage-loading" data-stage-loading role="status" aria-live="polite"><span aria-hidden="true"></span>Preparing the reference</div>
           <iframe
             data-stage-frame
-            data-showcase-feature-reference="INT-02"
-            src="examples/workspace-reference/index.html?view=investigation&amp;lang=en&amp;state=normal"
-            title="Investigation and Evidence Review reference"
+            data-showcase-feature-reference="INT-01"
+            src="examples/workspace-reference/index.html?lang=en&amp;theme=dark"
+            title="Entity Database Review reference"
             scrolling="no"
           ></iframe>
         </div>
 
         <footer class="stage-caption">
           <div>
-            <p class="reference-code">INT-02 / Intelligence workspace</p>
-            <h2 id="stage-title" data-stage-title data-showcase-feature-name="INT-02">Investigation and Evidence Review</h2>
-            <p data-stage-job data-showcase-feature-job="INT-02">Compare chronology, sources, conflicts, and uncertainty before recording a finding.</p>
+            <p class="reference-code">INT-01 / Intelligence workspace</p>
+            <h2 id="stage-title" data-stage-title data-showcase-feature-name="INT-01">Entity Database Review</h2>
+            <p data-stage-job data-showcase-feature-job="INT-01">Select an entity, inspect evidence and properties, and make a reversible decision.</p>
           </div>
           <details class="reference-disclosure">
             <summary>About this reference</summary>
             <dl>
               <div><dt>Source</dt><dd data-stage-source>Stable</dd></div>
               <div><dt>Presentation</dt><dd data-stage-presentation>Showcased</dd></div>
-              <div><dt>Fixture</dt><dd data-stage-boundary>The local fixture has no live sources, authoritative permission service, or durable finding record.</dd></div>
+              <div><dt>Fixture</dt><dd data-stage-boundary>Selection changes and review decisions are interactive but are not URL-addressable fixtures yet.</dd></div>
               <div><dt>Verification</dt><dd>Automated reference checks do not replace a real screen-reader, browser-zoom, or physical-device review.</dd></div>
             </dl>
           </details>

@@ -124,10 +124,10 @@ test("English and Chinese roots lead with a catalog-backed workflow", async ({ p
       lang: "en",
       title: "KIN Showcase — Design rules and runnable references",
       heading: "Interfaces for consequential work.",
-      workflow: "Investigation and Evidence Review",
-      job: "Compare chronology, sources, conflicts, and uncertainty before recording a finding.",
+      workflow: "Entity Database Review",
+      job: "Select an entity, inspect evidence and properties, and make a reversible decision.",
       tabs: ["Information", "Intelligence", "Ecommerce", "Engineering"],
-      reference: "examples/workspace-reference/index.html?view=investigation&lang=en&state=normal",
+      reference: "examples/workspace-reference/index.html?lang=en",
       source: "Stable",
     },
     {
@@ -135,10 +135,10 @@ test("English and Chinese roots lead with a catalog-backed workflow", async ({ p
       lang: "zh-CN",
       title: "KIN 设计系统 — 规则、组件与交互预览",
       heading: "为关键工作构建界面。",
-      workflow: "调查与证据复核",
-      job: "在记录结论前比较时间顺序、来源、冲突与不确定性。",
+      workflow: "对象数据库复核",
+      job: "选择对象，查看证据与属性，并完成可撤销的复核决定。",
       tabs: ["信息", "情报", "电商", "工程"],
-      reference: "../examples/workspace-reference/index.html?view=investigation&lang=zh-CN&state=normal",
+      reference: "../examples/workspace-reference/index.html?lang=zh-CN",
       source: "稳定",
     },
   ];
@@ -165,6 +165,7 @@ test("English and Chinese roots lead with a catalog-backed workflow", async ({ p
     await expect(frame).toHaveAttribute("src", locale.reference);
     await expect(workflow).toHaveAttribute("data-stage-ready", "true", { timeout: 10_000 });
     await expect(workflow.locator("[data-stage-loading]")).toBeHidden();
+    await expect(workflow.locator("[data-stage-frame]").contentFrame().locator("html")).toHaveAttribute("data-theme", "dark");
     await expect(workflow.locator("[data-preview-activate], [data-preview-deactivate]")).toHaveCount(0);
     await expect(page.locator(".context-atlas > a")).toHaveCount(4);
     await expect(disclosure).not.toHaveAttribute("open", "");
@@ -222,7 +223,7 @@ test("home stage auto-loads and keyboard tabs replace the live reference", async
     releaseCommerceReference = resolve;
   });
 
-  await page.route("**/examples/workspace-reference/index.html?view=investigation*", async (route) => {
+  await page.route("**/examples/workspace-reference/index.html?lang=en", async (route) => {
     await initialReferenceGate;
     await route.continue();
   });
@@ -240,7 +241,7 @@ test("home stage auto-loads and keyboard tabs replace the live reference", async
   await expect(loader).toBeVisible();
   await expect(frame).toHaveAttribute(
     "src",
-    "examples/workspace-reference/index.html?view=investigation&lang=en&state=normal",
+    "examples/workspace-reference/index.html?lang=en",
   );
   await expect(stage.locator("[data-stage-language-text]")).toHaveText("English reference");
   await expect(stage.locator("[data-preview-activate], [data-preview-deactivate]")).toHaveCount(0);
@@ -248,7 +249,7 @@ test("home stage auto-loads and keyboard tabs replace the live reference", async
   releaseInitialReference();
   await expect(stage).toHaveAttribute("data-stage-ready", "true", { timeout: 10_000 });
   await expect(loader).toBeHidden();
-  await expect(page.frameLocator("[data-stage-frame]").locator("[data-investigation]")).toBeVisible();
+  await expect(page.frameLocator("[data-stage-frame]").locator(".entity-content")).toBeVisible();
 
   await tabs.nth(1).focus();
   await page.keyboard.press("ArrowRight");
@@ -324,7 +325,7 @@ test("Reduced Motion stages use opacity-only transitions and settle rapid replac
   await tabs.nth(1).click();
   await expect(tabs.nth(1)).toHaveAttribute("aria-selected", "true");
   await expect(homeStage).toHaveAttribute("data-stage-ready", "true", { timeout: 10_000 });
-  await expect(page.frameLocator("[data-scenario-stage] iframe").locator("[data-investigation]")).toBeVisible();
+  await expect(page.frameLocator("[data-scenario-stage] iframe").locator(".entity-content")).toBeVisible();
 
   await page.goto("/components/evidence-list/");
   const componentStage = page.locator("[data-reference-stage]");
@@ -1289,6 +1290,51 @@ test("theme and contrast persist through route-aware language links", async ({ p
 
   await page.getByRole("button", { name: "选择语言" }).click();
   await expect(page.getByRole("menuitem", { name: "English" })).toHaveAttribute("href", "../../patterns/");
+});
+
+test("global material roles resolve by theme and fall back to structure in contrast modes", async ({ page, browserName }) => {
+  test.skip(browserName !== "chromium", "Computed material and Forced Colors coverage is recorded in Chromium.");
+
+  await page.goto("/docs/");
+  const readMaterial = () => page.evaluate(() => {
+    const style = getComputedStyle(document.documentElement);
+    return Object.fromEntries([
+      "edge-highlight",
+      "edge-highlight-strong",
+      "edge-contact",
+      "shadow-contact",
+      "shadow-raised",
+      "shadow-floating",
+    ].map((role) => [role, style.getPropertyValue(`--${role}`).trim()]));
+  });
+
+  const dark = await readMaterial();
+  expect(dark["edge-highlight"]).toBe("#ffffff08");
+  expect(dark["shadow-contact"]).not.toBe("none");
+  expect(dark["shadow-raised"]).not.toBe("none");
+  expect(dark["shadow-floating"]).not.toBe("none");
+
+  await page.getByRole("switch").click();
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
+  const light = await readMaterial();
+  expect(light["edge-highlight"]).toBe("#ffffffd6");
+  expect(light["shadow-floating"]).not.toBe(dark["shadow-floating"]);
+
+  await page.getByRole("button", { name: "Increase contrast" }).click();
+  const higherContrast = await readMaterial();
+  expect(higherContrast["edge-highlight"]).toBe("#00000000");
+  expect(higherContrast["edge-highlight-strong"]).toBe("#00000000");
+  expect(higherContrast["edge-contact"]).toBe("#00000000");
+  expect(higherContrast["shadow-contact"]).toBe("none");
+  expect(higherContrast["shadow-raised"]).toBe("none");
+  expect(higherContrast["shadow-floating"]).toBe("none");
+
+  await page.emulateMedia({ forcedColors: "active" });
+  const forcedColors = await readMaterial();
+  expect(["transparent", "#00000000"]).toContain(forcedColors["edge-highlight"]);
+  expect(forcedColors["shadow-contact"]).toBe("none");
+  expect(forcedColors["shadow-raised"]).toBe("none");
+  expect(forcedColors["shadow-floating"]).toBe("none");
 });
 
 test("route-aware language switching preserves valid shared fragments", async ({ page }) => {

@@ -2,6 +2,7 @@ import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 import process from "node:process";
+import { materialToCss, materialToDtcg, parseMaterialTokens } from "./material-tokens.mjs";
 import { motionToCss, motionToDtcg, parseMotionTokens } from "./motion-tokens.mjs";
 
 const root = process.cwd();
@@ -9,6 +10,7 @@ const outputDirectory = path.join(root, "tokens");
 const checkOnly = process.argv.includes("--check");
 const designMdCli = path.join(root, "node_modules", "@google", "design.md", "dist", "index.js");
 const designSource = fs.readFileSync(path.join(root, "DESIGN.md"), "utf8");
+const materialTokens = parseMaterialTokens(designSource);
 const motionTokens = parseMotionTokens(designSource);
 
 const targets = [
@@ -49,11 +51,12 @@ function generate(format) {
       /(--font-[\w-]+:\s*)"((?:\\.|[^"\\])*)";/g,
       (_, prefix, value) => `${prefix}${value.replaceAll('\\"', '"').replaceAll("\\\\", "\\")};`,
     );
-    return `${validFontStacks.trimEnd()}\n\n${motionToCss(motionTokens)}`;
+    return `${validFontStacks.trimEnd()}\n\n${motionToCss(motionTokens)}\n${materialToCss(materialTokens)}`;
   }
   if (format === "dtcg") {
     const payload = JSON.parse(generated);
     payload.motion = motionToDtcg(motionTokens);
+    payload.material = materialToDtcg(materialTokens);
     return `${JSON.stringify(payload, null, 2)}\n`;
   }
   return generated;

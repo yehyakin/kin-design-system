@@ -2,9 +2,17 @@
 
 Status: normative
 
-This contract defines Sidebar collapse, Location Bar, Toolbar, Split View, and Context Sidecar behavior for dense applications. It supplements [`DESIGN.md`](../DESIGN.md), [`navigation-and-disclosure.md`](./navigation-and-disclosure.md), [`overlays.md`](./overlays.md), and [`terminology.md`](./terminology.md).
+This contract defines Sidebar collapse, Location Bar, Toolbar, Split View, and Context Sidecar behavior for dense applications. It supplements [`DESIGN.md`](../DESIGN.md), [`material-hierarchy.md`](../principles/material-hierarchy.md), [`navigation-and-disclosure.md`](./navigation-and-disclosure.md), [`overlays.md`](./overlays.md), and [`terminology.md`](./terminology.md).
 
 These components organize a working surface. They MUST preserve location, action meaning, permissions, and task state when their presentation changes.
+
+## Material allocation
+
+- A full-viewport App Shell, Sidebar, Workspace, persistent Inspector, and persistent Sidecar are continuous planes. They MUST NOT receive independent ambient shadows.
+- Adjacent panes MAY use one directional `--edge-highlight` or `--edge-contact` recipe when Surface contrast and a hairline do not express ownership clearly. The direction MUST follow the real boundary and reading direction.
+- An embedded App Shell MAY use `--shadow-raised` only when it sits on a real outer Canvas. The same shell MUST remove that outer elevation when it becomes the production viewport.
+- A Drawer or floating Context Sidecar uses the floating role from the material contract. Its shadow and highlight MUST disappear in Higher Contrast and Forced Colors while an explicit boundary remains.
+- Selected navigation and the current decision MAY use the contact role sparingly. Every navigation row, section, or pane MUST NOT be raised.
 
 ## Sidebar collapse
 

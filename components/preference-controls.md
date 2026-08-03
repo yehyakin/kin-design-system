@@ -75,7 +75,7 @@ Sun | track and thumb | Moon
 - The current locale MUST be identified with text semantics such as `aria-current` or a checked menu-item role and MAY also use a check icon.
 - Opening the menu MUST move focus to a useful menu item. `Esc` and outside interaction MUST close it, and keyboard close MUST restore focus to the trigger.
 - Arrow-key behavior SHOULD follow the product's menu primitive. Tab order MUST remain predictable.
-- The menu MUST use a temporary surface, necessary hairline, and tight shadow; it MUST NOT become a flag grid or decorative country selector.
+- The menu MUST use the floating role from [`material-hierarchy.md`](../principles/material-hierarchy.md), with a solid temporary Surface, necessary hairline, strong edge highlight, and tight neutral shadow; it MUST NOT become a flag grid or decorative country selector.
 
 ### Locale behavior
 

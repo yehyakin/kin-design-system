@@ -62,7 +62,7 @@ Acceptance:
 | Default | Navigate to a stable destination | Low-contrast icon and label |
 | Hover | Preview interactivity | One surface step; no floating card |
 | Focus visible | Navigate with keyboard | Ring or inset focus treatment independent from selection |
-| Current | Expose `aria-current` | Quiet selected surface and optional small accent marker |
+| Current | Expose `aria-current` | Quiet selected surface; optional contact role and small accent marker when current location needs spatial emphasis |
 | Collapsed | Preserve accessible name | Icon remains aligned; label moves to tooltip |
 | Disabled | Explain unavailable destination if shown | No navigation action |
 
@@ -79,7 +79,7 @@ Acceptance:
 | Default | Present identity and comparable fields | Transparent or primary surface; bottom hairline where needed |
 | Hover | Reveal optional row actions without hiding data | `surface-hover`; stable row height |
 | Focus visible | Support keyboard selection/opening | Visible focus independent from selected state |
-| Selected | Synchronize Inspector and URL where required | `surface-selected`; identity remains highest contrast |
+| Selected | Synchronize Inspector and URL where required | `surface-selected`; optional contact role for the one current decision; identity remains highest contrast |
 | Multi-selected | Expose selection count and batch actions | Selection marker plus text/checkbox state |
 | Stale | Keep record readable | Timestamp or stale marker; no disabled styling |
 | Error | Preserve object identity and recovery | Inline failure in the affected field or row |
@@ -115,7 +115,7 @@ Acceptance:
 | State | Required behavior | Visual treatment |
 |---|---|---|
 | Closed | Shortcut remains available outside text entry | No hidden focus trap |
-| Open | Move focus to search and announce the dialog | Highest temporary surface with tight shadow |
+| Open | Move focus to search and announce the dialog | Floating material role with solid Surface, explicit border, strong edge highlight and tight neutral shadow |
 | Searching | Keep prior context until results update | Stable groups and concise progress |
 | Results | Support arrows, Home/End where appropriate, and Enter | Selected result uses surface contrast, not a bright block |
 | Empty | Explain what can be searched | Actionable guidance, no decorative illustration requirement |

@@ -24,6 +24,7 @@ const required = [
   "404.html",
   "assets/showcase.css",
   "assets/showcase.js",
+  "assets/posters/int-01-normal-dark.png",
   "assets/posters/int-02-normal-dark.png",
   "assets/site.css",
   "assets/site.js",
@@ -394,14 +395,16 @@ if (fs.existsSync(showcaseCssPath)) {
   if (!/prefers-reduced-motion/.test(css)) failures.push("assets/showcase.css: reduced-motion response is missing");
 }
 
-const posterPath = path.join(output, "assets/posters/int-02-normal-dark.png");
-if (fs.existsSync(posterPath)) {
-  const bytes = fs.readFileSync(posterPath);
-  const pngSignature = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]);
-  if (bytes.length < 24 || !bytes.subarray(0, 8).equals(pngSignature)) {
-    failures.push("assets/posters/int-02-normal-dark.png: expected a valid PNG poster");
-  } else if (bytes.readUInt32BE(16) !== 1180 || bytes.readUInt32BE(20) !== 760) {
-    failures.push("assets/posters/int-02-normal-dark.png: expected the governed 1180 x 760 reference viewport");
+for (const posterName of ["int-01-normal-dark.png", "int-02-normal-dark.png"]) {
+  const posterPath = path.join(output, "assets/posters", posterName);
+  if (fs.existsSync(posterPath)) {
+    const bytes = fs.readFileSync(posterPath);
+    const pngSignature = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]);
+    if (bytes.length < 24 || !bytes.subarray(0, 8).equals(pngSignature)) {
+      failures.push(`assets/posters/${posterName}: expected a valid PNG poster`);
+    } else if (bytes.readUInt32BE(16) !== 1180 || bytes.readUInt32BE(20) !== 760) {
+      failures.push(`assets/posters/${posterName}: expected the governed 1180 x 760 reference viewport`);
+    }
   }
 }
 

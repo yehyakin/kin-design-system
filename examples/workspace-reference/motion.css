@@ -27,7 +27,7 @@
 .frequency-actions { display: flex; flex-wrap: wrap; gap: 8px; }
 .frequency-actions button { min-height: 36px; }
 .frequency-actions kbd { margin-left: 8px; color: var(--disabled); font: 10px/1 ui-monospace, monospace; }
-.frequency-surface { width: min(100%, 520px); padding: 10px; border: 1px solid var(--line-strong); border-radius: 8px; background: var(--surface-3); box-shadow: var(--shadow); }
+.frequency-surface { width: min(100%, 520px); padding: 10px; border: 1px solid var(--line-strong); border-radius: 8px; background: var(--surface-3); box-shadow: inset 0 1px 0 var(--edge-highlight), var(--shadow-contact); }
 .frequency-surface > label { display: block; margin: 0 0 7px; color: var(--muted); font-size: 11px; }
 .frequency-surface > div { display: grid; grid-template-columns: 16px minmax(0, 1fr) 32px; align-items: center; gap: 8px; min-height: 38px; padding: 0 4px 0 10px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface-1); }
 .frequency-surface > div > svg { width: 14px; height: 14px; color: var(--muted); }
@@ -44,7 +44,7 @@
 .tooltip-toolbar { display: flex; align-items: center; gap: 4px; padding: 4px; border: 1px solid var(--line); border-radius: 7px; background: var(--surface-1); }
 .lab-tooltip-item { position: relative; display: inline-flex; }
 .lab-tooltip-item > button { width: 34px; min-width: 34px; height: 34px; }
-.lab-tooltip { position: absolute; z-index: 5; bottom: calc(100% + 7px); left: 50%; width: max-content; max-width: 200px; padding: 6px 8px; border: 1px solid var(--line-strong); border-radius: 5px; background: var(--surface-3); box-shadow: var(--shadow); color: var(--text-2); font-size: 11px; opacity: 0; pointer-events: none; transform: translateX(-50%) translateY(2px) scale(0.985); transform-origin: bottom center; }
+.lab-tooltip { position: absolute; z-index: 5; bottom: calc(100% + 7px); left: 50%; width: max-content; max-width: 200px; padding: 6px 8px; border: 1px solid var(--line-strong); border-radius: 5px; background: var(--surface-3); box-shadow: inset 0 1px 0 var(--edge-highlight-strong), var(--shadow-floating); color: var(--text-2); font-size: 11px; opacity: 0; pointer-events: none; transform: translateX(-50%) translateY(2px) scale(0.985); transform-origin: bottom center; }
 .lab-tooltip[data-state="open"] { opacity: 1; transform: translateX(-50%); }
 .lab-tooltip[data-instant="true"] { transition-duration: 0ms !important; }
 .tooltip-status { grid-column: 1 / -1; }
@@ -62,7 +62,7 @@
 .gesture-copy p { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.6; }
 .gesture-stage { position: relative; min-height: 250px; overflow: hidden; border: 1px solid var(--line); background: var(--canvas); }
 .gesture-stage::before { position: absolute; inset: 18px 18px auto; height: 76px; border: 1px solid var(--line); background: var(--surface-1); content: ""; }
-.gesture-sheet { position: absolute; right: 14px; bottom: 0; left: 14px; min-height: 176px; padding: 9px 14px 14px; border: 1px solid var(--line-strong); border-bottom: 0; border-radius: 11px 11px 0 0; background: var(--surface-2); box-shadow: var(--shadow); transform: translateY(0); }
+.gesture-sheet { position: absolute; right: 14px; bottom: 0; left: 14px; min-height: 176px; padding: 9px 14px 14px; border: 1px solid var(--line-strong); border-bottom: 0; border-radius: 11px 11px 0 0; background: var(--surface-2); box-shadow: inset 0 1px 0 var(--edge-highlight-strong), var(--shadow-floating); transform: translateY(0); }
 .gesture-sheet[data-state="dragging"], .gesture-sheet[data-state="settling"] { will-change: transform; }
 .gesture-handle { display: grid; width: 100%; min-height: 34px; margin: -4px 0 3px; place-items: center; border: 0; background: transparent; color: var(--muted); cursor: grab; touch-action: none; }
 .gesture-handle:active { cursor: grabbing; }

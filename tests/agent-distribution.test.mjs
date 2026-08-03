@@ -22,7 +22,7 @@ import {
 import { validateSchemaValue } from "../scripts/lib/schema-validator.mjs";
 import { findUnsafeLocaleText, scanGeneratedArtifact, validateLocaleRecord } from "../scripts/lib/safe-generated-content.mjs";
 import { resolveExistingPathWithin, resolveOutputFileWithin, writeFileSafelyWithin } from "../scripts/lib/safe-path.mjs";
-import { THEME_KEYS } from "../scripts/lib/theme-tokens.mjs";
+import { resolveThemeMaterial, THEME_KEYS } from "../scripts/lib/theme-tokens.mjs";
 import { validateAgentDistribution } from "../scripts/validate-agent-distribution.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
@@ -456,13 +456,16 @@ test("Agent distribution is deterministic, complete, and recipe-free", () => {
   assert.equal(first.manifest.catalogs.recipes, null);
 
   const colorShapes = new Set();
+  const materialShapes = new Set();
   const snapshotByMode = new Map();
   for (const [name, source] of first.artifacts) {
     if (!name.endsWith(".md")) continue;
     const metadata = parseFrontmatter(source);
     snapshotByMode.set(`${metadata.locale}|${metadata.theme}|${metadata.contrast}`, metadata);
     colorShapes.add(JSON.stringify(Object.keys(metadata.colors)));
+    materialShapes.add(JSON.stringify(Object.keys(metadata.material)));
     assert.deepEqual(Object.keys(metadata.colors), THEME_KEYS);
+    assert.deepEqual(metadata.material, resolveThemeMaterial(first.context.tokens, metadata.theme, metadata.contrast));
     assert.equal(metadata.features.component_recipes, "unavailable");
     const expectedReview = first.context.localeReviews.get(metadata.locale);
     assert.deepEqual(metadata.locale_review, {
@@ -474,6 +477,7 @@ test("Agent distribution is deterministic, complete, and recipe-free", () => {
     assert.deepEqual(metadata.publication, { state: "published-development", published: true, public_locators: "active" });
   }
   assert.equal(colorShapes.size, 1);
+  assert.equal(materialShapes.size, 1);
   for (const locale of ["en", "zh-CN"]) {
     for (const theme of ["light", "dark"]) {
       const base = snapshotByMode.get(`${locale}|${theme}|normal`);

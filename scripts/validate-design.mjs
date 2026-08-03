@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import process from "node:process";
+import { MATERIAL_ROLES, MATERIAL_TOKEN_NAMES, parseMaterialTokens, validateMaterialTokens } from "./material-tokens.mjs";
 import { parseCubicBezier, parseDuration, parseMotionTokens } from "./motion-tokens.mjs";
 
 const file = process.argv.slice(2).find((argument) => !argument.startsWith("--")) ?? "DESIGN.md";
@@ -60,12 +61,12 @@ if (!match) {
     add("error", "latest-stable", "latest_stable must be a semantic version");
   }
 
-  const requiredGroups = ["colors", "typography", "rounded", "spacing", "motion", "components"];
+  const requiredGroups = ["colors", "typography", "rounded", "spacing", "motion", "material", "components"];
   for (const required of requiredGroups) {
     if (!top.has(required)) add("error", "token-group", `missing token group: ${required}`);
   }
 
-  const minimums = { colors: 30, typography: 9, rounded: 5, spacing: 8, motion: 10 };
+  const minimums = { colors: 30, typography: 9, rounded: 5, spacing: 8, motion: 10, material: 18 };
   for (const [name, minimum] of Object.entries(minimums)) {
     const count = groups.get(name)?.size ?? 0;
     if (count < minimum) add("error", "token-coverage", `${name} has ${count} top-level tokens; expected at least ${minimum}`);
@@ -102,6 +103,12 @@ if (!match) {
   for (const [name, value] of Object.entries(motion)) {
     const cssValue = source.match(new RegExp(`--${name}:\\s*([^;]+);`))?.[1]?.trim();
     if (!cssValue || cssValue !== value) add("error", "motion-parity", `motion.${name} differs from the normative CSS --${name}`);
+  }
+
+  const material = parseMaterialTokens(source);
+  for (const finding of validateMaterialTokens(material)) add("error", "material-token", finding);
+  if (Object.keys(material).length !== MATERIAL_TOKEN_NAMES.length) {
+    add("error", "material-coverage", `material must contain exactly ${MATERIAL_TOKEN_NAMES.length} semantic source Tokens`);
   }
 
   const knownPaths = new Set();
@@ -157,6 +164,18 @@ if (!match) {
     }
   }
 
+  for (const theme of ["dark", "light"]) {
+    for (const role of MATERIAL_ROLES) {
+      const yamlValue = material[`${theme}-${role}`];
+      const cssValue = themeBlocks[theme].get(role);
+      if (!yamlValue || !cssValue) {
+        add("error", "material-theme-parity", `missing ${theme}-${role} or ${theme} --${role}`);
+      } else if (normalize(yamlValue) !== normalize(cssValue)) {
+        add("error", "material-theme-parity", `${theme}-${role} differs from ${theme} --${role}`);
+      }
+    }
+  }
+
   const contrastNames = ["canvas", "surface-1", "text-primary", "text-secondary", "line-default", "focus-ring"];
   for (const theme of ["contrast-dark", "contrast-light"]) {
     for (const name of contrastNames) {
@@ -166,6 +185,19 @@ if (!match) {
         add("error", "contrast-theme-parity", `missing ${theme}-${name} or high-contrast --${name}`);
       } else if (normalize(yamlValue) !== normalize(cssValue)) {
         add("error", "contrast-theme-parity", `${theme}-${name} differs from high-contrast --${name}`);
+      }
+    }
+  }
+
+
+  for (const theme of ["contrast-dark", "contrast-light"]) {
+    for (const role of MATERIAL_ROLES) {
+      const yamlValue = material[`contrast-${role}`];
+      const cssValue = themeBlocks[theme].get(role);
+      if (!yamlValue || !cssValue) {
+        add("error", "material-contrast-parity", `missing contrast-${role} or ${theme} --${role}`);
+      } else if (normalize(yamlValue) !== normalize(cssValue)) {
+        add("error", "material-contrast-parity", `contrast-${role} differs from ${theme} --${role}`);
       }
     }
   }

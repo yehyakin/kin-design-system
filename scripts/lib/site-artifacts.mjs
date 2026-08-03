@@ -16,6 +16,7 @@ export const SITE_COPY_ARTIFACTS = Object.freeze([
   ["site/zh/docs/index.html", "zh/docs/index.html"],
   ["site/assets/mark.svg", "assets/mark.svg"],
   ["site/assets/og-card.svg", "assets/og-card.svg"],
+  ["site/assets/posters/int-01-normal-dark.png", "assets/posters/int-01-normal-dark.png"],
   ["site/assets/posters/int-02-normal-dark.png", "assets/posters/int-02-normal-dark.png"],
   ["site/assets/showcase.css", "assets/showcase.css"],
   ["site/assets/site.css", "assets/site.css"],

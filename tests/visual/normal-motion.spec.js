@@ -6,20 +6,20 @@ test("normal motion keeps feedback visible without replacing state", async ({ pa
     localStorage.setItem("kin-reference-locale", "en");
   });
   await page.setViewportSize({ width: 1440, height: 900 });
-  await page.goto("/examples/workspace-reference/");
+  await page.goto("/examples/workspace-reference/motion.html");
 
   await expect(page.evaluate(() => matchMedia("(prefers-reduced-motion: reduce)").matches)).resolves.toBe(false);
 
-  const motionButton = page.locator("[data-motion-async]");
+  const motionButton = page.locator("[data-lab-async]");
   const transition = await motionButton.evaluate((element) => getComputedStyle(element).transitionDuration);
   expect(transition.split(",").some((duration) => duration.trim() !== "0s")).toBe(true);
 
   await motionButton.evaluate((element) => {
     window.__kinMotionButtonPending = new Promise((resolve) => {
       const observer = new MutationObserver(() => {
-        if (!element.classList.contains("is-loading")) return;
+        if (element.dataset.controlState !== "pending") return;
         observer.disconnect();
-        const loader = element.querySelector(".button-icon-loading");
+        const loader = element.querySelector('[data-icon-state="pending"]');
         resolve({
           animationName: getComputedStyle(loader).animationName,
           visible: getComputedStyle(loader).display !== "none",
@@ -30,9 +30,9 @@ test("normal motion keeps feedback visible without replacing state", async ({ pa
   });
   await motionButton.click();
   const pendingState = await page.evaluate(() => window.__kinMotionButtonPending);
-  expect(pendingState).toEqual({ animationName: "button-spin", visible: true });
-  await expect(motionButton).toHaveClass(/is-success/, { timeout: 2_000 });
-  await expect(page.getByText("View saved", { exact: true })).toBeVisible();
+  expect(pendingState).toEqual({ animationName: "core-spin", visible: true });
+  await expect(motionButton).toHaveAttribute("data-control-state", "success", { timeout: 2_000 });
+  await expect(page.getByText("布局已保存", { exact: true })).toBeVisible();
 });
 
 test("normal motion preserves spatial direction for Inspector and Drawer", async ({ page }) => {

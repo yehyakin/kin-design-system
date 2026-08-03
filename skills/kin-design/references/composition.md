@@ -22,6 +22,7 @@ Signature punctuation: <reference index/decision edge/commit boundary/recovery e
 Product-family silhouette: <task-specific composition that differs from unrelated profiles>
 Receding chrome: <what remains available but loses salience after orientation>
 Surface and density strategy: <flat rows/reading flow/canvas/property list and real boundaries>
+Material hierarchy: <continuous planes; directional edges; permitted contact/raised/floating layers; Light/Dark and contrast replacements>
 Narrow-screen priority: <ordered content and actions>
 Narrow-screen Context Thread transformation: <orientation/route/carrier change without priority loss>
 Required states and interactions: <real list>
@@ -111,6 +112,7 @@ Compare baseline and candidate with realistic, equivalent content and named view
 - task first;
 - one dominant region;
 - continuous structure;
+- material hierarchy that matches real containment, contact, overlap, and travel;
 - density without repeated explanation;
 - distinct semantics;
 - resolved light/dark theme integrity;

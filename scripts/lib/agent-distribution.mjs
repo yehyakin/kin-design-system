@@ -7,7 +7,7 @@ import { InputRegistry } from "./input-registry.mjs";
 import { extractExactSection } from "./markdown-sections.mjs";
 import { validateSchemaValue } from "./schema-validator.mjs";
 import { scanGeneratedArtifact, validateLocaleRecord } from "./safe-generated-content.mjs";
-import { resolveSharedTokens, resolveThemeColors, THEME_MODES } from "./theme-tokens.mjs";
+import { resolveSharedTokens, resolveThemeColors, resolveThemeMaterial, THEME_MODES } from "./theme-tokens.mjs";
 
 export const AGENT_SCHEMA_VERSION = "2.0.0";
 export const AGENT_SITE_BASE = "https://yehyakin.github.io/kin-design-system";
@@ -311,7 +311,14 @@ function bodyForSnapshot(context, localeDefinition, mode, coordinates) {
     ...typographyRows,
   ]);
   section("layout-and-density");
-  section("surface-and-elevation");
+  const material = resolveThemeMaterial(context.tokens, mode.theme, mode.contrast);
+  const materialRows = Object.entries(material).map(([name, value]) => `| \`${name}\` | \`${value}\` |`);
+  section("surface-and-elevation", [
+    "",
+    `| ${foundation.labels.token_role} | ${foundation.labels.token_value} |`,
+    "|---|---|",
+    ...materialRows,
+  ]);
   section("motion");
   section("content-rules");
 
@@ -333,6 +340,7 @@ function bodyForSnapshot(context, localeDefinition, mode, coordinates) {
 function createSnapshot(context, locale, mode, coordinates) {
   const review = context.localeReviews.get(locale.id);
   const colors = resolveThemeColors(context.tokens, mode.theme, mode.contrast);
+  const material = resolveThemeMaterial(context.tokens, mode.theme, mode.contrast);
   const metadata = {
     kind: "kin-agent-design",
     schema_version: AGENT_SCHEMA_VERSION,
@@ -377,6 +385,7 @@ function createSnapshot(context, locale, mode, coordinates) {
     spacing: context.sharedTokens.spacing,
     rounded: context.sharedTokens.rounded,
     motion: context.sharedTokens.motion,
+    material,
     component_recipes: null,
   };
   return createMarkdownWithFrontmatter(metadata, bodyForSnapshot(context, locale, mode, coordinates));

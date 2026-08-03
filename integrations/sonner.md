@@ -21,7 +21,8 @@ Runtime-integrated adapter for the stable Toast contract. Use for compact feedba
 
 - Show no more than three concurrent toasts.
 - Prefer inline errors for the object that failed.
-- Use KIN `surface-3`, hairline, compact shadow and 13px UI text.
+- Use KIN `surface-3`, the `--edge-highlight-strong` directional edge, `--shadow-floating`, and 13px UI text.
+- Higher Contrast and Forced Colors MUST remove the subtle highlight and floating shadow while retaining an explicit, identifiable boundary.
 - Keep actions keyboard accessible and return focus appropriately.
 - Error messages state what failed and the available next step.
 - Verify stacking with Dialogs, Drawers and mobile safe areas.
@@ -35,6 +36,8 @@ Runtime-integrated adapter for the stable Toast contract. Use for compact feedba
 The [Integration Lab](../examples/workspace-reference/integrations.html#sonner) demonstrates success, undo, one Promise-backed loading toast updated in place, recoverable error with Retry, LTR and RTL, and all six Sonner placements: top-left, top-center, top-right, bottom-left, bottom-center, and bottom-right. The position selector is verification evidence, not a requirement that every product expose notification placement to users. The broader [workspace references](../examples/workspace-reference/) exercise compact feedback ownership, bilingual labels, and Reduced Motion.
 
 Consuming React products SHOULD mount one `KinToaster` near the application root and call `kinToast` only from user-initiated operations. Non-React products SHOULD not add React only to copy this adapter; use a native-stack notification component that satisfies the same behavior contract instead.
+
+Material ownership follows [`principles/material-hierarchy.md`](../principles/material-hierarchy.md). Sonner keeps its upstream placement and motion engine; KIN only assigns the global floating-surface material recipe.
 
 ## Source
 

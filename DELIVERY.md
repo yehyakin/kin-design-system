@@ -72,6 +72,7 @@ The core repository MAY:
 
 - generate a reviewed Variables create payload;
 - describe collection, mode, alias, and naming intent already represented by repository output;
+- expose material edges as color variables and shadow recipes as string handoff values;
 - validate generated data against the normative Token source;
 - document a manual import or mapping boundary.
 
@@ -81,6 +82,7 @@ The core repository MUST NOT:
 - guess an existing team's file, collection, variable, component, or node IDs;
 - update or delete remote design assets;
 - claim a Figma component exists because an HTML reference exists;
+- claim that exported shadow strings are applied Effect Styles or a published material library;
 - claim Code Connect coverage when no maintained mapping exists;
 - publish a library from an unattended documentation workflow.
 
@@ -105,7 +107,7 @@ Until those conditions are met, KIN MUST describe Figma support as Variables int
 
 KIN does not currently publish a supported runtime package. The repository contains an isolated, private pre-release React integration laboratory at [`packages/react/`](./packages/react/). It runs selected official packages through KIN-owned semantic adapters, but it is not a universal dependency, a stable release, or evidence that a consuming product has completed KIN adoption.
 
-Framework-free references exist to make behavior inspectable and testable. They intentionally avoid establishing framework APIs, styling inheritance, application state, server/client boundaries, or dependency commitments for consuming products.
+Framework-free references exist to make behavior inspectable and testable. They intentionally avoid establishing framework APIs, styling inheritance, application state, server/client boundaries, or dependency commitments for consuming products. They consume the same global material roles as the contract and generated Token outputs; local showcase-only shadow scales are not part of the delivery model.
 
 Consuming projects SHOULD adapt KIN through their existing primitives. They MUST NOT introduce a second component framework only to make an interface appear KIN-like.
 
@@ -161,13 +163,13 @@ An adoption record uses four stages:
 | Stage | Meaning |
 |---|---|
 | `initialized` | A KIN version, profile, delivery mode, local paths, and owners are being identified |
-| `mapped` | Tokens, components, route profiles, exceptions, a ready implementation brief, product-specific decisions, and one representative production workflow are mapped to local sources |
+| `mapped` | Tokens including material roles, components, route profiles, exceptions, a ready implementation brief, product-specific decisions, and one representative production workflow are mapped to local sources |
 | `verified` | The brief is human-approved and required automated/manual checks plus every visual-signature criterion for that workflow are recorded with no unresolved blocking result |
 | `production-observed` | The verified mapping has dated production evidence, an owner, and a rollback path |
 
 - A project MUST NOT move directly from `initialized` to `verified` without mapping evidence.
 - `verified` MUST NOT be inferred from a successful build alone.
-- `verified` MUST NOT be inferred from Token parity, a component gallery, a design lab, or screenshots of isolated controls. It requires a representative production workflow and comparable baseline/candidate visual evidence as defined in [`principles/visual-signature.md`](./principles/visual-signature.md).
+- `verified` MUST NOT be inferred from Token parity, a component gallery, a design lab, or screenshots of isolated controls. It requires a representative production workflow and comparable baseline/candidate visual evidence as defined in [`principles/visual-signature.md`](./principles/visual-signature.md), including proof that continuous, contact, raised, and floating material roles remain distinct in Light, Dark, Higher Contrast, and Forced Colors outcomes.
 - A hybrid product MUST NOT apply one profile to unrelated route families merely to simplify implementation. The route/profile map records where each product pattern governs composition.
 - `production-observed` MUST name a product revision, observation date, evidence location, and owner.
 - Evidence MUST follow [`principles/verification.md`](./principles/verification.md).
@@ -192,6 +194,7 @@ Examples and experiments MAY explore a future boundary, but they MUST be labeled
 
 - The project describes KIN as contract-first.
 - Figma support is described as Variables interoperability, not a published component library.
+- Material roles are delivered through semantic Tokens and contracts; shadow strings are not misrepresented as applied Figma Effect Styles.
 - The private React integration laboratory is distinguished from a published or universally supported package.
 - Production components remain owned by the consuming project.
 - Optional package or design-library work has separate ownership and release gates.

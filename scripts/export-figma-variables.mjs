@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import process from "node:process";
+import { MATERIAL_ROLES, resolveThemeMaterial } from "./material-tokens.mjs";
 
 const root = process.cwd();
 const source = path.join(root, "tokens", "kin.tokens.json");
@@ -190,6 +191,35 @@ function generate() {
         },
       );
     }
+  }
+
+  const materialCollection = tempId("material", "collection");
+  const materialModeNames = ["Light", "Dark", "Light High Contrast", "Dark High Contrast"];
+  const materialModeIds = createCollection(payload, materialCollection, "KIN Material", materialModeNames);
+  const materialModes = [
+    resolveThemeMaterial(tokens, "light", "normal"),
+    resolveThemeMaterial(tokens, "dark", "normal"),
+    resolveThemeMaterial(tokens, "light", "more"),
+    resolveThemeMaterial(tokens, "dark", "more"),
+  ];
+  for (const role of MATERIAL_ROLES) {
+    const edge = role.startsWith("edge-");
+    createVariable(
+      payload,
+      materialCollection,
+      `Material/${role.replaceAll("-", " ")}`,
+      edge ? "COLOR" : "STRING",
+      materialModeIds.map((modeId, index) => [
+        modeId,
+        edge ? colorFromHex(materialModes[index][role]) : materialModes[index][role],
+      ]),
+      {
+        codeSyntax: { WEB: `--${role}` },
+        description: edge
+          ? "Theme-resolved KIN material edge color."
+          : "CSS shadow recipe for the resolved KIN material role; this is a Variable string, not a published Figma Effect Style.",
+      },
+    );
   }
 
   return `${JSON.stringify(payload, null, 2)}\n`;
