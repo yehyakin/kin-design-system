@@ -7,14 +7,13 @@ normative: false
 artifact_status: "generated-derivative"
 editable: false
 publication:
-  state: "published-development"
-  published: true
-  public_locators: "active"
+  state: "registry-controlled"
+  public_locators: "registry-authoritative"
 kin_version: "3.0.1"
 release_status: "released"
 latest_stable_contract: "3.0.1"
-channel: "next"
-locale: "zh-CN"
+channel: "versioned"
+locale: "en"
 direction: "ltr"
 theme: "light"
 contrast: "more"
@@ -26,14 +25,14 @@ locale_review:
   reviewers:
     - "@yehyakin"
   normative_source_checksum: "28d428a4429c45b5bcc6dc4cfddfd97682ef2f6a2b0297852954be1c247c4fe2"
-  localized_content_checksum: "5ce67d168f77941fa5cf023d00f72ffcbc0235a0fcf13c2af5a34fcf93cd2bc2"
+  localized_content_checksum: "8cbc0ee2535f738266c73e9f80419076c0da5afad2212a6049408902706f412a"
 source:
   contract_path: "DESIGN.md"
   checksum_algorithm: "sha256"
   checksum: "1eb36408ce4b807eedbd8c91f07b81e92c96db027e10db30259e28e86cd30714"
   input_set_checksum: "edacf69fb7222a6b51320fc1a73882b240524523a310d34da7ecefb119fb4061"
-  ref: "main"
-  revision_status: "mutable"
+  ref: "v3.0.1"
+  revision_status: "immutable"
 manifest_locator: "design-manifest.json"
 full_contract_path: "DESIGN.md"
 visual_signature_path: "principles/visual-signature.md"
@@ -224,33 +223,33 @@ material:
 component_recipes: null
 ---
 
-# KIN Agent 设计快照
+# KIN Agent design snapshot
 
-> 生成衍生文件。修改规范行为或交付边界时，必须阅读完整合同。
+> Generated derivative. Read the complete contract when changing normative behavior or delivery boundaries.
 
-## 状态与来源
+## Status and source
 
-- 这份精简文件由当前 KIN 合同生成。它不是规范来源、不得直接编辑，也不能替代所链接的完整文档。
-- 合同校验和: `1eb36408ce4b807eedbd8c91f07b81e92c96db027e10db30259e28e86cd30714`
-- 已解析模式: `light` / `more`
-- 本地化文案审核: `reviewed`
-- 发布状态: `published-development`
+- This compact file is generated from the current KIN contract. It is non-normative, must not be edited, and does not replace the linked source documents.
+- Contract checksum: `1eb36408ce4b807eedbd8c91f07b81e92c96db027e10db30259e28e86cd30714`
+- Resolved mode: `light` / `more`
+- Locale copy review: `reviewed`
+- Publication state: `registry-controlled; consult versions.json`
 
-## 视觉基调
+## Visual register
 
-- 第一有效视图先呈现用户要使用的对象、任务、搜索、列表、文档或操作。
-- 每个状态只有一个主导工作或阅读区域；完成定位后，导航、元数据和次要界面应退后。
+- Put the subject, current task, search, list, document, object, or action in the first meaningful view.
+- Give each state one dominant work or reading region; navigation, metadata, and secondary chrome recede after orientation.
 
-## 主题使用
+## Theme usage
 
-- 大部分结构保持中性，只用一个主要交互强调色表达焦点、选择、链接和主要操作。
-- 将 color-scheme 设置为当前主题，并在产品中保留亮色、暗色、跟随系统和高对比度行为。
+- Keep most structure neutral and use one primary interaction accent for focus, selection, links, and primary actions.
+- Set color-scheme to the resolved theme and preserve light, dark, system, and higher-contrast behavior in the product.
 
-## 字体角色
+## Typography roles
 
-- 用字体角色建立层级；界面文字保持紧凑，正文保持可读，需要比较的数字使用等宽数字。
+- Use typography roles to express hierarchy; keep interface text compact and body text readable, and use tabular numerals where comparison matters.
 
-| 角色 | 解析值 |
+| Role | Resolved value |
 |---|---|
 | `body` | 14px / 400 / 22 |
 | `display` | 32px / 600 / 38 |
@@ -262,15 +261,15 @@ component_recipes: null
 | `section-title` | 14px / 600 / 20 |
 | `ui` | 13px / 500 / 18 |
 
-## 布局与密度
+## Layout and density
 
-- 对齐重复值和操作，用共享列或分组控件承载共同含义，用留白说明优先级。
+- Align repeated values and actions, carry shared meaning in columns or group controls, and use empty space to clarify priority.
 
-## 表面与层级
+## Surface and elevation
 
-- 先用对齐、节奏、列、属性行、分隔线和细微表面差建立层级，再考虑增加容器。
+- Create hierarchy with alignment, rhythm, columns, property rows, dividers, and small surface steps before adding containers.
 
-| 角色 | 解析值 |
+| Role | Resolved value |
 |---|---|
 | `edge-highlight` | `#00000000` |
 | `edge-highlight-strong` | `#00000000` |
@@ -279,53 +278,53 @@ component_recipes: null
 | `shadow-raised` | `none` |
 | `shadow-floating` | `none` |
 
-## 动效
+## Motion
 
-- 动效用于保留来源、方向、状态连续性和提交结果；可逆交互从当前视觉状态继续。
+- Use motion to preserve origin, direction, state continuity, and committed results; reversible interactions begin from their current visual state.
 
-## 内容规则
+## Content rules
 
-- 只要产品有所区分，状态、风险、置信度、完整度、可用性、权限和进度就必须保持独立。
+- Keep status, risk, confidence, completeness, availability, permission, and progress separate whenever the product distinguishes them.
 
-## 应当
+## Do
 
-- 先用它确定主题模式、产品类型和首轮约束，再按任务打开详细合同。
-- 让真实内容和用户任务决定构图。
-- 用视觉权重让下一项有用操作清楚可见。
-- 让语义颜色始终对应各自独立的产品含义。
-- 把命名角色映射到产品可用字体，不分发私有字体。
-- 比较型数据行保持紧凑，同时保留要求的命中区域。
-- 只有独立对象、浮层、选中上下文或任务模式等真实边界才使用 Surface。
-- 动效保持可中断；减少动态效果时仍保留相同终态和层级。
-- 除了颜色，还要用文字或符号表达含义；关键数据要显示来源和时间。
-- 混合产品按路由族选择类型，并保留用户要求与产品事实。
-- 声明接入前，记录明确范围、真实状态、可比截图、人工评审、例外、责任人和回滚。
+- Use it to select a mode, product profile, and first-read constraints before opening the detailed contract.
+- Let real content and the user's job establish the composition.
+- Use visual weight to make the next useful action obvious.
+- Keep semantic colors tied to distinct product meanings.
+- Map the named roles to the product's available font stack without redistributing private fonts.
+- Keep comparison rows compact while preserving required hit areas.
+- Use a Surface only for a real object, overlay, selected context, or task-mode boundary.
+- Keep motion interruptible and preserve the same final hierarchy under Reduced Motion.
+- Make meaning readable with language or symbols as well as color, and show source and time for consequential data.
+- Use route-level profiles for hybrid products and preserve the user's stated request and product truth.
+- Record scoped mappings, realistic states, comparable screenshots, human review, exceptions, owners, and rollback before making an adoption claim.
 
-## 不要
+## Do not
 
-- 不要把生成文件、通过的检查或主题化组件展示当成产品已经接入 KIN 的证据。
-- 不要在工作任务之前放营销 Hero、泛化价值主张或装饰图表。
-- 不要因为有网格，就让无关面板拥有相同视觉权重。
-- 不要用颜色、徽标、图标或动效弥补内容顺序和对齐问题。
-- 不要为了模仿其他产品而放大标题或过度压缩中文字符间距。
-- 不要在每一行重复标签和帮助文字，也不要用大片空白掩盖未解决的构图。
-- 不要默认把正文、元数据、活动、属性组、筛选器和表格区域做成嵌套卡片。
-- 不要用反复抬升、自动计数、整页淡入或装饰性入场制造完成感。
-- 不要把不同判断折叠成一个好看的分数、徽标或缺乏依据的结论。
-- 不要把一种工作台布局套给所有路由，也不要让任务意图提示覆盖本地要求。
-- 不要根据这份快照、通过的生成器或孤立的样式组件推断生产接入。
+- Do not treat generated guidance, a passing check, or a themed component lab as proof of product adoption.
+- Do not place a marketing Hero, generic value proposition, or decorative graph before the working task.
+- Do not give unrelated panels equal weight merely because a grid is available.
+- Do not use color, badges, icons, or motion to compensate for weak order or alignment.
+- Do not enlarge headings or tighten Chinese tracking merely to imitate another product.
+- Do not repeat labels and helper text in every row or use large empty regions as unresolved composition.
+- Do not turn prose, metadata, activity, property groups, filters, or table regions into nested cards by default.
+- Do not use repeated lifts, automatic counting, generic page fades, or decorative entrances to manufacture polish.
+- Do not collapse independent judgments into one attractive score, badge, or unsupported claim.
+- Do not apply one workspace layout to every route or let task-intent hints override local requirements.
+- Do not infer production adoption from this snapshot, a passing generator, or isolated styled components.
 
-## 任务与产品类型路由
+## Task and product-profile routing
 
-- 根据真实路由和任务选择产品类型，修改构图前打开对应的详细模式合同。
+- Choose the product profile from the real route and task, then open the matching detailed pattern before changing composition.
 
-| 产品类型 | 任务意图 | 详细合同 |
+| Profile | Task intents | Detailed contract |
 |---|---|---|
 | `information-site` | `find`, `read`, `verify`, `cite` | `patterns/information-site.md` |
 | `intelligence-workspace` | `inspect`, `monitor`, `investigate`, `verify`, `decide` | `patterns/intelligence-workspace.md` |
 | `ecommerce-operations` | `operate`, `compare`, `approve`, `recover` | `patterns/ecommerce-operations.md` |
 | `engineering-canvas` | `create`, `select`, `inspect`, `modify`, `compare`, `undo` | `patterns/engineering-canvas.md` |
 
-## 验证与接入边界
+## Verification and adoption boundary
 
-- 生成快照、Token 一致、构建通过和组件参考都只是交付证据，不能证明产品已经具备可见或完整的 KIN 接入。
+- Generated snapshots, Token parity, builds, and component references are delivery evidence, not proof that a product is visibly or fully KIN.

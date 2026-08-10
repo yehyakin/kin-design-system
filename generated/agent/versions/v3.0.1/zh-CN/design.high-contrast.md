@@ -7,13 +7,12 @@ normative: false
 artifact_status: "generated-derivative"
 editable: false
 publication:
-  state: "published-development"
-  published: true
-  public_locators: "active"
+  state: "registry-controlled"
+  public_locators: "registry-authoritative"
 kin_version: "3.0.1"
 release_status: "released"
 latest_stable_contract: "3.0.1"
-channel: "next"
+channel: "versioned"
 locale: "zh-CN"
 direction: "ltr"
 theme: "light"
@@ -32,8 +31,8 @@ source:
   checksum_algorithm: "sha256"
   checksum: "1eb36408ce4b807eedbd8c91f07b81e92c96db027e10db30259e28e86cd30714"
   input_set_checksum: "edacf69fb7222a6b51320fc1a73882b240524523a310d34da7ecefb119fb4061"
-  ref: "main"
-  revision_status: "mutable"
+  ref: "v3.0.1"
+  revision_status: "immutable"
 manifest_locator: "design-manifest.json"
 full_contract_path: "DESIGN.md"
 visual_signature_path: "principles/visual-signature.md"
@@ -234,7 +233,7 @@ component_recipes: null
 - 合同校验和: `1eb36408ce4b807eedbd8c91f07b81e92c96db027e10db30259e28e86cd30714`
 - 已解析模式: `light` / `more`
 - 本地化文案审核: `reviewed`
-- 发布状态: `published-development`
+- 发布状态: `registry-controlled; consult versions.json`
 
 ## 视觉基调
 

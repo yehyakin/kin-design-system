@@ -716,6 +716,38 @@ h1 { max-width: 670px; margin: 0; font-size: clamp(30px, 4.5vw, 46px); font-weig
   .github-link { display: none; }
 }
 
+/* Reading remains a continuous plane; only adjoining navigation and bounded
+   preview surfaces gain directional edge or raised material. */
+.docs-nav,
+.section-rail {
+  box-shadow: inset -1px 0 0 var(--edge-contact), inset 0 1px 0 var(--edge-highlight);
+}
+
+.docs-main {
+  box-shadow: inset 1px 0 0 var(--edge-highlight);
+}
+
+.atlas-feature,
+.lab-preview {
+  box-shadow: inset 0 1px 0 var(--edge-highlight-strong), var(--shadow-raised);
+}
+
+.lab-topbar,
+.lab-preview-bar {
+  box-shadow: inset 0 1px 0 var(--edge-highlight), inset 0 -1px 0 var(--edge-contact);
+}
+
+@media (forced-colors: active) {
+  .atlas-feature,
+  .lab-preview,
+  .docs-nav,
+  .section-rail,
+  .docs-main {
+    border-color: CanvasText;
+    box-shadow: none;
+  }
+}
+
 @media (prefers-reduced-motion: no-preference) {
   button, a, input, .skip-link { transition: background-color 140ms var(--ease), border-color 140ms var(--ease), color 140ms var(--ease), translate 180ms var(--ease); }
   html[data-site-ready="true"] .theme-switch::after { transition: translate 180ms cubic-bezier(0.2, 0, 0, 1), scale 90ms cubic-bezier(0.2, 0, 0, 1), background-color 140ms var(--ease), border-color 140ms var(--ease); }

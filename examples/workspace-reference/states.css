@@ -151,3 +151,24 @@
     align-items: center;
   }
 }
+
+/* States are a continuous reference plane. Selection and local feedback use
+   contact elevation, while the command palette remains the sole float. */
+.reference-header {
+  box-shadow: inset 0 1px 0 var(--edge-highlight), inset 0 -1px 0 var(--edge-contact);
+}
+
+.reference-row.is-selected,
+.system-states article:is(.state-error, .state-stale) {
+  box-shadow: inset 0 1px 0 var(--edge-highlight), var(--shadow-contact);
+}
+
+@media (forced-colors: active) {
+  .reference-header,
+  .reference-row.is-selected,
+  .system-states article:is(.state-error, .state-stale),
+  .command-dialog {
+    border-color: CanvasText;
+    box-shadow: none;
+  }
+}

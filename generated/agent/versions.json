@@ -7,5 +7,19 @@
   "normative": false,
   "editable": false,
   "latest_agent_distribution": null,
-  "versions": []
+  "versions": [
+    {
+      "version": "3.0.1",
+      "publication_state": "staged",
+      "support_status": null,
+      "repository_directory": "generated/agent/versions/v3.0.1",
+      "manifest_url": null,
+      "manifest_sha256": "94df2f455a69c8fd3983408f8ec0539eb4db1c3e1c97520dd2c46951eaf8e205",
+      "kin_tag": "v3.0.1",
+      "design_checksum": "1eb36408ce4b807eedbd8c91f07b81e92c96db027e10db30259e28e86cd30714",
+      "input_set_checksum": "edacf69fb7222a6b51320fc1a73882b240524523a310d34da7ecefb119fb4061",
+      "replacement": null,
+      "advisory_url": null
+    }
+  ]
 }

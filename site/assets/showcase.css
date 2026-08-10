@@ -1792,6 +1792,33 @@ a.discovery-row__name {
   }
 }
 
+/* Shared preview material: product previews are bounded objects; discovery and
+   reading surfaces remain planes differentiated by directional contact edges. */
+.component-gallery,
+.reference-stage {
+  box-shadow: inset 0 1px 0 var(--edge-highlight-strong), var(--shadow-raised);
+}
+
+.component-gallery-card__header,
+.component-gallery-card__provenance,
+.reference-stage__toolbar,
+.reference-stage__footer {
+  box-shadow: inset 0 1px 0 var(--edge-highlight), inset 0 -1px 0 var(--edge-contact);
+}
+
+.reference-stage__viewport {
+  box-shadow: inset 0 1px 0 var(--edge-contact);
+}
+
+@media (forced-colors: active) {
+  .component-gallery,
+  .reference-stage,
+  .showcase-product-stage {
+    border-color: CanvasText;
+    box-shadow: none;
+  }
+}
+
 @media (max-width: 1180px) {
   :root {
     --showcase-page-padding: 24px;
@@ -2381,6 +2408,10 @@ a.discovery-row__name {
 .discovery-page {
   width: min(100%, 1240px);
   padding-top: 36px;
+}
+
+body[data-showcase-route="patterns"] .discovery-page {
+  width: min(100%, 1440px);
 }
 
 .discovery-hero--compact {
@@ -3577,12 +3608,12 @@ body[data-showcase-route="component-explorer"] .discovery-page {
 .pattern-browser {
   display: grid;
   min-width: 0;
-  grid-template-columns: 228px minmax(0, 1fr);
+  grid-template-columns: 200px minmax(0, 1fr);
   grid-template-areas:
     "selector heading"
     "selector stage"
     "contexts contexts";
-  gap: 0 28px;
+  gap: 0 20px;
   align-items: start;
   margin-top: 34px;
 }
@@ -3681,6 +3712,20 @@ body[data-showcase-route="component-explorer"] .discovery-page {
 
 .reference-stage--pattern-browser .reference-stage__viewport {
   height: clamp(560px, 68vh, 760px);
+}
+
+/* The browser is a bounded preview: preserve a desktop product viewport before
+   reducing selector density. This keeps the commerce inspector in its native
+   wide layout while the outer page remains a continuous reading surface. */
+@media (min-width: 1500px) {
+  .pattern-browser {
+    grid-template-columns: 184px minmax(1120px, 1fr);
+  }
+
+  .pattern-browser__selector button {
+    min-height: 72px;
+    padding-inline: 10px;
+  }
 }
 
 .reference-stage--pattern-browser {

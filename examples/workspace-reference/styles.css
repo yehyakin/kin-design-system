@@ -722,6 +722,97 @@ h1 { margin: 0; font-size: 22px; line-height: 1.25; letter-spacing: -0.015em; }
   .language-menu, .location-overflow-menu { transition: opacity 80ms linear; transform: none; }
 }
 
+/* Workspace shells keep their directional seams visible without elevating the
+   reading plane; only local records use contact material. */
+.app-shell {
+  box-shadow: inset 0 1px 0 var(--edge-highlight);
+}
+
+.sidebar {
+  box-shadow: inset 0 1px 0 var(--edge-highlight), inset -1px 0 0 var(--edge-contact);
+}
+
+.inspector {
+  box-shadow: inset 0 1px 0 var(--edge-highlight), inset 1px 0 0 var(--edge-contact);
+}
+
+.workspace-bar,
+.view-bar,
+.inspector > header {
+  box-shadow: inset 0 1px 0 var(--edge-highlight), inset 0 -1px 0 var(--edge-contact);
+}
+
+.investigation-state-message,
+.risk-state-message,
+[data-workspace-view="entity"] .activity-list li:first-child {
+  box-shadow: inset 0 1px 0 var(--edge-highlight), var(--shadow-contact);
+}
+
+@media (forced-colors: active) {
+  .app-shell,
+  .sidebar,
+  .inspector,
+  .workspace-bar,
+  .view-bar,
+  .inspector > header,
+  .investigation-state-message,
+  .risk-state-message,
+  [data-workspace-view="entity"] .activity-list li:first-child {
+    border-color: CanvasText;
+    box-shadow: none;
+  }
+}
+
+/* Direct references share one bounded desktop frame. The body is the frame so
+   state sections remain a continuous document rather than a card collection. */
+@media (min-width: 761px) {
+  html:has(body.states-page),
+  html:has(#showcase-specimen-app) {
+    background: var(--canvas);
+  }
+
+  body.states-page,
+  body:has(#showcase-specimen-app) {
+    min-height: calc(100dvh - 24px);
+    margin: 12px;
+    border: 1px solid var(--line-strong);
+    border-radius: 12px;
+    background: var(--surface-1);
+    box-shadow: inset 0 1px 0 var(--edge-highlight-strong), var(--shadow-raised);
+  }
+
+  body.states-page .reference-header {
+    border-radius: 11px 11px 0 0;
+  }
+
+  body:has(#showcase-specimen-app) {
+    overflow: hidden;
+  }
+
+  #showcase-specimen-app {
+    min-height: calc(100dvh - 26px);
+  }
+}
+
+@media (max-width: 760px) {
+  body.states-page,
+  body:has(#showcase-specimen-app) {
+    min-height: 100dvh;
+    margin: 0;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+}
+
+@media (forced-colors: active) {
+  body.states-page,
+  body:has(#showcase-specimen-app) {
+    border-color: CanvasText;
+    box-shadow: none;
+  }
+}
+
 @media (forced-colors: active) {
   :focus-visible { outline: 2px solid Highlight !important; outline-offset: 2px; }
   .primary-action { border: 1px solid ButtonText; }

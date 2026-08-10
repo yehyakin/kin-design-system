@@ -10,9 +10,9 @@ publication:
   state: "published-development"
   published: true
   public_locators: "active"
-kin_version: "3.0.0"
-release_status: "development"
-latest_stable_contract: "2.3.0"
+kin_version: "3.0.1"
+release_status: "released"
+latest_stable_contract: "3.0.1"
 channel: "next"
 locale: "zh-CN"
 direction: "ltr"
@@ -30,8 +30,8 @@ locale_review:
 source:
   contract_path: "DESIGN.md"
   checksum_algorithm: "sha256"
-  checksum: "2578c442c8270e49dc62d72699cc70b2560737527540a408244af087442344e8"
-  input_set_checksum: "b8ddc79f336160e2fd7482ac7e53d5df4adc8cfed1552ba8bdbbf4f18aacaded"
+  checksum: "1eb36408ce4b807eedbd8c91f07b81e92c96db027e10db30259e28e86cd30714"
+  input_set_checksum: "edacf69fb7222a6b51320fc1a73882b240524523a310d34da7ecefb119fb4061"
   ref: "main"
   revision_status: "mutable"
 manifest_locator: "design-manifest.json"
@@ -231,7 +231,7 @@ component_recipes: null
 ## 状态与来源
 
 - 这份精简文件由当前 KIN 合同生成。它不是规范来源、不得直接编辑，也不能替代所链接的完整文档。
-- 合同校验和: `2578c442c8270e49dc62d72699cc70b2560737527540a408244af087442344e8`
+- 合同校验和: `1eb36408ce4b807eedbd8c91f07b81e92c96db027e10db30259e28e86cd30714`
 - 已解析模式: `dark` / `normal`
 - 本地化文案审核: `reviewed`
 - 发布状态: `published-development`
