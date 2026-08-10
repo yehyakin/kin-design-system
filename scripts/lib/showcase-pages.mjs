@@ -912,7 +912,7 @@ function renderShell({
   <link rel="icon" href="${escapeHtml(`${assets}mark.svg`)}" type="image/svg+xml">
   <link rel="manifest" href="${escapeHtml(`${rootPrefix(publicPath)}manifest.webmanifest`)}">
   <link rel="stylesheet" href="${escapeHtml(`${assets}site.css`)}">
-  <link rel="stylesheet" href="${escapeHtml(`${assets}showcase.css?v=3.0.1`)}">
+  <link rel="stylesheet" href="${escapeHtml(`${assets}showcase.css?v=3.0.2`)}">
   <script>
     (() => {
       let storedTheme;
@@ -976,7 +976,7 @@ ${content}
     routePairs: commandPairs.routes,
   })}
   <script type="module" src="${escapeHtml(`${assets}site.js`)}"></script>
-  <script type="module" src="${escapeHtml(`${assets}showcase.js?v=3.0.1`)}"></script>
+  <script type="module" src="${escapeHtml(`${assets}showcase.js?v=3.0.2`)}"></script>
 </body>
 </html>`;
 }

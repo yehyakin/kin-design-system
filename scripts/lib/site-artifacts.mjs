@@ -19,7 +19,6 @@ export const SITE_COPY_ARTIFACTS = Object.freeze([
   ["site/assets/posters/int-01-normal-dark.png", "assets/posters/int-01-normal-dark.png"],
   ["site/assets/posters/int-02-normal-dark.png", "assets/posters/int-02-normal-dark.png"],
   ["site/assets/showcase.css", "assets/showcase.css"],
-  ["site/assets/site.css", "assets/site.css"],
   ["site/scenarios/index.html", "scenarios/index.html"],
   ["site/scenarios/lab.html", "scenarios/lab.html"],
   ["site/scenarios/locale.zh-CN.json", "scenarios/locale.zh-CN.json"],
@@ -63,6 +62,7 @@ export const SITE_COPY_ARTIFACTS = Object.freeze([
 ]);
 
 export const SITE_GENERATED_ARTIFACTS = Object.freeze([
+  "assets/site.css",
   "assets/kin-react.css",
   "assets/scenario-atlas.js",
   "assets/scenario-lab.js",

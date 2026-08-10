@@ -6,6 +6,13 @@ The project follows semantic versioning for normative design documentation.
 
 ## Unreleased
 
+## 3.0.2 — 2026-08-11
+
+### Showcase material delivery
+
+- Fixed the GitHub Pages CSS build so the shared KIN material Tokens are bundled into the public site stylesheet instead of resolving outside the project base path. Raised stages, directional edge highlights, contact depth, and floating surfaces now use the same resolved Token source in the deployed Showcase as in the local reference interfaces.
+- Added built-site validation that rejects unresolved CSS imports and fails when any of the six public material roles is missing from the deployable stylesheet.
+
 ## 3.0.1 — 2026-08-11
 
 ### Global material hierarchy
