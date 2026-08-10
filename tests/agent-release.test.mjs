@@ -53,24 +53,34 @@ function git(directory, args) {
   return result.stdout.trim();
 }
 
+function copyTrackedFixture(destination) {
+  const trackedFiles = git(root, ["ls-files", "-z"]).split("\0").filter(Boolean);
+  for (const relative of trackedFiles) {
+    const target = path.join(destination, relative);
+    fs.mkdirSync(path.dirname(target), { recursive: true });
+    fs.copyFileSync(path.join(root, relative), target);
+  }
+}
+
 function createReleaseFixture() {
   const directory = fs.mkdtempSync(path.join(os.tmpdir(), "kin-agent-release-"));
-  fs.cpSync(root, directory, {
-    recursive: true,
-    filter: (source) => {
-      const relative = path.relative(root, source);
-      return !relative.startsWith(".git")
-        && !relative.startsWith("node_modules")
-        && !relative.startsWith(".site-dist")
-        && !relative.startsWith("test-results")
-        && !relative.startsWith("playwright-report");
-    },
-  });
+  copyTrackedFixture(directory);
   const designPath = path.join(directory, "DESIGN.md");
   const design = fs.readFileSync(designPath, "utf8")
-    .replace("release_status: development", "release_status: released")
-    .replace("latest_stable: 2.3.0", "latest_stable: 3.0.0");
+    .replace(/^kin_version:\s*.+$/m, "kin_version: 3.0.0")
+    .replace(/^release_status:\s*.+$/m, "release_status: released")
+    .replace(/^latest_stable:\s*.+$/m, "latest_stable: 3.0.0");
   fs.writeFileSync(designPath, design);
+
+  const packagePath = path.join(directory, "package.json");
+  const packageValue = JSON.parse(fs.readFileSync(packagePath, "utf8"));
+  packageValue.version = "3.0.0";
+  fs.writeFileSync(packagePath, `${JSON.stringify(packageValue, null, 2)}\n`);
+
+  fs.rmSync(path.join(directory, "generated", "agent", "versions"), {
+    recursive: true,
+    force: true,
+  });
 
   const next = buildAgentDistribution(directory);
   const nextTemporary = path.join(directory, "generated", "agent", "next-test");
@@ -145,8 +155,14 @@ function rebuildNext(directory) {
 test("Version Registry Schema and handwritten invariants agree", () => {
   const schema = JSON.parse(fs.readFileSync(path.join(root, "distribution", "schemas", "versions.schema.json"), "utf8"));
   const empty = createEmptyAgentRegistry();
+  const emptyRoot = fs.mkdtempSync(path.join(os.tmpdir(), "kin-agent-empty-registry-"));
+  fs.mkdirSync(path.join(emptyRoot, "distribution", "schemas"), { recursive: true });
+  fs.copyFileSync(
+    path.join(root, "distribution", "schemas", "versions.schema.json"),
+    path.join(emptyRoot, "distribution", "schemas", "versions.schema.json"),
+  );
   assert.deepEqual(validateSchemaValue(empty, schema), []);
-  assert.deepEqual(validateAgentVersionRegistry({ root, registry: empty }), []);
+  assert.deepEqual(validateAgentVersionRegistry({ root: emptyRoot, registry: empty }), []);
 
   const stagedLatest = structuredClone(empty);
   stagedLatest.latest_agent_distribution = "3.0.0";

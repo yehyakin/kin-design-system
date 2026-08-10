@@ -3554,3 +3554,86 @@
     align-items: center;
   }
 }
+
+/* Shared page-pattern material: navigation meets content through contact
+   edges, local controls sit at contact elevation, and only dialogs float. */
+.flow-header,
+.onboarding-progress,
+.settings-nav,
+.system-nav,
+.support-nav,
+.schedule-sidebar {
+  box-shadow: inset 0 1px 0 var(--edge-highlight), inset -1px 0 0 var(--edge-contact);
+}
+
+.choice-row:has(input:checked),
+.appearance-option:has(input:checked),
+.state-icon,
+.search-result-link[aria-current="page"] {
+  box-shadow: inset 0 1px 0 var(--edge-highlight), var(--shadow-contact);
+}
+
+.access-task,
+.onboarding-main,
+.settings-main,
+.system-main,
+.support-main,
+.search-results-region,
+.schedule-workspace {
+  box-shadow: inset 1px 0 0 var(--edge-highlight);
+}
+
+@media (forced-colors: active) {
+  .flow-header,
+  .onboarding-progress,
+  .settings-nav,
+  .system-nav,
+  .support-nav,
+  .schedule-sidebar,
+  .choice-row:has(input:checked),
+  .appearance-option:has(input:checked),
+  .state-icon,
+  .search-result-link[aria-current="page"] {
+    border-color: CanvasText;
+    box-shadow: none;
+  }
+}
+
+/* Keep each direct flow as one bounded desktop surface. Content remains in its
+   native layout inside this frame; this deliberately does not card its rows. */
+@media (min-width: 761px) {
+  html:has(body.flow-page) {
+    background: var(--canvas);
+  }
+
+  body.flow-page {
+    min-height: calc(100dvh - 24px);
+    margin: 12px;
+    border: 1px solid var(--line-strong);
+    border-radius: 12px;
+    background: var(--surface-1);
+    box-shadow: inset 0 1px 0 var(--edge-highlight-strong), var(--shadow-raised);
+  }
+
+  .flow-header {
+    top: 0;
+    border-radius: 11px 11px 0 0;
+  }
+}
+
+@media (max-width: 760px) {
+  body.flow-page {
+    min-height: 100dvh;
+    margin: 0;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+}
+
+@media (forced-colors: active) {
+  body.flow-page {
+    border-color: CanvasText;
+    box-shadow: none;
+  }
+}

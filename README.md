@@ -33,7 +33,7 @@
   <sub>Illustrated reconstruction of the deterministic investigation reference</sub>
 </p>
 
-> **Version status:** use [v2.3.0](https://github.com/yehyakin/kin-design-system/releases/tag/v2.3.0) for production adoption. The `main` branch contains KIN 3.0.0 in development.
+> **Version status:** [v3.0.1](https://github.com/yehyakin/kin-design-system/releases/tag/v3.0.1) is the current release. The `main` branch may contain later documentation work.
 
 KIN is a framework-neutral design contract for teams building websites and software where people need to read, compare, decide, and act without losing context. It covers page composition, components, themes, motion, accessibility, data states, AI-assisted work, and recovery.
 
@@ -157,7 +157,7 @@ npm run test:reference
 Read [CONTRIBUTING.md](./CONTRIBUTING.md) before changing normative rules. Component and page maturity is recorded in the [component catalog](./components/catalog.md) and [page catalog](./pages/catalog.md).
 
 <p>
-  <a href="./DESIGN.md"><img src="https://img.shields.io/badge/Design_Contract-v3.0.0_development-5E6AD2" alt="KIN Design Contract v3.0.0 development" /></a>
+  <a href="./DESIGN.md"><img src="https://img.shields.io/badge/Design_Contract-v3.0.1-5E6AD2" alt="KIN Design Contract v3.0.1" /></a>
   <a href="https://github.com/yehyakin/kin-design-system/actions/workflows/validate-docs.yml"><img src="https://github.com/yehyakin/kin-design-system/actions/workflows/validate-docs.yml/badge.svg" alt="Documentation validation" /></a>
   <a href="./LICENSE"><img src="https://img.shields.io/badge/License-MIT-232326" alt="MIT License" /></a>
 </p>

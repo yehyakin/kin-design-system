@@ -7,17 +7,16 @@ normative: false
 artifact_status: "generated-derivative"
 editable: false
 publication:
-  state: "published-development"
-  published: true
-  public_locators: "active"
+  state: "registry-controlled"
+  public_locators: "registry-authoritative"
 kin_version: "3.0.1"
 release_status: "released"
 latest_stable_contract: "3.0.1"
-channel: "next"
+channel: "versioned"
 locale: "zh-CN"
 direction: "ltr"
 theme: "light"
-contrast: "more"
+contrast: "normal"
 coverage: "compact-foundations-and-routing"
 features:
   component_recipes: "unavailable"
@@ -32,8 +31,8 @@ source:
   checksum_algorithm: "sha256"
   checksum: "1eb36408ce4b807eedbd8c91f07b81e92c96db027e10db30259e28e86cd30714"
   input_set_checksum: "edacf69fb7222a6b51320fc1a73882b240524523a310d34da7ecefb119fb4061"
-  ref: "main"
-  revision_status: "mutable"
+  ref: "v3.0.1"
+  revision_status: "immutable"
 manifest_locator: "design-manifest.json"
 full_contract_path: "DESIGN.md"
 visual_signature_path: "principles/visual-signature.md"
@@ -100,7 +99,7 @@ rules:
     source_path: "principles/visual-signature.md"
     source_heading: "Adoption claims"
 colors:
-  canvas: "#ffffff"
+  canvas: "#f6f7f8"
   sidebar: "#f0f1f3"
   surface-1: "#ffffff"
   surface-2: "#f4f5f6"
@@ -109,21 +108,21 @@ colors:
   surface-hover: "#14161a0b"
   surface-selected: "#525ec41a"
   surface-overlay: "#f6f7f8c2"
-  text-primary: "#08090a"
-  text-secondary: "#343840"
+  text-primary: "#18191c"
+  text-secondary: "#494c53"
   text-muted: "#6b7079"
   text-disabled: "#a1a5ad"
   text-inverse: "#f7f8fa"
   icon-primary: "#3f4248"
   icon-muted: "#7d828b"
   line-subtle: "#14161a0f"
-  line-default: "#6a707a"
+  line-default: "#14161a1a"
   line-strong: "#14161a2b"
   accent: "#5360c5"
   accent-hover: "#4653b7"
   accent-active: "#3e4aa6"
   accent-soft: "#5360c51a"
-  focus-ring: "#3946b8"
+  focus-ring: "#4958c49e"
   monitor: "#167f8d"
   monitor-soft: "#167f8d17"
   positive: "#247b56"
@@ -215,12 +214,12 @@ motion:
   ease-exit: "cubic-bezier(0.23, 1, 0.32, 1)"
   ease-standard: "cubic-bezier(0.2, 0, 0, 1)"
 material:
-  edge-highlight: "#00000000"
-  edge-highlight-strong: "#00000000"
-  edge-contact: "#00000000"
-  shadow-contact: "none"
-  shadow-raised: "none"
-  shadow-floating: "none"
+  edge-highlight: "#ffffffd6"
+  edge-highlight-strong: "#fffffff5"
+  edge-contact: "#262b341a"
+  shadow-contact: "0 1px 2px rgba(27, 35, 48, 0.09)"
+  shadow-raised: "0 18px 44px rgba(27, 35, 48, 0.11), 0 2px 8px rgba(27, 35, 48, 0.07)"
+  shadow-floating: "0 18px 42px rgba(27, 35, 48, 0.16), 0 4px 12px rgba(27, 35, 48, 0.10)"
 component_recipes: null
 ---
 
@@ -232,9 +231,9 @@ component_recipes: null
 
 - 这份精简文件由当前 KIN 合同生成。它不是规范来源、不得直接编辑，也不能替代所链接的完整文档。
 - 合同校验和: `1eb36408ce4b807eedbd8c91f07b81e92c96db027e10db30259e28e86cd30714`
-- 已解析模式: `light` / `more`
+- 已解析模式: `light` / `normal`
 - 本地化文案审核: `reviewed`
-- 发布状态: `published-development`
+- 发布状态: `registry-controlled; consult versions.json`
 
 ## 视觉基调
 
@@ -272,12 +271,12 @@ component_recipes: null
 
 | 角色 | 解析值 |
 |---|---|
-| `edge-highlight` | `#00000000` |
-| `edge-highlight-strong` | `#00000000` |
-| `edge-contact` | `#00000000` |
-| `shadow-contact` | `none` |
-| `shadow-raised` | `none` |
-| `shadow-floating` | `none` |
+| `edge-highlight` | `#ffffffd6` |
+| `edge-highlight-strong` | `#fffffff5` |
+| `edge-contact` | `#262b341a` |
+| `shadow-contact` | `0 1px 2px rgba(27, 35, 48, 0.09)` |
+| `shadow-raised` | `0 18px 44px rgba(27, 35, 48, 0.11), 0 2px 8px rgba(27, 35, 48, 0.07)` |
+| `shadow-floating` | `0 18px 42px rgba(27, 35, 48, 0.16), 0 4px 12px rgba(27, 35, 48, 0.10)` |
 
 ## 动效
 

@@ -340,12 +340,10 @@ test("normal motion streaming can be stopped without losing input", async ({ pag
 
   const caret = page.locator(".stream-caret");
   await expect(caret).toBeVisible();
-  const animationName = await caret.evaluate((element) => {
-    const value = getComputedStyle(element).animationName;
-    document.querySelector("[data-composer-stop]")?.click();
-    return value;
-  });
-  expect(animationName).toBe("caret-pulse");
+  await expect.poll(async () => {
+    return caret.evaluate((element) => getComputedStyle(element).animationName).catch(() => "");
+  }).toBe("caret-pulse");
+  await page.locator("[data-composer-stop]").click();
 
   await expect(caret).toHaveCount(0);
   await expect(instruction).toHaveValue(originalValue);

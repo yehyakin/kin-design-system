@@ -10,6 +10,28 @@ const root = path.resolve(import.meta.dirname, "..");
 const kinVersion = JSON.parse(fs.readFileSync(path.join(root, "package.json"), "utf8")).version;
 const designContract = fs.readFileSync(path.join(root, "DESIGN.md"), "utf8");
 const releaseStatus = designContract.match(/^release_status:\s*(development|released)\s*$/m)?.[1];
+const releaseTagRef = `refs/tags/v${kinVersion}`;
+let createdReleaseTagFixture = false;
+
+if (releaseStatus === "released") {
+  const existingTag = spawnSync("git", ["rev-parse", "--verify", `${releaseTagRef}^{commit}`], {
+    cwd: root,
+    encoding: "utf8",
+  });
+  if (existingTag.status !== 0) {
+    // Pull-request checks intentionally run before the release Tag exists. Give
+    // adoption tests a local immutable locator without relaxing release gates;
+    // validate-release.mjs still requires the real annotated Tag after merge.
+    execFileSync("git", ["update-ref", releaseTagRef, "HEAD"], { cwd: root, stdio: "pipe" });
+    createdReleaseTagFixture = true;
+  }
+}
+
+test.after(() => {
+  if (createdReleaseTagFixture) {
+    execFileSync("git", ["update-ref", "-d", releaseTagRef], { cwd: root, stdio: "pipe" });
+  }
+});
 
 function initAdoption(project, profile = "information-site") {
   execFileSync(process.execPath, [path.join(root, "scripts", "init-adoption.mjs"), project, "--profile", profile], { stdio: "pipe" });

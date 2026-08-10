@@ -1691,3 +1691,46 @@ summary:focus-visible {
     forced-color-adjust: none;
   }
 }
+
+/* Explorer specimens use the same material order as their direct references:
+   one raised canvas, contact-level local surfaces, and floating dialogs. */
+.specimen-canvas,
+.code-shell {
+  box-shadow: inset 0 1px 0 var(--edge-highlight-strong), var(--shadow-raised);
+}
+
+.specimen-bar,
+.specimen-section-header,
+.specimen-footer,
+.mini-sidebar,
+.mini-inspector,
+.trace-context,
+.evidence-detail {
+  box-shadow: inset 0 1px 0 var(--edge-highlight), inset 0 -1px 0 var(--edge-contact);
+}
+
+.command-stage__context,
+.tool-activity,
+.task-icon,
+.kin-rule-side select {
+  box-shadow: inset 0 1px 0 var(--edge-highlight), var(--shadow-contact);
+}
+
+@media (forced-colors: active) {
+  .specimen-canvas,
+  .code-shell,
+  .specimen-bar,
+  .specimen-section-header,
+  .specimen-footer,
+  .mini-sidebar,
+  .mini-inspector,
+  .trace-context,
+  .evidence-detail,
+  .command-stage__context,
+  .tool-activity,
+  .task-icon,
+  .kin-rule-side select {
+    border-color: CanvasText;
+    box-shadow: none;
+  }
+}

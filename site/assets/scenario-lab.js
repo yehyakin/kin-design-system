@@ -116,8 +116,7 @@ const LAB_COPY = Object.freeze({
     visible_detail: "{selector} must be visible.",
     attribute_detail: "{selector} expected {attribute}=\"{expected}\"; received \"{actual}\".",
     text_detail: "{selector} must include \"{expected}\".",
-    reference_document_unavailable: "The reference document is unavailable.",
-    reference_window_unavailable: "The reference frame Window is unavailable."
+    reference_document_unavailable: "The reference document is unavailable."
   }),
   "zh-CN": Object.freeze({
     checking_reference: "正在检查交互预览 · {selection}",
@@ -153,8 +152,7 @@ const LAB_COPY = Object.freeze({
     visible_detail: "{selector} 必须可见。",
     attribute_detail: "{selector} 预期 {attribute}=\"{expected}\"；实际为 \"{actual}\"。",
     text_detail: "{selector} 必须包含“{expected}”。",
-    reference_document_unavailable: "预览页面不可用。",
-    reference_window_unavailable: "无法访问预览窗口。"
+    reference_document_unavailable: "预览页面不可用。"
   })
 });
 
@@ -337,6 +335,7 @@ let frameResizeVerification = null;
 let verificationObserver = null;
 let verificationTimer = null;
 let inspectionRevision = 0;
+let verifiedRevision = 0;
 let frameVerified = false;
 
 function readStoredMode() {
@@ -968,6 +967,7 @@ function verifyCurrentState(revision = inspectionRevision, { reportFailure = tru
   }
 
   if (passed) {
+    verifiedRevision = revision;
     clearError();
     setVerification("pass", formatCopy("verified"), detail);
     lab.dataset.loadState = "ready";
@@ -1045,6 +1045,35 @@ function inspectReference(revision = inspectionRevision) {
   }
 }
 
+function navigateFrame(url) {
+  try {
+    elements.frame.contentWindow.location.replace(url.href);
+  } catch {
+    elements.frame.src = url.href;
+  }
+}
+
+function awaitCurrentReference(revision = inspectionRevision, attempt = 0) {
+  if (revision !== inspectionRevision || revision === verifiedRevision) return;
+  const matchesReference = frameMatchesCurrentReference();
+  if (matchesReference && elements.frame.contentDocument?.documentElement) {
+    // Same-document navigations can settle out of issue order. Inspect only
+    // after the latest revision remains current for a short stability window.
+    setTimeout(() => {
+      if (revision !== inspectionRevision || revision === verifiedRevision) return;
+      if (frameMatchesCurrentReference() && elements.frame.contentDocument?.documentElement) inspectReference(revision);
+      else awaitCurrentReference(revision, attempt + 1);
+    }, 120);
+    return;
+  }
+  if (attempt >= 26) {
+    showError(formatCopy("reference_unavailable", { message: formatCopy("same_origin_unavailable") }));
+    return;
+  }
+  if (!matchesReference) navigateFrame(referenceUrl(selectedControl().reference_path));
+  setTimeout(() => awaitCurrentReference(revision, attempt + 1), 150);
+}
+
 function loadReference() {
   const revision = beginInspection();
   const control = selectedControl();
@@ -1056,31 +1085,10 @@ function loadReference() {
   lab.dataset.loadState = "loading";
   setFrameVerified(false, formatCopy("checking_reference", { selection: control.label }));
 
-  const currentUrl = currentFrameUrl();
-  if (currentUrl.href === nextUrl.href) {
-    inspectReference(revision);
-    return;
-  }
-
-  const sameDocument = currentUrl.origin === nextUrl.origin
-    && currentUrl.pathname === nextUrl.pathname
-    && currentUrl.search === nextUrl.search;
-  if (sameDocument && currentUrl.hash !== nextUrl.hash) {
-    try {
-      elements.frame.contentWindow?.addEventListener("hashchange", () => inspectReference(revision), { once: true });
-    } catch {
-      // A temporarily isolated fixture cannot expose its Window. The fallback below restores the requested reference.
-    }
-  }
-  try {
-    const frameWindow = elements.frame.contentWindow;
-    if (!frameWindow) throw new Error(formatCopy("reference_window_unavailable"));
-    // Scenario controls own the top-level history entry. Replacing the nested
-    // document keeps iframe navigations from adding duplicate Back/Forward steps.
-    frameWindow.location.replace(nextUrl.href);
-  } catch {
-    elements.frame.src = nextUrl.href;
-  }
+  // Scenario controls own the top-level history entry. Replacing the nested
+  // document keeps iframe navigations from adding duplicate Back/Forward steps.
+  if (currentFrameUrl().href !== nextUrl.href) navigateFrame(nextUrl);
+  awaitCurrentReference(revision);
 }
 
 function renderAll(options = {}) {

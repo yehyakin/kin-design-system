@@ -286,18 +286,56 @@ test("access flow covers sign-in, recovery, and contextual reauthentication", as
   await expect(page.locator("#reauth-password")).toHaveAttribute("aria-invalid", "true");
   await expect(page.locator("#reauth-password-error")).toBeVisible();
   await expect(page.locator("[data-reauth-status]")).toBeFocused();
+  await reauthDialog.evaluate((element) => {
+    window.__kinPageReauthClosing = new Promise((resolve) => {
+      const observer = new MutationObserver(() => {
+        if (element.dataset.state !== "closing") return;
+        observer.disconnect();
+        resolve({
+          ariaHidden: element.getAttribute("aria-hidden"),
+          inert: element.inert,
+          open: element.open,
+          state: element.dataset.state,
+        });
+      });
+      observer.observe(element, { attributes: true, attributeFilter: ["data-state"] });
+    });
+  });
   await page.locator("[data-reauth-cancel]").click();
-  await expect(reauthDialog).toHaveAttribute("data-state", "closing");
-  await expect(reauthDialog).toHaveAttribute("inert", "");
-  await expect(reauthDialog).toHaveAttribute("aria-hidden", "true");
+  expect(await page.evaluate(() => window.__kinPageReauthClosing)).toEqual({
+    ariaHidden: "true",
+    inert: true,
+    open: true,
+    state: "closing",
+  });
   await expect(reauthDialog).toBeHidden();
   await expect(reauthOpen).toBeFocused();
   await expect.poll(() => page.evaluate(() => scrollY)).toBe(accessScroll);
 
   await reauthOpen.click();
+  await reauthDialog.evaluate((element) => {
+    window.__kinPageReauthReversal = new Promise((resolve) => {
+      const observer = new MutationObserver(() => {
+        if (element.dataset.state !== "closing") return;
+        observer.disconnect();
+        const trigger = document.querySelector("[data-reauth-open]");
+        const snapshot = {
+          inert: element.inert,
+          open: element.open,
+          state: element.dataset.state,
+        };
+        trigger.click();
+        resolve(snapshot);
+      });
+      observer.observe(element, { attributes: true, attributeFilter: ["data-state"] });
+    });
+  });
   await page.locator("[data-reauth-cancel]").click();
-  await expect(reauthDialog).toHaveAttribute("data-state", "closing");
-  await reauthOpen.evaluate((element) => element.click());
+  expect(await page.evaluate(() => window.__kinPageReauthReversal)).toEqual({
+    inert: true,
+    open: true,
+    state: "closing",
+  });
   await expect(reauthDialog).toHaveAttribute("data-state", "open");
   await expect(reauthDialog).not.toHaveAttribute("inert", "");
   await expect(page.locator("body")).toHaveCSS("position", "fixed");
