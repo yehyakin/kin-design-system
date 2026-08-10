@@ -29,6 +29,13 @@ fs.copyFileSync(
 );
 
 await build({
+  entryPoints: [path.join(root, "site", "assets", "site.css")],
+  outfile: path.join(output, "assets", "site.css"),
+  bundle: true,
+  target: ["es2022"],
+});
+
+await build({
   entryPoints: [
     path.join(root, "site", "assets", "site.js"),
     path.join(root, "site", "assets", "scenario-atlas.js"),

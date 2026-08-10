@@ -385,6 +385,20 @@ if (fs.existsSync(cssPath)) {
   if (/transition(?:-property)?\s*:\s*all\b/i.test(css)) failures.push("assets/site.css: transition: all is forbidden");
   if (!/prefers-reduced-motion/.test(css)) failures.push("assets/site.css: reduced-motion response is missing");
   if (!/:focus-visible/.test(css)) failures.push("assets/site.css: visible focus behavior is missing");
+  if (/@import\s+/i.test(css)) failures.push("assets/site.css: local CSS imports must be bundled for Pages deployment");
+  for (const materialToken of [
+    "--edge-highlight",
+    "--edge-highlight-strong",
+    "--edge-contact",
+    "--shadow-contact",
+    "--shadow-raised",
+    "--shadow-floating",
+  ]) {
+    const escapedToken = materialToken.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    if (!new RegExp(`${escapedToken}\\s*:`, "u").test(css)) {
+      failures.push(`assets/site.css: bundled material Token is missing -> ${materialToken}`);
+    }
+  }
 }
 
 const showcaseCssPath = path.join(output, "assets/showcase.css");
