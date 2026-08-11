@@ -111,7 +111,14 @@ test("workspace distinguishes current navigation from selected evidence and risk
 
   for (const view of ["entity", "investigation", "risk-queue"]) {
     await page.goto(`/examples/workspace-reference/?view=${view}&state=normal&lang=en`);
-    const navigation = await snapshot(`[data-nav-view="${view}"]`);
+    const selector = `[data-nav-view="${view}"]`;
+    await expect.poll(async () => {
+      const material = await snapshot(selector);
+      return material.background === material.navigationSelected;
+    }, {
+      message: `${view} navigation should settle on the navigation-selected material`,
+    }).toBe(true);
+    const navigation = await snapshot(selector);
     expect(navigation.background).toBe(navigation.navigationSelected);
     expect(navigation.background).not.toBe(navigation.selected);
     expect(navigation.boxShadow).not.toContain(navigation.accent);
