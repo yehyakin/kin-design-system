@@ -51,6 +51,28 @@ async function assertMinimumTouchTargets(page, selector) {
   expect(targets.filter(({ height, width }) => height < 44 || width < 44)).toEqual([]);
 }
 
+async function materialSnapshot(locator) {
+  return locator.evaluate((element) => {
+    const resolveColor = (token) => {
+      const probe = document.createElement("span");
+      probe.style.backgroundColor = `var(${token})`;
+      document.body.append(probe);
+      const color = getComputedStyle(probe).backgroundColor;
+      probe.remove();
+      return color;
+    };
+    const style = getComputedStyle(element);
+    return {
+      accent: resolveColor("--accent"),
+      background: style.backgroundColor,
+      borderColor: style.borderColor,
+      boxShadow: style.boxShadow,
+      navigationSelected: resolveColor("--navigation-selected"),
+      surface2: resolveColor("--surface-2"),
+    };
+  });
+}
+
 async function capture(page, testInfo, name) {
   await page.screenshot({ path: testInfo.outputPath(name), fullPage: true });
 }
@@ -386,6 +408,14 @@ test("settings preserve unsaved state, update preferences, and confirm session r
   await page.setViewportSize({ width: 1280, height: 900 });
   await page.goto("/examples/page-patterns/settings.html");
 
+  const settingsNavigation = await materialSnapshot(page.locator('[data-settings-nav="profile"]'));
+  const settingsSurface = await materialSnapshot(page.locator('[data-settings-section="profile"]'));
+  expect(settingsNavigation.background).toBe(settingsNavigation.navigationSelected);
+  expect(settingsNavigation.boxShadow).not.toContain(settingsNavigation.accent);
+  expect(settingsSurface.background).toBe(settingsSurface.surface2);
+  expect(settingsSurface.borderColor).not.toBe("rgba(0, 0, 0, 0)");
+  expect(settingsSurface.boxShadow).not.toBe("none");
+
   const save = page.locator("[data-settings-save]");
   await expect(save).toBeDisabled();
   await page.locator("#profile-name").fill("林简宁");
@@ -530,6 +560,13 @@ test("help and support separates guidance requests tickets and sourced status", 
   await page.goto("/examples/page-patterns/support.html");
 
   await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
+  const supportNavigation = await materialSnapshot(page.locator('[data-support-nav="help"]'));
+  const supportSurface = await materialSnapshot(page.locator('[data-support-section="help"]'));
+  expect(supportNavigation.background).toBe(supportNavigation.navigationSelected);
+  expect(supportNavigation.boxShadow).not.toContain(supportNavigation.accent);
+  expect(supportSurface.background).toBe(supportSurface.surface2);
+  expect(supportSurface.borderColor).not.toBe("rgba(0, 0, 0, 0)");
+  expect(supportSurface.boxShadow).not.toBe("none");
   await page.locator("[data-help-search]").fill("权限");
   await expect(page.locator("[data-help-summary]")).toContainText("1 条");
   await page.locator("[data-help-article]:visible > button").click();

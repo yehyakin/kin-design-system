@@ -250,6 +250,17 @@ test("home stage auto-loads and keyboard tabs replace the live reference", async
   await expect(stage).toHaveAttribute("data-stage-ready", "true", { timeout: 10_000 });
   await expect(loader).toBeHidden();
   await expect(page.frameLocator("[data-stage-frame]").locator(".entity-content")).toBeVisible();
+  const initialTabMaterial = await tabs.nth(1).evaluate((element) => {
+    const style = getComputedStyle(element);
+    return {
+      background: style.backgroundColor,
+      edge: getComputedStyle(element, "::after").display,
+      shadow: style.boxShadow,
+    };
+  });
+  expect(initialTabMaterial.background).toBe("rgba(255, 255, 255, 0.055)");
+  expect(initialTabMaterial.edge).toBe("none");
+  expect(initialTabMaterial.shadow).not.toContain("117, 128, 224");
 
   await tabs.nth(1).focus();
   await page.keyboard.press("ArrowRight");
@@ -366,6 +377,23 @@ test("global navigation preserves the same spatial model across public routes", 
     await expect(navigation.getByRole("link")).toHaveText(expectedLabels);
     await expect(navigation.locator('a[aria-current="page"]')).toHaveCount(1);
     await expect(navigation.locator('a[aria-current="page"]')).toHaveText(currentLabel);
+    const currentNavigationStyle = await navigation.locator('a[aria-current="page"]').evaluate((element) => {
+      const probe = document.createElement("span");
+      probe.style.background = "var(--navigation-selected)";
+      document.body.append(probe);
+      const navigationSelected = getComputedStyle(probe).backgroundColor;
+      probe.remove();
+      const style = getComputedStyle(element);
+      return {
+        background: style.backgroundColor,
+        boxShadow: style.boxShadow,
+        navigationSelected,
+        edge: getComputedStyle(element, "::after").display,
+      };
+    });
+    expect(currentNavigationStyle.background).toBe(currentNavigationStyle.navigationSelected);
+    expect(currentNavigationStyle.boxShadow).not.toContain("94, 106, 210");
+    expect(currentNavigationStyle.edge).toBe("none");
 
     const geometry = await header.evaluate((element) => {
       const rect = element.getBoundingClientRect();
@@ -524,6 +552,15 @@ test("documentation route retains the original contract and reference destinatio
   await expect(page.locator(".nav-scrim")).toBeHidden();
   await expect(page.getByRole("button", { name: "Close navigation" })).toHaveCount(0);
   await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
+  const documentationTabMaterial = await page.locator('.pattern-tabs [aria-selected="true"]').evaluate((element) => {
+    const style = getComputedStyle(element);
+    return {
+      background: style.backgroundColor,
+      shadow: style.boxShadow,
+    };
+  });
+  expect(documentationTabMaterial.background).toBe("rgba(255, 255, 255, 0.055)");
+  expect(documentationTabMaterial.shadow).not.toContain("94, 106, 210");
   await expectNoHorizontalOverflow(page);
 
   await page.goto("/zh/docs/");
@@ -746,6 +783,17 @@ test("Component Explorer prioritizes a featured rail, live specimen, and lower e
   const tabs = page.locator("[data-component-tabs]");
   await expect(tabs.getByRole("tab")).toHaveCount(4);
   await expect(tabs.getByRole("tab", { name: "Usage" })).toHaveAttribute("aria-selected", "true");
+  const usageTabMaterial = await tabs.getByRole("tab", { name: "Usage" }).evaluate((element) => {
+    const style = getComputedStyle(element);
+    return {
+      background: style.backgroundColor,
+      edge: getComputedStyle(element, "::after").display,
+      shadow: style.boxShadow,
+    };
+  });
+  expect(usageTabMaterial.background).toBe("rgba(255, 255, 255, 0.055)");
+  expect(usageTabMaterial.edge).toBe("none");
+  expect(usageTabMaterial.shadow).not.toContain("94, 106, 210");
   await expect(tabs.locator("#usage-panel .contract-boundary")).toHaveCount(0);
   await tabs.getByRole("tab", { name: "Usage" }).focus();
   await page.keyboard.press("ArrowRight");
@@ -773,6 +821,52 @@ test("Component Explorer prioritizes a featured rail, live specimen, and lower e
     "href",
     "../../zh/components/evidence-list/",
   );
+});
+
+test("App Shell specimen keeps route navigation distinct from selected work", async ({ page }) => {
+  await page.goto("/components/app-shell/");
+  const reference = page.frameLocator("[data-reference-stage] [data-stage-frame]");
+  const currentNavigation = reference.locator('.mini-nav [aria-current="page"]');
+  await expect(currentNavigation).toBeVisible();
+  const material = await currentNavigation.evaluate((element) => {
+    const resolveColor = (token) => {
+      const probe = document.createElement("span");
+      probe.style.background = `var(${token})`;
+      document.body.append(probe);
+      const color = getComputedStyle(probe).backgroundColor;
+      probe.remove();
+      return color;
+    };
+    const style = getComputedStyle(element);
+    return {
+      accent: resolveColor("--accent"),
+      background: style.backgroundColor,
+      boxShadow: style.boxShadow,
+      navigationSelected: resolveColor("--navigation-selected"),
+      selected: resolveColor("--surface-selected"),
+    };
+  });
+  expect(material.background).toBe(material.navigationSelected);
+  expect(material.background).not.toBe(material.selected);
+  expect(material.boxShadow).not.toContain(material.accent);
+});
+
+test("Component Explorer keeps a current rail link and specimen-aware stage heights", async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.goto("/components/button/");
+  const buttonRail = page.locator(".component-studio__navigation nav");
+  await expect(buttonRail.locator('a[aria-current="page"]')).toHaveCount(1);
+  await expect(buttonRail.locator('a[aria-current="page"]')).toHaveAttribute("href", "./");
+  await expect(buttonRail.locator("a")).toHaveCount(9);
+  await expect(page.locator("[data-reference-stage]")).toHaveAttribute("data-stage-ready", "true", { timeout: 10_000 });
+  const buttonHeight = await page.locator(".reference-stage__viewport").evaluate((element) => element.getBoundingClientRect().height);
+  expect(buttonHeight).toBeLessThan(500);
+
+  await page.goto("/components/evidence-list/");
+  await expect(page.locator("[data-reference-stage]")).toHaveAttribute("data-stage-ready", "true", { timeout: 10_000 });
+  const evidenceHeight = await page.locator(".reference-stage__viewport").evaluate((element) => element.getBoundingClientRect().height);
+  expect(evidenceHeight).toBeGreaterThan(buttonHeight);
+  expect(evidenceHeight).toBeGreaterThanOrEqual(600);
 });
 
 test("Button Explorer demonstrates distinct tasks instead of a repeated variant matrix", async ({ page }) => {
@@ -875,6 +969,11 @@ test("Pattern discovery compares four compositions through one dominant live sta
   await expect(page.locator("details.pattern-details")).toHaveCount(4);
   await expect(stage).toHaveAttribute("data-stage-ready", "true", { timeout: 10_000 });
   await expect(stage.locator("[data-stage-loading]")).toBeHidden();
+  const initialOuterTheme = await page.locator("html").getAttribute("data-theme");
+  await expect(page.frameLocator("[data-pattern-browser] [data-reference-stage] iframe").locator("html")).toHaveAttribute(
+    "data-theme",
+    initialOuterTheme,
+  );
 
   const maturityDisclosure = page.locator("details.catalog-disclosure--compact");
   await expect(maturityDisclosure).not.toHaveAttribute("open", "");
@@ -912,6 +1011,23 @@ test("Pattern discovery compares four compositions through one dominant live sta
   await expect(stage).toHaveAttribute("data-stage-ready", "true", { timeout: 10_000 });
   await expect(page.locator("details.pattern-details a.button").filter({ hasText: "Open Chinese reference" })).toHaveCount(3);
   await expect(page.locator(".reference-language-note")).toHaveCount(3);
+  const stageOverride = initialOuterTheme === "dark" ? "Light" : "Dark";
+  await stage.getByRole("button", { name: stageOverride }).click();
+  const overrideTheme = stageOverride.toLowerCase();
+  await expect(page.frameLocator("[data-pattern-browser] [data-reference-stage] iframe").locator("html")).toHaveAttribute(
+    "data-theme",
+    overrideTheme,
+  );
+  await page.locator("[data-theme-switch]").click();
+  await expect(page.frameLocator("[data-pattern-browser] [data-reference-stage] iframe").locator("html")).toHaveAttribute(
+    "data-theme",
+    overrideTheme,
+  );
+  await choices.filter({ hasText: "Information Site" }).click();
+  await expect(page.frameLocator("[data-pattern-browser] [data-reference-stage] iframe").locator("html")).toHaveAttribute(
+    "data-theme",
+    overrideTheme,
+  );
   await expect(page.locator('.language-menu a[hreflang="zh-CN"]')).toHaveAttribute("href", "../zh/patterns/");
 });
 
@@ -1394,6 +1510,37 @@ test("language menu supports arrow, Home, End, Escape, and focus return on a nes
   await expect(page.locator("[data-language-menu]")).toBeHidden();
 });
 
+test("mobile horizontal references expose continuation cues without root overflow", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/components/button/");
+  const componentRail = page.locator(".component-studio__navigation nav");
+  const componentRailCue = await componentRail.evaluate((element) => {
+    const style = getComputedStyle(element, "::after");
+    return { overflow: element.scrollWidth > element.clientWidth, width: style.width, display: style.display };
+  });
+  expect(componentRailCue.overflow).toBe(true);
+  expect(componentRailCue.display).not.toBe("none");
+  expect(Number.parseFloat(componentRailCue.width)).toBeGreaterThan(0);
+  const controlCue = await page.locator(".reference-stage__controls").evaluate((element) => {
+    const style = getComputedStyle(element, "::after");
+    return { width: style.width, display: style.display };
+  });
+  expect(controlCue.display).not.toBe("none");
+  expect(Number.parseFloat(controlCue.width)).toBeGreaterThan(0);
+  await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
+
+  await page.goto("/patterns/");
+  const patternSelector = page.locator(".pattern-browser__selector");
+  const patternCue = await patternSelector.evaluate((element) => {
+    const style = getComputedStyle(element, "::after");
+    return { overflow: element.scrollWidth > element.clientWidth, width: style.width, display: style.display };
+  });
+  expect(patternCue.overflow).toBe(true);
+  expect(patternCue.display).not.toBe("none");
+  expect(Number.parseFloat(patternCue.width)).toBeGreaterThan(0);
+  await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
+});
+
 test("mobile global navigation remains available on nested routes with exact focus return", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/docs/");
@@ -1411,6 +1558,17 @@ test("mobile global navigation remains available on nested routes with exact foc
   await expect(navigation).toHaveAttribute("aria-modal", "true");
   await expect(main).toHaveJSProperty("inert", true);
   await expect(navigation.getByRole("link", { name: "Showcase" })).toBeFocused();
+  const currentNavigationStyle = await navigation.locator('a[aria-current="page"]').evaluate((element) => {
+    const style = getComputedStyle(element);
+    return {
+      background: style.backgroundColor,
+      boxShadow: style.boxShadow,
+      edge: getComputedStyle(element, "::after").display,
+    };
+  });
+  expect(currentNavigationStyle.background).not.toContain("94, 106, 210");
+  expect(currentNavigationStyle.boxShadow).not.toContain("94, 106, 210");
+  expect(currentNavigationStyle.edge).toBe("none");
 
   for (let index = 0; index < 12; index += 1) {
     await page.keyboard.press("Tab");

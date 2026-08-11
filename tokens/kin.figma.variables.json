@@ -317,6 +317,21 @@
     },
     {
       "action": "CREATE",
+      "id": "kin_kin_color_collection_variable_color_navigation_selected",
+      "name": "Color/navigation selected",
+      "resolvedType": "COLOR",
+      "variableCollectionId": "kin_color_collection",
+      "description": "Semantic KIN color. Values change by theme and contrast mode.",
+      "hiddenFromPublishing": false,
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "--navigation-selected"
+      }
+    },
+    {
+      "action": "CREATE",
       "id": "kin_kin_color_collection_variable_color_negative",
       "name": "Color/negative",
       "resolvedType": "COLOR",
@@ -2069,6 +2084,46 @@
         "g": 0.8156862745098039,
         "b": 0.8705882352941177,
         "a": 0.10196078431372549
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_navigation_selected",
+      "modeId": "kin_kin_color_collection_mode_light",
+      "value": {
+        "r": 0.0784313725490196,
+        "g": 0.08627450980392157,
+        "b": 0.10196078431372549,
+        "a": 0.054901960784313725
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_navigation_selected",
+      "modeId": "kin_kin_color_collection_mode_dark",
+      "value": {
+        "r": 1,
+        "g": 1,
+        "b": 1,
+        "a": 0.054901960784313725
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_navigation_selected",
+      "modeId": "kin_kin_color_collection_mode_light_high_contrast",
+      "value": {
+        "r": 0.0784313725490196,
+        "g": 0.08627450980392157,
+        "b": 0.10196078431372549,
+        "a": 0.054901960784313725
+      }
+    },
+    {
+      "variableId": "kin_kin_color_collection_variable_color_navigation_selected",
+      "modeId": "kin_kin_color_collection_mode_dark_high_contrast",
+      "value": {
+        "r": 1,
+        "g": 1,
+        "b": 1,
+        "a": 0.054901960784313725
       }
     },
     {

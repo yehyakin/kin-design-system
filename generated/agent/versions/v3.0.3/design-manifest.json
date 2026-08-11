@@ -1,26 +1,25 @@
 {
-  "$schema": "https://yehyakin.github.io/kin-design-system/next/schemas/manifest.schema.json",
+  "$schema": "https://yehyakin.github.io/kin-design-system/versions/v3.0.3/schemas/manifest.schema.json",
   "schema_version": "2.0.0",
   "kind": "kin-agent-distribution",
   "artifact_status": "generated-derivative",
   "generated": true,
   "normative": false,
   "publication": {
-    "state": "published-development",
-    "published": true,
-    "public_locators": "active"
+    "state": "registry-controlled",
+    "public_locators": "registry-authoritative"
   },
   "kin_version": "3.0.3",
   "release_status": "released",
   "latest_stable_contract": "3.0.3",
-  "channel": "next",
+  "channel": "versioned",
   "source": {
     "contract_path": "DESIGN.md",
     "checksum_algorithm": "sha256",
     "checksum": "98c86b92eace31b6157caf5a04599f981b5602b516cfadd3caa6487753ed42db",
     "input_set_checksum": "9ffdb2993dd50ed3eb058517eb2665fe62e0ef5c66d032f34c50e8f3e71164bb",
-    "ref": "main",
-    "revision_status": "mutable",
+    "ref": "v3.0.3",
+    "revision_status": "immutable",
     "inputs": [
       {
         "path": "DELIVERY.md",
@@ -147,46 +146,46 @@
     "component_recipes": "unavailable"
   },
   "links": {
-    "source_raw_base_url": "https://raw.githubusercontent.com/yehyakin/kin-design-system/main/",
-    "source_human_base_url": "https://github.com/yehyakin/kin-design-system/blob/main/",
-    "public_base_url": "https://yehyakin.github.io/kin-design-system/next/",
+    "source_raw_base_url": "https://raw.githubusercontent.com/yehyakin/kin-design-system/v3.0.3/",
+    "source_human_base_url": "https://github.com/yehyakin/kin-design-system/blob/v3.0.3/",
+    "public_base_url": "https://yehyakin.github.io/kin-design-system/versions/v3.0.3/",
     "versions_registry_url": "https://yehyakin.github.io/kin-design-system/versions.json"
   },
   "schemas": {
     "snapshot": {
       "repository_source_path": "distribution/schemas/snapshot.schema.json",
       "bundle_path": "schemas/snapshot.schema.json",
-      "public_url": "https://yehyakin.github.io/kin-design-system/next/schemas/snapshot.schema.json"
+      "public_url": "https://yehyakin.github.io/kin-design-system/versions/v3.0.3/schemas/snapshot.schema.json"
     },
     "manifest": {
       "repository_source_path": "distribution/schemas/manifest.schema.json",
       "bundle_path": "schemas/manifest.schema.json",
-      "public_url": "https://yehyakin.github.io/kin-design-system/next/schemas/manifest.schema.json"
+      "public_url": "https://yehyakin.github.io/kin-design-system/versions/v3.0.3/schemas/manifest.schema.json"
     },
     "alias_manifest": {
       "repository_source_path": "distribution/schemas/alias-manifest.schema.json",
       "bundle_path": "schemas/alias-manifest.schema.json",
-      "public_url": "https://yehyakin.github.io/kin-design-system/next/schemas/alias-manifest.schema.json"
+      "public_url": "https://yehyakin.github.io/kin-design-system/versions/v3.0.3/schemas/alias-manifest.schema.json"
     },
     "versions": {
       "repository_source_path": "distribution/schemas/versions.schema.json",
       "bundle_path": "schemas/versions.schema.json",
-      "public_url": "https://yehyakin.github.io/kin-design-system/next/schemas/versions.schema.json"
+      "public_url": "https://yehyakin.github.io/kin-design-system/versions/v3.0.3/schemas/versions.schema.json"
     },
     "rules": {
       "repository_source_path": "distribution/schemas/rules.schema.json",
       "bundle_path": "schemas/rules.schema.json",
-      "public_url": "https://yehyakin.github.io/kin-design-system/next/schemas/rules.schema.json"
+      "public_url": "https://yehyakin.github.io/kin-design-system/versions/v3.0.3/schemas/rules.schema.json"
     },
     "profiles": {
       "repository_source_path": "distribution/schemas/profiles.schema.json",
       "bundle_path": "schemas/profiles.schema.json",
-      "public_url": "https://yehyakin.github.io/kin-design-system/next/schemas/profiles.schema.json"
+      "public_url": "https://yehyakin.github.io/kin-design-system/versions/v3.0.3/schemas/profiles.schema.json"
     },
     "locale_source": {
       "repository_source_path": "distribution/schemas/locale-source.schema.json",
       "bundle_path": "schemas/locale-source.schema.json",
-      "public_url": "https://yehyakin.github.io/kin-design-system/next/schemas/locale-source.schema.json"
+      "public_url": "https://yehyakin.github.io/kin-design-system/versions/v3.0.3/schemas/locale-source.schema.json"
     }
   },
   "locales": [
@@ -268,8 +267,8 @@
   "catalogs": {
     "components": {
       "repository_path": "components/catalog.json",
-      "raw_url": "https://raw.githubusercontent.com/yehyakin/kin-design-system/main/components/catalog.json",
-      "human_url": "https://github.com/yehyakin/kin-design-system/blob/main/components/catalog.json",
+      "raw_url": "https://raw.githubusercontent.com/yehyakin/kin-design-system/v3.0.3/components/catalog.json",
+      "human_url": "https://github.com/yehyakin/kin-design-system/blob/v3.0.3/components/catalog.json",
       "schema_version": "1.0.0",
       "catalog_version": "1.6.0",
       "reviewed_on": "2026-07-30",
@@ -283,8 +282,8 @@
     },
     "pages": {
       "repository_path": "pages/catalog.json",
-      "raw_url": "https://raw.githubusercontent.com/yehyakin/kin-design-system/main/pages/catalog.json",
-      "human_url": "https://github.com/yehyakin/kin-design-system/blob/main/pages/catalog.json",
+      "raw_url": "https://raw.githubusercontent.com/yehyakin/kin-design-system/v3.0.3/pages/catalog.json",
+      "human_url": "https://github.com/yehyakin/kin-design-system/blob/v3.0.3/pages/catalog.json",
       "schema_version": "1.0.0",
       "catalog_version": "1.4.0",
       "reviewed_on": "2026-07-16",
@@ -298,8 +297,8 @@
     },
     "integrations": {
       "repository_path": "integrations/catalog.json",
-      "raw_url": "https://raw.githubusercontent.com/yehyakin/kin-design-system/main/integrations/catalog.json",
-      "human_url": "https://github.com/yehyakin/kin-design-system/blob/main/integrations/catalog.json",
+      "raw_url": "https://raw.githubusercontent.com/yehyakin/kin-design-system/v3.0.3/integrations/catalog.json",
+      "human_url": "https://github.com/yehyakin/kin-design-system/blob/v3.0.3/integrations/catalog.json",
       "schema_version": "1.0.0",
       "reviewed_on": "2026-07-15",
       "entry_count": 9,
@@ -324,12 +323,12 @@
       "locale": "en",
       "theme": "dark",
       "contrast": "more",
-      "repository_path": "generated/agent/next/en/design.dark.high-contrast.md",
+      "repository_path": "generated/agent/versions/v3.0.3/en/design.dark.high-contrast.md",
       "bundle_path": "en/design.dark.high-contrast.md",
-      "public_url": "https://yehyakin.github.io/kin-design-system/next/design.dark.high-contrast.md",
+      "public_url": "https://yehyakin.github.io/kin-design-system/versions/v3.0.3/design.dark.high-contrast.md",
       "media_type": "text/markdown; charset=utf-8",
       "normative": false,
-      "sha256": "3acfb6eeafe52abadd7f27d69b22afa072d8dc7d3315ea9097ca583387a8b4c9"
+      "sha256": "02d7cfa610170374f1293cceed937575ba7f8bc8cd9d5ebbcc7beae6c573b2cf"
     },
     {
       "id": "design-en-dark",
@@ -337,12 +336,12 @@
       "locale": "en",
       "theme": "dark",
       "contrast": "normal",
-      "repository_path": "generated/agent/next/en/design.dark.md",
+      "repository_path": "generated/agent/versions/v3.0.3/en/design.dark.md",
       "bundle_path": "en/design.dark.md",
-      "public_url": "https://yehyakin.github.io/kin-design-system/next/design.dark.md",
+      "public_url": "https://yehyakin.github.io/kin-design-system/versions/v3.0.3/design.dark.md",
       "media_type": "text/markdown; charset=utf-8",
       "normative": false,
-      "sha256": "f45d35f45c4a88d152cf6c2fe07dd4ef31e7e8b9ced2b1f96832abe723c7b85a"
+      "sha256": "3e6dfbf6495f5657405ed5236f858e98fa70232f6d23691114b18aeef1c9f5f7"
     },
     {
       "id": "design-en-light-high-contrast",
@@ -350,12 +349,12 @@
       "locale": "en",
       "theme": "light",
       "contrast": "more",
-      "repository_path": "generated/agent/next/en/design.high-contrast.md",
+      "repository_path": "generated/agent/versions/v3.0.3/en/design.high-contrast.md",
       "bundle_path": "en/design.high-contrast.md",
-      "public_url": "https://yehyakin.github.io/kin-design-system/next/design.high-contrast.md",
+      "public_url": "https://yehyakin.github.io/kin-design-system/versions/v3.0.3/design.high-contrast.md",
       "media_type": "text/markdown; charset=utf-8",
       "normative": false,
-      "sha256": "be62546f932ba9e1189c9d74fe6bfd91a5b224a1036c394ff5bd088f00ec1043"
+      "sha256": "149f62c1f342e916c14368e4eb8dbc8d7037e39a91790eba235340023f5a60ab"
     },
     {
       "id": "design-en-light",
@@ -363,82 +362,82 @@
       "locale": "en",
       "theme": "light",
       "contrast": "normal",
-      "repository_path": "generated/agent/next/en/design.md",
+      "repository_path": "generated/agent/versions/v3.0.3/en/design.md",
       "bundle_path": "en/design.md",
-      "public_url": "https://yehyakin.github.io/kin-design-system/next/design.md",
+      "public_url": "https://yehyakin.github.io/kin-design-system/versions/v3.0.3/design.md",
       "media_type": "text/markdown; charset=utf-8",
       "normative": false,
-      "sha256": "67d06232ddfda6eef7f64915ea43ad103ee6c85efd6c4e92d7d34661ac968556"
+      "sha256": "fb88143ca59c7c1f3ba776e5e3e0312dc46cd19986ead298fe97cc1d884c3203"
     },
     {
       "id": "schema-alias_manifest",
       "kind": "json-schema",
-      "repository_path": "generated/agent/next/schemas/alias-manifest.schema.json",
+      "repository_path": "generated/agent/versions/v3.0.3/schemas/alias-manifest.schema.json",
       "bundle_path": "schemas/alias-manifest.schema.json",
-      "public_url": "https://yehyakin.github.io/kin-design-system/next/schemas/alias-manifest.schema.json",
+      "public_url": "https://yehyakin.github.io/kin-design-system/versions/v3.0.3/schemas/alias-manifest.schema.json",
       "media_type": "application/schema+json; charset=utf-8",
       "normative": false,
-      "sha256": "7cadd60bcfd3b138a96399e8069e4828debf7ba98e29bbc2a9b68953d52eb43a"
+      "sha256": "e85ba9a1dd06870823a6ff8dd038acee1713d016687e69666163d4bf16bea9b7"
     },
     {
       "id": "schema-locale_source",
       "kind": "json-schema",
-      "repository_path": "generated/agent/next/schemas/locale-source.schema.json",
+      "repository_path": "generated/agent/versions/v3.0.3/schemas/locale-source.schema.json",
       "bundle_path": "schemas/locale-source.schema.json",
-      "public_url": "https://yehyakin.github.io/kin-design-system/next/schemas/locale-source.schema.json",
+      "public_url": "https://yehyakin.github.io/kin-design-system/versions/v3.0.3/schemas/locale-source.schema.json",
       "media_type": "application/schema+json; charset=utf-8",
       "normative": false,
-      "sha256": "31e0155620c642eb4c01a4a2a581afb17251716cd9b79b908aa116734f526960"
+      "sha256": "7f869089e71966e048c3609f9b279bbd9392efef667d70daaa1ae398acff5dd7"
     },
     {
       "id": "schema-manifest",
       "kind": "json-schema",
-      "repository_path": "generated/agent/next/schemas/manifest.schema.json",
+      "repository_path": "generated/agent/versions/v3.0.3/schemas/manifest.schema.json",
       "bundle_path": "schemas/manifest.schema.json",
-      "public_url": "https://yehyakin.github.io/kin-design-system/next/schemas/manifest.schema.json",
+      "public_url": "https://yehyakin.github.io/kin-design-system/versions/v3.0.3/schemas/manifest.schema.json",
       "media_type": "application/schema+json; charset=utf-8",
       "normative": false,
-      "sha256": "8942c4ff98742d89603818b43977c87dbc343c33c01d7ab58574c119d59befa3"
+      "sha256": "b9752ce03982b882885874a241b7cbea04a52127402ba21c277a7255527aa7e4"
     },
     {
       "id": "schema-profiles",
       "kind": "json-schema",
-      "repository_path": "generated/agent/next/schemas/profiles.schema.json",
+      "repository_path": "generated/agent/versions/v3.0.3/schemas/profiles.schema.json",
       "bundle_path": "schemas/profiles.schema.json",
-      "public_url": "https://yehyakin.github.io/kin-design-system/next/schemas/profiles.schema.json",
+      "public_url": "https://yehyakin.github.io/kin-design-system/versions/v3.0.3/schemas/profiles.schema.json",
       "media_type": "application/schema+json; charset=utf-8",
       "normative": false,
-      "sha256": "a48a3408caf685872ad653a83a269f114ed7229bf1988931effbd3791dc5c084"
+      "sha256": "162405ea35dd49c39563fea7ec2c6f52514fbf41e9b310186a85589af40481de"
     },
     {
       "id": "schema-rules",
       "kind": "json-schema",
-      "repository_path": "generated/agent/next/schemas/rules.schema.json",
+      "repository_path": "generated/agent/versions/v3.0.3/schemas/rules.schema.json",
       "bundle_path": "schemas/rules.schema.json",
-      "public_url": "https://yehyakin.github.io/kin-design-system/next/schemas/rules.schema.json",
+      "public_url": "https://yehyakin.github.io/kin-design-system/versions/v3.0.3/schemas/rules.schema.json",
       "media_type": "application/schema+json; charset=utf-8",
       "normative": false,
-      "sha256": "bd48f561959714132c5cc8823878863b5ce5b8a5892eea16663a4c3781a61b41"
+      "sha256": "e6d983d926290179f245979c873b1f95388178bb064c124c259cd58caf041ca0"
     },
     {
       "id": "schema-snapshot",
       "kind": "json-schema",
-      "repository_path": "generated/agent/next/schemas/snapshot.schema.json",
+      "repository_path": "generated/agent/versions/v3.0.3/schemas/snapshot.schema.json",
       "bundle_path": "schemas/snapshot.schema.json",
-      "public_url": "https://yehyakin.github.io/kin-design-system/next/schemas/snapshot.schema.json",
+      "public_url": "https://yehyakin.github.io/kin-design-system/versions/v3.0.3/schemas/snapshot.schema.json",
       "media_type": "application/schema+json; charset=utf-8",
       "normative": false,
-      "sha256": "5455324e9225514b88dea108ed2ee52c7e814e72b8cb2d0b0b289970a78fd0a5"
+      "sha256": "f71a100c6062bebc8500babad9ae2bd9afb33fa9a0c64fae4f1e3820510ff317"
     },
     {
       "id": "schema-versions",
       "kind": "json-schema",
-      "repository_path": "generated/agent/next/schemas/versions.schema.json",
+      "repository_path": "generated/agent/versions/v3.0.3/schemas/versions.schema.json",
       "bundle_path": "schemas/versions.schema.json",
-      "public_url": "https://yehyakin.github.io/kin-design-system/next/schemas/versions.schema.json",
+      "public_url": "https://yehyakin.github.io/kin-design-system/versions/v3.0.3/schemas/versions.schema.json",
       "media_type": "application/schema+json; charset=utf-8",
       "normative": false,
-      "sha256": "49e8aaf7d357223d123d04fe73bd7c3f2631a7b5db1cd56608d16fdca9536b11"
+      "sha256": "c109af9bbbf7b83303d178f7123472092da22a9d312d3f4c4776ee883e10dd55"
     },
     {
       "id": "design-zh-cn-dark-high-contrast",
@@ -446,12 +445,12 @@
       "locale": "zh-CN",
       "theme": "dark",
       "contrast": "more",
-      "repository_path": "generated/agent/next/zh-CN/design.dark.high-contrast.md",
+      "repository_path": "generated/agent/versions/v3.0.3/zh-CN/design.dark.high-contrast.md",
       "bundle_path": "zh-CN/design.dark.high-contrast.md",
-      "public_url": "https://yehyakin.github.io/kin-design-system/next/zh/design.dark.high-contrast.md",
+      "public_url": "https://yehyakin.github.io/kin-design-system/versions/v3.0.3/zh/design.dark.high-contrast.md",
       "media_type": "text/markdown; charset=utf-8",
       "normative": false,
-      "sha256": "39e9cf263e00b0a2114e71dd15ea040b78f59977f8add2f6b14dd5f4ce561120"
+      "sha256": "9d958f926fdf50fdde1e878584a27ad366d5f2d3cdc5edd6a6145f9890277184"
     },
     {
       "id": "design-zh-cn-dark",
@@ -459,12 +458,12 @@
       "locale": "zh-CN",
       "theme": "dark",
       "contrast": "normal",
-      "repository_path": "generated/agent/next/zh-CN/design.dark.md",
+      "repository_path": "generated/agent/versions/v3.0.3/zh-CN/design.dark.md",
       "bundle_path": "zh-CN/design.dark.md",
-      "public_url": "https://yehyakin.github.io/kin-design-system/next/zh/design.dark.md",
+      "public_url": "https://yehyakin.github.io/kin-design-system/versions/v3.0.3/zh/design.dark.md",
       "media_type": "text/markdown; charset=utf-8",
       "normative": false,
-      "sha256": "e2a65abcea7cce5f5a3d36e5059528b6795b3a69361ac5d35a0f118d21f3ca7a"
+      "sha256": "7156b94c690f76de1c482ffefebd9d231c7fb63f01ea46195b1e14c1a1a6bdaa"
     },
     {
       "id": "design-zh-cn-light-high-contrast",
@@ -472,12 +471,12 @@
       "locale": "zh-CN",
       "theme": "light",
       "contrast": "more",
-      "repository_path": "generated/agent/next/zh-CN/design.high-contrast.md",
+      "repository_path": "generated/agent/versions/v3.0.3/zh-CN/design.high-contrast.md",
       "bundle_path": "zh-CN/design.high-contrast.md",
-      "public_url": "https://yehyakin.github.io/kin-design-system/next/zh/design.high-contrast.md",
+      "public_url": "https://yehyakin.github.io/kin-design-system/versions/v3.0.3/zh/design.high-contrast.md",
       "media_type": "text/markdown; charset=utf-8",
       "normative": false,
-      "sha256": "17b97790871f98b5c49a278e2f750b56113fb927d666768190e1e3df765b2c14"
+      "sha256": "b2eca22613933b903576c737054a316a5e8dfde58a52add108cc65d5c794f3cc"
     },
     {
       "id": "design-zh-cn-light",
@@ -485,12 +484,12 @@
       "locale": "zh-CN",
       "theme": "light",
       "contrast": "normal",
-      "repository_path": "generated/agent/next/zh-CN/design.md",
+      "repository_path": "generated/agent/versions/v3.0.3/zh-CN/design.md",
       "bundle_path": "zh-CN/design.md",
-      "public_url": "https://yehyakin.github.io/kin-design-system/next/zh/design.md",
+      "public_url": "https://yehyakin.github.io/kin-design-system/versions/v3.0.3/zh/design.md",
       "media_type": "text/markdown; charset=utf-8",
       "normative": false,
-      "sha256": "6ad2452669e5371573a809593f74956f1b76740919bd3537b0b1161af4985b78"
+      "sha256": "923ef618a27bf24d98039bb58acba48148554860a9fc757b9c8e7ae975cc1769"
     }
   ]
 }

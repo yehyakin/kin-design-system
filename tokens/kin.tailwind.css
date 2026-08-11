@@ -11,6 +11,7 @@
   --color-dark-surface-4: #202124;
   --color-dark-surface-hover: #ffffff0b;
   --color-dark-surface-selected: #5e6ad21f;
+  --color-dark-navigation-selected: #ffffff0e;
   --color-dark-surface-overlay: #08090ab8;
   --color-dark-text-primary: #f4f5f7;
   --color-dark-text-secondary: #c9cbd1;
@@ -42,6 +43,7 @@
   --color-light-surface-4: #e4e6e9;
   --color-light-surface-hover: #14161a0b;
   --color-light-surface-selected: #525ec41a;
+  --color-light-navigation-selected: #14161a0e;
   --color-light-surface-overlay: #f6f7f8c2;
   --color-light-text-primary: #18191c;
   --color-light-text-secondary: #494c53;

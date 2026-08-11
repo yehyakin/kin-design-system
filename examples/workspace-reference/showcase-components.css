@@ -833,7 +833,8 @@ summary:focus-visible {
 }
 
 .mini-nav button[aria-current="page"] {
-  background: var(--surface-selected);
+  background: var(--navigation-selected);
+  box-shadow: inset 0 1px 0 var(--edge-highlight), var(--shadow-contact);
   color: var(--text-primary);
 }
 

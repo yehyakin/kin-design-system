@@ -33,6 +33,19 @@
       "input_set_checksum": "9e30554d18ee6454c546d37b65666cc64fc1f390a7c7545d027aea8db9cd6d7d",
       "replacement": null,
       "advisory_url": null
+    },
+    {
+      "version": "3.0.3",
+      "publication_state": "staged",
+      "support_status": null,
+      "repository_directory": "generated/agent/versions/v3.0.3",
+      "manifest_url": null,
+      "manifest_sha256": "f1aa4a45c8c9050c0618de2fcdf0465886910d60440d83bf6e062f8542776659",
+      "kin_tag": "v3.0.3",
+      "design_checksum": "98c86b92eace31b6157caf5a04599f981b5602b516cfadd3caa6487753ed42db",
+      "input_set_checksum": "9ffdb2993dd50ed3eb058517eb2665fe62e0ef5c66d032f34c50e8f3e71164bb",
+      "replacement": null,
+      "advisory_url": null
     }
   ]
 }

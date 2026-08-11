@@ -62,6 +62,27 @@ async function expectMaterialContract(page, family) {
   expect(boundaryShadow).not.toBe("none");
 }
 
+async function selectionMaterial(page, selector) {
+  return page.locator(selector).evaluate((element) => {
+    const resolveColor = (token) => {
+      const probe = document.createElement("span");
+      probe.style.backgroundColor = `var(${token})`;
+      document.body.append(probe);
+      const color = getComputedStyle(probe).backgroundColor;
+      probe.remove();
+      return color;
+    };
+    const style = getComputedStyle(element);
+    return {
+      accent: resolveColor("--accent"),
+      background: style.backgroundColor,
+      boxShadow: style.boxShadow,
+      navigationSelected: resolveColor("--navigation-selected"),
+      surfaceSelected: resolveColor("--surface-selected"),
+    };
+  });
+}
+
 for (const family of families) {
   test(`${family.name} reference uses KIN material and Lucide icons`, async ({ page }) => {
     await seedAppearance(page, "dark");
@@ -99,6 +120,33 @@ test("high contrast removes product-reference material shadows without losing se
   await expect(page.locator(families[0].selected)).toBeVisible();
   await expect(page.locator(families[0].selected)).toHaveCSS("box-shadow", "none");
   await expect(page.locator(families[0].selected)).toHaveCSS("border-radius", "5px");
+});
+
+test("product references distinguish current navigation from selected work objects", async ({ page }) => {
+  await seedAppearance(page, "dark");
+  await page.setViewportSize({ width: 1440, height: 900 });
+
+  await page.goto(families[0].path);
+  const informationNavigation = await selectionMaterial(page, '.topic-nav a[aria-current="page"]');
+  expect(informationNavigation.background).toBe(informationNavigation.navigationSelected);
+  expect(informationNavigation.background).not.toBe(informationNavigation.surfaceSelected);
+  expect(informationNavigation.boxShadow).not.toContain(informationNavigation.accent);
+
+  await page.goto(families[1].path);
+  const ecommerceNavigation = await selectionMaterial(page, '.commerce-nav a[aria-current="page"]');
+  const ecommerceObject = await selectionMaterial(page, ".commerce-row.selected");
+  expect(ecommerceNavigation.background).toBe(ecommerceNavigation.navigationSelected);
+  expect(ecommerceNavigation.background).not.toBe(ecommerceNavigation.surfaceSelected);
+  expect(ecommerceNavigation.boxShadow).not.toContain(ecommerceNavigation.accent);
+  expect(ecommerceObject.background).toBe(ecommerceObject.surfaceSelected);
+  expect(ecommerceObject.boxShadow).toContain(ecommerceObject.accent);
+
+  await page.goto(families[2].path);
+  for (const selector of ['.tool-rail button[aria-pressed="true"]', '.layer-tree button[aria-pressed="true"]']) {
+    const engineeringObject = await selectionMaterial(page, selector);
+    expect(engineeringObject.background).toBe(engineeringObject.surfaceSelected);
+    expect(engineeringObject.boxShadow).toContain(engineeringObject.accent);
+  }
 });
 
 test("patterns showcase mounts every current reference with its product icon grammar", async ({ page }) => {

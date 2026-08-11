@@ -767,8 +767,9 @@ function renderPreviewSizing({ announce = true } = {}) {
   const padding = stagePadding();
   const availableWidth = elements.stage.clientWidth - padding.horizontal;
   const availableHeight = elements.stage.clientHeight - padding.vertical;
+  const maxScale = currentMode === "present" ? 1.2 : 1;
   const fitScale = availableWidth > 0 && availableHeight > 0
-    ? Math.min(1, availableWidth / frameWidth, availableHeight / frameHeight)
+    ? Math.min(maxScale, availableWidth / frameWidth, availableHeight / frameHeight)
     : 1;
   const nextScale = previewSizing === "fit" ? fitScale : 1;
   const roundedScale = Number(nextScale.toFixed(6));

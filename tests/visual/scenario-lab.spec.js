@@ -101,6 +101,14 @@ test("Present is the default and explicit mode changes replace history and persi
   expect(new URL(page.url()).searchParams.get("mode")).toBe("inspect");
   expect(await page.evaluate(() => history.length)).toBe(initialHistoryLength);
   expect(await page.evaluate(() => localStorage.getItem("kin-showcase-lab-mode"))).toBe("inspect");
+  await expect.poll(() => page.evaluate(() => {
+    const stage = document.querySelector("[data-lab-stage]").getBoundingClientRect();
+    const frame = document.querySelector("[data-lab-frame-shell]").getBoundingClientRect();
+    return frame.left >= stage.left - 1
+      && frame.right <= stage.right + 1
+      && frame.top >= stage.top - 1
+      && frame.bottom <= stage.bottom + 1;
+  })).toBe(true);
   const inspectGeometry = await page.evaluate(() => {
     const stageElement = document.querySelector("[data-lab-stage]");
     const frameShell = document.querySelector("[data-lab-frame-shell]");
@@ -110,9 +118,14 @@ test("Present is the default and explicit mode changes replace history and persi
       scale: document.querySelector("[data-lab-frame-sizing]").dataset.scale,
     };
   });
-  expect(inspectGeometry.stage).toEqual(presentGeometry.stage);
-  expect(inspectGeometry.frame).toEqual(presentGeometry.frame);
-  expect(inspectGeometry.scale).toBe(presentGeometry.scale);
+  expect(inspectGeometry.stage.width).toBe(presentGeometry.stage.width);
+  expect(inspectGeometry.stage.top).toBeGreaterThan(presentGeometry.stage.top);
+  expect(inspectGeometry.stage.height).toBeLessThan(presentGeometry.stage.height);
+  expect(Number(presentGeometry.scale)).toBeGreaterThanOrEqual(Number(inspectGeometry.scale));
+  expect(inspectGeometry.frame.left).toBeGreaterThanOrEqual(inspectGeometry.stage.left - 1);
+  expect(inspectGeometry.frame.right).toBeLessThanOrEqual(inspectGeometry.stage.right + 1);
+  expect(inspectGeometry.frame.top).toBeGreaterThanOrEqual(inspectGeometry.stage.top - 1);
+  expect(inspectGeometry.frame.bottom).toBeLessThanOrEqual(inspectGeometry.stage.bottom + 1);
 
   await present.click();
   await expect(root).toHaveAttribute("data-mode", "present");
@@ -303,9 +316,14 @@ test("wide Inspect controls close to Present, reopen, and reverse without stale 
   await expect(root).toHaveAttribute("data-mode", "inspect");
   await expect(controls).toHaveCSS("transition-duration", "0.24s, 0.24s");
 
-  await close.evaluate((element) => element.click());
-  await expect(root).toHaveAttribute("data-controls-state", "closing");
-  await trigger.evaluate((element) => element.click());
+  const reversal = await page.evaluate(() => {
+    document.querySelector("[data-lab-controls-close]").click();
+    const closingState = document.querySelector("[data-scenario-lab]").dataset.controlsState;
+    document.querySelector("[data-lab-controls-trigger]").click();
+    const reopenedState = document.querySelector("[data-scenario-lab]").dataset.controlsState;
+    return { closingState, reopenedState };
+  });
+  expect(reversal).toEqual({ closingState: "closing", reopenedState: "open" });
   await expect(root).toHaveAttribute("data-controls-state", "open");
   await expect(root).toHaveAttribute("data-mode", "inspect");
   await page.waitForTimeout(260);
@@ -447,7 +465,7 @@ test("Fit scales the wrapper honestly while 100% preserves the configured viewpo
         const frameShell = document.querySelector("[data-lab-frame-shell]");
         const style = getComputedStyle(stage);
         const expected = Math.min(
-          1,
+          1.2,
           (stage.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight)) / frameShell.offsetWidth,
           (stage.clientHeight - parseFloat(style.paddingTop) - parseFloat(style.paddingBottom)) / frameShell.offsetHeight
         );
@@ -457,6 +475,39 @@ test("Fit scales the wrapper honestly while 100% preserves the configured viewpo
     .toBeLessThan(0.00001);
   await expect(shell).toHaveCSS("transform-origin", "0px 0px");
 });
+
+for (const viewport of [
+  { width: 1280, height: 800 },
+  { width: 1600, height: 1000 },
+]) {
+  test(`Present mode fills its stage without clipping at ${viewport.width}px`, async ({ page }) => {
+    await page.setViewportSize(viewport);
+    await page.goto("/scenarios/lab.html?scenario=INT-01&state=normal&viewport=wide&theme=dark&mode=present");
+    await expectVerified(page);
+
+    const geometry = await page.evaluate(() => {
+      const stage = document.querySelector("[data-lab-stage]").getBoundingClientRect();
+      const frame = document.querySelector("[data-lab-frame-shell]").getBoundingClientRect();
+      const scale = Number(document.querySelector("[data-lab-frame-sizing]").dataset.scale);
+      return {
+        fitsHorizontally: frame.left >= stage.left - 1 && frame.right <= stage.right + 1,
+        fitsVertically: frame.top >= stage.top - 1 && frame.bottom <= stage.bottom + 1,
+        heightRatio: frame.height / stage.height,
+        scale,
+        widthRatio: frame.width / stage.width,
+        rootFits: document.documentElement.scrollWidth <= document.documentElement.clientWidth,
+      };
+    });
+
+    expect(geometry.fitsHorizontally).toBe(true);
+    expect(geometry.fitsVertically).toBe(true);
+    expect(geometry.rootFits).toBe(true);
+    expect(geometry.scale).toBeGreaterThan(0);
+    expect(geometry.scale).toBeLessThanOrEqual(1.2);
+    expect(geometry.widthRatio).toBeGreaterThan(0.68);
+    expect(geometry.heightRatio).toBeGreaterThan(0.84);
+  });
+}
 
 test("Fullscreen availability and pressed state follow the browser API", async ({ page }) => {
   await page.goto("/scenarios/lab.html?scenario=INT-01&state=normal&viewport=wide&theme=dark");

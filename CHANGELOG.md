@@ -6,6 +6,21 @@ The project follows semantic versioning for normative design documentation.
 
 ## Unreleased
 
+## 3.0.3 — 2026-08-12
+
+### Selection semantics
+
+- Defined three distinct selection semantics: current navigation now uses the new neutral Light/Dark `navigation-selected` Token with a contact relationship; content and object selection retains the existing accent-tinted `surface-selected` Token; and a 1–2px accent Decision edge is restricted to real selected objects, evidence conflict, review or commitment boundaries, and engineering tool or layer selection. Ordinary Chrome navigation MUST NOT use the Decision edge.
+- Existing `surface-selected` consumers remain backward compatible. Adopters migrating current navigation SHOULD move only current-route treatments to `navigation-selected` plus `shadow-contact`, retain `surface-selected` for the selected content or object, and validate that focus remains independently visible.
+
+### Showcase alignment
+
+- Applied the new navigation, content-selection and Decision-edge semantics across the public showcase, documentation, component references, workspace references and product/page patterns so current-route Chrome remains neutral while selected work objects retain the accent relationship.
+- Improved the Component Explorer with stable specimen-aware stage heights and a visible current-component destination; embedded Pattern references now follow the outer theme until the user explicitly overrides the stage.
+- Refined Scenario Lab Present mode, narrow-screen continuation cues, Settings and Support surfaces, and wide Ecommerce composition so the live references use the same material hierarchy without clipping or root-level horizontal overflow.
+- Restored explicit keyboard focus boundaries for the workspace command search and contextual composer, including Forced Colors treatment, and added regression coverage for both real keyboard paths.
+- Expanded visual regression coverage for Light/Dark material semantics, 1,280/1,600px stage geometry, 390px overflow behavior, selected-object boundaries and embedded-reference theme persistence.
+
 ## 3.0.2 — 2026-08-11
 
 ### Showcase material delivery

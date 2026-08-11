@@ -1,9 +1,9 @@
 ---
 version: alpha
 name: KIN Design System
-kin_version: 3.0.2
+kin_version: 3.0.3
 release_status: released
-latest_stable: 3.0.2
+latest_stable: 3.0.3
 status: normative
 language: zh-CN
 description: A calm, precise interface system for information-rich websites, commerce tools, and professional workspaces.
@@ -29,6 +29,7 @@ colors:
   dark-surface-4: "#202124"
   dark-surface-hover: "rgba(255, 255, 255, 0.045)"
   dark-surface-selected: "rgba(94, 106, 210, 0.12)"
+  dark-navigation-selected: "rgba(255, 255, 255, 0.055)"
   dark-surface-overlay: "rgba(8, 9, 10, 0.72)"
   dark-text-primary: "#f4f5f7"
   dark-text-secondary: "#c9cbd1"
@@ -60,6 +61,7 @@ colors:
   light-surface-4: "#e4e6e9"
   light-surface-hover: "rgba(20, 22, 26, 0.045)"
   light-surface-selected: "rgba(82, 94, 196, 0.10)"
+  light-navigation-selected: "rgba(20, 22, 26, 0.055)"
   light-surface-overlay: "rgba(246, 247, 248, 0.76)"
   light-text-primary: "#18191c"
   light-text-secondary: "#494c53"
@@ -313,6 +315,18 @@ components:
   selected-region-light:
     rounded: "{rounded.sm}"
     backgroundColor: "{colors.light-surface-selected}"
+  navigation-selected-dark:
+    rounded: "{rounded.sm}"
+    backgroundColor: "{colors.dark-navigation-selected}"
+  navigation-selected-light:
+    rounded: "{rounded.sm}"
+    backgroundColor: "{colors.light-navigation-selected}"
+  decision-edge-dark:
+    backgroundColor: "{colors.dark-accent}"
+    width: 2px
+  decision-edge-light:
+    backgroundColor: "{colors.light-accent}"
+    width: 2px
   overlay-dark:
     backgroundColor: "{colors.dark-surface-overlay}"
   overlay-light:
@@ -573,6 +587,16 @@ KIN 以中性色为主体，只保留一个主要交互强调色。业务颜色�
 
 组件必须引用语义 Token，禁止在组件文件中散落 Hex。Primitive Token 可在主题生成层存在，业务组件只消费 alias。
 
+### 3.1.1 选择语义
+
+当前导航、内容/对象选择和决策边缘是三种不同的关系，MUST NOT 以同一个 accent-tinted surface 或边缘标记互相替代。焦点仍由 `focus-ring` 单独表达，不能被其中任何一种选择语义取代。
+
+1. `navigation selected` 表示用户当前所在的位置，而不是当前工作的对象。Sidebar、顶部导航、Breadcrumb 或同类 Chrome 的当前项 MUST 使用中性的 `navigation-selected` 表面和 `shadow-contact` 关系，并以 `aria-current` 或等价语义暴露当前位置。它 MUST NOT 使用 `surface-selected`、accent-tinted 填充或 Decision edge。
+2. `content/object selected` 表示列表、表格、画布或 Inspector 正在呈现的真实对象。它使用现有 accent-tinted `surface-selected`；该 Token 保持向后兼容，现有对象选择不需要为此迁移到导航 Token。多选仍需以复选框、数量或其他非颜色提示表达范围。
+3. `decision edge` 是选中对象、证据冲突、复核/承诺边界，或工程工具/图层选择与相邻上下文之间的一条 1–2px accent 起始边。它只在该关系真实存在时出现，且一个主导区域同时 SHOULD 不超过一条强 accent edge。普通 Chrome 导航 MUST NOT 使用 Decision edge。
+
+`navigation-selected-dark`、`navigation-selected-light`、`decision-edge-dark` 和 `decision-edge-light` 是机器可读取的 Recipe；前两者暴露相应的 Light/Dark 中性表面，并由本节的规范要求配合 contact 关系；后两者固定 2px，以便产品实现和验证明确区分三类选择语义。
+
 建议主题模型由三个输入参数派生：
 
 ```ts
@@ -599,6 +623,7 @@ type ThemeSeed = {
   --surface-4: #202124;
   --surface-hover: rgba(255, 255, 255, 0.045);
   --surface-selected: rgba(94, 106, 210, 0.12);
+  --navigation-selected: rgba(255, 255, 255, 0.055);
   --surface-overlay: rgba(8, 9, 10, 0.72);
 
   --text-primary: #f4f5f7;
@@ -658,6 +683,7 @@ type ThemeSeed = {
   --surface-4: #e4e6e9;
   --surface-hover: rgba(20, 22, 26, 0.045);
   --surface-selected: rgba(82, 94, 196, 0.10);
+  --navigation-selected: rgba(20, 22, 26, 0.055);
   --surface-overlay: rgba(246, 247, 248, 0.76);
 
   --text-primary: #18191c;
@@ -1044,7 +1070,7 @@ Rules：
 
 - 背景比 Workspace 更退后。
 - 非活动文字与图标使用 muted 层级。
-- 活动项使用轻微 surface 和清楚文字，不使用高饱和整块背景。
+- 活动项使用 `navigation-selected`、`shadow-contact` 和清楚文字，不使用 `surface-selected`、高饱和整块背景或 Decision edge。
 - 图标更少、更小；不为每一项加彩色容器。
 - 分组标题克制，支持折叠但不要层层树状嵌套。
 - 保存视图和收藏可重排时显示专用 drag handle。

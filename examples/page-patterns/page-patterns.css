@@ -854,7 +854,8 @@
 }
 
 .settings-nav button[aria-current="page"] {
-  background: var(--selected);
+  background: var(--navigation-selected);
+  box-shadow: inset 0 1px 0 var(--edge-highlight), var(--shadow-contact);
   color: var(--text);
 }
 
@@ -872,6 +873,11 @@
 .settings-section {
   width: min(100%, 720px);
   margin: 0 auto;
+  padding: 24px 26px 30px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface-2);
+  box-shadow: inset 0 1px 0 var(--edge-highlight), var(--shadow-contact);
 }
 
 .settings-section > header {
@@ -1023,7 +1029,8 @@
 }
 
 .system-nav button[aria-current="page"] {
-  background: var(--selected);
+  background: var(--navigation-selected);
+  box-shadow: inset 0 1px 0 var(--edge-highlight), var(--shadow-contact);
   color: var(--text);
 }
 
@@ -1154,7 +1161,8 @@
 }
 
 .support-nav button[aria-current="page"] {
-  background: var(--selected);
+  background: var(--navigation-selected);
+  box-shadow: inset 0 1px 0 var(--edge-highlight), var(--shadow-contact);
   color: var(--text);
 }
 
@@ -1172,6 +1180,11 @@
 .support-section {
   width: min(100%, 780px);
   margin: 0 auto;
+  padding: 24px 26px 30px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface-2);
+  box-shadow: inset 0 1px 0 var(--edge-highlight), var(--shadow-contact);
 }
 
 .support-section > header {
@@ -2278,6 +2291,14 @@
     padding: 28px 16px 56px;
   }
 
+  .settings-section,
+  .support-section {
+    padding: 20px 16px 26px;
+    border-inline: 0;
+    border-radius: 0;
+    box-shadow: inset 0 1px 0 var(--edge-highlight), inset 0 -1px 0 var(--edge-contact);
+  }
+
   .access-context {
     padding: 22px 16px;
   }
@@ -2626,7 +2647,8 @@
 
 .schedule-nav-item[aria-current="page"] {
   border-color: var(--line);
-  background: var(--selected);
+  background: var(--navigation-selected);
+  box-shadow: inset 0 1px 0 var(--edge-highlight), var(--shadow-contact);
   color: var(--text);
 }
 
@@ -3594,6 +3616,12 @@
   .appearance-option:has(input:checked),
   .state-icon,
   .search-result-link[aria-current="page"] {
+    border-color: CanvasText;
+    box-shadow: none;
+  }
+
+  .settings-section,
+  .support-section {
     border-color: CanvasText;
     box-shadow: none;
   }
