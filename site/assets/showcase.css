@@ -67,17 +67,14 @@
 }
 
 .showcase-nav a[aria-current="page"] {
+  border-radius: 5px;
+  background: var(--navigation-selected);
+  box-shadow: inset 0 1px 0 var(--edge-highlight), var(--shadow-contact);
   color: var(--text);
 }
 
 .showcase-nav a[aria-current="page"]::after {
-  position: absolute;
-  right: 10px;
-  bottom: 0;
-  left: 10px;
-  height: 2px;
-  background: var(--accent);
-  content: "";
+  display: none;
 }
 
 .showcase-header .header-actions {
@@ -258,6 +255,8 @@ html:lang(zh-CN) .showcase-hero-copy h1 {
   --stage-line: rgb(255 255 255 / 0.09);
   --stage-canvas: #090a0b;
   --stage-surface: #0f1012;
+  --stage-navigation-selected: rgb(255 255 255 / 0.055);
+  --stage-edge-highlight: rgb(255 255 255 / 0.055);
   --stage-loading: rgb(15 16 18 / 0.92);
   position: relative;
   display: grid;
@@ -280,6 +279,8 @@ html:lang(zh-CN) .showcase-hero-copy h1 {
   --stage-line: rgb(17 24 39 / 0.1);
   --stage-canvas: #f6f7f8;
   --stage-surface: #fff;
+  --stage-navigation-selected: rgb(20 22 26 / 0.055);
+  --stage-edge-highlight: rgb(255 255 255 / 0.84);
   --stage-loading: rgb(255 255 255 / 0.94);
   box-shadow: inset 0 1px 0 var(--edge-highlight-strong), var(--shadow-raised);
 }
@@ -335,20 +336,13 @@ html:lang(zh-CN) .showcase-hero-copy h1 {
 }
 
 .stage-tabs button[aria-selected="true"] {
-  background: rgb(255 255 255 / 0.045);
+  background: var(--stage-navigation-selected);
   color: var(--stage-text);
+  box-shadow: inset 0 1px 0 var(--stage-edge-highlight), 0 1px 2px rgb(0 0 0 / 0.09);
 }
 
 .stage-tabs button[aria-selected="true"]::after {
-  position: absolute;
-  top: auto;
-  right: 12px;
-  bottom: -4px;
-  left: 12px;
-  width: auto;
-  height: 2px;
-  background: #7580e0;
-  content: "";
+  display: none;
 }
 
 .stage-lab-link {
@@ -2002,13 +1996,12 @@ a.discovery-row__name {
   }
 
   .showcase-nav a[aria-current="page"] {
-    background: var(--surface-4);
+    background: var(--navigation-selected);
+    box-shadow: inset 0 1px 0 var(--edge-highlight), var(--shadow-contact);
   }
 
   .showcase-nav a[aria-current="page"]::after {
-    inset: 10px auto 10px 0;
-    width: 2px;
-    height: auto;
+    display: none;
   }
 
   .showcase-button,
@@ -3406,7 +3399,8 @@ body[data-showcase-route="component-explorer"] .discovery-page {
 }
 
 .component-studio__navigation nav a[aria-current="page"] {
-  background: var(--selected);
+  background: var(--navigation-selected);
+  box-shadow: inset 0 1px 0 var(--edge-highlight), var(--shadow-contact);
   color: var(--text);
 }
 
@@ -3490,15 +3484,16 @@ body[data-showcase-route="component-explorer"] .discovery-page {
 
 .component-detail-tabs__list {
   display: flex;
-  gap: 22px;
+  gap: 4px;
   border-bottom: 1px solid var(--line);
 }
 
 .component-detail-tabs__list button {
   position: relative;
   min-height: 46px;
-  padding: 0;
+  padding: 0 10px;
   border: 0;
+  border-radius: 5px;
   background: transparent;
   color: var(--muted);
   font-size: 11px;
@@ -3506,17 +3501,13 @@ body[data-showcase-route="component-explorer"] .discovery-page {
 }
 
 .component-detail-tabs__list button[aria-selected="true"] {
+  background: var(--navigation-selected);
+  box-shadow: inset 0 1px 0 var(--edge-highlight), var(--shadow-contact);
   color: var(--text);
 }
 
 .component-detail-tabs__list button[aria-selected="true"]::after {
-  position: absolute;
-  right: 0;
-  bottom: -1px;
-  left: 0;
-  height: 2px;
-  background: var(--accent);
-  content: "";
+  display: none;
 }
 
 .component-detail-tabs__panel {
@@ -3648,9 +3639,9 @@ body[data-showcase-route="component-explorer"] .discovery-page {
 }
 
 .pattern-browser__selector button[aria-selected="true"] {
-  background: color-mix(in srgb, var(--accent) 9%, transparent);
+  background: var(--navigation-selected);
   color: var(--text);
-  box-shadow: inset 2px 0 0 var(--accent);
+  box-shadow: inset 0 1px 0 var(--edge-highlight), var(--shadow-contact);
 }
 
 .pattern-browser__selector button > svg {
@@ -4092,12 +4083,7 @@ body[data-showcase-route="component-explorer"] .discovery-page {
   }
 
   .stage-tabs button[aria-selected="true"]::after {
-    top: auto;
-    right: 10px;
-    bottom: -4px;
-    left: 10px;
-    width: auto;
-    height: 2px;
+    display: none;
   }
 
   .stage-toolbar-actions {
@@ -4207,9 +4193,31 @@ body[data-showcase-route="component-explorer"] .discovery-page {
     display: flex;
     gap: 2px;
     margin-top: 4px;
+    position: relative;
     overflow-x: auto;
     overscroll-behavior-inline: contain;
     scrollbar-width: none;
+  }
+
+  .component-studio__navigation nav::after,
+  .reference-stage__controls::after,
+  .pattern-browser__selector::after {
+    position: sticky;
+    z-index: 2;
+    right: 0;
+    display: grid;
+    width: 24px;
+    min-width: 24px;
+    min-height: 44px;
+    flex: 0 0 24px;
+    place-items: center;
+    align-self: stretch;
+    border-left: 1px solid var(--line);
+    background: var(--surface-1);
+    color: var(--muted);
+    content: "›";
+    font: 600 16px/1 system-ui, sans-serif;
+    pointer-events: none;
   }
 
   .component-studio__navigation nav::-webkit-scrollbar {
@@ -4242,6 +4250,7 @@ body[data-showcase-route="component-explorer"] .discovery-page {
   }
 
   .reference-stage__controls {
+    position: relative;
     flex-wrap: nowrap;
     max-width: none;
     margin: 0 -10px;
@@ -4312,7 +4321,7 @@ body[data-showcase-route="component-explorer"] .discovery-page {
   }
 
   .pattern-browser__selector {
-    position: static;
+    position: relative;
     flex-direction: row;
     overflow-x: auto;
     overscroll-behavior-inline: contain;
@@ -4324,9 +4333,6 @@ body[data-showcase-route="component-explorer"] .discovery-page {
     border-radius: 0;
   }
 
-  .pattern-browser__selector button[aria-selected="true"] {
-    box-shadow: inset 0 2px 0 var(--accent);
-  }
 }
 
 @media (max-width: 620px) {
@@ -4367,8 +4373,7 @@ body[data-showcase-route="component-explorer"] .discovery-page {
   }
 
   .stage-tabs button[aria-selected="true"]::after {
-    right: 8px;
-    left: 8px;
+    display: none;
   }
 
   .stage-lab-link {

@@ -108,26 +108,21 @@ function focusEmbeddedReference(frameDocument, selector, { isolate = true } = {}
 }
 
 function sizeFocusedReference(container, frameDocument, focusRoot) {
-  if (!focusRoot) {
+  // Stage height is authored by the showcase catalog for each specimen. Do
+  // not derive it from a live fixture's bounding box: compact and dense
+  // references need a stable contract across themes, remounts, and browsers.
+  const configuredHeight = container.dataset.stageHeight;
+  if (configuredHeight) {
+    container.style.setProperty("--explorer-stage-height", configuredHeight);
+  } else {
     container.style.removeProperty("--explorer-stage-height");
-    return;
   }
 
-  requestAnimationFrame(() => {
-    if (!focusRoot.isConnected) return;
-    if (focusRoot.matches("dialog")) {
-      container.style.setProperty("--explorer-stage-height", "min(720px, 70vh)");
-      return;
-    }
-    const rootHeight = focusRoot.getBoundingClientRect().height;
-    const preferredHeight = Math.min(640, Math.max(360, Math.ceil(rootHeight + 48)));
-    container.style.setProperty("--explorer-stage-height", `${preferredHeight}px`);
-
-    const view = frameDocument.defaultView;
-    if (!view) return;
-    const top = focusRoot.getBoundingClientRect().top + view.scrollY;
-    view.scrollTo(0, Math.max(0, top - 20));
-  });
+  if (!focusRoot || !focusRoot.isConnected) return;
+  const view = frameDocument.defaultView;
+  if (!view) return;
+  const top = focusRoot.getBoundingClientRect().top + view.scrollY;
+  view.scrollTo(0, Math.max(0, top - 20));
 }
 
 function prepareEmbeddedReference(frame, { theme = "dark", contrast = "normal" } = {}) {
@@ -339,11 +334,13 @@ function initializeScenarioStage(container) {
 
 for (const link of labLinks) syncLabLinkAppearance(link);
 const syncScenarioStageAppearance = stage ? initializeScenarioStage(stage) : null;
+const referenceStageAppearanceSyncs = [];
 
 const appearanceObserver = new MutationObserver((records) => {
   if (!records.some((record) => ["data-theme", "data-contrast"].includes(record.attributeName))) return;
   for (const link of labLinks) syncLabLinkAppearance(link);
   syncScenarioStageAppearance?.();
+  for (const syncAppearance of referenceStageAppearanceSyncs) syncAppearance();
 });
 appearanceObserver.observe(root, {
   attributes: true,
@@ -355,9 +352,10 @@ function initializeReferenceStage(container) {
   const loader = container.querySelector("[data-stage-loading]");
   if (!frame || !loader) return;
 
-  let theme = container.dataset.initialTheme === "light" ? "light" : "dark";
+  let theme = root.dataset.theme === "light" ? "light" : "dark";
   let viewport = container.dataset.stageViewport === "narrow" ? "narrow" : "wide";
   let contextMode = container.dataset.stageContext === "isolated" ? "isolated" : "workflow";
+  let themeExplicit = false;
 
   function syncControls() {
     for (const control of container.querySelectorAll("button[data-stage-theme]")) {
@@ -408,10 +406,21 @@ function initializeReferenceStage(container) {
     }
   }
 
-  function setTheme(nextTheme, { revealReference = true } = {}) {
+  function setTheme(nextTheme, { revealReference = true, explicit = true } = {}) {
     theme = nextTheme === "light" ? "light" : "dark";
+    if (explicit) themeExplicit = true;
     syncControls();
     if (revealReference && frame.contentDocument?.documentElement) reveal();
+  }
+
+  function syncOuterAppearance() {
+    if (themeExplicit) return;
+    const nextTheme = root.dataset.theme === "light" ? "light" : "dark";
+    if (nextTheme === theme) {
+      syncControls();
+      return;
+    }
+    setTheme(nextTheme, { explicit: false });
   }
 
   function setViewport(nextViewport) {
@@ -446,9 +455,13 @@ function initializeReferenceStage(container) {
   });
   container.addEventListener("kin:reference-refresh", reveal);
   container.addEventListener("kin:stage-theme", (event) =>
-    setTheme(event.detail?.theme, { revealReference: event.detail?.reveal !== false }));
+    setTheme(event.detail?.theme, {
+      revealReference: event.detail?.reveal !== false,
+      explicit: event.detail?.explicit !== false,
+    }));
   syncControls();
   if (frame.contentDocument?.readyState === "complete") reveal();
+  return syncOuterAppearance;
 }
 
 function initializeComponentTabs(container) {
@@ -519,9 +532,6 @@ function initializePatternBrowser(browser) {
     syncLabLinkAppearance(labLink);
     stageContainer.dataset.readySelector = choice.dataset.patternReadySelector;
     stageContainer.dispatchEvent(new CustomEvent("kin:reference-change"));
-    stageContainer.dispatchEvent(new CustomEvent("kin:stage-theme", {
-      detail: { theme: choice.dataset.patternTheme, reveal: false },
-    }));
     frame.title = `${choice.dataset.patternName}: ${
       root.lang === "zh-CN" ? "产品布局预览" : "live product reference"
     }`;
@@ -561,7 +571,8 @@ function initializePatternBrowser(browser) {
 }
 
 for (const referenceStage of document.querySelectorAll("[data-reference-stage]")) {
-  initializeReferenceStage(referenceStage);
+  const syncAppearance = initializeReferenceStage(referenceStage);
+  if (syncAppearance) referenceStageAppearanceSyncs.push(syncAppearance);
 }
 for (const tabset of document.querySelectorAll("[data-component-tabs]")) {
   initializeComponentTabs(tabset);

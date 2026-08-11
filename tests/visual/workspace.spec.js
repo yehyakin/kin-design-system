@@ -66,7 +66,9 @@ for (const theme of ["dark", "light"]) {
     await expect(page.locator("html")).toHaveAttribute("data-theme", theme);
     await expect(page.getByRole("heading", { name: "Alpha Network", level: 1 })).toBeVisible();
     await expect(page.locator(".inspector")).toBeVisible();
-    expect(await page.locator("svg.lucide").count()).toBeGreaterThan(8);
+    await expect.poll(() => page.locator("svg.lucide").count(), {
+      message: "Lucide icons should finish replacing their deterministic placeholders",
+    }).toBeGreaterThan(8);
     if (theme === "dark") {
       await expect(page.locator(".theme-control")).toHaveScreenshot("workspace-theme-control-dark.png", {
         animations: "disabled",
@@ -83,6 +85,46 @@ for (const theme of ["dark", "light"]) {
     await capture(page, testInfo, `workspace-${theme}-desktop.png`);
   });
 }
+
+test("workspace distinguishes current navigation from selected evidence and risk objects", async ({ page }) => {
+  await seedPreferences(page, "dark", "normal", "en");
+  await page.setViewportSize({ width: 1440, height: 900 });
+
+  const snapshot = (selector) => page.locator(selector).evaluate((element) => {
+    const resolveColor = (token) => {
+      const probe = document.createElement("span");
+      probe.style.backgroundColor = `var(${token})`;
+      document.body.append(probe);
+      const color = getComputedStyle(probe).backgroundColor;
+      probe.remove();
+      return color;
+    };
+    const style = getComputedStyle(element);
+    return {
+      accent: resolveColor("--accent"),
+      background: style.backgroundColor,
+      boxShadow: style.boxShadow,
+      navigationSelected: resolveColor("--navigation-selected"),
+      selected: resolveColor("--selected"),
+    };
+  });
+
+  for (const view of ["entity", "investigation", "risk-queue"]) {
+    await page.goto(`/examples/workspace-reference/?view=${view}&state=normal&lang=en`);
+    const navigation = await snapshot(`[data-nav-view="${view}"]`);
+    expect(navigation.background).toBe(navigation.navigationSelected);
+    expect(navigation.background).not.toBe(navigation.selected);
+    expect(navigation.boxShadow).not.toContain(navigation.accent);
+  }
+
+  await page.goto("/examples/workspace-reference/?view=investigation&state=normal&event=EVT-318&lang=en");
+  const evidence = await snapshot('[data-investigation-event-row][data-selected="true"]');
+  expect(evidence.background).toBe(evidence.selected);
+
+  await page.goto("/examples/workspace-reference/?view=risk-queue&state=normal&signal=RSK-204&lang=en");
+  const risk = await snapshot('[data-risk-row][data-selected="true"]');
+  expect(risk.background).toBe(risk.selected);
+});
 
 test("workspace exposes keyboard-complete theme and language preferences", async ({ page }) => {
   await seedPreferences(page, "light");
@@ -220,6 +262,27 @@ test("workspace localizes controls and loads Sonner on demand", async ({ page })
   await page.locator("[data-context-follow]").click();
   await expect(page.locator("[data-sonner-toast]")).toBeVisible();
   expect(await page.evaluate(() => performance.getEntriesByType("resource").some(({ name }) => name.includes("sonner-island")))).toBe(true);
+});
+
+test("workspace command and contextual composer expose visible keyboard focus boundaries", async ({ page }) => {
+  await seedPreferences(page, "dark", "normal", "en");
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/examples/workspace-reference/");
+
+  const searchTrigger = page.locator("[data-workspace-search]:visible").first();
+  await searchTrigger.focus();
+  await page.keyboard.press("Enter");
+  await expect(page.locator("[data-workspace-command-input]")).toBeFocused();
+  await expect(page.locator(".workspace-command__search")).toHaveCSS("outline-style", "solid");
+  await expect(page.locator(".workspace-command__search")).toHaveCSS("outline-width", "2px");
+  await page.keyboard.press("Escape");
+  await expect(searchTrigger).toBeFocused();
+
+  const contextInput = page.locator("[data-context-input]");
+  await contextInput.focus();
+  await expect(contextInput).toBeFocused();
+  await expect(page.locator(".context-composer")).toHaveCSS("outline-style", "solid");
+  await expect(page.locator(".context-composer")).toHaveCSS("outline-width", "2px");
 });
 
 test("workspace demonstrates button motion and Sonner result patterns", async ({ page }) => {
@@ -834,6 +897,30 @@ test("core navigation separates tabs menus disclosures and pagination", async ({
   await expect(page.getByRole("tab", { name: "历史" })).toHaveAttribute("aria-selected", "true");
   await expect(page.getByRole("tabpanel", { name: "历史" })).toBeVisible();
 
+  const selectedTab = page.locator('.tab-list [aria-selected="true"]');
+  await expect(selectedTab).toHaveCSS("background-color", "rgba(255, 255, 255, 0.055)");
+  const selectedTabMaterial = await selectedTab.evaluate((element) => {
+    const resolveColor = (token) => {
+      const probe = document.createElement("span");
+      probe.style.background = `var(${token})`;
+      document.body.append(probe);
+      const color = getComputedStyle(probe).backgroundColor;
+      probe.remove();
+      return color;
+    };
+    const style = getComputedStyle(element);
+    return {
+      accent: resolveColor("--accent"),
+      background: style.backgroundColor,
+      edge: getComputedStyle(element, "::after").display,
+      navigationSelected: resolveColor("--navigation-selected"),
+      shadow: style.boxShadow,
+    };
+  });
+  expect(selectedTabMaterial.background).toBe(selectedTabMaterial.navigationSelected);
+  expect(selectedTabMaterial.edge).toBe("none");
+  expect(selectedTabMaterial.shadow).not.toContain(selectedTabMaterial.accent);
+
   const navigation = page.locator("#navigation");
   const menuTrigger = navigation.locator("[data-menu-trigger]");
   await menuTrigger.click();
@@ -860,6 +947,25 @@ test("core navigation separates tabs menus disclosures and pagination", async ({
   await disclosure.locator("summary").click();
   await expect(disclosure).toHaveAttribute("open", "");
   await expect(page.getByRole("link", { name: "1" })).toHaveAttribute("aria-current", "page");
+  const paginationMaterial = await page.getByRole("link", { name: "1" }).evaluate((element) => {
+    const resolveColor = (token) => {
+      const probe = document.createElement("span");
+      probe.style.background = `var(${token})`;
+      document.body.append(probe);
+      const color = getComputedStyle(probe).backgroundColor;
+      probe.remove();
+      return color;
+    };
+    const style = getComputedStyle(element);
+    return {
+      accent: resolveColor("--accent"),
+      background: style.backgroundColor,
+      boxShadow: style.boxShadow,
+      navigationSelected: resolveColor("--navigation-selected"),
+    };
+  });
+  expect(paginationMaterial.background).toBe(paginationMaterial.navigationSelected);
+  expect(paginationMaterial.boxShadow).not.toContain(paginationMaterial.accent);
 });
 
 test("core data display preserves labels status and loading meaning", async ({ page }, testInfo) => {

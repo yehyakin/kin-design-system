@@ -102,6 +102,17 @@
         "hex": "#5e6ad21f"
       }
     },
+    "dark-navigation-selected": {
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          1,
+          1,
+          1
+        ],
+        "hex": "#ffffff0e"
+      }
+    },
     "dark-surface-overlay": {
       "$value": {
         "colorSpace": "srgb",
@@ -441,6 +452,17 @@
           0.769
         ],
         "hex": "#525ec41a"
+      }
+    },
+    "light-navigation-selected": {
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.078,
+          0.086,
+          0.102
+        ],
+        "hex": "#14161a0e"
       }
     },
     "light-surface-overlay": {

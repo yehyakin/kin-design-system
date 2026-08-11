@@ -98,6 +98,25 @@ const FEATURED_COMPONENT_IDS = Object.freeze([
   "app-shell",
 ]);
 
+// Explorer stages use an explicit specimen-aware height so compact fixtures do
+// not inherit the dense evidence viewport. This is a content contract rather
+// than a DOM measurement: the live reference remains free to scroll inside the
+// bounded stage when a fixture needs more room.
+const COMPONENT_STAGE_HEIGHTS = Object.freeze({
+  "app-shell": "640px",
+  "evidence-list": "640px",
+  "suggested-change-review": "560px",
+  "execution-preview": "560px",
+  "agent-activity-trace": "540px",
+  "background-task-queue": "520px",
+  "story-timeline": "560px",
+  "data-table": "600px",
+  "command-menu": "min(720px, 70vh)",
+  "authentication-dialog": "min(720px, 70vh)",
+  "code-block": "460px",
+  button: "380px",
+});
+
 export const SHOWCASE_PATTERN_IDS = Object.freeze([
   "information-site",
   "intelligence-workspace",
@@ -912,7 +931,7 @@ function renderShell({
   <link rel="icon" href="${escapeHtml(`${assets}mark.svg`)}" type="image/svg+xml">
   <link rel="manifest" href="${escapeHtml(`${rootPrefix(publicPath)}manifest.webmanifest`)}">
   <link rel="stylesheet" href="${escapeHtml(`${assets}site.css`)}">
-  <link rel="stylesheet" href="${escapeHtml(`${assets}showcase.css?v=3.0.2`)}">
+  <link rel="stylesheet" href="${escapeHtml(`${assets}showcase.css?v=3.0.3`)}">
   <script>
     (() => {
       let storedTheme;
@@ -976,7 +995,7 @@ ${content}
     routePairs: commandPairs.routes,
   })}
   <script type="module" src="${escapeHtml(`${assets}site.js`)}"></script>
-  <script type="module" src="${escapeHtml(`${assets}showcase.js?v=3.0.2`)}"></script>
+  <script type="module" src="${escapeHtml(`${assets}showcase.js?v=3.0.3`)}"></script>
 </body>
 </html>`;
 }
@@ -1366,12 +1385,15 @@ function renderComponentExplorer({ id, locale, publicPath, configuration, compon
     ["touch", copy.touch],
     ["reduced_motion", copy.reduced_motion],
   ];
-  const featuredNavigation = FEATURED_COMPONENT_IDS.map((componentId) => {
+  const railComponentIds = FEATURED_COMPONENT_IDS.includes(id)
+    ? FEATURED_COMPONENT_IDS
+    : [...FEATURED_COMPONENT_IDS, id];
+  const featuredNavigation = railComponentIds.map((componentId) => {
     const active = componentId === id ? ' aria-current="page"' : "";
     const displayName = localized.components.items[componentId].display_name;
     return `<a href="${escapeHtml(
       directoryHref(publicPath, localizedPaths("components", componentId)[locale]),
-    )}"${active}><i data-lucide="${escapeHtml(COMPONENT_ICONS[componentId] ?? "component")}"></i><span lang="${escapeHtml(
+    )}"${active}${componentId === id && !FEATURED_COMPONENT_IDS.includes(id) ? ' class="component-studio__navigation-current"' : ""}><i data-lucide="${escapeHtml(COMPONENT_ICONS[componentId] ?? "component")}"></i><span lang="${escapeHtml(
       locale,
     )}">${escapeHtml(displayName)}</span></a>`;
   }).join("\n");
@@ -1400,7 +1422,9 @@ function renderComponentExplorer({ id, locale, publicPath, configuration, compon
               COMPONENT_STAGE_FOCUS_SELECTORS[id]
                 ? ` data-focus-selector="${escapeHtml(COMPONENT_STAGE_FOCUS_SELECTORS[id])}"`
                 : ""
-            } data-component-id="${escapeHtml(id)}" aria-labelledby="reference-title">
+            } data-component-id="${escapeHtml(id)}" data-stage-height="${escapeHtml(
+              COMPONENT_STAGE_HEIGHTS[id] ?? "clamp(520px, 62vh, 640px)",
+            )}" aria-labelledby="reference-title">
             <header class="reference-stage__toolbar reference-stage__toolbar--explorer">
               <div class="reference-stage__identity"><span id="reference-title">${escapeHtml(
                   ui.present_reference,

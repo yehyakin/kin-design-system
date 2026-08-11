@@ -33,7 +33,7 @@
   <sub>基于固定数据调查参考界面的重绘</sub>
 </p>
 
-> **版本状态：** [v3.0.2](https://github.com/yehyakin/kin-design-system/releases/tag/v3.0.2) 是当前正式版本；`main` 分支可能包含后续文档更新。
+> **版本状态：** [v3.0.3](https://github.com/yehyakin/kin-design-system/releases/tag/v3.0.3) 是当前正式版本；`main` 分支可能包含后续文档更新。
 
 KIN 是一套不绑定前端框架的设计合同，适用于需要阅读、比较、判断和操作，同时不能丢失上下文的网站与软件。它覆盖页面构图、组件、主题、动效、无障碍、数据状态、AI 辅助流程和恢复路径。
 
@@ -157,7 +157,7 @@ npm run test:reference
 修改规范性规则前请阅读[贡献指南](../CONTRIBUTING.md)。组件和页面成熟度记录在[组件目录](../components/catalog.md)与[页面目录](../pages/catalog.md)中。
 
 <p>
-  <a href="../DESIGN.md"><img src="https://img.shields.io/badge/Design_Contract-v3.0.2-5E6AD2" alt="KIN Design Contract v3.0.2" /></a>
+  <a href="../DESIGN.md"><img src="https://img.shields.io/badge/Design_Contract-v3.0.3-5E6AD2" alt="KIN Design Contract v3.0.3" /></a>
   <a href="https://github.com/yehyakin/kin-design-system/actions/workflows/validate-docs.yml"><img src="https://github.com/yehyakin/kin-design-system/actions/workflows/validate-docs.yml/badge.svg" alt="文档校验" /></a>
   <a href="../LICENSE"><img src="https://img.shields.io/badge/License-MIT-232326" alt="MIT 许可证" /></a>
 </p>

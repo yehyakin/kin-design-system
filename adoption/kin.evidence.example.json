@@ -1,6 +1,6 @@
 {
   "$schema": "https://raw.githubusercontent.com/yehyakin/kin-design-system/main/adoption/kin.evidence.schema.json",
-  "kinVersion": "3.0.2",
+  "kinVersion": "3.0.3",
   "profile": "information-site",
   "productRevision": "unassigned",
   "status": "initialized",
