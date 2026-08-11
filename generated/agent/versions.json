@@ -1,12 +1,12 @@
 {
-  "$schema": "https://yehyakin.github.io/kin-design-system/next/schemas/versions.schema.json",
+  "$schema": "https://yehyakin.github.io/kin-design-system/versions/v3.0.3/schemas/versions.schema.json",
   "schema_version": "2.0.0",
   "kind": "kin-agent-distribution-versions",
   "artifact_status": "generated-derivative",
   "generated": true,
   "normative": false,
   "editable": false,
-  "latest_agent_distribution": null,
+  "latest_agent_distribution": "3.0.3",
   "versions": [
     {
       "version": "3.0.1",
@@ -36,10 +36,10 @@
     },
     {
       "version": "3.0.3",
-      "publication_state": "staged",
-      "support_status": null,
+      "publication_state": "released",
+      "support_status": "supported",
       "repository_directory": "generated/agent/versions/v3.0.3",
-      "manifest_url": null,
+      "manifest_url": "https://yehyakin.github.io/kin-design-system/versions/v3.0.3/design-manifest.json",
       "manifest_sha256": "f1aa4a45c8c9050c0618de2fcdf0465886910d60440d83bf6e062f8542776659",
       "kin_tag": "v3.0.3",
       "design_checksum": "98c86b92eace31b6157caf5a04599f981b5602b516cfadd3caa6487753ed42db",
