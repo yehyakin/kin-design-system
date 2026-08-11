@@ -73,6 +73,15 @@ async function materialSnapshot(locator) {
   });
 }
 
+async function waitForNavigationMaterial(locator) {
+  await expect.poll(async () => {
+    const material = await materialSnapshot(locator);
+    return material.background === material.navigationSelected;
+  }, {
+    message: "Current navigation should settle on the navigation-selected material",
+  }).toBe(true);
+}
+
 async function capture(page, testInfo, name) {
   await page.screenshot({ path: testInfo.outputPath(name), fullPage: true });
 }
@@ -408,7 +417,9 @@ test("settings preserve unsaved state, update preferences, and confirm session r
   await page.setViewportSize({ width: 1280, height: 900 });
   await page.goto("/examples/page-patterns/settings.html");
 
-  const settingsNavigation = await materialSnapshot(page.locator('[data-settings-nav="profile"]'));
+  const settingsNavigationLocator = page.locator('[data-settings-nav="profile"]');
+  await waitForNavigationMaterial(settingsNavigationLocator);
+  const settingsNavigation = await materialSnapshot(settingsNavigationLocator);
   const settingsSurface = await materialSnapshot(page.locator('[data-settings-section="profile"]'));
   expect(settingsNavigation.background).toBe(settingsNavigation.navigationSelected);
   expect(settingsNavigation.boxShadow).not.toContain(settingsNavigation.accent);
@@ -560,7 +571,9 @@ test("help and support separates guidance requests tickets and sourced status", 
   await page.goto("/examples/page-patterns/support.html");
 
   await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
-  const supportNavigation = await materialSnapshot(page.locator('[data-support-nav="help"]'));
+  const supportNavigationLocator = page.locator('[data-support-nav="help"]');
+  await waitForNavigationMaterial(supportNavigationLocator);
+  const supportNavigation = await materialSnapshot(supportNavigationLocator);
   const supportSurface = await materialSnapshot(page.locator('[data-support-section="help"]'));
   expect(supportNavigation.background).toBe(supportNavigation.navigationSelected);
   expect(supportNavigation.boxShadow).not.toContain(supportNavigation.accent);
