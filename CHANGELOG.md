@@ -10,6 +10,7 @@ The project follows semantic versioning for normative design documentation.
 
 - Replaced static accent-edge treatments on navigation, tools, records, evidence, schedule entries and engineering objects with the correct navigation, toggle or object-selection semantics. Accent Decision edges remain reserved for real conflict, review and commitment boundaries.
 - Rebuilt Component discovery as a bilingual, keyboard-operable inline workbench for twelve runnable component references, including command, dialog, notification, data, review and application-shell interactions without requiring a separate Explorer page.
+- Preserved the initiating component or reset control as the stable focus target while the shared live-reference frame reloads, including under parallel browser load, without trapping focus after the reference settles.
 - Added a source-derived public route matrix that checks all generated Showcase routes at wide, intermediate and narrow viewports, plus representative Firefox and WebKit smoke coverage for language, overflow, embedded-reference readiness, selection edges and runtime errors.
 
 ## 3.0.3 — 2026-08-12
