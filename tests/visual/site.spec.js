@@ -801,6 +801,7 @@ test("component workbench selects all twelve components and preserves one live s
     await stage.locator("[data-stage-reset]").click();
     await expect(stage.locator("[data-stage-reset]")).toBeFocused();
     await expect(stage).toHaveAttribute("data-stage-ready", "true", { timeout: 10_000 });
+    await expect(stage.locator("[data-stage-reset]")).toBeFocused();
     await expect(browser.locator("iframe[data-stage-frame]")).toHaveCount(1);
     const resetReference = page.frameLocator("iframe[data-stage-frame]");
     if (id === "command-menu") {

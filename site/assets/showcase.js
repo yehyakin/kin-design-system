@@ -573,11 +573,36 @@ function initializeComponentWorkbench(browser) {
   let selected = choices.find((choice) => choice.getAttribute("aria-selected") === "true") || choices[0];
   let selectionRevision = 0;
   let focusIntent = null;
+  let focusIntentRevision = 0;
 
-  function restoreIntentFocus() {
+  function restoreIntentFocus(revision = focusIntentRevision) {
+    if (revision !== focusIntentRevision) return;
     const target = focusIntent;
     if (!target || !target.isConnected) return;
-    if (document.activeElement !== target) target.focus();
+    if (document.activeElement !== target) target.focus({ preventScroll: true });
+  }
+
+  function setFocusIntent(target) {
+    focusIntent = target?.isConnected ? target : null;
+    focusIntentRevision += 1;
+    restoreIntentFocus();
+  }
+
+  function settleIntentFocus() {
+    if (!focusIntent) return;
+    const revision = focusIntentRevision;
+    restoreIntentFocus(revision);
+    requestAnimationFrame(() => {
+      restoreIntentFocus(revision);
+      requestAnimationFrame(() => {
+        restoreIntentFocus(revision);
+        window.setTimeout(() => {
+          if (revision !== focusIntentRevision) return;
+          restoreIntentFocus(revision);
+          focusIntent = null;
+        }, 0);
+      });
+    });
   }
 
   function updateLanguageNotice(choice) {
@@ -636,10 +661,7 @@ function initializeComponentWorkbench(browser) {
         frame.contentWindow.location.replace(nextUrl);
       }
     }
-    if (focus) {
-      focusIntent = choice;
-      choice.focus();
-    }
+    if (focus || invocation === "pointer") setFocusIntent(choice);
     if (updateHash) {
       const hash = `#component-${componentId}`;
       if (location.hash !== hash) history.replaceState(history.state, "", hash);
@@ -664,18 +686,23 @@ function initializeComponentWorkbench(browser) {
   });
 
   stageContainer.addEventListener("kin:stage-ready", () => {
-    restoreIntentFocus();
+    settleIntentFocus();
   });
   frame.addEventListener("load", () => {
     // Navigating the shared frame can transiently move focus into the frame
     // under heavy parallel loading. Restore an intentional tab/reset target.
     restoreIntentFocus();
   });
+  frame.addEventListener("focus", () => {
+    if (!focusIntent) return;
+    const revision = focusIntentRevision;
+    queueMicrotask(() => restoreIntentFocus(revision));
+  });
 
   reset?.addEventListener("click", () => {
-    focusIntent = reset;
+    setFocusIntent(reset);
     activate(selected, { invocation: "programmatic", updateHash: false, force: true });
-    reset.focus();
+    restoreIntentFocus();
   });
 
   const requestedId = location.hash.match(/^#component-(.+)$/)?.[1];
