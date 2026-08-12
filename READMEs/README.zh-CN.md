@@ -157,7 +157,7 @@ npm run test:reference
 修改规范性规则前请阅读[贡献指南](../CONTRIBUTING.md)。组件和页面成熟度记录在[组件目录](../components/catalog.md)与[页面目录](../pages/catalog.md)中。
 
 <p>
-  <a href="../DESIGN.md"><img src="https://img.shields.io/badge/Design_Contract-v3.0.3-5E6AD2" alt="KIN Design Contract v3.0.3" /></a>
+  <a href="../DESIGN.md"><img src="https://img.shields.io/badge/Design_Contract-v3.0.4_development-5E6AD2" alt="KIN Design Contract v3.0.4 development" /></a>
   <a href="https://github.com/yehyakin/kin-design-system/actions/workflows/validate-docs.yml"><img src="https://github.com/yehyakin/kin-design-system/actions/workflows/validate-docs.yml/badge.svg" alt="文档校验" /></a>
   <a href="../LICENSE"><img src="https://img.shields.io/badge/License-MIT-232326" alt="MIT 许可证" /></a>
 </p>
