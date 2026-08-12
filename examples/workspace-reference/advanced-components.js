@@ -107,8 +107,8 @@ createTask.addEventListener("click", () => {
 const mediaSelect = document.querySelector("[data-media-select]");
 const mediaStatus = document.querySelector("[data-media-status]");
 mediaSelect.addEventListener("click", () => {
-  const selected = mediaSelect.getAttribute("aria-pressed") !== "true";
-  mediaSelect.setAttribute("aria-pressed", String(selected));
+  const selected = mediaSelect.getAttribute("aria-selected") !== "true";
+  mediaSelect.setAttribute("aria-selected", String(selected));
   mediaSelect.textContent = selected ? "已选择" : "选择资产";
   mediaStatus.textContent = selected ? "资产已选择，仍需单独批准。" : "资产未选择，也未批准。";
 });

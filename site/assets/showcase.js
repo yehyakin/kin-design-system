@@ -356,6 +356,30 @@ function initializeReferenceStage(container) {
   let viewport = container.dataset.stageViewport === "narrow" ? "narrow" : "wide";
   let contextMode = container.dataset.stageContext === "isolated" ? "isolated" : "workflow";
   let themeExplicit = false;
+  let referenceRevision = 0;
+  let contrast = root.dataset.contrast === "more" ? "more" : "normal";
+  let revealRetryTimer = null;
+
+  function matchesExpectedDocument(expected, loaded) {
+    if (!expected || !loaded) return true;
+    const expectedUrl = new URL(expected, window.location.href);
+    const loadedUrl = new URL(loaded, window.location.href);
+    if (expectedUrl.origin !== loadedUrl.origin || expectedUrl.pathname !== loadedUrl.pathname) return false;
+    for (const key of ["specimen", "view", "lang", "scenario"]) {
+      if (expectedUrl.searchParams.has(key) && expectedUrl.searchParams.get(key) !== loadedUrl.searchParams.get(key)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  function retryReveal(revision) {
+    if (revision !== referenceRevision || revealRetryTimer !== null) return;
+    revealRetryTimer = window.setTimeout(() => {
+      revealRetryTimer = null;
+      if (revision === referenceRevision) reveal();
+    }, 50);
+  }
 
   function syncControls() {
     for (const control of container.querySelectorAll("button[data-stage-theme]")) {
@@ -372,8 +396,15 @@ function initializeReferenceStage(container) {
   }
 
   function reveal() {
+    const revision = referenceRevision;
+    const expectedSource = frame.getAttribute("src");
+    const loadedUrl = frame.contentWindow?.location?.href || "";
+    if (!matchesExpectedDocument(expectedSource, loadedUrl)) {
+      retryReveal(revision);
+      return;
+    }
     try {
-      if (!prepareEmbeddedReference(frame, { theme, contrast: "normal" })) throw new Error("unavailable");
+      if (!prepareEmbeddedReference(frame, { theme, contrast })) throw new Error("unavailable");
       const frameDocument = frame.contentDocument;
       const readyFragment = container.dataset.readyFragment;
       const readySelector = container.dataset.readySelector;
@@ -389,6 +420,13 @@ function initializeReferenceStage(container) {
         container.style.removeProperty("--explorer-stage-height");
       }
       requestAnimationFrame(() => requestAnimationFrame(() => {
+        if (revision !== referenceRevision) return;
+        const currentSource = frame.getAttribute("src");
+        const currentLoadedUrl = frame.contentWindow?.location?.href || "";
+        if (!matchesExpectedDocument(currentSource, currentLoadedUrl)) {
+          retryReveal(revision);
+          return;
+        }
         container.dataset.stageReady = "true";
         frame.dispatchEvent(new CustomEvent("kin:stage-ready", { bubbles: true }));
         if (container.dataset.stageInput === "keyboard") {
@@ -398,6 +436,7 @@ function initializeReferenceStage(container) {
         }
       }));
     } catch {
+      if (revision !== referenceRevision) return;
       container.dataset.stageReady = "false";
       delete container.dataset.stageInput;
       loader.replaceChildren(document.createTextNode(
@@ -414,9 +453,14 @@ function initializeReferenceStage(container) {
   }
 
   function syncOuterAppearance() {
-    if (themeExplicit) return;
+    contrast = root.dataset.contrast === "more" ? "more" : "normal";
+    if (themeExplicit) {
+      container.dataset.stageContrast = contrast;
+      if (frame.contentDocument?.documentElement) reveal();
+      return;
+    }
     const nextTheme = root.dataset.theme === "light" ? "light" : "dark";
-    if (nextTheme === theme) {
+    if (nextTheme === theme && container.dataset.stageContrast === contrast) {
       syncControls();
       return;
     }
@@ -450,6 +494,9 @@ function initializeReferenceStage(container) {
   }
 
   container.addEventListener("kin:reference-change", () => {
+    referenceRevision += 1;
+    contrast = root.dataset.contrast === "more" ? "more" : "normal";
+    container.dataset.stageContrast = contrast;
     container.dataset.stageReady = "false";
     container.style.removeProperty("--explorer-stage-height");
   });
@@ -460,6 +507,7 @@ function initializeReferenceStage(container) {
       explicit: event.detail?.explicit !== false,
     }));
   syncControls();
+  container.dataset.stageContrast = contrast;
   if (frame.contentDocument?.readyState === "complete") reveal();
   return syncOuterAppearance;
 }
@@ -493,6 +541,146 @@ function initializeComponentTabs(container) {
     else next = (index + 1) % tabs.length;
     activate(tabs[next], { focus: true });
   });
+}
+
+function initializeComponentWorkbench(browser) {
+  const choices = [...browser.querySelectorAll("[data-component-choice]")];
+  const stageContainer = browser.querySelector("[data-reference-stage]");
+  const frame = stageContainer?.querySelector("[data-stage-frame]");
+  const stageTitle = stageContainer?.querySelector("[data-stage-title]");
+  const stageJob = stageContainer?.querySelector("[data-stage-job]");
+  const stageState = stageContainer?.querySelector("[data-stage-state]");
+  const stageLanguage = stageContainer?.querySelector("[data-stage-language-text]");
+  const stageLanguageNotes = stageContainer?.querySelectorAll("[data-stage-language-note]") || [];
+  const directReference = stageContainer?.querySelector("[data-stage-reference-link]");
+  const explorerLink = stageContainer?.querySelector("[data-stage-explorer-link]");
+  const reset = stageContainer?.querySelector("[data-stage-reset]");
+  if (
+    choices.length === 0 ||
+    !stageContainer ||
+    !frame ||
+    !stageTitle ||
+    !stageJob ||
+    !stageState ||
+    !stageLanguage ||
+    !directReference ||
+    !explorerLink
+  ) return;
+
+  const syncAppearance = initializeReferenceStage(stageContainer);
+  if (syncAppearance) referenceStageAppearanceSyncs.push(syncAppearance);
+
+  let selected = choices.find((choice) => choice.getAttribute("aria-selected") === "true") || choices[0];
+  let selectionRevision = 0;
+  let focusIntent = null;
+
+  function restoreIntentFocus() {
+    const target = focusIntent;
+    if (!target || !target.isConnected) return;
+    if (document.activeElement !== target) target.focus();
+  }
+
+  function updateLanguageNotice(choice) {
+    const notice = choice.dataset.componentReferenceLanguage || "";
+    for (const element of stageLanguageNotes) {
+      if (element === stageLanguage) continue;
+      element.textContent = notice;
+      element.hidden = !notice;
+    }
+  }
+
+  function activate(choice, { focus = false, invocation = "pointer", updateHash = true, force = false } = {}) {
+    if (!choice || (!force && choice === selected && stageContainer.dataset.stageReady === "true")) return;
+    selected = choice;
+    selectionRevision += 1;
+    stageContainer.dataset.stageInput = invocation;
+    stageContainer.dataset.stageSelectionRevision = String(selectionRevision);
+
+    for (const candidate of choices) {
+      const active = candidate === choice;
+      candidate.setAttribute("aria-selected", String(active));
+      candidate.tabIndex = active ? 0 : -1;
+    }
+    stageContainer.setAttribute("aria-labelledby", choice.id);
+
+    const componentId = choice.dataset.componentChoice;
+    const reference = choice.dataset.componentReference;
+    const referenceWithFragment = `${reference}${choice.dataset.componentReadyFragment ? `#${choice.dataset.componentReadyFragment}` : ""}`;
+    stageContainer.dataset.componentId = componentId;
+    stageContainer.dataset.readyFragment = choice.dataset.componentReadyFragment || "";
+    stageContainer.dataset.stageHeight = choice.dataset.componentStageHeight || "";
+    stageTitle.textContent = choice.dataset.componentName || "";
+    stageJob.textContent = choice.dataset.componentJob || "";
+    stageState.textContent = choice.dataset.componentState || "";
+    const referenceLocale = choice.dataset.componentReferenceLocale || (root.lang === "zh-CN" ? "zh-CN" : "en");
+    stageLanguage.textContent = referenceLocale === "zh-CN" ? "中文" : "English";
+    stageLanguage.lang = referenceLocale;
+    updateLanguageNotice(choice);
+    directReference.href = referenceWithFragment;
+    explorerLink.href = choice.dataset.componentExplorer || "";
+    if (directReference.firstChild?.nodeType === Node.TEXT_NODE) {
+      directReference.firstChild.nodeValue = root.lang === "zh-CN" ? "打开预览 " : "Open reference ";
+    }
+    if (explorerLink.firstChild?.nodeType === Node.TEXT_NODE) {
+      explorerLink.firstChild.nodeValue = root.lang === "zh-CN" ? "打开演示 " : "Open Explorer ";
+    }
+
+    stageContainer.dispatchEvent(new CustomEvent("kin:reference-change", { detail: { revision: selectionRevision } }));
+    frame.title = `${choice.dataset.componentName || "Component"}: ${choice.dataset.componentState || "reference"}`;
+    if (frame.getAttribute("src") === reference) {
+      frame.contentWindow?.location?.reload?.();
+    } else {
+      frame.src = reference;
+      const nextUrl = new URL(reference, window.location.href).href;
+      if (frame.contentWindow?.location?.href && frame.contentWindow.location.href !== nextUrl) {
+        frame.contentWindow.location.replace(nextUrl);
+      }
+    }
+    if (focus) {
+      focusIntent = choice;
+      choice.focus();
+    }
+    if (updateHash) {
+      const hash = `#component-${componentId}`;
+      if (location.hash !== hash) history.replaceState(history.state, "", hash);
+    }
+  }
+
+  for (const choice of choices) {
+    choice.addEventListener("click", () => activate(choice, { invocation: "pointer" }));
+  }
+
+  browser.querySelector('[role="tablist"]')?.addEventListener("keydown", (event) => {
+    if (!["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Home", "End"].includes(event.key)) return;
+    const index = choices.indexOf(document.activeElement);
+    if (index < 0) return;
+    event.preventDefault();
+    let next = index;
+    if (event.key === "Home") next = 0;
+    else if (event.key === "End") next = choices.length - 1;
+    else if (event.key === "ArrowLeft" || event.key === "ArrowUp") next = (index - 1 + choices.length) % choices.length;
+    else next = (index + 1) % choices.length;
+    activate(choices[next], { focus: true, invocation: "keyboard" });
+  });
+
+  stageContainer.addEventListener("kin:stage-ready", () => {
+    restoreIntentFocus();
+  });
+  frame.addEventListener("load", () => {
+    // Navigating the shared frame can transiently move focus into the frame
+    // under heavy parallel loading. Restore an intentional tab/reset target.
+    restoreIntentFocus();
+  });
+
+  reset?.addEventListener("click", () => {
+    focusIntent = reset;
+    activate(selected, { invocation: "programmatic", updateHash: false, force: true });
+    reset.focus();
+  });
+
+  const requestedId = location.hash.match(/^#component-(.+)$/)?.[1];
+  const requestedChoice = choices.find((choice) => choice.dataset.componentChoice === requestedId);
+  if (requestedChoice) activate(requestedChoice, { invocation: "programmatic", updateHash: false });
 }
 
 function initializePatternBrowser(browser) {
@@ -571,6 +759,7 @@ function initializePatternBrowser(browser) {
 }
 
 for (const referenceStage of document.querySelectorAll("[data-reference-stage]")) {
+  if (referenceStage.hasAttribute("data-component-workbench-stage")) continue;
   const syncAppearance = initializeReferenceStage(referenceStage);
   if (syncAppearance) referenceStageAppearanceSyncs.push(syncAppearance);
 }
@@ -579,4 +768,7 @@ for (const tabset of document.querySelectorAll("[data-component-tabs]")) {
 }
 for (const browser of document.querySelectorAll("[data-pattern-browser]")) {
   initializePatternBrowser(browser);
+}
+for (const browser of document.querySelectorAll("[data-component-workbench]")) {
+  initializeComponentWorkbench(browser);
 }

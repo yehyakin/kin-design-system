@@ -98,9 +98,9 @@
               <button type="button" class="icon-button" data-language-trigger aria-haspopup="menu" aria-expanded="false" data-i18n-aria="language">
                 <i data-lucide="languages"></i>
               </button>
-              <div class="language-menu" data-language-menu role="menu" data-state="closed" hidden>
-                <button type="button" role="menuitem" data-locale-value="zh"><span>中文</span><i data-lucide="check"></i></button>
-                <button type="button" role="menuitem" data-locale-value="en"><span>English</span><i data-lucide="check"></i></button>
+              <div class="language-menu" data-language-menu role="menu" aria-label="语言" data-state="closed" hidden>
+                <button type="button" role="menuitemradio" aria-checked="true" tabindex="0" data-locale-value="zh"><span>中文</span><i data-lucide="check"></i></button>
+                <button type="button" role="menuitemradio" aria-checked="false" tabindex="-1" data-locale-value="en"><span>English</span><i data-lucide="check"></i></button>
               </div>
             </div>
 
@@ -307,11 +307,11 @@
             </div>
 
             <div class="risk-table-scroll" data-risk-table-wrap>
-              <table class="risk-table" data-risk-table data-i18n-aria="riskTableLabel">
+              <table class="risk-table" data-risk-table role="grid" aria-label="风险信号" data-i18n-aria="riskTableLabel">
                 <thead><tr><th scope="col" data-i18n="riskColumnSignal">信号</th><th scope="col" data-i18n="riskColumnSeverity">严重度</th><th scope="col" data-i18n="riskColumnEvidence">证据状态</th><th scope="col" data-i18n="riskColumnOwner">负责人</th><th scope="col" data-i18n="riskColumnReview">复核状态</th><th scope="col" data-i18n="riskColumnObserved">观察时间</th></tr></thead>
                 <tbody>
                   <tr data-risk-row="RSK-204" data-selected="true">
-                    <td data-label="信号"><button type="button" class="risk-row-button" data-risk-signal="RSK-204" aria-current="true"><strong>RSK-204</strong><span data-i18n="riskSignal204">证书签发者发生变化</span></button></td>
+                    <td data-label="信号"><button type="button" class="risk-row-button" data-risk-signal="RSK-204"><strong>RSK-204</strong><span data-i18n="riskSignal204">证书签发者发生变化</span></button></td>
                     <td data-label="严重度"><span class="semantic-status severity-high"><i></i><span data-i18n="riskSeverityHigh">高</span></span></td>
                     <td data-label="证据状态"><span class="semantic-status evidence-conflict"><i></i><span data-i18n="riskEvidenceConflict">冲突</span></span></td>
                     <td data-label="负责人"><span data-risk-row-owner data-i18n="riskUnassigned">未指派</span></td>
@@ -389,7 +389,7 @@
               <p data-i18n="investigationEmptyBody">可以切换范围；本地示例不会扩大时间窗口或补造来源。</p>
             </div>
 
-            <div class="investigation-chronology" data-investigation-chronology>
+            <div class="investigation-chronology" data-investigation-chronology role="listbox" aria-label="证据事件" data-i18n-aria="investigationChronologyTitle">
               <section class="investigation-day" aria-labelledby="investigation-day-title">
                 <h3 id="investigation-day-title" data-i18n="investigationDayTitle">2026 年 7 月 20 日</h3>
                 <ol>
@@ -410,7 +410,7 @@
                     </button>
                   </li>
                   <li data-investigation-event-row="EVT-318" data-investigation-scope-tags="all conflicting" data-selected="true">
-                    <button type="button" data-investigation-event="EVT-318" aria-current="true">
+                    <button type="button" data-investigation-event="EVT-318">
                       <span class="investigation-time"><time datetime="2026-07-20T09:02:00+08:00">09:02</time><small data-i18n="investigationObserved0904">观察于 09:04</small></span>
                       <span class="investigation-event-copy"><strong data-i18n="investigationEvent318Title">证书签发者发生变化</strong><small data-i18n="investigationEvent318Body">签发者从 North CA 4 变更为 North CA 5。</small></span>
                       <span class="investigation-source"><strong data-i18n="investigationSourceCertificate">证书监测</strong><small data-i18n="investigationSourceAvailable">来源可用</small></span>

@@ -291,7 +291,7 @@ svg.lucide { width: 15px; height: 15px; flex: 0 0 auto; stroke-width: 1.5; }
 .commerce-row { display: grid; grid-template-columns: 38px minmax(210px, 1.4fr) 112px 90px 124px 94px; min-height: 48px; align-items: center; padding: 0 14px; border-bottom: 1px solid var(--line); color: var(--muted); }
 .commerce-row.header { min-height: 34px; background: color-mix(in srgb, var(--surface-1) 96%, var(--surface-2)); color: var(--disabled); font-size: 10px; }
 .commerce-row:not(.header):hover { background: var(--hover); }
-.commerce-row.selected { background: var(--surface-selected); box-shadow: inset 2px 0 0 var(--accent), inset 0 1px 0 var(--edge-highlight), var(--shadow-contact); }
+.commerce-row.selected { background: var(--surface-selected); }
 .commerce-row strong { color: var(--text-2); font-weight: 550; }
 .commerce-row .money, .commerce-row .quantity { font-variant-numeric: tabular-nums; }
 .checkbox-target { display: grid; width: 44px; height: 44px; place-items: center; cursor: pointer; }
@@ -376,7 +376,7 @@ svg.lucide { width: 15px; height: 15px; flex: 0 0 auto; stroke-width: 1.5; }
 .tool-rail { grid-row: 2; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 8px 5px; border-right: 1px solid var(--line); background: var(--sidebar); box-shadow: inset -1px 0 0 var(--edge-contact); }
 .tool-rail button { display: grid; width: 34px; height: 34px; place-items: center; padding: 0; border-color: transparent; background: transparent; box-shadow: none; }
 .tool-rail button:hover { background: var(--hover); }
-.tool-rail button[aria-pressed="true"] { border-color: var(--line); background: var(--surface-selected); box-shadow: inset 2px 0 0 var(--accent), inset 0 1px 0 var(--edge-highlight), var(--shadow-contact); color: var(--text); }
+.tool-rail button[aria-pressed="true"] { border-color: var(--line); background: var(--surface-selected); box-shadow: inset 0 1px 0 var(--edge-highlight), var(--shadow-contact); color: var(--text); }
 .layer-panel { grid-column: 2; grid-row: 2; overflow: auto; border-right: 1px solid var(--line); background: var(--surface-1); box-shadow: inset -1px 0 0 var(--edge-contact); }
 .panel-heading { display: flex; min-height: 42px; align-items: center; justify-content: space-between; padding: 0 12px; border-bottom: 1px solid var(--line); box-shadow: inset 0 -1px 0 var(--edge-contact); }
 .panel-heading strong { display: flex; align-items: center; gap: 7px; font-size: 11px; }
@@ -384,7 +384,7 @@ svg.lucide { width: 15px; height: 15px; flex: 0 0 auto; stroke-width: 1.5; }
 .layer-tree { padding: 8px; }
 .layer-tree button { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; width: 100%; min-height: 32px; align-items: center; gap: 8px; padding: 0 8px; border-color: transparent; background: transparent; box-shadow: none; text-align: left; }
 .layer-tree button:hover { background: var(--hover); }
-.layer-tree button[aria-pressed="true"] { background: var(--surface-selected); box-shadow: inset 2px 0 0 var(--accent), inset 0 1px 0 var(--edge-highlight), var(--shadow-contact); }
+.layer-tree button[aria-selected="true"] { background: var(--surface-selected); }
 .layer-tree .nested { padding-left: 18px; }
 .layer-tree small { margin-left: auto; color: var(--disabled); }
 .split-separator { position: absolute; z-index: 6; top: 50px; bottom: 30px; left: calc(48px + var(--layers-width) - 6px); width: 12px; padding: 0; border: 0; background: transparent; box-shadow: none; cursor: col-resize; touch-action: none; }
@@ -395,8 +395,8 @@ svg.lucide { width: 15px; height: 15px; flex: 0 0 auto; stroke-width: 1.5; }
 .drawing-area svg { position: absolute; inset: 50% auto auto 50%; width: min(78%, 760px); height: auto; translate: -50% -50%; }
 .drawing-area .geometry { fill: none; stroke: var(--text-2); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
 .drawing-area .secondary { stroke: var(--muted); stroke-dasharray: 5 4; }
-.drawing-area .selected-geometry { fill: color-mix(in srgb, var(--accent) 8%, transparent); stroke: var(--accent); stroke-width: 2; }
-.drawing-area .handle { fill: var(--surface-1); stroke: var(--accent); stroke-width: 1.5; }
+.drawing-area .selected-geometry { fill: var(--surface-selected); stroke: var(--text-2); stroke-width: 1.5; }
+.drawing-area .handle { fill: var(--surface-1); stroke: var(--line-strong); stroke-width: 1.5; }
 .dimension { fill: var(--text-2); font: 12px ui-monospace, monospace; }
 .canvas-mode { position: absolute; top: 12px; left: 12px; display: inline-flex; align-items: center; gap: 6px; padding: 6px 8px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface-2); box-shadow: inset 0 1px 0 var(--edge-highlight), var(--shadow-raised); color: var(--muted); font-size: 11px; }
 .property-panel { grid-column: 4; grid-row: 2; overflow: auto; border-left: 1px solid var(--line); background: var(--surface-2); box-shadow: inset 1px 0 0 var(--edge-highlight); }
@@ -538,7 +538,7 @@ svg.lucide { width: 15px; height: 15px; flex: 0 0 auto; stroke-width: 1.5; }
 
 @media (forced-colors: active) {
   button, .identity-mark, .info-frame, .info-search-field, .source-note, .commerce-shell, .commerce-row.selected, .product-thumb, .commerce-inspector .approval, .commerce-edit-impact, .canvas-shell, .canvas-mode, .generated-change { box-shadow: none; }
-  .topic-nav a[aria-current="page"], .commerce-nav a[aria-current="page"], .tool-rail button[aria-pressed="true"], .layer-tree button[aria-pressed="true"], .commerce-row.selected { outline: 1px solid Highlight; outline-offset: -1px; }
+  .topic-nav a[aria-current="page"], .commerce-nav a[aria-current="page"], .tool-rail button[aria-pressed="true"], .layer-tree button[aria-selected="true"], .commerce-row.selected { outline: 1px solid Highlight; outline-offset: -1px; }
 }
 
 [data-contrast="more"] :is(button, .identity-mark, .info-frame, .info-search-field, .source-note, .commerce-shell, .commerce-row.selected, .product-thumb, .commerce-inspector .approval, .commerce-edit-impact, .canvas-shell, .canvas-mode, .generated-change, .commerce-inspector, .property-panel, .source-rail, .topic-nav, .commerce-sidebar, .tool-rail, .layer-panel) { box-shadow: none; }

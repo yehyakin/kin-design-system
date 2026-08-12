@@ -282,8 +282,8 @@ kbd { margin-left: 8px; color: var(--disabled); font-family: inherit; font-size:
 .language-menu button { display: flex; align-items: center; justify-content: space-between; width: 100%; min-height: 34px; padding: 0 9px; border: 0; background: transparent; }
 .language-menu button:hover { background: var(--hover); }
 .language-menu button svg { visibility: hidden; color: var(--accent); }
-.language-menu button[aria-current="true"] { color: var(--text); }
-.language-menu button[aria-current="true"] svg { visibility: visible; }
+.language-menu button[aria-checked="true"] { color: var(--text); }
+.language-menu button[aria-checked="true"] svg { visibility: visible; }
 .location-overflow-menu button { display: flex; align-items: center; gap: 9px; width: 100%; min-height: 34px; padding: 0 9px; border: 0; background: transparent; text-align: left; }
 .location-overflow-menu button:hover, .location-overflow-menu button:focus-visible { background: var(--hover); }
 .location-overflow-menu button[aria-checked="true"] svg { color: var(--accent); }
@@ -308,6 +308,8 @@ kbd { margin-left: 8px; color: var(--disabled); font-family: inherit; font-size:
 .theme-menu-appearance-icon { display: none; }
 .theme-menu-chevron { display: block; }
 .theme-menu { width: 160px; }
+
+.media-selection button[aria-selected="true"] { background: var(--selected); color: var(--text); }
 
 .view-bar {
   position: sticky;

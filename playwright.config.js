@@ -19,7 +19,7 @@ export default defineConfig({
   projects: [
     {
       name: "chromium-reduced",
-      testIgnore: [/normal-motion\.spec\.js/, /browser-smoke\.spec\.js/],
+      testIgnore: [/normal-motion\.spec\.js/, /browser-smoke\.spec\.js/, /public-matrix-smoke\.spec\.js/],
       use: {
         ...devices["Desktop Chrome"],
         reducedMotion: "reduce",
@@ -35,7 +35,7 @@ export default defineConfig({
     },
     {
       name: "firefox-smoke",
-      testMatch: /browser-smoke\.spec\.js/,
+      testMatch: /(browser-smoke|public-matrix-smoke)\.spec\.js/,
       use: {
         ...devices["Desktop Firefox"],
         reducedMotion: "reduce",
@@ -43,7 +43,7 @@ export default defineConfig({
     },
     {
       name: "webkit-smoke",
-      testMatch: /browser-smoke\.spec\.js/,
+      testMatch: /(browser-smoke|public-matrix-smoke)\.spec\.js/,
       use: {
         ...devices["Desktop Safari"],
         reducedMotion: "reduce",

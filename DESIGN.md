@@ -1,8 +1,8 @@
 ---
 version: alpha
 name: KIN Design System
-kin_version: 3.0.3
-release_status: released
+kin_version: 3.0.4
+release_status: development
 latest_stable: 3.0.3
 status: normative
 language: zh-CN

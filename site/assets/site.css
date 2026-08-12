@@ -369,7 +369,7 @@ h1 { max-width: 670px; margin: 0; font-size: clamp(30px, 4.5vw, 46px); font-weig
 .data-row { display: grid; grid-template-columns: minmax(180px, 1.5fr) 110px 110px 112px; min-height: 42px; align-items: center; padding: 0 14px; border-bottom: 1px solid var(--line-subtle); color: var(--muted); font-size: 12px; }
 .data-row:last-child { border-bottom: 0; }
 .data-row.header { min-height: 34px; color: var(--muted); font-size: 11px; }
-.data-row.selected { background: var(--selected); }
+.data-row[aria-selected="true"] { background: var(--selected); }
 .data-row strong { color: var(--text-2); font-weight: 550; }
 .status { display: inline-flex; align-items: center; gap: 7px; }
 .status::before { width: 6px; height: 6px; border-radius: 50%; background: var(--offline); content: ""; }
@@ -875,7 +875,6 @@ h1 { max-width: 670px; margin: 0; font-size: clamp(30px, 4.5vw, 46px); font-weig
 .atlas-group-heading > p { margin: 0; color: var(--muted); font-size: 13px; }
 .scenario-list { border-top: 1px solid var(--line); }
 .scenario-row { display: grid; grid-template-columns: 78px minmax(0, 1fr) 128px; gap: 18px; align-items: start; min-height: 112px; padding: 18px 0; border-bottom: 1px solid var(--line); }
-.scenario-row.is-linked { padding-inline: 12px; background: linear-gradient(90deg, var(--accent-soft), transparent 52%); box-shadow: inset 2px 0 var(--accent); }
 .scenario-code strong, .scenario-code span { display: block; }
 .scenario-code strong { color: var(--text-2); font: 600 11px/1.45 ui-monospace, monospace; letter-spacing: 0.02em; }
 .scenario-code span { margin-top: 4px; color: var(--muted); font: 10px/1.4 ui-monospace, monospace; }
@@ -912,7 +911,6 @@ h1 { max-width: 670px; margin: 0; font-size: clamp(30px, 4.5vw, 46px); font-weig
   .atlas-group-heading { display: block; }
   .atlas-group-heading > p { margin-top: 8px; }
   .scenario-row { grid-template-columns: 66px minmax(0, 1fr); gap: 12px; min-height: 0; }
-  .scenario-row.is-linked { padding-inline: 10px; }
   .scenario-end { grid-column: 2; flex-direction: row; align-items: center; justify-content: space-between; padding-top: 0; text-align: left; }
   .atlas-next { grid-template-columns: 1fr; }
   .atlas-next > div { padding: 14px 0; border-right: 0; border-bottom: 1px solid var(--line); }

@@ -107,7 +107,7 @@ test("cross-browser smoke preserves navigation focus and advanced states", async
   await expect(page.locator("[data-lab-verification]")).toHaveAttribute("data-state", "pass");
   const engineeringFrame = page.frameLocator("[data-lab-frame]");
   await expect(engineeringFrame.locator("#canvas-layers")).toBeVisible();
-  await expect(engineeringFrame.locator('[data-object][aria-pressed="true"]')).toContainText("Bracket-01");
+  await expect(engineeringFrame.locator('[data-object][aria-selected="true"]')).toContainText("Bracket-01");
   await expect(engineeringFrame.locator("html")).toHaveAttribute("data-theme", "light");
   await expect(engineeringFrame.locator("html")).toHaveAttribute("data-contrast", "more");
 
@@ -119,4 +119,19 @@ test("cross-browser smoke preserves navigation focus and advanced states", async
   await expect(commerceFrame.locator("[data-commerce-current-price]").first()).toHaveText("CNY 1,299.00");
   await expect(commerceFrame.locator("html")).toHaveAttribute("data-theme", "dark");
   await expect(commerceFrame.locator("html")).toHaveAttribute("data-contrast", "more");
+});
+
+test("docs data grid keeps activation on the current row", async ({ page }) => {
+  await page.goto("/docs/", { waitUntil: "domcontentloaded" });
+  const rows = page.locator(".data-demo .data-row:not(.header)");
+  await expect(rows).toHaveCount(3);
+  await rows.first().focus();
+  await page.keyboard.press("Enter");
+  await expect(rows.first()).toHaveAttribute("aria-selected", "true");
+  await expect(rows.nth(1)).toHaveAttribute("aria-selected", "false");
+  await page.keyboard.press("ArrowDown");
+  await expect(rows.nth(1)).toBeFocused();
+  await page.keyboard.press(" ");
+  await expect(rows.nth(1)).toHaveAttribute("aria-selected", "true");
+  await expect(rows.first()).toHaveAttribute("aria-selected", "false");
 });

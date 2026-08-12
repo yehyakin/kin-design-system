@@ -327,6 +327,7 @@ function PreferenceMenu({ action, label, value, items, onSelect, children, class
     if (event.key === "ArrowUp") nextIndex = (currentIndex - 1 + menuItems.length) % menuItems.length;
     if (event.key === "Home") nextIndex = 0;
     if (event.key === "End") nextIndex = menuItems.length - 1;
+    menuItems.forEach((item, itemIndex) => { item.tabIndex = itemIndex === nextIndex ? 0 : -1; });
     menuItems[nextIndex]?.focus();
   };
 
@@ -360,7 +361,7 @@ function PreferenceMenu({ action, label, value, items, onSelect, children, class
               type="button"
               role="menuitemradio"
               aria-checked={selected}
-              aria-current={selected ? "true" : undefined}
+              tabIndex={selected ? 0 : -1}
               data-preference-value={item.value}
               onClick={() => {
                 onSelect(item.value);
@@ -536,10 +537,13 @@ function App() {
   ];
 
   const moveActive = (event) => {
-    if (!["j", "k", "ArrowDown", "ArrowUp"].includes(event.key)) return;
+    if (!["j", "k", "ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)) return;
     event.preventDefault();
-    const next = event.key === "j" || event.key === "ArrowDown" ? 1 : -1;
-    setActiveIndex((current) => Math.min(listItems.length - 1, Math.max(0, current + next)));
+    setActiveIndex((current) => event.key === "Home"
+      ? 0
+      : event.key === "End"
+        ? listItems.length - 1
+        : Math.min(listItems.length - 1, Math.max(0, current + (event.key === "j" || event.key === "ArrowDown" ? 1 : -1))));
   };
 
   return (
@@ -704,7 +708,7 @@ function App() {
 
         <Section id="virtuoso" title={c.virtualTitle} body={c.virtualBody} source={{ href: "https://github.com/petyosi/react-virtuoso", label: "React Virtuoso" }}>
           <LazyMount label={c.loadingRuntime}>
-            <div data-integration-virtual className="integration-virtual-shell" tabIndex={0} onKeyDown={moveActive} aria-label={c.listLabel}>
+            <div data-integration-virtual className="integration-virtual-shell" role="listbox" tabIndex={0} onKeyDown={moveActive} aria-activedescendant={`integration-entity-${listItems[activeIndex]?.id}`} aria-label={c.listLabel}>
               <div className="integration-list-toolbar"><Search size={14} /><span>{c.listCount(listItems.length)}</span><span>J / K</span></div>
               <KinVirtualList
                 items={listItems}
@@ -712,7 +716,7 @@ function App() {
                 activeIndex={activeIndex}
                 label={c.listLabel}
                 defaultItemHeight={42}
-                renderItem={(item, index) => <button type="button" className="integration-entity-row" aria-current={index === activeIndex ? "true" : undefined} onClick={() => setActiveIndex(index)}><span>{item.id}</span><strong>{item.name}</strong><small>{item.state}</small></button>}
+                renderItem={(item, index) => <button id={`integration-entity-${item.id}`} type="button" role="option" className="integration-entity-row" aria-selected={index === activeIndex} tabIndex={-1} onClick={(event) => { setActiveIndex(index); event.currentTarget.closest("[data-integration-virtual]")?.focus(); }}><span>{item.id}</span><strong>{item.name}</strong><small>{item.state}</small></button>}
               />
             </div>
           </LazyMount>

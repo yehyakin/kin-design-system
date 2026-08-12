@@ -397,7 +397,7 @@ test("investigation keeps chronology source state and attributable finding separ
     const investigation = document.querySelector("[data-investigation]");
     const fields = document.querySelector("[data-investigation-fields]");
     const pending = document.querySelector("[data-investigation-pending]");
-    const selectedEvent = document.querySelector('[data-investigation-event][aria-current="true"]');
+    const selectedEvent = document.querySelector('[data-investigation-event][aria-selected="true"]');
     const otherEvent = document.querySelector('[data-investigation-event="EVT-320"]');
     window.__kinInvestigationPendingObservation = null;
     const observer = new MutationObserver(() => {
@@ -511,8 +511,9 @@ test("risk queue keeps severity evidence and review separate through a reversibl
   await expect(page.locator("html")).toHaveAttribute("data-workspace-view", "risk-queue");
   await expect(page.getByRole("heading", { name: "Elevated signals", level: 1 })).toBeVisible();
   await expect(page.locator('[data-nav-view="risk-queue"]')).toHaveAttribute("aria-current", "page");
-  await expect(page.getByRole("table", { name: "Risk signal queue" })).toBeVisible();
+  await expect(page.getByRole("grid", { name: "Risk signal queue" })).toBeVisible();
   await expect(page.locator(".risk-table th[scope=col]")).toHaveCount(6);
+  await expect(page.locator('.risk-table [role="row"][aria-selected="true"]')).toHaveCount(1);
   await expect(page.locator("[data-risk-row]:visible")).toHaveCount(2);
   await expect(page.locator("[data-risk-count]")).toHaveText("2 local signals");
   await expect(page.locator("[data-risk-queue] .fixture-note")).toContainText("as of 2026-07-19 10:32 +08:00");
@@ -615,7 +616,7 @@ test("risk queue preserves drafts across error and adapts selection to a mobile 
   await page.goto("/examples/workspace-reference/?view=risk-queue&state=permission&lang=en");
   await expect(page.locator("[data-risk-permission]")).toBeVisible();
   await expect(page.locator("[data-risk-review-fields]")).toHaveAttribute("disabled", "");
-  await expect(page.getByRole("table", { name: "Risk signal queue" })).toBeVisible();
+  await expect(page.getByRole("grid", { name: "Risk signal queue" })).toBeVisible();
 
   await page.goto("/examples/workspace-reference/?view=risk-queue&state=empty&lang=en");
   await expect(page.locator("[data-risk-empty]")).toBeVisible();
@@ -673,7 +674,7 @@ test("risk queue preserves drafts across error and adapts selection to a mobile 
   await expect(page.locator('[data-risk-row="RSK-204"]')).toHaveAttribute("data-selected", "true");
 
   await page.locator("[data-language-trigger]").click();
-  await page.getByRole("menuitem", { name: "中文" }).click();
+  await page.getByRole("menuitemradio", { name: "中文" }).click();
   await expect(page).toHaveURL(/lang=zh-CN/);
   await expect(page.getByRole("heading", { name: "高优先级待复核", level: 1 })).toBeVisible();
   await page.reload();
@@ -1189,9 +1190,10 @@ test("media review keeps selection and approval distinct", async ({ page }) => {
   await page.goto("/examples/workspace-reference/advanced-components.html#media-review");
 
   await expect(page.getByRole("img", { name: /商品主图本地占位预览/ })).toBeVisible();
-  const select = page.getByRole("button", { name: "已选择" });
-  await expect(select).toHaveAttribute("aria-pressed", "true");
+  const select = page.locator("[data-media-select]");
+  await expect(select).toHaveAttribute("aria-selected", "true");
   await select.click();
+  await expect(select).toHaveAttribute("aria-selected", "false");
   await expect(page.getByText("资产未选择，也未批准。", { exact: true })).toBeVisible();
   await page.getByRole("button", { name: "批准发布" }).click();
   await expect(page.getByText("渠道 B 的裁切仍待处理", { exact: false })).toBeVisible();
@@ -1362,7 +1364,7 @@ test("engineering canvas separates tools, selection, and generated changes", asy
   await expect(page.locator('.drawing-area svg[role="img"]')).toBeVisible();
   const tools = page.locator("[data-tool]");
   expect(await tools.count()).toBe(5);
-  const selectedObject = page.locator('[data-object][aria-pressed="true"]');
+  const selectedObject = page.locator('[data-object][aria-selected="true"]');
   await expect(selectedObject).toHaveCount(1);
   const lineTool = page.locator('[data-tool][aria-pressed="false"]');
   expect(await lineTool.count()).toBe(4);

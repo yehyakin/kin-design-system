@@ -82,7 +82,7 @@
 
         <section class="schedule-workspace" aria-labelledby="schedule-grid-title">
           <h2 class="visually-hidden" id="schedule-grid-title" data-i18n="schedule.gridTitle">本周排期</h2>
-          <div class="schedule-week" data-schedule-week>
+          <div class="schedule-week" data-schedule-week role="listbox" aria-label="本周排期" data-i18n-aria="schedule.gridTitle">
             <div class="schedule-time-rail" aria-hidden="true"><span>08:00</span><span>10:00</span><span>12:00</span><span>14:00</span><span>16:00</span><span>18:00</span></div>
             <section class="schedule-day" data-schedule-day="0"><header><span data-i18n="schedule.monday">周一</span><strong data-day-date></strong></header><div class="schedule-day-body">
               <button class="schedule-event event-campaign" type="button" style="--event-start:1.5;--event-span:1" data-schedule-event data-event-id="SCH-101" data-event-type="campaign" data-event-day="0" data-event-start="09:30" data-event-end="10:30" data-title-key="schedule.event1Title" data-status-key="schedule.statusReady" data-owner-key="schedule.ownerGrowth" data-context-key="schedule.event1Context" data-conflict-key="schedule.noConflict"><strong data-i18n="schedule.event1Title">夏季活动发布复核</strong><span data-i18n="schedule.event1Meta">09:30–10:30 · 已准备</span></button>
@@ -102,7 +102,7 @@
 
           <section class="schedule-agenda" data-schedule-agenda aria-labelledby="schedule-agenda-title">
             <header><h2 id="schedule-agenda-title" data-i18n="schedule.agendaTitle">按日期查看</h2><p data-i18n="schedule.agendaBody">按日期列出时间、状态、冲突和负责人。</p></header>
-            <div data-schedule-agenda-list></div>
+            <div data-schedule-agenda-list role="listbox" aria-labelledby="schedule-agenda-title"></div>
           </section>
 
           <div class="schedule-empty" data-schedule-empty hidden><i data-lucide="calendar-days" aria-hidden="true"></i><h2 data-i18n="schedule.emptyTitle">当前范围没有排期</h2><p data-i18n="schedule.emptyBody">当前筛选下没有排期。选择“全部排期”查看示例。</p><button class="flow-button" type="button" data-schedule-reset><span data-i18n="schedule.resetScope">查看所有排期</span></button></div>

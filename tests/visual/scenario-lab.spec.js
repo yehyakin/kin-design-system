@@ -670,7 +670,7 @@ test("scenario lab verifies every catalog-backed showcased state", async ({ page
     }
 
     if (scenario.id === "ENG-02") {
-      await expect(page.frameLocator("[data-lab-frame]").locator('[data-object][aria-pressed="true"]')).toContainText("Bracket-01");
+      await expect(page.frameLocator("[data-lab-frame]").locator('[data-object][aria-selected="true"]')).toContainText("Bracket-01");
       await page.screenshot({ path: testInfo.outputPath("scenario-lab-layer-structure.png"), fullPage: true });
     }
     if (scenario.id === "COM-02") {

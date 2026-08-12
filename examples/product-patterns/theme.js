@@ -462,10 +462,22 @@ for (const tool of document.querySelectorAll("[data-tool]")) {
   });
 }
 
-for (const object of document.querySelectorAll("[data-object]")) {
+const canvasObjects = [...document.querySelectorAll("[data-object]")];
+for (const object of canvasObjects) {
+  object.setAttribute("role", "treeitem");
   object.addEventListener("click", () => {
-    for (const item of document.querySelectorAll("[data-object]")) item.setAttribute("aria-pressed", "false");
-    object.setAttribute("aria-pressed", "true");
+    for (const item of canvasObjects) {
+      item.setAttribute("aria-selected", String(item === object));
+      item.tabIndex = item === object ? 0 : -1;
+    }
+  });
+  object.addEventListener("keydown", (event) => {
+    if (!["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)) return;
+    const index = canvasObjects.indexOf(object);
+    const next = event.key === "Home" ? 0 : event.key === "End" ? canvasObjects.length - 1 : (index + (event.key === "ArrowDown" ? 1 : -1) + canvasObjects.length) % canvasObjects.length;
+    event.preventDefault();
+    canvasObjects[next]?.click();
+    canvasObjects[next]?.focus({ preventScroll: true });
   });
 }
 
@@ -600,7 +612,7 @@ const canvasPanelConfigs = [
     closeTrigger: canvasLayersClose,
     shellClass: "layers-open",
     overlayQuery: canvasMobileLayout,
-    persistentFocus: () => canvasLayers?.querySelector('[data-object][aria-pressed="true"]') ?? canvasLayers?.querySelector("[data-object]"),
+    persistentFocus: () => canvasLayers?.querySelector('[data-object][aria-selected="true"]') ?? canvasLayers?.querySelector("[data-object]"),
   },
   {
     name: "properties",

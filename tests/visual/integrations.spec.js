@@ -188,7 +188,7 @@ test("React Virtuoso windows one thousand rows and follows keyboard selection", 
   expect(await renderedRows.count()).toBeLessThan(100);
   await shell.focus();
   await page.keyboard.press("j");
-  await expect(shell.locator('.integration-entity-row[aria-current="true"]')).toContainText("ENT-0002");
+  await expect(shell.locator('.integration-entity-row[aria-selected="true"]')).toContainText("ENT-0002");
 });
 
 test("dnd kit supports keyboard sorting with localized instructions", async ({ page }) => {

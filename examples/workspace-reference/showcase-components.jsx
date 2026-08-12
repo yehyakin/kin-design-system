@@ -859,7 +859,13 @@ function EvidenceSpecimen({ c }) {
     },
   ];
   const [selected, setSelected] = React.useState("external");
+  const rowRefs = React.useRef([]);
   const active = evidence.find((item) => item.id === selected) ?? evidence[0];
+  const selectEvidence = (index, moveFocus = false) => {
+    const next = Math.min(evidence.length - 1, Math.max(0, index));
+    setSelected(evidence[next].id);
+    if (moveFocus) requestAnimationFrame(() => rowRefs.current[next]?.focus({ preventScroll: true }));
+  };
 
   return (
     <SpecimenFrame
@@ -869,14 +875,23 @@ function EvidenceSpecimen({ c }) {
       footer={<><span>{c.evidence.body}</span><span>{c.localFixture}</span></>}
     >
       <div className="evidence-layout">
-        <ol className="evidence-list">
+        <ol className="evidence-list" role="listbox" aria-label={c.evidence.heading}>
           {evidence.map((item, index) => (
-            <li key={item.id}>
+            <li key={item.id} role="presentation">
               <button
+                ref={(node) => { rowRefs.current[index] = node; }}
                 className="evidence-row"
                 type="button"
-                aria-pressed={selected === item.id}
-                onClick={() => setSelected(item.id)}
+                role="option"
+                aria-selected={selected === item.id}
+                tabIndex={selected === item.id ? 0 : -1}
+                onKeyDown={(event) => {
+                  if (!["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)) return;
+                  event.preventDefault();
+                  const next = event.key === "Home" ? 0 : event.key === "End" ? evidence.length - 1 : index + (event.key === "ArrowDown" ? 1 : -1);
+                  selectEvidence((next + evidence.length) % evidence.length, true);
+                }}
+                onClick={() => selectEvidence(index)}
               >
                 <span className="evidence-index">[{index + 1}]</span>
                 <span>
@@ -1065,6 +1080,7 @@ function BackgroundTaskSpecimen({ c }) {
 function DataTableSpecimen({ c }) {
   const [sortAscending, setSortAscending] = React.useState(true);
   const [selected, setSelected] = React.useState("PRD-184");
+  const rowRefs = React.useRef([]);
   const rows = [
     { id: "PRD-184", name: "Field Jacket", price: 1299, channel: c.table.webPlusTwo, state: c.table.review, tone: "warning", updated: "09:42" },
     { id: "PRD-076", name: "Transit Bag", price: 899, channel: c.table.web, state: c.table.approved, tone: "positive", updated: "09:18" },
@@ -1079,7 +1095,7 @@ function DataTableSpecimen({ c }) {
       footer={<><span>{c.localFixture}</span><span>{c.table.selected}: {selected}</span></>}
     >
       <div className="table-shell">
-        <table className="kin-table">
+        <table className="kin-table" role="grid" aria-label={c.table.title}>
           <thead>
             <tr>
               <th>{c.table.product}</th>
@@ -1094,9 +1110,16 @@ function DataTableSpecimen({ c }) {
             </tr>
           </thead>
           <tbody>
-            {rows.map((row) => (
-              <tr key={row.id} data-selected={selected === row.id}>
-                <td><button type="button" onClick={() => setSelected(row.id)}><strong>{row.name}</strong><br /><span className="specimen-meta">{row.id}</span></button></td>
+            {rows.map((row, index) => (
+              <tr key={row.id} role="row" aria-selected={selected === row.id} data-selected={selected === row.id}>
+                <td><button ref={(node) => { rowRefs.current[index] = node; }} type="button" tabIndex={selected === row.id ? 0 : -1} onKeyDown={(event) => {
+                  if (!["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)) return;
+                  event.preventDefault();
+                  const next = event.key === "Home" ? 0 : event.key === "End" ? rows.length - 1 : index + (event.key === "ArrowDown" ? 1 : -1);
+                  const targetIndex = (next + rows.length) % rows.length;
+                  setSelected(rows[targetIndex].id);
+                  requestAnimationFrame(() => rowRefs.current[targetIndex]?.focus({ preventScroll: true }));
+                }} onClick={() => setSelected(row.id)}><strong>{row.name}</strong><br /><span className="specimen-meta">{row.id}</span></button></td>
                 <td>CNY {row.price.toLocaleString("en")}.00</td>
                 <td>{row.channel}</td>
                 <td><span className="kin-status" data-tone={row.tone}>{row.state}</span></td>
@@ -1165,7 +1188,13 @@ function AppShellSpecimen({ c }) {
     { id: "PRD-231", name: "Studio Lamp", state: c.shell.review, owner: c.shell.operator },
   ];
   const [selected, setSelected] = React.useState(products[0].id);
+  const productRefs = React.useRef([]);
   const active = products.find((product) => product.id === selected) ?? products[0];
+  const selectProduct = (index, moveFocus = false) => {
+    const next = Math.min(products.length - 1, Math.max(0, index));
+    setSelected(products[next].id);
+    if (moveFocus) requestAnimationFrame(() => productRefs.current[next]?.focus({ preventScroll: true }));
+  };
 
   return (
     <main id="specimen-root" className="kin-showcase-specimen" tabIndex={-1}>
@@ -1173,20 +1202,35 @@ function AppShellSpecimen({ c }) {
         <div className="mini-app-shell">
           <aside className="mini-sidebar">
             <div className="mini-brand">KIN</div>
-            <nav className="mini-nav" aria-label={c.shell.title}>
-              <button type="button"><LayoutDashboard aria-hidden="true" />{c.shell.overview}</button>
-              <button type="button" aria-current="page"><PackageSearch aria-hidden="true" />{c.shell.catalog}</button>
-              <button type="button"><FileSearch aria-hidden="true" />{c.shell.evidence}</button>
-              <button type="button"><ListChecks aria-hidden="true" />{c.shell.tasks}</button>
-            </nav>
+            <div className="mini-nav" aria-hidden="true">
+              <span><LayoutDashboard aria-hidden="true" />{c.shell.overview}</span>
+              <span data-active="true"><PackageSearch aria-hidden="true" />{c.shell.catalog}</span>
+              <span><FileSearch aria-hidden="true" />{c.shell.evidence}</span>
+              <span><ListChecks aria-hidden="true" />{c.shell.tasks}</span>
+            </div>
           </aside>
           <section className="mini-workspace">
             <header className="mini-location"><span>{c.shell.location}</span><span className="specimen-meta">{c.shell.records}</span></header>
             <div className="mini-content">
               <h2>{c.shell.heading}</h2>
-              <div className="mini-list">
+              <div className="mini-list" role="listbox" aria-label={c.shell.heading}>
                 {products.map((product) => (
-                  <button key={product.id} type="button" aria-pressed={selected === product.id} onClick={() => setSelected(product.id)}>
+                  <button
+                    ref={(node) => { productRefs.current[products.indexOf(product)] = node; }}
+                    key={product.id}
+                    type="button"
+                    role="option"
+                    aria-selected={selected === product.id}
+                    tabIndex={selected === product.id ? 0 : -1}
+                    onKeyDown={(event) => {
+                      if (!["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)) return;
+                      event.preventDefault();
+                      const index = products.indexOf(product);
+                      const next = event.key === "Home" ? 0 : event.key === "End" ? products.length - 1 : index + (event.key === "ArrowDown" ? 1 : -1);
+                      selectProduct((next + products.length) % products.length, true);
+                    }}
+                    onClick={() => selectProduct(products.indexOf(product))}
+                  >
                     <strong>{product.name}<br /><span>{product.id}</span></strong>
                     <span className="kin-status" data-tone={product.state === c.shell.approved ? "positive" : "warning"}>{product.state}</span>
                   </button>
@@ -1426,11 +1470,11 @@ function StoryTimelineSpecimen({ c }) {
           ref={timelineRef}
           className="story-timeline"
           data-ready={ready}
-          role="group"
+          role="listbox"
           aria-label={c.timeline.title}
           onKeyDown={onKeyDown}
         >
-          <ol className="story-timeline__track">
+          <ol className="story-timeline__track" role="presentation">
             <li className="story-timeline__progress" aria-hidden="true" role="presentation" />
             {items.map((item, index) => (
               <li
@@ -1438,6 +1482,7 @@ function StoryTimelineSpecimen({ c }) {
                 data-active={activeIndex === index}
                 data-milestone-id={item.id}
                 key={item.id}
+                role="presentation"
               >
                 <time>{item.label}</time>
                 <button
@@ -1445,7 +1490,8 @@ function StoryTimelineSpecimen({ c }) {
                   className="story-marker"
                   type="button"
                   aria-label={`${item.label}: ${item.title}`}
-                  aria-pressed={activeIndex === index}
+                  role="option"
+                  aria-selected={activeIndex === index}
                   tabIndex={activeIndex === index ? 0 : -1}
                   onClick={() => select(index)}
                 />
