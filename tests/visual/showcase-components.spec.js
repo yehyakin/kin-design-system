@@ -92,7 +92,7 @@ test("review, execution, task, table, shell, and evidence specimens preserve dis
   await page.goto(specimenUrl("evidence-list"));
   const firstEvidence = page.locator(".evidence-row").first();
   await firstEvidence.click();
-  await expect(firstEvidence).toHaveAttribute("aria-pressed", "true");
+  await expect(firstEvidence).toHaveAttribute("aria-selected", "true");
   await expect(page.locator(".evidence-detail")).toContainText("Internal price record");
 
   await page.goto(specimenUrl("suggested-change-review"));
@@ -116,8 +116,13 @@ test("review, execution, task, table, shell, and evidence specimens preserve dis
   await expect(page.locator(".specimen-footer")).toContainText("PRD-076");
 
   await page.goto(specimenUrl("app-shell"));
-  await page.getByRole("button", { name: /Transit Bag/ }).click();
+  await page.getByRole("option", { name: /Transit Bag/ }).click();
   await expect(page.locator(".mini-inspector")).toContainText("PRD-076");
+  const miniNav = page.locator(".mini-nav");
+  await expect(miniNav).toHaveCount(1);
+  await expect(miniNav.getByText("Catalog", { exact: true })).toHaveAttribute("data-active", "true");
+  await expect(miniNav.getByRole("link")).toHaveCount(0);
+  await expect(miniNav.getByRole("button")).toHaveCount(0);
 });
 
 test("Authentication Dialog preserves validation, Escape dismissal, and focus return", async ({ page }) => {
@@ -197,10 +202,10 @@ test("Story Timeline keeps one ordered model across keyboard and narrow orientat
   await markers.first().focus();
   await page.keyboard.press("ArrowDown");
   await expect(markers.first()).toBeFocused();
-  await expect(markers.first()).toHaveAttribute("aria-pressed", "true");
+  await expect(markers.first()).toHaveAttribute("aria-selected", "true");
   await page.keyboard.press("End");
   await expect(markers.last()).toBeFocused();
-  await expect(markers.last()).toHaveAttribute("aria-pressed", "true");
+  await expect(markers.last()).toHaveAttribute("aria-selected", "true");
   await page.keyboard.press("Home");
   await expect(markers.first()).toBeFocused();
   await expect(page.locator(".timeline-detail")).toContainText("09:30");

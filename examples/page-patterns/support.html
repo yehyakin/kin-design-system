@@ -36,7 +36,7 @@
     <main class="support-shell">
       <nav class="support-nav" aria-labelledby="support-nav-title">
         <h1 id="support-nav-title" data-i18n="support.title">帮助与支持</h1>
-        <div class="support-nav-list">
+        <div class="support-nav-list" role="tablist" aria-labelledby="support-nav-title">
           <button type="button" data-support-nav="help"><i data-lucide="book-open" aria-hidden="true"></i><span data-i18n="support.helpNav">查找答案</span></button>
           <button type="button" data-support-nav="request"><i data-lucide="message-square-plus" aria-hidden="true"></i><span data-i18n="support.requestNav">提交请求</span></button>
           <button type="button" data-support-nav="tickets"><i data-lucide="ticket-check" aria-hidden="true"></i><span data-i18n="support.ticketsNav">请求记录</span></button>
@@ -125,7 +125,7 @@
           </header>
           <div class="support-reference-note"><i data-lucide="shield-check" aria-hidden="true"></i><span data-i18n="support.ticketReferenceNote">以下为本地示例，不代表真实客服响应时间或处理结果。</span></div>
           <div class="ticket-layout">
-            <div class="ticket-list" aria-label="支持请求列表" data-i18n-aria="support.ticketListLabel">
+            <div class="ticket-list" role="listbox" aria-label="支持请求列表" data-i18n-aria="support.ticketListLabel">
               <button class="ticket-row" type="button" data-ticket-select="SUP-1042"><span><strong data-i18n="support.ticket1Title">导出任务缺少两条记录</strong><span>SUP-1042 · 2026-07-12 16:20 UTC+8</span></span><span class="ticket-status waiting" data-i18n="support.waitingSupport">等待支持团队</span></button>
               <button class="ticket-row" type="button" data-ticket-select="SUP-1037"><span><strong data-i18n="support.ticket2Title">确认新的工作区角色</strong><span>SUP-1037 · 2026-07-11 09:14 UTC+8</span></span><span class="ticket-status resolved" data-i18n="support.resolved">已解决</span></button>
             </div>

@@ -24,9 +24,9 @@ function updateControl(control, preference, resolved) {
 
   for (const item of control.querySelectorAll("[data-theme-preference]")) {
     const selected = item.dataset.themePreference === preference;
+    item.setAttribute("role", "menuitemradio");
     item.setAttribute("aria-checked", String(selected));
-    if (selected) item.setAttribute("aria-current", "true");
-    else item.removeAttribute("aria-current");
+    item.tabIndex = selected ? 0 : -1;
   }
 }
 
@@ -104,6 +104,7 @@ function moveMenuFocus(menu, event) {
   if (event.key === "ArrowUp") nextIndex = (currentIndex - 1 + items.length) % items.length;
   if (event.key === "Home") nextIndex = 0;
   if (event.key === "End") nextIndex = items.length - 1;
+  items.forEach((item, index) => { item.tabIndex = index === nextIndex ? 0 : -1; });
   items[nextIndex]?.focus();
 }
 

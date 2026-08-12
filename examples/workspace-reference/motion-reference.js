@@ -83,8 +83,9 @@ function applyTheme(preference, persist = true) {
   themeSwitch.setAttribute("aria-label", `${preference === "system" ? "当前跟随系统。" : ""}${theme === "dark" ? "切换到日间模式" : "切换到夜间模式"}`);
   for (const option of themeOptions) {
     const selected = option.dataset.labThemePreference === preference;
+    option.setAttribute("role", "menuitemradio");
     option.setAttribute("aria-checked", String(selected));
-    option.setAttribute("aria-current", selected ? "true" : "false");
+    option.tabIndex = selected ? 0 : -1;
   }
   if (persist) localStorage.setItem("kin-reference-theme", preference);
   if (sonnerModulePromise) sonnerModulePromise.then((module) => module.updateToasterTheme(theme, "zh"));
@@ -189,6 +190,7 @@ themeMenu.addEventListener("keydown", (event) => {
     : event.key === "End"
       ? themeOptions.length - 1
       : (index + (event.key === "ArrowDown" ? 1 : -1) + themeOptions.length) % themeOptions.length;
+  themeOptions.forEach((option, optionIndex) => { option.tabIndex = optionIndex === next ? 0 : -1; });
   themeOptions[next]?.focus();
 });
 document.addEventListener("pointerdown", (event) => {

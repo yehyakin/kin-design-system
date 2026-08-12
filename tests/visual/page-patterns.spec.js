@@ -612,8 +612,8 @@ test("help and support separates guidance requests tickets and sourced status", 
   await expect(page.getByRole("heading", { name: "Service status and source", level: 2 })).toBeVisible();
 
   await page.locator('[data-support-nav="help"]').click();
-  await expect(page.locator('[data-support-nav="help"]')).toHaveAttribute("aria-current", "page");
-  await expect(page.locator('[data-support-nav="status"]')).not.toHaveAttribute("aria-current", "page");
+  await expect(page.locator('[data-support-nav="help"]')).toHaveAttribute("aria-selected", "true");
+  await expect(page.locator('[data-support-nav="status"]')).not.toHaveAttribute("aria-selected", "true");
   await expect(page.locator("[data-help-empty]")).toBeHidden();
   await assertNoHorizontalOverflow(page);
   await capture(page, testInfo, "page-support-dark-desktop.png");

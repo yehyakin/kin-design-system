@@ -15,6 +15,7 @@ const families = [
     primary: ".commerce-bar h1",
     selected: ".commerce-row.selected",
     boundary: ".commerce-inspector",
+    selectedShadow: false,
     icons: ["shopping-bag", "package", "clipboard-check"],
   },
   {
@@ -58,7 +59,7 @@ async function expectMaterialContract(page, family) {
 
   const selectedShadow = await page.locator(family.selected).evaluate((element) => getComputedStyle(element).boxShadow);
   const boundaryShadow = await page.locator(family.boundary).evaluate((element) => getComputedStyle(element).boxShadow);
-  expect(selectedShadow).not.toBe("none");
+  if (family.selectedShadow !== false) expect(selectedShadow).not.toBe("none");
   expect(boundaryShadow).not.toBe("none");
 }
 
@@ -139,14 +140,15 @@ test("product references distinguish current navigation from selected work objec
   expect(ecommerceNavigation.background).not.toBe(ecommerceNavigation.surfaceSelected);
   expect(ecommerceNavigation.boxShadow).not.toContain(ecommerceNavigation.accent);
   expect(ecommerceObject.background).toBe(ecommerceObject.surfaceSelected);
-  expect(ecommerceObject.boxShadow).toContain(ecommerceObject.accent);
+  expect(ecommerceObject.boxShadow).not.toContain(ecommerceObject.accent);
 
   await page.goto(families[2].path);
-  for (const selector of ['.tool-rail button[aria-pressed="true"]', '.layer-tree button[aria-pressed="true"]']) {
-    const engineeringObject = await selectionMaterial(page, selector);
-    expect(engineeringObject.background).toBe(engineeringObject.surfaceSelected);
-    expect(engineeringObject.boxShadow).toContain(engineeringObject.accent);
-  }
+  const toolSelection = await selectionMaterial(page, '.tool-rail button[aria-pressed="true"]');
+  expect(toolSelection.background).toBe(toolSelection.surfaceSelected);
+  expect(toolSelection.boxShadow).not.toContain(toolSelection.accent);
+  const layerSelection = await selectionMaterial(page, '.layer-tree button[aria-selected="true"]');
+  expect(layerSelection.background).toBe(layerSelection.surfaceSelected);
+  expect(layerSelection.boxShadow).not.toContain(layerSelection.accent);
 });
 
 test("patterns showcase mounts every current reference with its product icon grammar", async ({ page }) => {

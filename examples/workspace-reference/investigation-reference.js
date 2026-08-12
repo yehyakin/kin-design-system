@@ -143,9 +143,12 @@ export function createInvestigationController({
     for (const row of rows) {
       const selected = row.dataset.investigationEventRow === selectedId;
       row.dataset.selected = String(selected);
+      row.setAttribute("role", "presentation");
       const button = row.querySelector("[data-investigation-event]");
-      if (selected) button.setAttribute("aria-current", "true");
-      else button.removeAttribute("aria-current");
+      button.setAttribute("role", "option");
+      button.setAttribute("aria-selected", String(selected));
+      button.tabIndex = selected ? 0 : -1;
+      button.removeAttribute("aria-current");
     }
     inspectorTitle.textContent = selectedId + " · " + messages[event.titleKey];
     detailOccurred.textContent = event.occurred;
@@ -269,6 +272,20 @@ export function createInvestigationController({
   }
 
   for (const button of eventButtons) {
+    button.addEventListener("keydown", (event) => {
+      if (!["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)) return;
+      const visible = eventButtons.filter((item) => !item.closest("[data-investigation-event-row]")?.hidden);
+      const index = visible.indexOf(button);
+      const next = event.key === "Home"
+        ? 0
+        : event.key === "End"
+          ? visible.length - 1
+          : (index + (event.key === "ArrowDown" ? 1 : -1) + visible.length) % visible.length;
+      event.preventDefault();
+      const target = visible[next];
+      target?.click();
+      target?.focus({ preventScroll: true });
+    });
     button.addEventListener("click", () => {
       if (currentState === "pending") return;
       const changed = selectedId !== button.dataset.investigationEvent;

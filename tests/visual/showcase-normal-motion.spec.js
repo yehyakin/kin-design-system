@@ -126,7 +126,7 @@ test("Story Timeline preserves purposeful draw motion and keyboard selection", a
   await markers.first().focus();
   await page.keyboard.press("ArrowRight");
   await expect(markers.nth(1)).toBeFocused();
-  await expect(markers.nth(1)).toHaveAttribute("aria-pressed", "true");
+  await expect(markers.nth(1)).toHaveAttribute("aria-selected", "true");
   await expect(page.locator(".timeline-detail")).toContainText("09:34");
 });
 

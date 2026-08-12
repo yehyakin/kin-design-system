@@ -549,14 +549,34 @@ function setupSettingsPage() {
     const target = sections.find((section) => section.dataset.settingsSection === id) ?? sections[0];
     for (const section of sections) section.hidden = section !== target;
     for (const item of navItems) {
-      if (item.dataset.settingsNav === target.dataset.settingsSection) item.setAttribute("aria-current", "page");
-      else item.removeAttribute("aria-current");
+      const selected = item.dataset.settingsNav === target.dataset.settingsSection;
+      item.setAttribute("role", "tab");
+      item.setAttribute("aria-selected", String(selected));
+      item.tabIndex = selected ? 0 : -1;
+      const panel = sections.find((section) => section.dataset.settingsSection === item.dataset.settingsNav);
+      if (panel) {
+        item.id ||= `settings-tab-${item.dataset.settingsNav}`;
+        panel.id ||= `settings-panel-${panel.dataset.settingsSection}`;
+        panel.setAttribute("role", "tabpanel");
+        panel.setAttribute("aria-labelledby", item.id);
+        item.setAttribute("aria-controls", panel.id);
+      }
     }
     history.replaceState(null, "", `#${target.dataset.settingsSection}`);
     if (moveFocus) target.querySelector("h2")?.focus();
   }
 
-  for (const item of navItems) item.addEventListener("click", () => showSettingsSection(item.dataset.settingsNav));
+  for (const item of navItems) {
+    item.addEventListener("click", () => showSettingsSection(item.dataset.settingsNav));
+    item.addEventListener("keydown", (event) => {
+      if (!["ArrowDown", "ArrowRight", "ArrowUp", "ArrowLeft", "Home", "End"].includes(event.key)) return;
+      event.preventDefault();
+      const index = navItems.indexOf(item);
+      const next = event.key === "Home" ? 0 : event.key === "End" ? navItems.length - 1 : (index + (event.key === "ArrowDown" || event.key === "ArrowRight" ? 1 : -1) + navItems.length) % navItems.length;
+      showSettingsSection(navItems[next].dataset.settingsNav);
+      navItems[next].focus();
+    });
+  }
   showSettingsSection(location.hash.slice(1), false);
 
   function setDirty(dirty) {
@@ -628,17 +648,37 @@ function renderSystemState(state, moveFocus = true) {
   document.querySelector("[data-system-primary]").textContent = text(`${prefix}.primary`);
   document.querySelector("[data-system-secondary]").textContent = text(`${prefix}.secondary`);
   document.querySelector("[data-system-code]").textContent = text(`${prefix}.code`);
-  for (const button of document.querySelectorAll("[data-system-state]")) {
-    if (button.dataset.systemState === state) button.setAttribute("aria-current", "page");
-    else button.removeAttribute("aria-current");
+  const stateButtons = [...document.querySelectorAll("[data-system-state]")];
+  const panel = document.querySelector(".system-main");
+  for (const button of stateButtons) {
+    const selected = button.dataset.systemState === state;
+    button.setAttribute("role", "tab");
+    button.setAttribute("aria-selected", String(selected));
+    button.tabIndex = selected ? 0 : -1;
+    button.id ||= `system-tab-${button.dataset.systemState}`;
+    if (panel) {
+      panel.id = "system-panel";
+      panel.setAttribute("role", "tabpanel");
+      button.setAttribute("aria-controls", panel.id);
+      if (selected) panel.setAttribute("aria-labelledby", button.id);
+    }
   }
   history.replaceState(null, "", `#${state}`);
   if (moveFocus) document.querySelector("[data-system-title]").focus();
 }
 
 function setupSystemPage() {
-  for (const button of document.querySelectorAll("[data-system-state]")) {
+  const stateButtons = [...document.querySelectorAll("[data-system-state]")];
+  for (const button of stateButtons) {
     button.addEventListener("click", () => renderSystemState(button.dataset.systemState));
+    button.addEventListener("keydown", (event) => {
+      if (!["ArrowDown", "ArrowRight", "ArrowUp", "ArrowLeft", "Home", "End"].includes(event.key)) return;
+      event.preventDefault();
+      const index = stateButtons.indexOf(button);
+      const next = event.key === "Home" ? 0 : event.key === "End" ? stateButtons.length - 1 : (index + (event.key === "ArrowDown" || event.key === "ArrowRight" ? 1 : -1) + stateButtons.length) % stateButtons.length;
+      renderSystemState(stateButtons[next].dataset.systemState);
+      stateButtons[next].focus();
+    });
   }
   addEventListener("hashchange", () => renderSystemState(currentSystemState(), false));
   const recoveryStatus = document.querySelector("[data-system-status]");
@@ -795,12 +835,14 @@ function setupSearchPage() {
       const unavailableSource = partial && result.dataset.partialExcluded === "true";
       const shown = !serviceError && !forcedEmpty && !unavailableSource && matchesQuery && matchesScope && matchesAccess;
       result.hidden = !shown;
+      result.setAttribute("role", "presentation");
       if (shown) visible.push(result);
 
       const link = result.querySelector("[data-search-result-link]");
       link.href = urlFor(result.dataset.resultId);
-      if (result.dataset.resultId === state.selected && shown) link.setAttribute("aria-current", "page");
-      else link.removeAttribute("aria-current");
+      link.setAttribute("role", "option");
+      link.setAttribute("aria-selected", String(result.dataset.resultId === state.selected && shown));
+      link.tabIndex = result.dataset.resultId === state.selected && shown ? 0 : -1;
     }
 
     let selectedResult = visible.find((result) => result.dataset.resultId === state.selected);
@@ -906,6 +948,16 @@ function setupSearchPage() {
       render();
       document.querySelector("[data-search-detail-title]")?.focus();
     });
+    result.querySelector("[data-search-result-link]")?.addEventListener("keydown", (event) => {
+      if (!["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)) return;
+      const links = results.filter((item) => !item.hidden).map((item) => item.querySelector("[data-search-result-link]"));
+      const index = links.indexOf(event.currentTarget);
+      const next = event.key === "Home" ? 0 : event.key === "End" ? links.length - 1 : (index + (event.key === "ArrowDown" ? 1 : -1) + links.length) % links.length;
+      event.preventDefault();
+      links[next]?.focus();
+      state.selected = results.find((item) => item.querySelector("[data-search-result-link]") === links[next])?.dataset.resultId || "";
+      render();
+    });
   }
 
   detailClose?.addEventListener("click", () => {
@@ -975,14 +1027,34 @@ function setupSupportPage() {
     const target = sections.find((section) => section.dataset.supportSection === selected) ?? sections[0];
     for (const section of sections) section.hidden = section !== target;
     for (const item of navItems) {
-      if (item.dataset.supportNav === selected) item.setAttribute("aria-current", "page");
-      else item.removeAttribute("aria-current");
+      const active = item.dataset.supportNav === selected;
+      item.setAttribute("role", "tab");
+      item.setAttribute("aria-selected", String(active));
+      item.tabIndex = active ? 0 : -1;
+      const panel = sections.find((section) => section.dataset.supportSection === item.dataset.supportNav);
+      if (panel) {
+        item.id ||= `support-tab-${item.dataset.supportNav}`;
+        panel.id ||= `support-panel-${panel.dataset.supportSection}`;
+        panel.setAttribute("role", "tabpanel");
+        panel.setAttribute("aria-labelledby", item.id);
+        item.setAttribute("aria-controls", panel.id);
+      }
     }
     history.replaceState(null, "", `#${selected}`);
     if (moveFocus) target?.querySelector("h2")?.focus();
   }
 
-  for (const item of navItems) item.addEventListener("click", () => showSection(item.dataset.supportNav));
+  for (const item of navItems) {
+    item.addEventListener("click", () => showSection(item.dataset.supportNav));
+    item.addEventListener("keydown", (event) => {
+      if (!["ArrowDown", "ArrowRight", "ArrowUp", "ArrowLeft", "Home", "End"].includes(event.key)) return;
+      event.preventDefault();
+      const index = navItems.indexOf(item);
+      const next = event.key === "Home" ? 0 : event.key === "End" ? navItems.length - 1 : (index + (event.key === "ArrowDown" || event.key === "ArrowRight" ? 1 : -1) + navItems.length) % navItems.length;
+      showSection(navItems[next].dataset.supportNav);
+      navItems[next].focus();
+    });
+  }
   showSection(location.hash.slice(1), false);
 
   function filterHelp() {
@@ -1043,11 +1115,26 @@ function setupSupportPage() {
   const ticketButtons = [...document.querySelectorAll("[data-ticket-select]")];
   const ticketDetails = [...document.querySelectorAll("[data-ticket-detail]")];
   function selectTicket(id, moveFocus = true) {
-    for (const button of ticketButtons) button.setAttribute("aria-current", String(button.dataset.ticketSelect === id));
+    for (const button of ticketButtons) {
+      const selected = button.dataset.ticketSelect === id;
+      button.setAttribute("role", "option");
+      button.setAttribute("aria-selected", String(selected));
+      button.tabIndex = selected ? 0 : -1;
+    }
     for (const detail of ticketDetails) detail.hidden = detail.dataset.ticketDetail !== id;
     if (moveFocus) ticketDetails.find((detail) => detail.dataset.ticketDetail === id)?.querySelector("h3")?.focus();
   }
-  for (const button of ticketButtons) button.addEventListener("click", () => selectTicket(button.dataset.ticketSelect));
+  for (const button of ticketButtons) {
+    button.addEventListener("click", () => selectTicket(button.dataset.ticketSelect));
+    button.addEventListener("keydown", (event) => {
+      if (!["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)) return;
+      event.preventDefault();
+      const index = ticketButtons.indexOf(button);
+      const next = event.key === "Home" ? 0 : event.key === "End" ? ticketButtons.length - 1 : (index + (event.key === "ArrowDown" ? 1 : -1) + ticketButtons.length) % ticketButtons.length;
+      selectTicket(ticketButtons[next].dataset.ticketSelect, false);
+      ticketButtons[next].focus();
+    });
+  }
   if (ticketButtons[0]) selectTicket(ticketButtons[0].dataset.ticketSelect, false);
 
   const statusSource = document.querySelector("[data-support-status-source]");
@@ -1293,16 +1380,20 @@ function setupSchedulingPage() {
       if (dayEvents.length === 0) continue;
       const group = document.createElement("section");
       group.className = "schedule-agenda-group";
+      group.setAttribute("role", "presentation");
       const heading = document.createElement("h3");
       heading.textContent = localeDate(addDays(state.monday, day), { month: "short", day: "numeric", weekday: "short" });
       const list = document.createElement("div");
       list.className = "schedule-agenda-items";
+      list.setAttribute("role", "presentation");
       for (const event of dayEvents) {
         const button = document.createElement("button");
         button.type = "button";
         button.className = "schedule-agenda-item";
         button.dataset.agendaEvent = event.dataset.eventId;
-        button.setAttribute("aria-pressed", String(state.selected === event.dataset.eventId));
+        button.setAttribute("role", "option");
+        button.setAttribute("aria-selected", String(state.selected === event.dataset.eventId));
+        button.tabIndex = state.selected === event.dataset.eventId ? 0 : -1;
         button.setAttribute("aria-label", eventLabel(event));
         const time = document.createElement("time");
         time.textContent = `${event.dataset.eventStart}–${event.dataset.eventEnd}`;
@@ -1317,6 +1408,15 @@ function setupSchedulingPage() {
         stateMark.setAttribute("aria-hidden", "true");
         button.append(time, copy, stateMark);
         button.addEventListener("click", () => selectEvent(event.dataset.eventId, button));
+        button.addEventListener("keydown", (keyboardEvent) => {
+          if (!["ArrowDown", "ArrowUp", "Home", "End"].includes(keyboardEvent.key)) return;
+          const options = [...agendaList.querySelectorAll("[data-agenda-event]")];
+          const index = options.indexOf(button);
+          const next = keyboardEvent.key === "Home" ? 0 : keyboardEvent.key === "End" ? options.length - 1 : (index + (keyboardEvent.key === "ArrowDown" ? 1 : -1) + options.length) % options.length;
+          keyboardEvent.preventDefault();
+          options[next]?.click();
+          options[next]?.focus({ preventScroll: true });
+        });
         list.append(button);
       }
       group.append(heading, list);
@@ -1336,6 +1436,7 @@ function setupSchedulingPage() {
     });
     document.querySelector("[data-schedule-period]").textContent = period;
     document.querySelectorAll("[data-schedule-day]").forEach((day) => {
+      day.setAttribute("role", "presentation");
       day.querySelector("[data-day-date]").textContent = localeDate(addDays(state.monday, Number(day.dataset.scheduleDay)), { month: "numeric", day: "numeric" });
     });
 
@@ -1348,7 +1449,9 @@ function setupSchedulingPage() {
     }
     for (const event of events) {
       event.hidden = !visibleIds.has(event.dataset.eventId);
-      event.setAttribute("aria-pressed", String(state.selected === event.dataset.eventId));
+      event.setAttribute("role", "option");
+      event.setAttribute("aria-selected", String(state.selected === event.dataset.eventId));
+      event.tabIndex = state.selected === event.dataset.eventId ? 0 : -1;
       event.setAttribute("aria-label", eventLabel(event));
     }
     const hasItems = items.length > 0;
@@ -1366,7 +1469,19 @@ function setupSchedulingPage() {
     renderSidebar();
   });
 
-  for (const event of events) event.addEventListener("click", () => selectEvent(event.dataset.eventId, event));
+  for (const event of events) {
+    event.setAttribute("role", "option");
+    event.addEventListener("click", () => selectEvent(event.dataset.eventId, event));
+    event.addEventListener("keydown", (keyboardEvent) => {
+      if (!["ArrowDown", "ArrowUp", "Home", "End"].includes(keyboardEvent.key)) return;
+      const options = events.filter((candidate) => !candidate.hidden);
+      const index = options.indexOf(event);
+      const next = keyboardEvent.key === "Home" ? 0 : keyboardEvent.key === "End" ? options.length - 1 : (index + (keyboardEvent.key === "ArrowDown" ? 1 : -1) + options.length) % options.length;
+      keyboardEvent.preventDefault();
+      options[next]?.click();
+      options[next]?.focus({ preventScroll: true });
+    });
+  }
 
   for (const button of document.querySelectorAll("[data-schedule-view-button]")) {
     button.addEventListener("click", () => {

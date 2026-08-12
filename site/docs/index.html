@@ -197,11 +197,11 @@
               <div class="field"><label for="project-name">Project name</label><input id="project-name" value="KIN reference"><small>Shown in the workspace header.</small></div>
               <div class="field invalid"><label for="source-url">Source URL</label><input id="source-url" value="example"><small>Enter a complete URL including https://</small></div>
             </div>
-            <div class="data-demo" role="table" aria-label="Entity rows">
-              <div class="data-row header" role="row"><span>Object</span><span>Status</span><span>Source</span><span>Updated</span></div>
-              <div class="data-row selected" role="row" aria-selected="true"><strong>Reference contract</strong><span class="status healthy">Current</span><span>Repository</span><span>2 min ago</span></div>
-              <div class="data-row" role="row"><strong>External evidence</strong><span class="status watch">Review</span><span>3 sources</span><span>Yesterday</span></div>
-              <div class="data-row" role="row"><strong>Archived decision</strong><span class="status">Stale</span><span>Unavailable</span><span>12 Jun</span></div>
+            <div class="data-demo" role="grid" aria-label="Entity rows">
+              <div class="data-row header" role="row"><span role="columnheader">Object</span><span role="columnheader">Status</span><span role="columnheader">Source</span><span role="columnheader">Updated</span></div>
+              <div class="data-row selected" role="row" aria-selected="true"><strong role="gridcell">Reference contract</strong><span role="gridcell" class="status healthy">Current</span><span role="gridcell">Repository</span><span role="gridcell">2 min ago</span></div>
+              <div class="data-row" role="row" aria-selected="false"><strong role="gridcell">External evidence</strong><span role="gridcell" class="status watch">Review</span><span role="gridcell">3 sources</span><span role="gridcell">Yesterday</span></div>
+              <div class="data-row" role="row" aria-selected="false"><strong role="gridcell">Archived decision</strong><span role="gridcell" class="status">Stale</span><span role="gridcell">Unavailable</span><span role="gridcell">12 Jun</span></div>
             </div>
             <div class="metric-demo">
               <div><span>Contract</span><strong>3.0.3 release</strong></div><div><span>Theme modes</span><strong>4</strong></div><div><span>Product patterns</span><strong>4</strong></div><div><span>Last reviewed</span><strong>12 Aug 2026</strong></div>
@@ -332,6 +332,32 @@ checkpoint before coding; do not implement a draft or unresolved workflow.</code
     </div>
   </dialog>
   <div data-sonner-root></div>
+  <script>
+    (() => {
+      const rows = [...document.querySelectorAll(".data-demo .data-row:not(.header)")];
+      rows.forEach((row, index) => {
+        row.tabIndex = row.getAttribute("aria-selected") === "true" ? 0 : -1;
+        row.addEventListener("click", () => rows.forEach((candidate) => {
+          const selected = candidate === row;
+          candidate.classList.toggle("selected", selected);
+          candidate.setAttribute("aria-selected", String(selected));
+          candidate.tabIndex = selected ? 0 : -1;
+        }));
+        row.addEventListener("keydown", (event) => {
+          if (!["ArrowDown", "ArrowUp", "Home", "End", "Enter", " "].includes(event.key)) return;
+          event.preventDefault();
+          if (event.key === "Enter" || event.key === " ") {
+            row.click();
+            row.focus();
+            return;
+          }
+          const next = event.key === "Home" ? 0 : event.key === "End" ? rows.length - 1 : index + (event.key === "ArrowDown" ? 1 : -1);
+          rows[(next + rows.length) % rows.length].click();
+          rows[(next + rows.length) % rows.length].focus();
+        });
+      });
+    })();
+  </script>
   <script type="module" src="../assets/site.js"></script>
 </body>
 </html>

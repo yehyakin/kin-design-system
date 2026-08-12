@@ -362,7 +362,9 @@ function translate(locale, persist = true) {
   }
   for (const button of localeButtons) {
     const active = button.dataset.localeValue === locale;
-    button.setAttribute("aria-current", active ? "true" : "false");
+    button.setAttribute("role", "menuitemradio");
+    button.setAttribute("aria-checked", String(active));
+    button.tabIndex = active ? 0 : -1;
   }
   updateThemeSwitch(root.dataset.theme);
   if (persist) {
@@ -530,9 +532,11 @@ function renderRiskSignal({ syncForm = false } = {}) {
   for (const row of riskRows) {
     const selected = row.dataset.riskRow === selectedRiskId;
     row.dataset.selected = String(selected);
+    row.setAttribute("role", "row");
+    row.setAttribute("aria-selected", String(selected));
     const button = row.querySelector("[data-risk-signal]");
-    if (selected) button.setAttribute("aria-current", "true");
-    else button.removeAttribute("aria-current");
+    button.tabIndex = selected ? 0 : -1;
+    button.removeAttribute("aria-current");
   }
   riskInspectorTitle.textContent = selectedRiskId + " · " + signal.entity;
   riskDetailSeverity.textContent = messages[signal.severityKey];
@@ -658,7 +662,8 @@ function updateThemeSwitch(theme) {
   for (const option of themeOptions) {
     const selected = option.dataset.themeOption === root.dataset.themePreference;
     option.setAttribute("aria-checked", String(selected));
-    option.setAttribute("aria-current", selected ? "true" : "false");
+    option.setAttribute("role", "menuitemradio");
+    option.tabIndex = selected ? 0 : -1;
   }
 }
 
@@ -730,11 +735,13 @@ async function copyCurrentLocation() {
 copyLocation.addEventListener("click", copyCurrentLocation);
 
 function setLanguageMenu(open, moveFocus = true) {
+  const selected = languageMenu.querySelector('[role="menuitemradio"][aria-checked="true"]') ?? languageMenu.querySelector('[role^="menuitem"]');
   setTransientSurface(languageMenu, open, {
     trigger: languageTrigger,
-    focusTarget: moveFocus ? languageMenu.querySelector('[role="menuitem"]') : null,
+    focusTarget: moveFocus ? selected : null,
     restoreFocus: moveFocus && !open,
   });
+  if (open && moveFocus) requestAnimationFrame(() => selected?.focus({ preventScroll: true }));
 }
 
 function setThemeMenu(open, moveFocus = true) {
@@ -756,6 +763,7 @@ function bindMenuKeyboard(menu, items, close) {
         : event.key === "End"
           ? items.length - 1
           : (index + (event.key === "ArrowDown" ? 1 : -1) + items.length) % items.length;
+      items.forEach((item, itemIndex) => { item.tabIndex = itemIndex === next ? 0 : -1; });
       items[next]?.focus();
     }
     if (event.key === "Escape") {
@@ -1055,6 +1063,20 @@ for (const link of riskScopeLinks) {
 }
 
 for (const button of riskSignalButtons) {
+  button.addEventListener("keydown", (event) => {
+    if (!["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)) return;
+    const visible = riskSignalButtons.filter((item) => !item.closest("[data-risk-row]")?.hidden);
+    const index = visible.indexOf(button);
+    const next = event.key === "Home"
+      ? 0
+      : event.key === "End"
+        ? visible.length - 1
+        : (index + (event.key === "ArrowDown" ? 1 : -1) + visible.length) % visible.length;
+    event.preventDefault();
+    const target = visible[next];
+    target?.click();
+    target?.focus({ preventScroll: true });
+  });
   button.addEventListener("click", () => {
     if (currentRiskState === "pending") return;
     const changed = selectedRiskId !== button.dataset.riskSignal;

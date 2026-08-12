@@ -12,6 +12,21 @@ const SHOWCASE_ROOT_IDS = [
   "flows",
 ];
 
+const FEATURED_COMPONENT_IDS = [
+  "command-menu",
+  "evidence-list",
+  "suggested-change-review",
+  "execution-preview",
+  "background-task-queue",
+  "data-table",
+  "authentication-dialog",
+  "app-shell",
+  "agent-activity-trace",
+  "story-timeline",
+  "code-block",
+  "button",
+];
+
 async function expectNoHorizontalOverflow(page) {
   const dimensions = await page.evaluate(() => ({
     clientWidth: document.documentElement.clientWidth,
@@ -620,7 +635,7 @@ test("compact documentation and Lab metadata retain AA text contrast", async ({ 
   }
 });
 
-test("component discovery presents eight deterministic local posters and a closed full catalog", async ({ page }) => {
+test("component discovery presents an interactive twelve-component workbench and a closed full catalog", async ({ page }) => {
   await page.goto("/components/");
   await expect(page).toHaveTitle("Find a component by task and evidence. · KIN Design System");
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("Components you can feel before you read.");
@@ -630,7 +645,7 @@ test("component discovery presents eight deterministic local posters and a close
   const catalog = page.locator("details.catalog-disclosure");
   const catalogRows = catalog.locator(".discovery-row[data-component-id]");
 
-  await expect(cards).toHaveCount(8);
+  await expect(cards).toHaveCount(12);
   await expect(cards.evaluateAll((items) => items.map((item) => item.dataset.componentId))).resolves.toEqual([
     "command-menu",
     "evidence-list",
@@ -640,29 +655,40 @@ test("component discovery presents eight deterministic local posters and a close
     "data-table",
     "authentication-dialog",
     "app-shell",
+    "agent-activity-trace",
+    "story-timeline",
+    "code-block",
+    "button",
   ]);
-  await expect(browser.locator("[data-reference-stage], iframe")).toHaveCount(0);
-  await expect(browser.locator("[data-component-choice]")).toHaveCount(0);
-  await expect(browser.locator(".component-fixture-poster")).toHaveCount(8);
-  await expect(browser.locator('.component-fixture-poster[role="img"]')).toHaveCount(8);
-  await expect(browser.locator(".component-gallery-card__provenance")).toHaveCount(8);
+  await expect(browser.locator("[data-component-choice]")).toHaveCount(12);
+  await expect(browser.locator('[role="tablist"] [role="tab"][aria-controls="component-workbench-stage"]')).toHaveCount(12);
+  await expect(browser.locator('[role="tabpanel"]#component-workbench-stage')).toHaveCount(1);
+  await expect(browser.locator('[role="tabpanel"]#component-workbench-stage')).toHaveAttribute(
+    "aria-labelledby",
+    "component-choice-command-menu",
+  );
   await expect(
-    cards.evaluateAll((items) => new Set(items.map((item) => item.dataset.posterSource)).size),
-  ).resolves.toBe(8);
-  await expect(
-    browser.locator(".component-fixture-poster").evaluateAll((items) => new Set(items.map((item) => item.className)).size),
-  ).resolves.toBe(8);
-  await expect(cards.nth(1)).toHaveAttribute(
-    "data-poster-source",
-    "../examples/workspace-reference/showcase-components.html?lang=en&specimen=evidence-list",
+    browser.locator('[role="tab"][aria-controls="component-workbench-stage"]').evaluateAll((tabs) =>
+      tabs.every((tab) => document.getElementById(tab.getAttribute("aria-controls"))?.getAttribute("role") === "tabpanel"),
+    ),
+  ).resolves.toBe(true);
+  await expect(browser.locator('[data-component-choice][aria-selected="true"]')).toHaveCount(1);
+  await expect(browser.locator('[data-component-choice][aria-selected="true"]')).toHaveAttribute(
+    "data-component-choice",
+    "command-menu",
+  );
+  await expect(browser.locator("[data-reference-stage]")).toHaveCount(1);
+  await expect(browser.locator("iframe[data-stage-frame]")).toHaveCount(1);
+  await expect(browser.locator("[data-reference-stage]")).toHaveAttribute("data-stage-ready", "true", {
+    timeout: 10_000,
+  });
+  await expect(browser.locator("iframe[data-stage-frame]")).toHaveAttribute(
+    "src",
+    "../examples/workspace-reference/showcase-components.html?lang=en&specimen=command-menu",
   );
   await expect(cards.nth(1).getByRole("link", { name: "Open: Evidence List" })).toHaveAttribute(
     "href",
     "evidence-list/",
-  );
-  await expect(cards.nth(1).getByRole("img")).toHaveAttribute(
-    "aria-label",
-    "Deterministic poster derived from the local component fixture: Evidence List",
   );
   await expect(catalog).not.toHaveAttribute("open", "");
   await expect(catalogRows).toHaveCount(80);
@@ -681,6 +707,187 @@ test("component discovery presents eight deterministic local posters and a close
   await expect(page.locator('.language-menu a[hreflang="zh-CN"]')).toHaveAttribute("href", "../zh/components/");
 });
 
+test("component workbench selects all twelve components and preserves one live stage", async ({ page }) => {
+  test.setTimeout(90_000);
+  await page.goto("/components/");
+  const browser = page.locator("[data-component-gallery]");
+  const choices = browser.locator("[data-component-choice]");
+  const stage = browser.locator("[data-reference-stage]");
+  const frame = stage.locator("iframe[data-stage-frame]");
+  await expect(choices).toHaveCount(12);
+  await expect(frame).toHaveCount(1);
+  await expect(stage).toHaveAttribute("data-stage-ready", "true", { timeout: 10_000 });
+
+  for (const id of FEATURED_COMPONENT_IDS) {
+    const choice = browser.locator('[data-component-choice="' + id + '"]');
+    await choice.click();
+    await expect(choice).toHaveAttribute("aria-selected", "true");
+    await expect(browser.locator('[data-component-choice][aria-selected="true"]')).toHaveCount(1);
+    await expect(stage).toHaveAttribute("aria-labelledby", "component-choice-" + id);
+    await expect(stage).toHaveAttribute("data-component-id", id);
+    await expect(stage).toHaveAttribute("data-stage-ready", "true", { timeout: 10_000 });
+    await expect(stage).toHaveAttribute("data-ready-fragment", await choice.getAttribute("data-component-ready-fragment"));
+    await expect(frame).toHaveAttribute(
+      "src",
+      "../examples/workspace-reference/showcase-components.html?lang=en&specimen=" + id,
+    );
+    await expect(stage.locator("[data-stage-language-text]")).toHaveText("English");
+    await expect(stage.locator("[data-stage-reference-link]")).toHaveAttribute(
+      "href",
+      "../examples/workspace-reference/showcase-components.html?lang=en&specimen=" + id + "#showcase-specimen-app",
+    );
+    await expect(stage.locator("[data-stage-explorer-link]")).toHaveAttribute("href", id + "/");
+    await expect(browser.locator("iframe[data-stage-frame]")).toHaveCount(1);
+
+    const reference = page.frameLocator("iframe[data-stage-frame]");
+    if (id === "command-menu") {
+      const dialog = reference.getByRole("dialog", { name: "KIN command menu" });
+      await expect(dialog).toBeVisible();
+      await dialog.press("Escape");
+      await expect(dialog).toBeHidden();
+      await reference.getByRole("button", { name: "Open command menu" }).click();
+      await expect(dialog).toBeVisible();
+    } else if (id === "evidence-list") {
+      const row = reference.locator("button, [role=\"option\"], [role=\"row\"]").filter({ hasText: "Internal price record" }).first();
+      await row.click();
+      await expect(row).toHaveAttribute("aria-selected", "true");
+      await expect(reference.locator(".evidence-detail h3")).toHaveText("Internal price record");
+    } else if (id === "suggested-change-review") {
+      await reference.getByRole("button", { name: "Accept suggestion" }).click();
+      await expect(reference.getByText("Accepted", { exact: true })).toBeVisible();
+    } else if (id === "execution-preview") {
+      await reference.getByRole("button", { name: "Run local preview" }).click();
+      await expect(reference.getByRole("button", { name: "Executing local fixture…" })).toBeDisabled();
+    } else if (id === "background-task-queue") {
+      await reference.getByRole("button", { name: "Retry" }).click();
+      await expect(reference.getByText("Retrying", { exact: true })).toBeVisible();
+    } else if (id === "data-table") {
+      const transit = reference.locator('[role="row"]').filter({ hasText: "Transit Bag" }).first();
+      await transit.getByRole("button").click();
+      await expect(transit).toHaveAttribute("aria-selected", "true");
+      const price = reference.getByRole("button", { name: /Price/ });
+      await price.click();
+      await expect(reference.locator("tbody tr").first()).toContainText("Field Jacket");
+    } else if (id === "authentication-dialog") {
+      const dialog = reference.locator("[data-auth-dialog]");
+      await expect(dialog).toBeVisible();
+      await reference.getByRole("button", { name: "Cancel" }).click({ force: true });
+      await expect(dialog).toBeHidden();
+      await reference.getByRole("button", { name: "Open sign-in dialog" }).click({ force: true });
+      await expect(dialog).toBeVisible();
+    } else if (id === "app-shell") {
+      const transit = reference.locator("button, [role=\"option\"], [role=\"row\"]").filter({ hasText: "Transit Bag" }).first();
+      await transit.click();
+      await expect(transit).toHaveAttribute("aria-selected", "true");
+      await expect(reference.locator(".mini-inspector")).toContainText("PRD-076");
+    } else if (id === "agent-activity-trace") {
+      const toolActivity = reference.locator(".tool-activity");
+      await toolActivity.locator("summary").click();
+      await expect(toolActivity.locator("pre")).toBeVisible();
+    } else if (id === "story-timeline") {
+      const marker = reference.locator(".story-marker").nth(1);
+      await marker.click();
+      await expect(marker).toHaveAttribute("aria-selected", "true");
+      await expect(reference.locator(".timeline-detail")).toContainText("09:34");
+    } else if (id === "code-block") {
+      const wrap = reference.getByRole("button", { name: "Wrap lines" });
+      await wrap.click();
+      await expect(wrap).toHaveAttribute("aria-pressed", "true");
+    } else if (id === "button") {
+      await reference.getByRole("button", { name: "Export records" }).click();
+      await expect(reference.getByText("Export task created", { exact: true })).toBeVisible();
+    }
+
+    await stage.locator("[data-stage-reset]").click();
+    await expect(stage.locator("[data-stage-reset]")).toBeFocused();
+    await expect(stage).toHaveAttribute("data-stage-ready", "true", { timeout: 10_000 });
+    await expect(browser.locator("iframe[data-stage-frame]")).toHaveCount(1);
+    const resetReference = page.frameLocator("iframe[data-stage-frame]");
+    if (id === "command-menu") {
+      await expect(resetReference.getByRole("dialog", { name: "KIN command menu" })).toBeVisible();
+    } else if (id === "evidence-list") {
+      await expect(resetReference.locator(".evidence-detail h3")).toHaveText("External channel snapshot");
+    } else if (id === "suggested-change-review") {
+      await expect(resetReference.getByRole("button", { name: "Accept suggestion" })).toBeVisible();
+    } else if (id === "execution-preview") {
+      await expect(resetReference.getByRole("button", { name: "Run local preview" })).toBeVisible();
+    } else if (id === "background-task-queue") {
+      await expect(resetReference.getByRole("button", { name: "Retry" })).toBeVisible();
+    } else if (id === "data-table") {
+      await expect(resetReference.locator('[role="row"]').filter({ hasText: "Field Jacket" }).first()).toHaveAttribute(
+        "aria-selected",
+        "true",
+      );
+    } else if (id === "authentication-dialog") {
+      await expect(resetReference.locator("[data-auth-dialog]")).toBeVisible();
+    } else if (id === "app-shell") {
+      await expect(resetReference.locator('[role="option"]').filter({ hasText: "Field Jacket" }).first()).toHaveAttribute(
+        "aria-selected",
+        "true",
+      );
+    } else if (id === "agent-activity-trace") {
+      await expect(resetReference.locator(".tool-activity pre")).toBeHidden();
+    } else if (id === "story-timeline") {
+      await expect(resetReference.locator('[role="option"]').first()).toHaveAttribute("aria-selected", "true");
+    } else if (id === "code-block") {
+      await expect(resetReference.getByRole("button", { name: "Wrap lines" })).toHaveAttribute("aria-pressed", "false");
+    } else if (id === "button") {
+      await expect(resetReference.getByRole("button", { name: "Export records" })).toBeVisible();
+    }
+  }
+});
+
+test("component workbench restores hash, roves focus, syncs controls, and keeps reduced motion final state", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/components/#component-data-table");
+  const browser = page.locator("[data-component-gallery]");
+  const stage = browser.locator("[data-reference-stage]");
+  await expect(browser.locator('[data-component-choice="data-table"]')).toHaveAttribute("aria-selected", "true");
+  await expect(stage).toHaveAttribute("data-stage-ready", "true", { timeout: 10_000 });
+  await browser.locator('[data-component-choice="command-menu"]').focus();
+  await page.keyboard.press("ArrowRight");
+  await expect(browser.locator('[data-component-choice="evidence-list"]')).toBeFocused();
+  await expect(browser.locator('[data-component-choice="evidence-list"]')).toHaveAttribute("aria-selected", "true");
+  await page.keyboard.press("ArrowDown");
+  await expect(browser.locator('[data-component-choice="suggested-change-review"]')).toBeFocused();
+  await page.keyboard.press("ArrowUp");
+  await expect(browser.locator('[data-component-choice="evidence-list"]')).toBeFocused();
+  await page.keyboard.press("End");
+  await expect(browser.locator('[data-component-choice="button"]')).toBeFocused();
+  await page.keyboard.press("Home");
+  await expect(browser.locator('[data-component-choice="command-menu"]')).toBeFocused();
+  await browser.locator('[data-component-choice="data-table"]').click();
+  await expect(stage).toHaveAttribute("data-stage-ready", "true", { timeout: 10_000 });
+  await stage.getByRole("button", { name: "Light" }).click();
+  await expect(stage.getByRole("button", { name: "Light" })).toHaveAttribute("aria-pressed", "true");
+  await stage.getByRole("button", { name: "Narrow" }).click();
+  await expect(stage).toHaveAttribute("data-stage-viewport", "narrow");
+  await stage.getByRole("button", { name: "In workflow" }).click();
+  await expect(stage).toHaveAttribute("data-stage-context", "workflow");
+  await expect(stage.locator("iframe")).toHaveCSS("transition-property", "opacity");
+  await page.locator("[data-contrast-toggle]").click();
+  await expect(page.frameLocator("iframe[data-stage-frame]").locator("html")).toHaveAttribute("data-contrast", "more");
+  await expect(browser.locator("iframe[data-stage-frame]")).toHaveCount(1);
+});
+
+test("component workbench keeps a localized fallback when a selected mount is unavailable", async ({ page }) => {
+  await page.route("**/examples/workspace-reference/showcase-components.html?lang=en&specimen=app-shell", async (route) => {
+    await route.fulfill({
+      contentType: "text/html",
+      body: "<!doctype html><html><head><title>Valid but unrelated reference</title></head><body><main>Unrelated</main></body></html>",
+    });
+  });
+  await page.goto("/components/");
+  const browser = page.locator("[data-component-gallery]");
+  const stage = browser.locator("[data-reference-stage]");
+  await browser.locator('[data-component-choice="app-shell"]').click();
+  await expect(stage).toHaveAttribute("data-stage-ready", "false");
+  await expect(stage.locator("[data-stage-loading]")).toHaveText("Reference unavailable", { timeout: 10_000 });
+  await expect(stage.locator("[data-stage-loading]")).toBeVisible();
+  await expect(stage.locator("[data-stage-reference-link]")).toHaveAttribute("href", /app-shell/);
+  await expect(stage.locator("[data-stage-explorer-link]")).toHaveAttribute("href", "app-shell/");
+});
+
 test("Component Explorer rejects a reference without the intended fixture mount", async ({ page }) => {
   await page.route("**/examples/workspace-reference/showcase-components.html?lang=en&specimen=app-shell", async (route) => {
     await route.fulfill({
@@ -695,6 +902,40 @@ test("Component Explorer rejects a reference without the intended fixture mount"
   await expect(stage).toHaveAttribute("data-stage-ready", "false");
   await expect(stage.locator("[data-stage-loading]")).toHaveText("Reference unavailable", { timeout: 10_000 });
   await expect(stage.locator("[data-stage-loading]")).toBeVisible();
+});
+
+test("component workbench uses a quiet desktop rail and a touch-safe mobile rail", async ({ page }) => {
+  await page.setViewportSize({ width: 1600, height: 900 });
+  await page.goto("/components/");
+  const browser = page.locator("[data-component-gallery]");
+  const rail = browser.locator(".component-gallery");
+  const stage = browser.locator("[data-reference-stage]");
+  const desktop = await Promise.all([rail.boundingBox(), stage.boundingBox()]);
+  expect(desktop[0]).not.toBeNull();
+  expect(desktop[1]).not.toBeNull();
+  expect(desktop[0].width).toBeGreaterThanOrEqual(220);
+  expect(desktop[0].width).toBeLessThanOrEqual(280);
+  expect(desktop[1].x).toBeGreaterThanOrEqual(desktop[0].x + desktop[0].width - 1);
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.reload();
+  await expectNoHorizontalOverflow(page);
+  const mobileRail = await rail.evaluate((element) => ({ clientWidth: element.clientWidth, scrollWidth: element.scrollWidth }));
+  expect(mobileRail.scrollWidth).toBeGreaterThan(mobileRail.clientWidth);
+  const choiceTargets = await browser.locator("[data-component-choice]").evaluateAll((items) =>
+    items.map((item) => { const box = item.getBoundingClientRect(); return { width: box.width, height: box.height }; }),
+  );
+  expect(choiceTargets.every((target) => target.width >= 44 && target.height >= 44)).toBe(true);
+  const controlTargets = await stage.locator("[data-stage-theme], [data-stage-viewport], [data-stage-context]").evaluateAll((items) =>
+    items.map((item) => {
+      const box = item.getBoundingClientRect();
+      return { width: box.width, height: box.height };
+    }),
+  );
+  expect(controlTargets.every((target) => target.width >= 44 && target.height >= 44)).toBe(true);
+  const resetBox = await stage.locator("[data-stage-reset]").boundingBox();
+  expect(resetBox).not.toBeNull();
+  expect(resetBox.width).toBeGreaterThanOrEqual(44);
+  expect(resetBox.height).toBeGreaterThanOrEqual(44);
 });
 
 test("Component Explorer prioritizes a featured rail, live specimen, and lower evidence tabs", async ({ page }) => {
@@ -823,10 +1064,13 @@ test("Component Explorer prioritizes a featured rail, live specimen, and lower e
   );
 });
 
-test("App Shell specimen keeps route navigation distinct from selected work", async ({ page }) => {
+test("App Shell specimen keeps visual navigation distinct from selected work", async ({ page }) => {
   await page.goto("/components/app-shell/");
   const reference = page.frameLocator("[data-reference-stage] [data-stage-frame]");
-  const currentNavigation = reference.locator('.mini-nav [aria-current="page"]');
+  const navigation = reference.locator(".mini-nav");
+  const currentNavigation = navigation.locator('[data-active="true"]');
+  await expect(navigation).toHaveAttribute("aria-hidden", "true");
+  await expect(navigation.locator("a, button, [role=\"link\"], [aria-current]")).toHaveCount(0);
   await expect(currentNavigation).toBeVisible();
   const material = await currentNavigation.evaluate((element) => {
     const resolveColor = (token) => {
@@ -1090,9 +1334,13 @@ test("Chinese Component and Pattern discovery preserve machine-fact parity", asy
   const browser = page.locator("[data-component-gallery]");
   const catalog = page.locator("details.catalog-disclosure");
   const catalogRows = catalog.locator(".discovery-row[data-component-id]");
-  await expect(browser.locator("[data-component-card]")).toHaveCount(8);
-  await expect(browser.locator("[data-reference-stage], iframe")).toHaveCount(0);
-  await expect(browser.locator(".component-fixture-poster")).toHaveCount(8);
+  await expect(browser.locator("[data-component-card]")).toHaveCount(12);
+  await expect(browser.locator("[data-component-choice]")).toHaveCount(12);
+  await expect(browser.locator("[data-reference-stage]")).toHaveCount(1);
+  await expect(browser.locator("iframe[data-stage-frame]")).toHaveCount(1);
+  await expect(browser.locator("[data-reference-stage]")).toHaveAttribute("data-stage-ready", "true", {
+    timeout: 10_000,
+  });
   await expect(catalog).not.toHaveAttribute("open", "");
   await expect(catalogRows).toHaveCount(80);
   await expect(catalogRows.locator(".status-badge--stable")).toHaveCount(65);
@@ -1113,10 +1361,12 @@ test("Chinese Component and Pattern discovery preserve machine-fact parity", asy
   await expect(
     browser.locator('[data-component-id="evidence-list"]').getByRole("link", { name: "打开: 证据列表" }),
   ).toHaveAttribute("href", "evidence-list/");
-  await expect(browser.locator('[data-component-id="evidence-list"]').getByRole("img")).toHaveAttribute(
-    "aria-label",
-    "根据本地组件样例制作的确定性海报: 证据列表",
+  await expect(browser.locator('[data-component-choice="command-menu"]')).toHaveAttribute("aria-selected", "true");
+  await expect(browser.locator("iframe[data-stage-frame]")).toHaveAttribute(
+    "src",
+    "../../examples/workspace-reference/showcase-components.html?lang=zh-CN&specimen=command-menu",
   );
+  await expect(page.frameLocator("iframe[data-stage-frame]").locator("html")).toHaveAttribute("lang", "zh-CN");
   await expect(page.locator('a[href="../../scenarios/?lang=zh-CN"]').first()).toContainText("场景");
   await expect(page.locator('a[href="../../scenarios/lab.html?lang=zh-CN"]').first()).toContainText("场景检查台");
 
@@ -1904,7 +2154,7 @@ test.describe("coarse-pointer explorer controls", () => {
           return { height: box.height, width: box.width };
         }),
       );
-    expect(galleryActions).toHaveLength(8);
+    expect(galleryActions).toHaveLength(12);
     expect(galleryActions.every((target) => target.width >= 44 && target.height >= 44)).toBe(true);
 
     await page.goto("/components/evidence-list/");
