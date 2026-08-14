@@ -12,6 +12,7 @@ The project follows semantic versioning for normative design documentation.
 - Rebuilt Component discovery as a bilingual, keyboard-operable inline workbench for twelve runnable component references, including command, dialog, notification, data, review and application-shell interactions without requiring a separate Explorer page.
 - Preserved the initiating component or reset control as the stable focus target while the shared live-reference frame reloads, including under parallel browser load, without trapping focus after the reference settles.
 - Added a source-derived public route matrix that checks all generated Showcase routes at wide, intermediate and narrow viewports, plus representative Firefox and WebKit smoke coverage for language, overflow, embedded-reference readiness, selection edges and runtime errors.
+- Prevented the localized Scenario Atlas from first loading and then cancelling the wrong-language reference module before mounting the correct iframe, removing a WebKit-only module error without weakening runtime-error checks.
 
 ## 3.0.3 — 2026-08-12
 

@@ -1523,8 +1523,18 @@ test("scenario atlas exposes honest coverage and seventeen inspectable scenarios
 
 test("Chinese Scenario Atlas and Lab preserve language through discovery and verification", async ({ page }) => {
   const consoleWarnings = [];
+  const featureFrameRequests = [];
   page.on("console", (message) => {
     if (["warning", "error"].includes(message.type())) consoleWarnings.push(message.text());
+  });
+  page.on("request", (request) => {
+    const url = new URL(request.url());
+    if (
+      request.resourceType() === "document"
+      && url.pathname.endsWith("/examples/workspace-reference/index.html")
+    ) {
+      featureFrameRequests.push(url.pathname + url.search);
+    }
   });
 
   await page.goto("/scenarios/?lang=zh-CN");
@@ -1540,6 +1550,9 @@ test("Chinese Scenario Atlas and Lab preserve language through discovery and ver
     "src",
     "../examples/workspace-reference/index.html?view=investigation&lang=zh-CN&state=normal",
   );
+  await expect.poll(() => featureFrameRequests).toEqual([
+    "/examples/workspace-reference/index.html?view=investigation&lang=zh-CN&state=normal",
+  ]);
   await expect(page.locator("[data-scenario-id]")).toHaveCount(30);
   await expect(page.locator('[data-scenario-id="INT-01"]')).toContainText("档案复核");
   await expect(page.locator('[data-scenario-id="CORE-03"]')).toContainText("搜索与结果");
