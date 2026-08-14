@@ -1,4 +1,11 @@
 const locale = new URLSearchParams(window.location.search).get("lang") === "zh-CN" ? "zh-CN" : "en";
+const featureFrame = document.querySelector("[data-atlas-feature-frame]");
+
+if (featureFrame) {
+  featureFrame.src = locale === "zh-CN"
+    ? featureFrame.dataset.referenceZhCn
+    : featureFrame.dataset.referenceEn;
+}
 
 if (locale === "zh-CN") {
   document.documentElement.lang = "zh-CN";
@@ -182,10 +189,6 @@ if (locale === "zh-CN") {
     const catalog = await response.json();
 
     translateText();
-    const featureFrame = document.querySelector("[data-atlas-feature-frame]");
-    if (featureFrame) {
-      featureFrame.src = "../examples/workspace-reference/index.html?view=investigation&lang=zh-CN&state=normal";
-    }
     const localNavigationTrigger = document.querySelector("[data-local-nav-toggle]");
     if (localNavigationTrigger) {
       localNavigationTrigger.dataset.openLabel = STATIC_COPY["Open Scenario Atlas sections"];
