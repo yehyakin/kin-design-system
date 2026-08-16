@@ -28,6 +28,7 @@ export const SITE_COPY_ARTIFACTS = Object.freeze([
   ["tokens/kin.tailwind.css", "tokens/kin.tailwind.css"],
   ["tokens/kin.figma.variables.json", "tokens/kin.figma.variables.json"],
   ["examples/page-patterns/access.html", "examples/page-patterns/access.html"],
+  ["examples/page-patterns/dashboard.html", "examples/page-patterns/dashboard.html"],
   ["examples/page-patterns/onboarding.html", "examples/page-patterns/onboarding.html"],
   ["examples/page-patterns/page-patterns.css", "examples/page-patterns/page-patterns.css"],
   ["examples/page-patterns/scheduling.html", "examples/page-patterns/scheduling.html"],

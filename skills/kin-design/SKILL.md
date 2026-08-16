@@ -11,7 +11,7 @@ Use KIN as a product contract, not as a visual theme preset.
 
 1. Locate the KIN repository root from this skill directory and read `DESIGN.md` and `DELIVERY.md` completely.
 2. Read `VISION.md`, `principles/visual-signature.md`, and `principles/material-hierarchy.md` when the task changes a page, complete workflow, product composition, showcase, Surface hierarchy, edge treatment, elevation, shadow, or KIN adoption claim.
-3. Read `components/catalog.md` and `components/terminology.md` when the task adds, selects, renames, audits, or claims completion of a component.
+3. Read `components/catalog.md`, `components/terminology.md`, and `components/selection-routing.md` when the task adds, selects, renames, audits, or claims completion of a component. Use the routing contract to choose components from the real task and data relationship without waiting for the user to name them.
 4. Read `components/ai-assistance.md`, `review-and-approval.md`, `background-work.md`, or `charts-and-analysis.md` when AI output, evidence, approval, side effects, durable jobs, media review, or analytical charts are in scope.
 5. Read `principles/verification.md` before claiming accessibility, browser, motion, zoom, RTL, or component-completion evidence.
 6. Read `integrations/catalog.md`, `packages/react/RFC.md`, and the matching integration contract before changing an official runtime adapter, package export, dependency boundary, or upstream behavior.
@@ -65,13 +65,14 @@ Do not silently change routes, navigation labels, data meaning, form fields, ana
 1. Inspect the real project and identify the source of truth.
 2. Separate facts, assumptions, user choices, and generated suggestions.
 3. Reuse existing tokens and primitives before creating new ones.
-4. Plan information hierarchy and states before styling.
-5. For a page or migration, complete the KIN composition checkpoint in `references/composition.md`, including the material hierarchy; when a local implementation brief exists, resolve it before building isolated component examples.
-6. When an official runtime integration is in scope, preserve the upstream behavior engine, verify the KIN maturity boundary, and record package, bundle, SSR/hydration, accessibility, localization, and rollback evidence.
-7. Implement the smallest coherent change that completes a real user task.
-8. Verify realistic content, empty/error/loading/stale states, light/dark themes, target viewports, keyboard use, touch where relevant, and both normal and reduced motion. Label automated and manual evidence separately.
-9. Inspect comparable baseline and candidate screenshots whenever a runnable UI exists; a component lab is not production evidence.
-10. Report evidence, deviations, unresolved issues, and rollback.
+4. Route each real action, choice, data relationship, state, feedback need, and consequence to the nearest mature KIN component. Record why it fits and reject visual-shape substitutions.
+5. Plan information hierarchy and states before styling.
+6. For a page or migration, complete the KIN composition checkpoint in `references/composition.md`, including the material hierarchy; when a local implementation brief exists, resolve it before building isolated component examples.
+7. When an official runtime integration is in scope, preserve the upstream behavior engine, verify the KIN maturity boundary, and record package, bundle, SSR/hydration, accessibility, localization, and rollback evidence.
+8. Implement the smallest coherent change that completes a real user task.
+9. Verify realistic content, empty/error/loading/stale states, light/dark themes, target viewports, keyboard use, touch where relevant, and both normal and reduced motion. Label automated and manual evidence separately.
+10. Inspect comparable baseline and candidate screenshots whenever a runnable UI exists; a component lab is not production evidence.
+11. Report evidence, deviations, unresolved issues, and rollback.
 
 For consuming projects with `kin.config.json`, run the structural adoption check before implementation. During an audit, the optional KIN CLI may locate candidates, but every match must be confirmed in source context and rendered UI before it becomes a finding.
 

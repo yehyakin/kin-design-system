@@ -13,6 +13,7 @@ function option(name, fallback) {
 
 const catalogFile = path.resolve(root, option("--catalog", "components/catalog.json"));
 const terminologyFile = path.resolve(root, option("--terminology", "components/terminology.json"));
+const routingFile = path.resolve(root, option("--routing", "components/selection-routing.json"));
 const catalogMarkdownFile = path.resolve(root, "components/catalog.md");
 const terminologyMarkdownFile = path.resolve(root, "components/terminology.md");
 const findings = [];
@@ -50,11 +51,13 @@ function checkPathList(file, field, value) {
 
 const catalog = readJson(catalogFile);
 const terminology = readJson(terminologyFile);
+const routing = readJson(routingFile);
 const allowedStatuses = new Set(["stable", "candidate", "draft", "deprecated"]);
 const allowedTiers = new Set(["core", "workspace", "product-specific", "conditional"]);
 const supportFields = ["themes", "responsive", "keyboard", "touch", "reduced_motion"];
 const ids = new Set();
 const names = new Set();
+const catalogById = new Map();
 
 if (catalog) {
   if (catalog.schema_version !== "1.0.0") add(catalogFile, "schema_version", "must equal 1.0.0");
@@ -65,7 +68,10 @@ if (catalog) {
       const base = `components[${index}]`;
       if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(component.id ?? "")) add(catalogFile, `${base}.id`, "must be a kebab-case identifier");
       else if (ids.has(component.id)) add(catalogFile, `${base}.id`, `duplicate id: ${component.id}`);
-      else ids.add(component.id);
+      else {
+        ids.add(component.id);
+        catalogById.set(component.id, component);
+      }
 
       if (typeof component.canonical_name !== "string" || component.canonical_name.trim() === "") add(catalogFile, `${base}.canonical_name`, "must be a non-empty string");
       else if (names.has(component.canonical_name)) add(catalogFile, `${base}.canonical_name`, `duplicate canonical name: ${component.canonical_name}`);
@@ -110,6 +116,43 @@ if (catalog) {
   }
 }
 
+if (routing) {
+  if (routing.schema_version !== "1.0.0") add(routingFile, "schema_version", "must equal 1.0.0");
+  if (routing.catalog_path !== "components/catalog.json") add(routingFile, "catalog_path", "must equal components/catalog.json");
+  if (!Array.isArray(routing.routes)) {
+    add(routingFile, "routes", "must be an array");
+  } else {
+    const routeIds = new Set();
+    const allowedSelection = new Set(["automatic", "guarded", "manual-only", "legacy-only"]);
+    for (const [index, route] of routing.routes.entries()) {
+      const base = `routes[${index}]`;
+      if (!route || typeof route !== "object" || Array.isArray(route)) {
+        add(routingFile, base, "must be an object");
+        continue;
+      }
+      const extras = Object.keys(route).filter((field) => !["id", "selection", "select_when", "constraints", "fallback"].includes(field));
+      if (extras.length > 0) add(routingFile, base, `contains unsupported fields: ${extras.join(", ")}`);
+      if (!ids.has(route.id)) add(routingFile, `${base}.id`, `unknown catalog id: ${route.id}`);
+      else if (routeIds.has(route.id)) add(routingFile, `${base}.id`, `duplicate route id: ${route.id}`);
+      else routeIds.add(route.id);
+      if (!allowedSelection.has(route.selection)) add(routingFile, `${base}.selection`, `unsupported selection mode: ${route.selection}`);
+      for (const field of ["select_when", "fallback"]) {
+        if (typeof route[field] !== "string" || route[field].trim() === "") add(routingFile, `${base}.${field}`, "must be a non-empty string");
+      }
+      if (!isStringArray(route.constraints) || route.constraints.length === 0 || route.constraints.some((item) => item.trim() === "")) {
+        add(routingFile, `${base}.constraints`, "must be a non-empty array of non-empty strings");
+      }
+      const status = catalogById.get(route.id)?.status;
+      if (status === "stable" && route.selection !== "automatic") add(routingFile, `${base}.selection`, "stable components must be automatic when their task conditions match");
+      if (status === "candidate" && route.selection !== "guarded") add(routingFile, `${base}.selection`, "candidate components must use guarded selection with fallback");
+      if (status === "draft" && route.selection !== "manual-only") add(routingFile, `${base}.selection`, "draft components must be manual-only");
+      if (status === "deprecated" && route.selection !== "legacy-only") add(routingFile, `${base}.selection`, "deprecated components must be legacy-only");
+    }
+    for (const id of ids) if (!routeIds.has(id)) add(routingFile, "routes", `missing route for catalog id: ${id}`);
+    for (const id of routeIds) if (!ids.has(id)) add(routingFile, "routes", `route does not map to a current catalog id: ${id}`);
+  }
+}
+
 const terminologyNames = new Set();
 if (terminology) {
   if (terminology.schema_version !== "1.0.0") add(terminologyFile, "schema_version", "must equal 1.0.0");
@@ -146,11 +189,12 @@ if (terminology) {
 const summary = {
   catalogEntries: catalog?.components?.length ?? 0,
   terminologyEntries: terminology?.entries?.length ?? 0,
+  routingEntries: routing?.routes?.length ?? 0,
   errors: findings.length,
 };
 
 if (asJson) console.log(JSON.stringify({ summary, findings }, null, 2));
-else if (findings.length === 0) console.log(`Component validation passed: ${summary.catalogEntries} catalog entries, ${summary.terminologyEntries} terminology entries.`);
+else if (findings.length === 0) console.log(`Component validation passed: ${summary.catalogEntries} catalog entries, ${summary.terminologyEntries} terminology entries, ${summary.routingEntries} routed entries.`);
 else {
   console.error(`Component validation failed (${findings.length}):`);
   for (const finding of findings) console.error(`- ${finding.file} ${finding.field}: ${finding.message}`);

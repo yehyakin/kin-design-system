@@ -133,7 +133,8 @@ const allowedStates = new Set(["normal", "loading", "empty", "partial", "stale",
 const allowedViewports = new Set(["wide", "narrow"]);
 const allowedThemes = new Set(["light", "dark", "light-high-contrast", "dark-high-contrast"]);
 const allowedAssertionKinds = new Set(["visible", "attribute", "text"]);
-const expectedPilots = ["INT-01", "INF-01", "COM-01", "ENG-01", "CORE-01", "WORK-01"];
+const expectedPilots = ["INT-01", "INF-01", "COM-01", "ENG-01", "CORE-01", "WORK-01", "WORK-05"];
+const expectedScenarioCount = 31;
 const expectedPhase3Shared = ["CORE-02", "CORE-03", "CORE-04", "CORE-05", "CORE-06"];
 const expectedPhase3ProductFamily = ["INT-03", "INF-02", "INF-03", "COM-02", "ENG-02"];
 const statusRank = { deprecated: 0, draft: 1, candidate: 2, stable: 3 };
@@ -175,9 +176,9 @@ if (catalog) {
   if (catalog.schema_version !== "1.1.0") add("schema_version", "must equal 1.1.0");
   if (!/^[0-9]+[.][0-9]+[.][0-9]+$/.test(catalog.catalog_version || "")) add("catalog_version", "must be SemVer");
   if (!/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(catalog.reviewed_on || "")) add("reviewed_on", "must be an ISO date");
-  checkStringArray("pilot_ids", catalog.pilot_ids, null, 6);
+  checkStringArray("pilot_ids", catalog.pilot_ids, null, expectedPilots.length);
   if (Array.isArray(catalog.pilot_ids) && [...catalog.pilot_ids].sort().join("|") !== [...expectedPilots].sort().join("|")) {
-    add("pilot_ids", "must contain the approved six P0 scenario IDs");
+    add("pilot_ids", "must contain the governed seven P0 scenario IDs");
   }
   if (!catalog.presentation_status_definitions || typeof catalog.presentation_status_definitions !== "object") {
     add("presentation_status_definitions", "must define planned, linked, and showcased");
@@ -194,9 +195,9 @@ if (catalog) {
   checkInspectionDefaults(catalog.inspection_defaults);
 
   if (!Array.isArray(catalog.scenarios)) {
-    add("scenarios", "must contain the approved 30-entry Phase 1 matrix");
+    add("scenarios", `must contain the governed ${expectedScenarioCount}-entry Phase 1 matrix`);
   } else {
-    if (catalog.scenarios.length !== 30) add("scenarios", "must contain the approved 30-entry Phase 1 matrix");
+    if (catalog.scenarios.length !== expectedScenarioCount) add("scenarios", `must contain the governed ${expectedScenarioCount}-entry Phase 1 matrix`);
     for (const [index, scenario] of catalog.scenarios.entries()) {
       const base = "scenarios[" + index + "]";
       if (!scenario || typeof scenario !== "object" || Array.isArray(scenario)) {
@@ -341,7 +342,7 @@ if (catalog) {
         for (const viewport of allowedViewports) if (!viewports.includes(viewport)) add(base + ".viewports", "P0 scenarios must name wide and narrow references");
         for (const theme of allowedThemes) if (!themes.includes(theme)) add(base + ".themes", "P0 scenarios must name all four KIN theme modes");
       } else if (scenario.wave === "P0") {
-        add(base + ".wave", "only the approved six scenarios may use P0");
+        add(base + ".wave", "only the governed seven scenarios may use P0");
       }
 
       if (expectedPhase3Shared.includes(scenario.id)) {

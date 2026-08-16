@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
-  "catalog_version": "1.4.0",
-  "reviewed_on": "2026-07-16",
+  "catalog_version": "1.5.0",
+  "reviewed_on": "2026-08-16",
   "status_definitions": {
     "stable": "Normative contract, runnable reference, applicable automated acceptance checks, and named manual checks exist.",
     "candidate": "The page job and contract exist, but one or more completion dimensions remain open.",
@@ -144,6 +144,19 @@
       "support": { "themes": true, "responsive": false, "keyboard": true, "touch": false, "reduced_motion": true, "localization": true },
       "manual_checks": ["task relevance and ranking"],
       "known_gaps": ["runnable reference", "personalization boundary", "responsive and automated checks"]
+    },
+    {
+      "id": "data-and-admin-dashboard",
+      "canonical_name": "Data and Admin Dashboard Page",
+      "tier": "workspace",
+      "status": "stable",
+      "contract_paths": ["pages/data-and-admin-dashboard.md", "components/charts-and-analysis.md", "components/selection-routing.md"],
+      "reference_paths": ["examples/page-patterns/dashboard.html"],
+      "test_paths": ["tests/visual/page-patterns.spec.js", "tests/visual/browser-smoke.spec.js"],
+      "product_families": ["intelligence", "ecommerce", "engineering"],
+      "support": { "themes": true, "responsive": true, "keyboard": true, "touch": true, "reduced_motion": true, "localization": true },
+      "manual_checks": ["real metric definitions, aggregation, source freshness, and drill-down routing", "screen-reader chart summary and exact-value fallback relationships", "200% zoom and long localized-copy review", "touch and keyboard chart inspection in an adopting product"],
+      "known_gaps": []
     },
     {
       "id": "scheduling-workspace",

@@ -12,7 +12,7 @@ Every KIN interface MUST satisfy the following principles at the page or workflo
 
 ### 1. The task appears before the explanation
 
-- The first meaningful view MUST expose the subject, current task, search, list, document, object, or action the user came to use.
+- The first meaningful view MUST expose the subject, current task, search, list, document, object, action, or operational overview the user came to use.
 - A product MUST NOT place a marketing Hero, decorative graph, generic value proposition, or implementation showcase ahead of the primary task inside a working product.
 - Explanatory content SHOULD sit beside, below, or progressively behind the task unless understanding it is itself the task.
 
@@ -20,7 +20,7 @@ Every KIN interface MUST satisfy the following principles at the page or workflo
 
 - Each state MUST have one dominant work or reading region.
 - Navigation, global actions, metadata, secondary properties, and status chrome MUST recede after orientation.
-- Equal visual weight MUST NOT be assigned to several unrelated panels merely because a grid is available.
+- Equal visual weight MUST NOT be assigned to several unrelated panels merely because a grid is available. A data/admin overview MAY contain independent metric and analysis Cards, but one analysis region and one exception path still own attention.
 
 ### 3. Structure is continuous
 
@@ -85,6 +85,7 @@ The common signature is required, but composition changes with the job.
 - Evidence, conflict, finding, commitment, and audit or recovery MUST remain connected when they are part of the workflow.
 - Activity is a flat chronological record; evidence and properties are structured rows, not decorative timeline and stat cards.
 - Risk, evidence confidence, completeness, online health, and AI confidence remain visually and semantically distinct.
+- A separate data/admin route MAY use the dashboard page contract for cross-entity trends, source health, and exception triage. It MUST lead into the entity, evidence, signal, or monitor workflow instead of replacing it.
 
 ### Ecommerce operations
 
@@ -94,6 +95,7 @@ The common signature is required, but composition changes with the job.
 - Current and proposed state, permission, approval, execution, and rollback MUST remain distinct at the point of consequence.
 - AI suggestions appear inside review and execution context; a generic assistant panel does not replace the operating workflow.
 - Media receives space according to the decision being made, not as decorative merchandising inside an operations tool.
+- A separate data/admin route MAY summarize cross-scope commercial operations under the dashboard page contract, provided every metric and chart drills into the exact order, inventory, channel, approval, or failure queue.
 
 ### Engineering canvas
 
@@ -148,7 +150,7 @@ The machine-readable review MUST record each of these criteria separately: task 
 - Does chrome recede after location is understood?
 - Are repeated labels and actions aligned rather than restated?
 - Can risk, confidence, completeness, availability, and progress be distinguished without relying on color?
-- Does the light theme retain structure without a card wall?
+- Does the light theme retain structure without a field of interchangeable Cards?
 - Does the dark theme retain hierarchy without glow or hard black boxes?
 - Does motion explain origin, direction, or completion?
 - Can the applicable source, comparison, decision, commitment, and recovery relationship be followed without reading explanatory documentation?
@@ -161,7 +163,7 @@ The machine-readable review MUST record each of these criteria separately: task 
 The following are evidence that a visual-signature review is required:
 
 - a centered max-width page with kicker, title, description, and several equal CTA buttons before the real task;
-- a dashboard composed primarily of equal stat cards and chart cards;
+- a dashboard composed primarily of equal stat cards and chart cards with no dominant analysis, source, exception path, or drill-down;
 - a component laboratory presented as the redesigned product;
 - a Sidebar, Top Bar, and Inspector added around an unchanged landing-page interior;
 - the same Sidebar / Main / Inspector silhouette copied into information, operations, and canvas products;

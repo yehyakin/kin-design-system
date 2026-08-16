@@ -1,18 +1,21 @@
 import {
   Activity,
   AlertTriangle,
+  ArrowUpRight,
   ArrowLeft,
   ArrowRight,
   Bell,
   BookOpen,
   CalendarDays,
   CalendarRange,
+  ChartNoAxesCombined,
   Check,
   ChevronDown,
   ChevronLeft,
   ChevronRight,
   CircleHelp,
   CircleAlert,
+  CircleCheck,
   ClipboardCheck,
   Clock,
   Copy,
@@ -27,6 +30,7 @@ import {
   Languages,
   ListChecks,
   LayoutList,
+  LayoutDashboard,
   LockKeyhole,
   MessageSquarePlus,
   Megaphone,
@@ -46,6 +50,7 @@ import {
   SlidersHorizontal,
   Sun,
   TicketCheck,
+  TriangleAlert,
   UserRound,
   Users,
   X,
@@ -1594,21 +1599,210 @@ function setupSchedulingPage() {
   }
 }
 
+function setupDashboardPage() {
+  const shell = document.querySelector("[data-dashboard-shell]");
+  if (!shell) return;
+
+  const stateSelect = document.querySelector("[data-dashboard-state-select]");
+  const rangeInputs = [...document.querySelectorAll('[name="dashboard-range"]')];
+  const queueFilter = document.querySelector("[data-dashboard-queue-filter]");
+  const queueRows = [...document.querySelectorAll("[data-dashboard-queue-row]")];
+  const status = document.querySelector("[data-dashboard-status]");
+  const refresh = document.querySelector("[data-dashboard-refresh]");
+  const retry = document.querySelector("[data-dashboard-retry]");
+  const chart = document.querySelector("[data-dashboard-chart]");
+  const chartError = document.querySelector("[data-dashboard-error]");
+  const chartTable = document.querySelector("[data-dashboard-chart-table]");
+  const validRanges = new Set(["7d", "30d", "90d"]);
+  const validStates = new Set(["normal", "partial", "stale", "error"]);
+  const validQueues = new Set(["all", "review", "failed"]);
+
+  const rangeData = Object.freeze({
+    "7d": Object.freeze({
+      metrics: Object.freeze({ records: ["6,120", "+3.1%"], active: ["25", "+2"], review: ["4", "-1"], failed: ["1", "0"] }),
+      line: "M52 176 C132 154 160 166 224 130 S340 146 402 104 S522 116 582 74 S662 82 700 58",
+      area: "M52 176 C132 154 160 166 224 130 S340 146 402 104 S522 116 582 74 S662 82 700 58 L700 204 L52 204 Z",
+      point: [700, 58],
+      rows: [["dashboard.periodStart", "1,420", "0"], ["dashboard.periodMiddle", "2,030", "1"], ["dashboard.periodRecent", "2,670", "0"]],
+      summary: "dashboard.summary7",
+    }),
+    "30d": Object.freeze({
+      metrics: Object.freeze({ records: ["24,680", "+8.4%"], active: ["38", "+4"], review: ["7", "-2"], failed: ["2", "+1"] }),
+      line: "M52 182 C115 172 140 150 190 158 S280 123 332 134 S420 92 468 108 S560 58 610 76 S665 48 700 55",
+      area: "M52 182 C115 172 140 150 190 158 S280 123 332 134 S420 92 468 108 S560 58 610 76 S665 48 700 55 L700 204 L52 204 Z",
+      point: [700, 55],
+      rows: [["dashboard.periodStart", "6,840", "1"], ["dashboard.periodMiddle", "7,920", "2"], ["dashboard.periodRecent", "9,920", "2"]],
+      summary: "dashboard.summary30",
+    }),
+    "90d": Object.freeze({
+      metrics: Object.freeze({ records: ["69,240", "+12.6%"], active: ["42", "+6"], review: ["11", "+3"], failed: ["3", "-1"] }),
+      line: "M52 190 C110 176 150 182 204 152 S300 162 354 122 S455 132 510 92 S612 78 700 42",
+      area: "M52 190 C110 176 150 182 204 152 S300 162 354 122 S455 132 510 92 S612 78 700 42 L700 204 L52 204 Z",
+      point: [700, 42],
+      rows: [["dashboard.periodStart", "19,460", "4"], ["dashboard.periodMiddle", "22,310", "3"], ["dashboard.periodRecent", "27,470", "3"]],
+      summary: "dashboard.summary90",
+    }),
+  });
+
+  function currentUrlState() {
+    const params = new URLSearchParams(location.search);
+    return {
+      queue: validQueues.has(params.get("queue")) ? params.get("queue") : "all",
+      range: validRanges.has(params.get("range")) ? params.get("range") : "30d",
+      state: validStates.has(params.get("state")) ? params.get("state") : "normal",
+    };
+  }
+
+  let dashboardState = currentUrlState();
+
+  function writeUrl(mode = "replace") {
+    const url = new URL(location.href);
+    if (dashboardState.range === "30d") url.searchParams.delete("range");
+    else url.searchParams.set("range", dashboardState.range);
+    if (dashboardState.state === "normal") url.searchParams.delete("state");
+    else url.searchParams.set("state", dashboardState.state);
+    if (dashboardState.queue === "all") url.searchParams.delete("queue");
+    else url.searchParams.set("queue", dashboardState.queue);
+    history[mode === "push" ? "pushState" : "replaceState"](null, "", `${url.pathname}${url.search}${url.hash}`);
+  }
+
+  function renderRange() {
+    const data = rangeData[dashboardState.range];
+    for (const input of rangeInputs) input.checked = input.value === dashboardState.range;
+    for (const [metric, [value, change]] of Object.entries(data.metrics)) {
+      const valueElement = document.querySelector(`[data-dashboard-metric-value="${metric}"]`);
+      const changeElement = document.querySelector(`[data-dashboard-metric-change="${metric}"]`);
+      if (valueElement) valueElement.textContent = value;
+      if (changeElement) changeElement.textContent = change;
+    }
+    const total = document.querySelector("[data-dashboard-chart-total]");
+    const line = document.querySelector("[data-dashboard-chart-line]");
+    const area = document.querySelector("[data-dashboard-chart-area]");
+    const point = document.querySelector("[data-dashboard-chart-point]");
+    const summary = document.querySelector("[data-dashboard-chart-summary]");
+    if (total) total.textContent = data.metrics.records[0];
+    line?.setAttribute("d", data.line);
+    area?.setAttribute("d", data.area);
+    point?.setAttribute("cx", data.point[0]);
+    point?.setAttribute("cy", data.point[1]);
+    if (summary) summary.textContent = text(data.summary);
+    if (chartTable) {
+      chartTable.replaceChildren(...data.rows.map(([label, completed, failed]) => {
+        const row = document.createElement("tr");
+        const period = document.createElement("th");
+        const completedCell = document.createElement("td");
+        const failedCell = document.createElement("td");
+        period.scope = "row";
+        period.textContent = text(label);
+        completedCell.textContent = completed;
+        failedCell.textContent = failed;
+        row.append(period, completedCell, failedCell);
+        return row;
+      }));
+    }
+  }
+
+  function renderQueue() {
+    if (queueFilter) queueFilter.value = dashboardState.queue;
+    let visible = 0;
+    for (const row of queueRows) {
+      const show = dashboardState.queue === "all" || row.dataset.queueKind === dashboardState.queue;
+      row.hidden = !show;
+      if (show) visible += 1;
+    }
+    const navCount = document.querySelector("[data-dashboard-nav-count]");
+    const empty = document.querySelector("[data-dashboard-queue-empty]");
+    if (navCount) navCount.textContent = String(visible);
+    if (empty) empty.hidden = visible !== 0;
+  }
+
+  function renderState() {
+    shell.dataset.dashboardState = dashboardState.state;
+    if (stateSelect) stateSelect.value = dashboardState.state;
+    for (const notice of document.querySelectorAll("[data-dashboard-notice]")) {
+      notice.hidden = notice.dataset.dashboardNotice !== dashboardState.state;
+    }
+    const hasError = dashboardState.state === "error";
+    if (chart) chart.hidden = hasError;
+    if (chartError) chartError.hidden = !hasError;
+  }
+
+  function render() {
+    renderRange();
+    renderQueue();
+    renderState();
+  }
+
+  for (const input of rangeInputs) {
+    input.addEventListener("change", () => {
+      dashboardState.range = input.value;
+      writeUrl("push");
+      renderRange();
+    });
+  }
+
+  stateSelect?.addEventListener("change", () => {
+    dashboardState.state = stateSelect.value;
+    writeUrl("push");
+    renderState();
+  });
+
+  queueFilter?.addEventListener("change", () => {
+    dashboardState.queue = queueFilter.value;
+    writeUrl("push");
+    renderQueue();
+  });
+
+  retry?.addEventListener("click", () => {
+    dashboardState.state = "normal";
+    writeUrl("push");
+    renderState();
+    status.textContent = text("dashboard.refreshed");
+    stateSelect?.focus();
+  });
+
+  refresh?.addEventListener("click", () => {
+    refresh.disabled = true;
+    refresh.setAttribute("aria-busy", "true");
+    status.textContent = text("dashboard.refreshing");
+    setTimeout(() => {
+      dashboardState.state = "normal";
+      writeUrl("replace");
+      renderState();
+      refresh.disabled = false;
+      refresh.removeAttribute("aria-busy");
+      status.textContent = text("dashboard.refreshed");
+      refresh.focus();
+    }, 360);
+  });
+
+  addEventListener("popstate", () => {
+    dashboardState = currentUrlState();
+    render();
+  });
+
+  document.addEventListener("kin:localechange", renderRange);
+  render();
+}
+
 createIcons({
   icons: {
     Activity,
     AlertTriangle,
+    ArrowUpRight,
     ArrowLeft,
     ArrowRight,
     Bell,
     BookOpen,
     CalendarDays,
     CalendarRange,
+    ChartNoAxesCombined,
     Check,
     ChevronDown,
     ChevronLeft,
     ChevronRight,
     CircleAlert,
+    CircleCheck,
     CircleHelp,
     ClipboardCheck,
     Clock,
@@ -1622,6 +1816,7 @@ createIcons({
     KeyRound,
     Languages,
     LayoutList,
+    LayoutDashboard,
     ListChecks,
     LockKeyhole,
     MessageSquarePlus,
@@ -1642,6 +1837,7 @@ createIcons({
     SlidersHorizontal,
     Sun,
     TicketCheck,
+    TriangleAlert,
     UserRound,
     Users,
     X,
@@ -1663,6 +1859,7 @@ if (document.body.dataset.page === "system") setupSystemPage();
 if (document.body.dataset.page === "search") setupSearchPage();
 if (document.body.dataset.page === "support") setupSupportPage();
 if (document.body.dataset.page === "scheduling") setupSchedulingPage();
+if (document.body.dataset.page === "dashboard") setupDashboardPage();
 
 addEventListener("keydown", (event) => {
   if (event.key !== "Escape") return;

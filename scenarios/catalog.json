@@ -1,15 +1,16 @@
 {
   "$schema": "./catalog.schema.json",
   "schema_version": "1.1.0",
-  "catalog_version": "1.6.0",
-  "reviewed_on": "2026-07-21",
+  "catalog_version": "1.7.0",
+  "reviewed_on": "2026-08-16",
   "pilot_ids": [
     "INT-01",
     "INF-01",
     "COM-01",
     "ENG-01",
     "CORE-01",
-    "WORK-01"
+    "WORK-01",
+    "WORK-05"
   ],
   "inspection_defaults": {
     "viewports": [
@@ -1880,6 +1881,97 @@
       ],
       "inspection_path": null,
       "state_controls": []
+    },
+    {
+      "id": "WORK-05",
+      "canonical_name": "Data and Admin Dashboard",
+      "group": "shared",
+      "product_profiles": [
+        "intelligence-workspace",
+        "ecommerce-operations",
+        "engineering-canvas"
+      ],
+      "wave": "P0",
+      "user_job": "Compare current operating state across sources, identify exceptions, and enter the exact queue or record that needs attention.",
+      "entry": "An operator opens a shared overview for a defined scope and period.",
+      "completion": "The operator understands current change and opens the relevant exception, source, report, or queue.",
+      "composition": {
+        "first_meaningful_view": "Scope, time range, source freshness, key metrics, and current exceptions.",
+        "dominant_region": "Primary trend analysis joined to the exception queue.",
+        "persistent_context": "Time range, source freshness, state filter, and exception scope."
+      },
+      "contract_paths": [
+        "pages/data-and-admin-dashboard.md",
+        "components/charts-and-analysis.md",
+        "components/selection-routing.md"
+      ],
+      "page_ids": [
+        "data-and-admin-dashboard"
+      ],
+      "source_maturity": "stable",
+      "conditional": false,
+      "presentation_status": "showcased",
+      "reference_path": "examples/page-patterns/dashboard.html",
+      "states": [
+        "normal",
+        "partial",
+        "stale",
+        "error"
+      ],
+      "viewports": [
+        "wide",
+        "narrow"
+      ],
+      "themes": [
+        "light",
+        "dark",
+        "light-high-contrast",
+        "dark-high-contrast"
+      ],
+      "known_gaps": [
+        "Consuming products still own real metric definitions, aggregation, permissions, routing, source freshness, and manual assistive-technology evidence."
+      ],
+      "inspection_path": "site/scenarios/lab.html?scenario=WORK-05",
+      "state_controls": [
+        {
+          "state": "normal",
+          "label": "Current operating view",
+          "reference_path": "examples/page-patterns/dashboard.html?lang=en&state=normal",
+          "assertion": {
+            "kind": "attribute",
+            "selector": "[data-dashboard-shell]",
+            "attribute": "data-dashboard-state",
+            "value": "normal"
+          }
+        },
+        {
+          "state": "partial",
+          "label": "Partial source coverage",
+          "reference_path": "examples/page-patterns/dashboard.html?lang=en&state=partial",
+          "assertion": {
+            "kind": "visible",
+            "selector": "[data-dashboard-notice=\"partial\"]"
+          }
+        },
+        {
+          "state": "stale",
+          "label": "Last verified view",
+          "reference_path": "examples/page-patterns/dashboard.html?lang=en&state=stale",
+          "assertion": {
+            "kind": "visible",
+            "selector": "[data-dashboard-notice=\"stale\"]"
+          }
+        },
+        {
+          "state": "error",
+          "label": "Analysis unavailable",
+          "reference_path": "examples/page-patterns/dashboard.html?lang=en&state=error",
+          "assertion": {
+            "kind": "visible",
+            "selector": "[data-dashboard-error]"
+          }
+        }
+      ]
     },
     {
       "id": "COND-01",

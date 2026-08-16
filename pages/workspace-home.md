@@ -2,7 +2,9 @@
 
 Status: normative
 
-Use this page as the return point for ongoing work in dense applications. It is an operational home, not a generic Dashboard.
+Use this page as the return point for ongoing work in dense applications. It is a personalized resume point, not a shared data overview.
+
+When the primary job is to compare cross-object metrics, trends, source health, and exceptions for a shared operating scope, use [`data-and-admin-dashboard.md`](./data-and-admin-dashboard.md) instead. The two page families MUST NOT be merged merely because both can contain metrics.
 
 ## User job
 

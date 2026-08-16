@@ -52,6 +52,7 @@ const required = [
   "examples/workspace-reference/showcase-components.css",
   "examples/workspace-reference/showcase-components.js",
   "examples/page-patterns/access.html",
+  "examples/page-patterns/dashboard.html",
   "examples/page-patterns/onboarding.html",
   "examples/page-patterns/search.html",
   "examples/page-patterns/settings.html",
@@ -489,7 +490,7 @@ if (fs.existsSync(scenarioCatalogPath) && fs.existsSync(scenarioHtmlPath)) {
     const showcasedRows = scenarioEntries.filter((entry) => entry.attributes.includes('data-presentation-status="showcased"')).length;
     const plannedRows = scenarioEntries.filter((entry) => entry.attributes.includes('data-presentation-status="planned"')).length;
     if (linkedRows !== 0) failures.push("scenarios/index.html: Phase 3 expects no linked-only rows");
-    if (showcasedRows !== 17) failures.push("scenarios/index.html: expected 17 showcased scenario rows");
+    if (showcasedRows !== 18) failures.push("scenarios/index.html: expected 18 showcased scenario rows");
     if (plannedRows !== 13) failures.push("scenarios/index.html: expected 13 planned rows");
   }
 }

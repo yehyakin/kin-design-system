@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light" data-theme-preference="system">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f6f7f8" />
+    <title>KIN 数据与后台总览参考</title>
+    <script>
+      (() => {
+        const preference = localStorage.getItem("kin-reference-theme") || "system";
+        const resolved = preference === "system" ? (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light") : preference;
+        document.documentElement.dataset.theme = resolved;
+        document.documentElement.dataset.themePreference = preference;
+      })();
+    </script>
+    <link rel="stylesheet" href="../product-patterns/patterns.css" />
+    <link rel="stylesheet" href="./page-patterns.css" />
+    <script type="module" src="./reference.js"></script>
+  </head>
+  <body class="flow-page dashboard-page" data-page="dashboard">
+    <header class="flow-header">
+      <a class="flow-brand" href="../../"><strong>KIN</strong><span data-i18n="common.reference">页面流程</span></a>
+      <div class="flow-preferences">
+        <div class="language-control">
+          <button class="icon-control" type="button" data-language-trigger aria-haspopup="menu" aria-expanded="false" aria-controls="language-menu" data-i18n-aria="common.language" aria-label="切换语言"><i data-lucide="languages" aria-hidden="true"></i></button>
+          <div class="language-menu preference-menu" id="language-menu" data-language-menu role="menu" data-state="closed" hidden><button type="button" role="menuitemradio" aria-checked="true" data-language-option="zh-CN">中文</button><button type="button" role="menuitemradio" aria-checked="false" data-language-option="en">English</button></div>
+        </div>
+        <div class="theme-control">
+          <button class="theme-switch canonical-theme-switch" type="button" role="switch" aria-checked="false" data-theme-switch data-i18n-aria="common.themeDark" aria-label="切换到夜间模式"><span class="theme-switch-icon"><i class="theme-sun" data-lucide="sun" aria-hidden="true"></i></span><span class="theme-switch-track" aria-hidden="true"><span></span></span><span class="theme-switch-icon"><i class="theme-moon" data-lucide="moon" aria-hidden="true"></i></span></button>
+          <button class="icon-control theme-menu-trigger" type="button" data-theme-menu-trigger aria-haspopup="menu" aria-expanded="false" aria-controls="theme-menu" data-i18n-aria="common.themeMenu" aria-label="选择外观"><i data-lucide="chevron-down" aria-hidden="true"></i></button>
+          <div class="theme-menu preference-menu" id="theme-menu" data-theme-menu role="menu" data-state="closed" hidden><button type="button" role="menuitemradio" aria-checked="false" data-theme-option="light" data-i18n="common.themeLightChoice">日间模式</button><button type="button" role="menuitemradio" aria-checked="false" data-theme-option="dark" data-i18n="common.themeDarkChoice">夜间模式</button><button type="button" role="menuitemradio" aria-checked="true" data-theme-option="system" data-i18n="common.themeSystemChoice">跟随系统</button></div>
+        </div>
+      </div>
+    </header>
+
+    <div class="dashboard-shell" data-dashboard-shell data-dashboard-state="normal">
+      <aside class="dashboard-sidebar" aria-label="后台导航" data-i18n-aria="dashboard.navLabel">
+        <div class="dashboard-brand"><span class="dashboard-mark" aria-hidden="true"><i data-lucide="layout-dashboard"></i></span><span><strong data-i18n="dashboard.workspace">运营中心</strong><small data-i18n="dashboard.workspaceMeta">共享数据范围</small></span></div>
+        <nav class="dashboard-nav" aria-label="后台导航" data-i18n-aria="dashboard.navLabel">
+          <a href="./dashboard.html" aria-current="page"><i data-lucide="layout-dashboard" aria-hidden="true"></i><span data-i18n="dashboard.navOverview">总览</span></a>
+          <a href="#exceptions"><i data-lucide="list-checks" aria-hidden="true"></i><span data-i18n="dashboard.navQueue">异常队列</span><small data-dashboard-nav-count>4</small></a>
+          <a href="#analysis"><i data-lucide="chart-no-axes-combined" aria-hidden="true"></i><span data-i18n="dashboard.navReports">分析报告</span></a>
+          <a href="#sources"><i data-lucide="database" aria-hidden="true"></i><span data-i18n="dashboard.navSources">数据来源</span></a>
+          <a href="./settings.html"><i data-lucide="settings" aria-hidden="true"></i><span data-i18n="dashboard.navSettings">后台设置</span></a>
+        </nav>
+        <p class="dashboard-sidebar-note"><i data-lucide="shield-check" aria-hidden="true"></i><span data-i18n="dashboard.fixture">确定性本地数据 · 未连接分析、监控或后台服务</span></p>
+      </aside>
+
+      <main class="dashboard-main">
+        <header class="dashboard-toolbar">
+          <div class="dashboard-title-group">
+            <p data-i18n="dashboard.eyebrow">共享后台 / 全部来源</p>
+            <h1 data-i18n="dashboard.title">运营总览</h1>
+            <p><span data-i18n="dashboard.updated">最近验证于 09:42 UTC+8</span><span aria-hidden="true"> · </span><span data-i18n="dashboard.sourceCount">12 个来源</span></p>
+          </div>
+          <div class="dashboard-toolbar-actions">
+            <label class="dashboard-state-control"><span data-i18n="dashboard.stateLabel">示例状态</span><select data-dashboard-state-select><option value="normal" data-i18n="dashboard.stateNormal">正常</option><option value="partial" data-i18n="dashboard.statePartial">部分来源</option><option value="stale" data-i18n="dashboard.stateStale">数据过期</option><option value="error" data-i18n="dashboard.stateError">分析错误</option></select></label>
+            <button class="flow-button" type="button" data-dashboard-refresh><i data-lucide="refresh-cw" aria-hidden="true"></i><span data-i18n="dashboard.refresh">刷新示例</span></button>
+          </div>
+        </header>
+
+        <section class="dashboard-scope" aria-labelledby="dashboard-range-title">
+          <div>
+            <h2 id="dashboard-range-title" data-i18n="dashboard.rangeTitle">数据范围</h2>
+            <p data-i18n="dashboard.rangeBody">所有指标使用同一已验证周期；点击指标进入对应记录。</p>
+          </div>
+          <fieldset class="dashboard-range" data-dashboard-range>
+            <legend class="visually-hidden" data-i18n="dashboard.rangeLabel">时间范围</legend>
+            <label><input type="radio" name="dashboard-range" value="7d" /><span data-i18n="dashboard.range7">7 天</span></label>
+            <label><input type="radio" name="dashboard-range" value="30d" checked /><span data-i18n="dashboard.range30">30 天</span></label>
+            <label><input type="radio" name="dashboard-range" value="90d" /><span data-i18n="dashboard.range90">90 天</span></label>
+          </fieldset>
+        </section>
+
+        <div class="dashboard-notice partial" data-dashboard-notice="partial" role="status" hidden><i data-lucide="circle-alert" aria-hidden="true"></i><div><strong data-i18n="dashboard.partialTitle">一个来源暂时不可用</strong><p data-i18n="dashboard.partialBody">渠道活动来源缺少最近 3 小时数据；受影响的指标和图表区间已标记。</p></div></div>
+        <div class="dashboard-notice stale" data-dashboard-notice="stale" role="status" hidden><i data-lucide="clock" aria-hidden="true"></i><div><strong data-i18n="dashboard.staleTitle">当前显示最近一次已验证数据</strong><p data-i18n="dashboard.staleBody">最后成功同步于昨天 23:18。刷新前不会把该数据描述为实时结果。</p></div></div>
+        <p class="visually-hidden" aria-live="polite" data-dashboard-status></p>
+
+        <section class="dashboard-metrics" aria-label="关键指标" data-i18n-aria="dashboard.metricsLabel">
+          <a class="dashboard-metric" href="#analysis" data-metric="records">
+            <span class="dashboard-metric-icon"><i data-lucide="database" aria-hidden="true"></i></span>
+            <span class="dashboard-metric-heading"><span data-i18n="dashboard.metricRecords">已处理记录</span><i data-lucide="arrow-up-right" aria-hidden="true"></i></span>
+            <strong data-dashboard-metric-value="records">24,680</strong>
+            <small><span data-dashboard-metric-change="records">+8.4%</span><span data-i18n="dashboard.vsPrevious"> 对比上一周期</span></small>
+            <em data-i18n="dashboard.metricRecordsSource">12 个来源 · 已验证</em>
+          </a>
+          <a class="dashboard-metric" href="#sources" data-metric="active">
+            <span class="dashboard-metric-icon"><i data-lucide="activity" aria-hidden="true"></i></span>
+            <span class="dashboard-metric-heading"><span data-i18n="dashboard.metricActive">运行中任务</span><i data-lucide="arrow-up-right" aria-hidden="true"></i></span>
+            <strong data-dashboard-metric-value="active">38</strong>
+            <small><span data-dashboard-metric-change="active">+4</span><span data-i18n="dashboard.vsPrevious"> 对比上一周期</span></small>
+            <em data-i18n="dashboard.metricActiveSource">任务队列 · 09:42</em>
+          </a>
+          <a class="dashboard-metric" href="#exceptions" data-metric="review">
+            <span class="dashboard-metric-icon warning"><i data-lucide="clipboard-check" aria-hidden="true"></i></span>
+            <span class="dashboard-metric-heading"><span data-i18n="dashboard.metricReview">等待复核</span><i data-lucide="arrow-up-right" aria-hidden="true"></i></span>
+            <strong data-dashboard-metric-value="review">7</strong>
+            <small><span data-dashboard-metric-change="review">-2</span><span data-i18n="dashboard.vsPrevious"> 对比上一周期</span></small>
+            <em data-i18n="dashboard.metricReviewSource">复核队列 · 当前范围</em>
+          </a>
+          <a class="dashboard-metric" href="#exceptions" data-metric="failed">
+            <span class="dashboard-metric-icon negative"><i data-lucide="circle-alert" aria-hidden="true"></i></span>
+            <span class="dashboard-metric-heading"><span data-i18n="dashboard.metricFailed">失败来源</span><i data-lucide="arrow-up-right" aria-hidden="true"></i></span>
+            <strong data-dashboard-metric-value="failed">2</strong>
+            <small><span data-dashboard-metric-change="failed">+1</span><span data-i18n="dashboard.vsPrevious"> 对比上一周期</span></small>
+            <em data-i18n="dashboard.metricFailedSource">来源健康 · 需要处理</em>
+          </a>
+        </section>
+
+        <section class="dashboard-analysis" id="analysis" aria-label="运营分析" data-i18n-aria="dashboard.analysisLabel">
+          <article class="dashboard-primary-chart">
+            <header>
+              <div><p data-i18n="dashboard.chartEyebrow">处理量</p><h2 data-i18n="dashboard.chartTitle">记录处理趋势</h2><p data-i18n="dashboard.chartBody">按已验证完成时间统计；不含失败和待复核记录。</p></div>
+              <span class="dashboard-chart-total"><strong data-dashboard-chart-total>24,680</strong><small data-i18n="dashboard.recordsUnit"> 条记录</small></span>
+            </header>
+            <div class="dashboard-error" data-dashboard-error hidden>
+              <i data-lucide="triangle-alert" aria-hidden="true"></i>
+              <h3 data-i18n="dashboard.errorTitle">趋势分析暂时不可用</h3>
+              <p data-i18n="dashboard.errorBody">关键指标仍显示最后一次已验证值。重试只会恢复本地示例状态。</p>
+              <button class="flow-button" type="button" data-dashboard-retry><i data-lucide="refresh-cw" aria-hidden="true"></i><span data-i18n="dashboard.retry">重试分析</span></button>
+            </div>
+            <figure class="dashboard-chart" data-dashboard-chart>
+              <svg viewBox="0 0 720 240" role="img" aria-labelledby="dashboard-chart-title dashboard-chart-summary">
+                <title id="dashboard-chart-title" data-i18n="dashboard.chartTitle">记录处理趋势</title>
+                <desc id="dashboard-chart-summary" data-dashboard-chart-summary>过去 30 天共处理 24,680 条记录，后半段高于前半段。</desc>
+                <g class="dashboard-grid" aria-hidden="true"><path d="M 52 36 H 700" /><path d="M 52 92 H 700" /><path d="M 52 148 H 700" /><path d="M 52 204 H 700" /></g>
+                <path class="dashboard-chart-area" data-dashboard-chart-area d="M52 182 C115 172 140 150 190 158 S280 123 332 134 S420 92 468 108 S560 58 610 76 S665 48 700 55 L700 204 L52 204 Z" />
+                <path class="dashboard-chart-line" data-dashboard-chart-line d="M52 182 C115 172 140 150 190 158 S280 123 332 134 S420 92 468 108 S560 58 610 76 S665 48 700 55" />
+                <g class="dashboard-axis" aria-hidden="true"><text x="52" y="225">01</text><text x="260" y="225">10</text><text x="478" y="225">20</text><text x="682" y="225">30</text></g>
+                <circle class="dashboard-chart-point" cx="700" cy="55" r="4" data-dashboard-chart-point />
+              </svg>
+              <figcaption><span data-dashboard-chart-caption data-i18n="dashboard.chartCaption">后半段处理量高于前半段；2 个失败来源仍在异常队列中。</span><span data-i18n="dashboard.chartSource">来源：已验证处理记录 · 09:42 UTC+8</span></figcaption>
+            </figure>
+            <details class="dashboard-data-fallback">
+              <summary data-i18n="dashboard.showData">查看精确数据</summary>
+              <div class="dashboard-table-scroll"><table><caption data-i18n="dashboard.dataCaption">趋势图精确数据</caption><thead><tr><th scope="col" data-i18n="dashboard.period">区间</th><th scope="col" data-i18n="dashboard.completed">已完成</th><th scope="col" data-i18n="dashboard.failed">失败</th></tr></thead><tbody data-dashboard-chart-table></tbody></table></div>
+            </details>
+          </article>
+
+          <div class="dashboard-side-analysis">
+            <article class="dashboard-module" id="sources">
+              <header><div><p data-i18n="dashboard.sourcesEyebrow">来源覆盖</p><h2 data-i18n="dashboard.sourcesTitle">来源分布</h2></div><a href="#exceptions" data-i18n="dashboard.inspectSources">查看来源</a></header>
+              <div class="dashboard-distribution">
+                <div class="dashboard-donut" role="img" data-i18n-aria="dashboard.distributionAria" aria-label="内部记录 58%，监控任务 27%，外部来源 15%"><span><strong>12</strong><small data-i18n="dashboard.sourcesUnit">来源</small></span></div>
+                <ul><li><span class="distribution-key internal"></span><span data-i18n="dashboard.sourceInternal">内部记录</span><strong>58%</strong></li><li><span class="distribution-key monitor"></span><span data-i18n="dashboard.sourceMonitor">监控任务</span><strong>27%</strong></li><li><span class="distribution-key external"></span><span data-i18n="dashboard.sourceExternal">外部来源</span><strong>15%</strong></li></ul>
+              </div>
+            </article>
+            <article class="dashboard-module dashboard-health">
+              <header><div><p data-i18n="dashboard.healthEyebrow">任务健康</p><h2 data-i18n="dashboard.healthTitle">当前执行状态</h2></div><span data-i18n="dashboard.healthTime">09:42</span></header>
+              <ul><li><span><i data-lucide="circle-check" aria-hidden="true"></i><span data-i18n="dashboard.healthCompleted">已完成</span></span><strong>31</strong></li><li><span><i data-lucide="clock" aria-hidden="true"></i><span data-i18n="dashboard.healthRunning">运行中</span></span><strong>5</strong></li><li class="negative"><span><i data-lucide="circle-alert" aria-hidden="true"></i><span data-i18n="dashboard.healthFailed">失败</span></span><strong>2</strong></li></ul>
+              <div class="dashboard-health-meter" role="meter" aria-valuemin="0" aria-valuemax="38" aria-valuenow="31" data-i18n-aria="dashboard.healthMeter" aria-label="38 个任务中 31 个已完成"><span style="--meter-value:81.6%"></span></div>
+            </article>
+          </div>
+        </section>
+
+        <section class="dashboard-bottom-grid">
+          <article class="dashboard-exceptions" id="exceptions">
+            <header><div><p data-i18n="dashboard.queueEyebrow">需要处理</p><h2 data-i18n="dashboard.queueTitle">异常队列</h2><p data-i18n="dashboard.queueBody">按影响和最近失败时间排序。</p></div><label><span data-i18n="dashboard.queueFilter">筛选</span><select data-dashboard-queue-filter><option value="all" data-i18n="dashboard.queueAll">全部异常</option><option value="review" data-i18n="dashboard.queueReview">等待复核</option><option value="failed" data-i18n="dashboard.queueFailed">失败来源</option></select></label></header>
+            <div class="dashboard-table-scroll"><table><caption class="visually-hidden" data-i18n="dashboard.queueTitle">异常队列</caption><thead><tr><th scope="col" data-i18n="dashboard.object">对象</th><th scope="col" data-i18n="dashboard.stateLabel">示例状态</th><th scope="col" data-i18n="dashboard.owner">负责人</th><th scope="col" data-i18n="dashboard.updatedColumn">最近更新</th><th scope="col"><span class="visually-hidden" data-i18n="dashboard.open">打开</span></th></tr></thead><tbody>
+              <tr data-dashboard-queue-row data-queue-kind="failed"><td><strong>SRC-07</strong><small data-i18n="dashboard.rowSource">渠道活动来源</small></td><td><span class="semantic-state negative"><i data-lucide="circle-alert" aria-hidden="true"></i><span data-i18n="dashboard.rowUnavailable">来源不可用</span></span></td><td>Lin</td><td data-i18n="dashboard.rowTime1">12 分钟前</td><td><a class="icon-control" href="./system.html#server" data-i18n-aria="dashboard.openSource" aria-label="打开来源"><i data-lucide="arrow-up-right" aria-hidden="true"></i></a></td></tr>
+              <tr data-dashboard-queue-row data-queue-kind="review"><td><strong>REV-128</strong><small data-i18n="dashboard.rowReview">价格变更复核</small></td><td><span class="semantic-state warning"><i data-lucide="clipboard-check" aria-hidden="true"></i><span data-i18n="dashboard.rowPending">等待复核</span></span></td><td>Mina</td><td data-i18n="dashboard.rowTime2">28 分钟前</td><td><a class="icon-control" href="../workspace-reference/advanced-components.html" data-i18n-aria="dashboard.openReview" aria-label="打开复核"><i data-lucide="arrow-up-right" aria-hidden="true"></i></a></td></tr>
+              <tr data-dashboard-queue-row data-queue-kind="failed"><td><strong>JOB-044</strong><small data-i18n="dashboard.rowJob">目录同步任务</small></td><td><span class="semantic-state negative"><i data-lucide="circle-alert" aria-hidden="true"></i><span data-i18n="dashboard.rowFailed">执行失败</span></span></td><td>Ops</td><td data-i18n="dashboard.rowTime3">41 分钟前</td><td><a class="icon-control" href="../workspace-reference/advanced-components.html" data-i18n-aria="dashboard.openTask" aria-label="打开任务"><i data-lucide="arrow-up-right" aria-hidden="true"></i></a></td></tr>
+              <tr data-dashboard-queue-row data-queue-kind="review"><td><strong>REV-124</strong><small data-i18n="dashboard.rowEvidence">来源冲突复核</small></td><td><span class="semantic-state warning"><i data-lucide="shield-alert" aria-hidden="true"></i><span data-i18n="dashboard.rowConflict">存在冲突</span></span></td><td>Yehyakin</td><td data-i18n="dashboard.rowTime4">1 小时前</td><td><a class="icon-control" href="../workspace-reference/index.html" data-i18n-aria="dashboard.openEvidence" aria-label="打开证据"><i data-lucide="arrow-up-right" aria-hidden="true"></i></a></td></tr>
+            </tbody></table></div>
+            <p class="dashboard-queue-empty" data-dashboard-queue-empty hidden data-i18n="dashboard.queueEmpty">当前筛选下没有异常。</p>
+          </article>
+
+          <article class="dashboard-activity">
+            <header><div><p data-i18n="dashboard.activityEyebrow">最近变化</p><h2 data-i18n="dashboard.activityTitle">运营活动</h2></div><a href="../workspace-reference/index.html" data-i18n="dashboard.viewActivity">查看全部</a></header>
+            <ol><li><span class="dashboard-activity-icon"><i data-lucide="refresh-cw" aria-hidden="true"></i></span><div><strong data-i18n="dashboard.activity1">记录索引完成同步</strong><p><span>JOB-041</span><span aria-hidden="true"> · </span><span data-i18n="dashboard.activityTime1">8 分钟前</span></p></div></li><li><span class="dashboard-activity-icon warning"><i data-lucide="clipboard-check" aria-hidden="true"></i></span><div><strong data-i18n="dashboard.activity2">两项价格变更进入复核</strong><p><span data-i18n="dashboard.activityOwner">运营规则</span><span aria-hidden="true"> · </span><span data-i18n="dashboard.activityTime2">28 分钟前</span></p></div></li><li><span class="dashboard-activity-icon negative"><i data-lucide="circle-alert" aria-hidden="true"></i></span><div><strong data-i18n="dashboard.activity3">一个外部来源停止响应</strong><p><span>SRC-07</span><span aria-hidden="true"> · </span><span data-i18n="dashboard.activityTime3">41 分钟前</span></p></div></li></ol>
+          </article>
+        </section>
+      </main>
+
+      <nav class="dashboard-mobile-nav" aria-label="移动端后台导航" data-i18n-aria="dashboard.mobileNav"><a href="./dashboard.html" aria-current="page"><i data-lucide="layout-dashboard" aria-hidden="true"></i><span data-i18n="dashboard.navOverview">总览</span></a><a href="#exceptions"><i data-lucide="list-checks" aria-hidden="true"></i><span data-i18n="dashboard.navQueue">异常队列</span></a><a href="#analysis"><i data-lucide="chart-no-axes-combined" aria-hidden="true"></i><span data-i18n="dashboard.navReports">分析报告</span></a><a href="./settings.html"><i data-lucide="settings" aria-hidden="true"></i><span data-i18n="dashboard.navSettings">后台设置</span></a></nav>
+    </div>
+
+    <script type="application/json" data-i18n-dictionary>
+      {
+        "en": {
+          "common.themeMenu": "Choose appearance",
+          "common.themeLightChoice": "Light",
+          "common.themeDarkChoice": "Dark",
+          "common.themeSystemChoice": "System",
+          "common.direction": "ltr",
+          "common.reference": "Page flow reference",
+          "common.language": "Change language",
+          "common.themeDark": "Switch to dark theme",
+          "common.themeLight": "Switch to light theme",
+          "meta.title": "KIN data and admin dashboard reference",
+          "dashboard.navLabel": "Administration navigation",
+          "dashboard.workspace": "Operations center",
+          "dashboard.workspaceMeta": "Shared data scope",
+          "dashboard.navOverview": "Overview",
+          "dashboard.navQueue": "Exception queue",
+          "dashboard.navReports": "Analysis reports",
+          "dashboard.navSources": "Data sources",
+          "dashboard.navSettings": "Administration settings",
+          "dashboard.fixture": "Deterministic local data · no analytics, monitoring, or administration service",
+          "dashboard.eyebrow": "Shared administration / All sources",
+          "dashboard.title": "Operations overview",
+          "dashboard.updated": "Last verified at 09:42 UTC+8",
+          "dashboard.sourceCount": "12 sources",
+          "dashboard.stateLabel": "Example state",
+          "dashboard.stateNormal": "Normal",
+          "dashboard.statePartial": "Partial sources",
+          "dashboard.stateStale": "Stale data",
+          "dashboard.stateError": "Analysis error",
+          "dashboard.refresh": "Refresh example",
+          "dashboard.refreshing": "Refreshing the local example",
+          "dashboard.refreshed": "Local example refreshed; no external request was made.",
+          "dashboard.rangeTitle": "Data scope",
+          "dashboard.rangeBody": "All metrics use the same verified period; open a metric to inspect its records.",
+          "dashboard.rangeLabel": "Time range",
+          "dashboard.range7": "7 days",
+          "dashboard.range30": "30 days",
+          "dashboard.range90": "90 days",
+          "dashboard.partialTitle": "One source is temporarily unavailable",
+          "dashboard.partialBody": "The channel activity source is missing the latest 3 hours; affected metrics and chart intervals are marked.",
+          "dashboard.staleTitle": "Showing the last verified view",
+          "dashboard.staleBody": "The last successful sync was yesterday at 23:18. It is not described as live before refresh.",
+          "dashboard.metricsLabel": "Key metrics",
+          "dashboard.metricRecords": "Processed records",
+          "dashboard.metricActive": "Running tasks",
+          "dashboard.metricReview": "Needs review",
+          "dashboard.metricFailed": "Failed sources",
+          "dashboard.vsPrevious": " vs previous period",
+          "dashboard.metricRecordsSource": "12 sources · verified",
+          "dashboard.metricActiveSource": "Task queue · 09:42",
+          "dashboard.metricReviewSource": "Review queue · current scope",
+          "dashboard.metricFailedSource": "Source health · action required",
+          "dashboard.analysisLabel": "Operations analysis",
+          "dashboard.chartEyebrow": "Throughput",
+          "dashboard.chartTitle": "Processed record trend",
+          "dashboard.chartBody": "Grouped by verified completion time; failed and pending records are excluded.",
+          "dashboard.recordsUnit": " records",
+          "dashboard.chartCaption": "The second half is above the first; two failed sources remain in the exception queue.",
+          "dashboard.chartSource": "Source: verified processing records · 09:42 UTC+8",
+          "dashboard.showData": "View exact data",
+          "dashboard.dataCaption": "Exact data for the trend chart",
+          "dashboard.period": "Period",
+          "dashboard.completed": "Completed",
+          "dashboard.failed": "Failed",
+          "dashboard.periodStart": "Early period",
+          "dashboard.periodMiddle": "Middle period",
+          "dashboard.periodRecent": "Recent period",
+          "dashboard.summary7": "6,120 records were processed over 7 days, with higher volume in the latest two days.",
+          "dashboard.summary30": "24,680 records were processed over 30 days, with the second half above the first.",
+          "dashboard.summary90": "69,240 records were processed over 90 days, with the latest month above the prior intervals.",
+          "dashboard.errorTitle": "Trend analysis is unavailable",
+          "dashboard.errorBody": "Key metrics retain the last verified values. Retry only restores the local example state.",
+          "dashboard.retry": "Retry analysis",
+          "dashboard.sourcesEyebrow": "Source coverage",
+          "dashboard.sourcesTitle": "Source distribution",
+          "dashboard.inspectSources": "Inspect sources",
+          "dashboard.distributionAria": "Internal records 58%, monitor tasks 27%, external sources 15%",
+          "dashboard.sourcesUnit": "sources",
+          "dashboard.sourceInternal": "Internal records",
+          "dashboard.sourceMonitor": "Monitor tasks",
+          "dashboard.sourceExternal": "External sources",
+          "dashboard.healthEyebrow": "Task health",
+          "dashboard.healthTitle": "Current execution state",
+          "dashboard.healthTime": "09:42",
+          "dashboard.healthCompleted": "Completed",
+          "dashboard.healthRunning": "Running",
+          "dashboard.healthFailed": "Failed",
+          "dashboard.healthMeter": "31 of 38 tasks completed",
+          "dashboard.queueEyebrow": "Needs attention",
+          "dashboard.queueTitle": "Exception queue",
+          "dashboard.queueBody": "Sorted by impact and latest failure time.",
+          "dashboard.queueFilter": "Filter",
+          "dashboard.queueAll": "All exceptions",
+          "dashboard.queueReview": "Needs review",
+          "dashboard.queueFailed": "Failed sources",
+          "dashboard.object": "Object",
+          "dashboard.owner": "Owner",
+          "dashboard.updatedColumn": "Updated",
+          "dashboard.open": "Open",
+          "dashboard.rowSource": "Channel activity source",
+          "dashboard.rowUnavailable": "Source unavailable",
+          "dashboard.rowReview": "Price change review",
+          "dashboard.rowPending": "Needs review",
+          "dashboard.rowJob": "Catalog sync job",
+          "dashboard.rowFailed": "Execution failed",
+          "dashboard.rowEvidence": "Source conflict review",
+          "dashboard.rowConflict": "Conflict",
+          "dashboard.rowTime1": "12 minutes ago",
+          "dashboard.rowTime2": "28 minutes ago",
+          "dashboard.rowTime3": "41 minutes ago",
+          "dashboard.rowTime4": "1 hour ago",
+          "dashboard.openSource": "Open source",
+          "dashboard.openReview": "Open review",
+          "dashboard.openTask": "Open task",
+          "dashboard.openEvidence": "Open evidence",
+          "dashboard.queueEmpty": "No exceptions match this filter.",
+          "dashboard.activityEyebrow": "Recent change",
+          "dashboard.activityTitle": "Operations activity",
+          "dashboard.viewActivity": "View all",
+          "dashboard.activity1": "Record index finished syncing",
+          "dashboard.activity2": "Two price changes entered review",
+          "dashboard.activity3": "One external source stopped responding",
+          "dashboard.activityOwner": "Operations rule",
+          "dashboard.activityTime1": "8 minutes ago",
+          "dashboard.activityTime2": "28 minutes ago",
+          "dashboard.activityTime3": "41 minutes ago",
+          "dashboard.mobileNav": "Mobile administration navigation"
+        }
+      }
+    </script>
+  </body>
+</html>

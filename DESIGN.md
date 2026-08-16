@@ -432,7 +432,7 @@ Agent 必须先完成以下动作：
 1. 阅读本文件全文。
 2. 阅读 [`DELIVERY.md`](./DELIVERY.md)，以及项目的 `README`、`AGENTS.md`、现有 Token、组件库和路由；不得把 KIN 参考页误认为运行时组件包，也不得把私有 React 集成实验室误认为通用稳定包。
 3. 识别产品类型、核心对象、主要任务和信息来源。
-4. 查询 [`components/catalog.md`](./components/catalog.md) 与 [`components/terminology.md`](./components/terminology.md)，使用规范名称并确认组件成熟度；随后搜索已有实现，禁止先创建重复组件。
+4. 查询 [`components/catalog.md`](./components/catalog.md)、[`components/terminology.md`](./components/terminology.md) 与 [`components/selection-routing.md`](./components/selection-routing.md)，从真实任务、数据关系、后果、持续时间和状态自动匹配最合适的成熟组件；随后搜索已有实现，禁止先创建重复组件或等待用户逐一指定常见组件。
 5. 识别真实数据状态：加载、空、错误、部分、过期、无权限和离线。
 6. 确认日间、夜间、键盘、触控和 reduced motion 的影响。
 7. 列出准备新增的依赖及每项依赖解决的真实问题。
@@ -1040,10 +1040,11 @@ KIN 支持但不强制以下结构：
 - Board：阶段或空间关系确实重要时。
 - Timeline：时间、依赖和区间是核心时。
 - Schedule：对象必须被安排到日期、时段、资源或发布窗口时。
+- Data / Admin Dashboard：首要任务是跨对象汇总、周期比较、来源健康和异常分流时。
 - Canvas：设计、CAD、创意和关系图。
 - Fullscreen：分析、演示或专注编辑。
 
-不得把所有业务强行做成 Dashboard cards。
+Dashboard 只在数据总览本身就是任务时采用。对象查找、详情、编辑、审批、调查和画布仍使用对应视图；不得因为页面含有指标就把业务强行做成 Dashboard Cards。完整选型条件见 [`pages/data-and-admin-dashboard.md`](./pages/data-and-admin-dashboard.md)。
 
 ### 7.5 响应式
 
@@ -1140,9 +1141,11 @@ Context Sidecar 是与主任务并行存在的辅助工作区域。它可承载�
 
 ### 8.6 Metric Strip
 
-多个相关指标使用连续横向条或属性列，不使用独立统计卡片。
+在对象详情、列表标题或紧凑工作区中，多个相关指标使用连续横向条或属性列，不使用独立统计卡片。
 
 每个指标必须包含：名称、值、单位或范围、必要的更新时间。趋势颜色按业务含义决定，不能机械使用“涨绿跌红”。
+
+当跨对象数据总览、周期比较和异常分流本身是页面首要任务时，[`Data and Admin Dashboard Page`](./pages/data-and-admin-dashboard.md) MAY 使用独立 Metric Cards。每张 Card 必须拥有独立范围、来源、更新时间、比较语义和明确定义的下钻目标；所有卡片同权、无来源、无目标或仅为填满网格时仍然禁止。
 
 ### 8.7 Activity Feed
 
@@ -1231,7 +1234,8 @@ Error state 明确失败对象、可能范围和重试方式。过期数据必�
 
 页面不是组件的放大版本。页面 MUST 说明任务入口、信息顺序、持久状态、失败与恢复路径、权限边界和离开后的返回位置。
 
-- Agent MUST 从 [`pages/catalog.md`](./pages/catalog.md) 选择最接近的页面族，并读取相应合同。
+- Agent MUST 从 [`pages/catalog.md`](./pages/catalog.md) 选择最接近的页面族，并读取相应合同。当首要任务是跨对象汇总、趋势比较、来源健康和异常分流时，SHOULD 自动选择 [`data-and-admin-dashboard.md`](./pages/data-and-admin-dashboard.md)，即使路由名称不含 Dashboard。
+- Agent MUST 按 [`components/selection-routing.md`](./components/selection-routing.md) 为每个动作、选择、数据关系、反馈状态和后果自动匹配最合适的成熟组件，并记录选择理由。自动匹配不得替换语义正确的既有实现，也不得安装全部集成或用更多组件制造完整感。
 - 只有同时具备规范合同、可运行参考、适用的自动检查和明确的人工复核项，页面族才 MAY 标记为 `stable`。
 - 只有按钮、表单、列表和 Dialog 状态完整时，仍 MUST NOT 宣称登录、设置、导入或组织管理流程已经完成。
 - 接入产品 MUST 用真实路由、权限、后端、文案和数据状态验证参考流程；KIN 的本地 fixture 只提供确定性证据。
@@ -1707,9 +1711,18 @@ review. State the primary surface, user task, constraints, and source of truth.
 Do not silently change routes, data meaning, permissions, analytics, brand
 assets, or public API behavior.
 
-Do not create card walls, gradients, glow, decorative AI visuals, fake metrics,
-or unnecessary dependencies. Use semantic tokens, preserve light/dark/system,
+Do not create unstructured card walls that replace the task, gradients, glow,
+decorative AI visuals, fake metrics, or unnecessary dependencies. A governed
+data/admin dashboard may use a small hierarchy of metric and analysis Cards
+only when cross-object comparison and exception triage are the primary job.
+Use semantic tokens, preserve light/dark/system,
 mobile, accessibility, reduced motion, SSR, SEO, permissions, and real APIs.
+
+Read components/selection-routing.md and automatically map each real action,
+choice, data relationship, feedback need, consequence, and state to the nearest
+mature KIN component. Prefer a correct existing implementation; candidate
+components require a documented gap and fallback, and draft components are not
+automatic.
 
 Before coding, report the current structure, reusable parts, proposed changes,
 risks, and verification plan. Verify real content and states, light/dark themes,

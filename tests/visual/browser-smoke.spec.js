@@ -79,6 +79,15 @@ test("cross-browser smoke preserves navigation focus and advanced states", async
   await page.keyboard.press("Escape");
   await expect(page).not.toHaveURL(/selected=/);
 
+  await page.goto("/examples/page-patterns/dashboard.html?range=90d&state=partial", { waitUntil: "domcontentloaded" });
+  await expect(page.locator("[data-dashboard-shell]")).toHaveAttribute("data-dashboard-state", "partial");
+  await expect(page.locator('[data-dashboard-metric-value="records"]')).toHaveText("69,240");
+  await expect(page.locator('[data-dashboard-notice="partial"]')).toBeVisible();
+  await page.locator("[data-dashboard-state-select]").selectOption("error");
+  await expect(page.locator("[data-dashboard-error]")).toBeVisible();
+  await page.locator("[data-dashboard-retry]").click();
+  await expect(page.locator("[data-dashboard-chart]")).toBeVisible();
+
   await page.goto("/scenarios/lab.html?scenario=CORE-05&state=error&viewport=narrow&theme=dark-high-contrast", { waitUntil: "domcontentloaded" });
   await expect(page.locator("[data-lab-verification]")).toHaveAttribute("data-state", "pass");
   const labFrame = page.frameLocator("[data-lab-frame]");

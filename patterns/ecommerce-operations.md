@@ -39,6 +39,10 @@ Inspector: state, ownership, money/quantity/channel, approval, activity
 - Product imagery remains subordinate in operational lists and expands only for identity or media-review decisions.
 - Narrow screens preserve `identity -> blocking state -> affected money/quantity/channel -> safe action -> activity`.
 
+### Data and administration overview
+
+When the primary task is to compare store, channel, inventory, order, campaign, or automation health across a shared scope, the route SHOULD adopt [`pages/data-and-admin-dashboard.md`](../pages/data-and-admin-dashboard.md). Metrics and charts lead into the exact catalog, order, approval, or failure queue. Product editing, order handling, creative review, and approval routes remain queue- or object-led and MUST NOT inherit the overview Card composition.
+
 ### Context Thread mapping
 
 The ecommerce-operations silhouette is an operating scope and exception queue joined to a selected commercial record and an explicit approval or execution boundary. It MUST not inherit the intelligence-workspace silhouette unchanged.

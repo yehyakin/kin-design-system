@@ -45,6 +45,10 @@ Command layer: command menu, menus, dialogs, toast
 
 A public homepage in the same product MAY use the `information-site` profile. That does not permit the database route to retain a marketing-page composition.
 
+### Data and administration overview
+
+When the real first task is cross-entity monitoring, period comparison, source health, and exception triage, the route SHOULD adopt [`pages/data-and-admin-dashboard.md`](../pages/data-and-admin-dashboard.md). The overview leads into the entity list, signal queue, evidence review, or monitor task; it MUST NOT replace those working routes. Entity database, investigation, and risk-review routes continue to use the structures above.
+
 ### Context Thread mapping
 
 The intelligence-workspace silhouette is an evidence queue or entity list joined to one dominant investigation field and a decision Inspector. It MUST remain recognizably different from an ecommerce queue, reading page, or engineering canvas.

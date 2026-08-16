@@ -26,6 +26,7 @@ Material hierarchy: <continuous planes; directional edges; permitted contact/rai
 Narrow-screen priority: <ordered content and actions>
 Narrow-screen Context Thread transformation: <orientation/route/carrier change without priority loss>
 Required states and interactions: <real list>
+Component routing: <task/data/state -> canonical component, maturity, existing implementation or fallback>
 Prohibited substitutions: <specific failure patterns>
 Evidence and rollback: <baseline, target views, safe rollback>
 ```
@@ -51,6 +52,7 @@ Reject a checkpoint that uses adjectives such as “premium,” “modern,” or
 - Preserve current identity and state while selection, history, evidence, or properties change.
 - Prefer List, Split View, Detail, Activity, and Inspector relationships over Dashboard cards.
 - Keep risk, evidence confidence, completeness, availability, progress, and AI confidence separate.
+- When the first job is cross-entity summary, time comparison, source health, and exception triage, route the page to `pages/data-and-admin-dashboard.md`; keep investigation and entity routes List/Split/Detail-led.
 
 ### Ecommerce operations
 
@@ -60,6 +62,7 @@ Reject a checkpoint that uses adjectives such as “premium,” “modern,” or
 - Align money, units, time, channel, ownership, and state for comparison.
 - Give imagery space only when identity or media review is part of the decision.
 - Place AI suggestions inside review and execution context, not in a generic assistant panel.
+- When the first job is cross-scope operational summary and exception triage, route the page to `pages/data-and-admin-dashboard.md`; keep product, order, approval, and creative work queue- or object-led.
 
 ### Engineering canvas
 
@@ -75,6 +78,14 @@ Reject a checkpoint that uses adjectives such as “premium,” “modern,” or
 Do not force one profile onto every route. Map each route family to the closest product job. A public information entry may use `information-site`, while its database and investigation routes use `intelligence-workspace`.
 
 Choose one high-value representative workflow for the first implementation phase. Do not choose the easiest or most decorative page.
+
+## Automatic page and component routing
+
+- Select `pages/data-and-admin-dashboard.md` automatically when cross-object summary, time comparison, source health, and exception drill-down are the primary task, even if the route is not named Dashboard.
+- Do not select it for a detail, list, form, review, approval, or canvas task merely because metrics are present.
+- After selecting the page family, apply `components/selection-routing.md` to every real action, choice, data relationship, feedback state, and consequence.
+- Prefer stable components and existing semantically correct implementations. Candidate components require an explicit gap, evidence plan, and fallback; draft components are never automatic.
+- “Complete” means the task, states, feedback, recovery, and responsive behavior are covered. It does not mean maximizing the number of Cards, charts, icons, or runtime packages.
 
 ## Reference relationships
 

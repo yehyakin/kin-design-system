@@ -3,6 +3,7 @@ import path from "node:path";
 
 export const PAGE_PATTERN_IDS = Object.freeze([
   "access",
+  "dashboard",
   "onboarding",
   "scheduling",
   "search",

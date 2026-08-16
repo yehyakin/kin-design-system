@@ -7,6 +7,7 @@ Use this workflow for a new page, feature, component, or application shell.
 - Name the primary entity, user task, critical status, evidence or source, and main action.
 - Identify real data sources. Use explicit unknown, empty, stale, partial, and error states instead of invented data.
 - Map the information hierarchy before choosing components.
+- Read `components/selection-routing.md` and map every action, choice, data relationship, feedback need, and consequence to the nearest mature KIN component. Do not wait for the user to name common components when the task conditions are unambiguous.
 
 ## 2. Plan the interface
 
@@ -23,6 +24,7 @@ Reject the plan if it could be reused unchanged for an unrelated product.
 ## 3. Implement
 
 - Read `components/core-states.md` from the KIN repository when implementing Sidebar, Data Row, Inspector, Command Menu, Button, Form, Activity, or Metric primitives.
+- Read `components/selection-routing.md` before choosing controls or display components. Preserve a semantically correct project component; adapt or replace it only when the contract exposes a real gap.
 - Read `components/micro-interactions.md` before adding paired-state icons, async progress, success confirmation, disclosure motion, or temporary feedback.
 - Resolve ambiguous names through `components/terminology.md` and check `components/catalog.md` before treating a component as stable.
 - Read the matching contract before implementation: `actions-and-selection.md`, `forms-and-entry.md`, `navigation-and-disclosure.md`, `data-display.md`, `feedback-and-progress.md`, or `overlays.md`.

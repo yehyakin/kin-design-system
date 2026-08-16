@@ -119,7 +119,7 @@ The brief MUST NOT install every integrated package or replace a working local a
 Record the page-level shortcuts that would make the implementation fail even if its Tokens are correct. At minimum, reject:
 
 - a marketing Hero before a working task;
-- a Card wall replacing a list, document, queue, canvas, or reading hierarchy;
+- an unstructured Card wall replacing a list, document, queue, canvas, reading hierarchy, or real drill-down path; a data/admin dashboard is permitted only when cross-object summary and exception triage are the task and [`pages/data-and-admin-dashboard.md`](../pages/data-and-admin-dashboard.md) governs it;
 - a Sidebar and Inspector wrapped around an unchanged landing-page interior;
 - a component gallery used as production evidence;
 - invented metrics, sources, activity, AI output, or monitoring state;
@@ -170,6 +170,7 @@ Material hierarchy and Token mapping:
 Narrow-screen priority:
 Narrow-screen Context Thread transformation:
 Required states and interactions:
+Page and component routing:
 Runtime integration decisions:
 Prohibited substitutions:
 Evidence and rollback:

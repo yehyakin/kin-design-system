@@ -6,6 +6,12 @@ The project follows semantic versioning for normative design documentation.
 
 ## Unreleased
 
+### Data and administration overview
+
+- Added a stable Data and Admin Dashboard page contract and deterministic bilingual reference for cross-object metrics, period comparison, source health, exception triage, and drill-down. Dashboard composition is selected automatically only when the overview itself is the user task; entity lists, details, approvals, investigations, and canvases retain their existing KIN structures.
+- Added normative component-selection routing so coding Agents map actions, choices, data relationships, feedback, consequences, states, and viewport needs to the nearest mature KIN component instead of waiting for component names or filling a page with interchangeable Cards.
+- Recorded Shadcn Dashboard as a bounded page-flow reference for metric-to-chart-to-table administration coverage while excluding copied code, assets, fixture data, framework defaults, and universal dashboard shells.
+
 ### Showcase interaction and selection repair
 
 - Replaced static accent-edge treatments on navigation, tools, records, evidence, schedule entries and engineering objects with the correct navigation, toggle or object-selection semantics. Accent Decision edges remain reserved for real conflict, review and commitment boundaries.

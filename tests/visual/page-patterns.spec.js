@@ -145,7 +145,7 @@ for (const { height, language, theme, width } of accessTitleCases) {
   });
 }
 
-for (const pattern of ["access", "onboarding", "settings", "system", "search", "support", "scheduling"]) {
+for (const pattern of ["access", "dashboard", "onboarding", "settings", "system", "search", "support", "scheduling"]) {
   test(`${pattern} exposes the complete theme and language preference contract`, async ({ page }) => {
     await seedPreferences(page, "light");
     await page.goto(`/examples/page-patterns/${pattern}.html`);
@@ -192,6 +192,7 @@ for (const pattern of ["access", "onboarding", "settings", "system", "search", "
 
 for (const [pattern, headingKey, englishHeading, chineseHeading] of [
   ["access", "access.contextTitle", "Verify your identity and continue the current task", "验证身份后继续"],
+  ["dashboard", "dashboard.title", "Operations overview", "运营总览"],
   ["onboarding", "onboarding.title", "Set up the workspace", "设置工作区"],
   ["scheduling", "schedule.title", "Publication and review schedule", "发布与复核排期"],
   ["search", "search.title", "Find records, documents, and tasks", "查找记录、文档和任务"],
@@ -623,6 +624,80 @@ test("help and support separates guidance requests tickets and sourced status", 
   await assertMinimumTouchTargets(page, '.support-section input:not([type="checkbox"]), .support-section select, .support-section textarea, .support-confirm');
   await assertNoHorizontalOverflow(page);
   await capture(page, testInfo, "page-support-dark-mobile.png");
+});
+
+test("data and admin dashboard connects metrics, analysis, source state, exceptions, and responsive drill-down", async ({ page }, testInfo) => {
+  await seedPreferences(page, "dark");
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/examples/page-patterns/dashboard.html");
+
+  const shell = page.locator("[data-dashboard-shell]");
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
+  await expect(page.getByRole("heading", { name: "运营总览", level: 1 })).toBeVisible();
+  await expect(shell).toHaveAttribute("data-dashboard-state", "normal");
+  await expect(page.locator(".dashboard-metric")).toHaveCount(4);
+  await expect(page.locator(".dashboard-metric svg")).toHaveCount(8);
+  await expect(page.locator("[data-dashboard-chart]")).toBeVisible();
+  await expect(page.locator("[data-dashboard-chart-summary]")).toContainText("24,680");
+  await expect(page.locator("[data-dashboard-error]")).toBeHidden();
+
+  await page.getByRole("radio", { name: "90 天" }).check();
+  await expect(page).toHaveURL(/range=90d/);
+  await expect(page.locator('[data-dashboard-metric-value="records"]')).toHaveText("69,240");
+  await expect(page.locator("[data-dashboard-chart-total]")).toHaveText("69,240");
+  await expect(page.locator("[data-dashboard-chart-summary]")).toContainText("69,240");
+
+  await page.locator(".dashboard-data-fallback summary").click();
+  await expect(page.locator("[data-dashboard-chart-table] tr")).toHaveCount(3);
+  await expect(page.locator("[data-dashboard-chart-table]")).toContainText("27,470");
+
+  const state = page.locator("[data-dashboard-state-select]");
+  await state.selectOption("partial");
+  await expect(shell).toHaveAttribute("data-dashboard-state", "partial");
+  await expect(page.locator('[data-dashboard-notice="partial"]')).toBeVisible();
+  await expect(page).toHaveURL(/state=partial/);
+  await state.selectOption("stale");
+  await expect(page.locator('[data-dashboard-notice="stale"]')).toBeVisible();
+  await state.selectOption("error");
+  await expect(page.locator("[data-dashboard-error]")).toBeVisible();
+  await expect(page.locator("[data-dashboard-chart]")).toBeHidden();
+  await page.locator("[data-dashboard-retry]").click();
+  await expect(shell).toHaveAttribute("data-dashboard-state", "normal");
+  await expect(page.locator("[data-dashboard-error]")).toBeHidden();
+  await expect(state).toBeFocused();
+
+  const queueFilter = page.locator("[data-dashboard-queue-filter]");
+  await queueFilter.selectOption("failed");
+  await expect(page).toHaveURL(/queue=failed/);
+  await expect(page.locator("[data-dashboard-queue-row]:visible")).toHaveCount(2);
+  await expect(page.locator("[data-dashboard-nav-count]")).toHaveText("2");
+  await expect(page.locator("[data-dashboard-queue-row]:visible .semantic-state.negative")).toHaveCount(2);
+
+  await page.locator("[data-theme-switch]").click();
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
+  await assertNoHorizontalOverflow(page);
+  await capture(page, testInfo, "page-dashboard-light-desktop.png");
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.reload();
+  const mobileNav = page.locator(".dashboard-mobile-nav");
+  const mobileNavLinks = mobileNav.locator("a");
+  await expect
+    .poll(() => page.locator(".flow-header").evaluate((element) => getComputedStyle(element).backgroundColor))
+    .not.toMatch(/rgba/u);
+  await expect(mobileNav).toBeVisible();
+  await expect(mobileNavLinks).toHaveCount(4);
+  for (let index = 0; index < 4; index += 1) {
+    await expect(mobileNavLinks.nth(index)).toBeVisible();
+    const bounds = await mobileNavLinks.nth(index).boundingBox();
+    expect(bounds?.width).toBeGreaterThan(0);
+    expect(bounds?.height).toBeGreaterThan(0);
+  }
+  await expect(page.locator(".dashboard-sidebar")).toBeHidden();
+  await expect(page.locator("[data-dashboard-queue-row]:visible")).toHaveCount(2);
+  await assertMinimumTouchTargets(page, ".dashboard-mobile-nav a, .dashboard-range label, .dashboard-toolbar button, .dashboard-toolbar select, .dashboard-exceptions select, .dashboard-exceptions .icon-control");
+  await assertNoHorizontalOverflow(page);
+  await capture(page, testInfo, "page-dashboard-light-mobile.png");
 });
 
 test("scheduling preserves period, selection, Sidebar, Sidecar, agenda, and responsive focus", async ({ page }, testInfo) => {

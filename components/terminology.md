@@ -4,7 +4,7 @@ Status: normative
 
 This document defines the canonical names KIN uses for common interface patterns. It improves communication between designers, engineers, reviewers, and coding Agents. A canonical name identifies a behavioral pattern; it does not prescribe a visual style or implementation package.
 
-The machine-readable source is [`terminology.json`](./terminology.json). Component maturity and evidence are recorded separately in [`catalog.md`](./catalog.md) and [`catalog.json`](./catalog.json).
+The machine-readable source is [`terminology.json`](./terminology.json). Component maturity and evidence are recorded separately in [`catalog.md`](./catalog.md) and [`catalog.json`](./catalog.json). Task-driven automatic selection is governed by [`selection-routing.md`](./selection-routing.md).
 
 ## Naming rules
 

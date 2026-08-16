@@ -3,7 +3,7 @@ import { expect, test } from "@playwright/test";
 import { SHOWCASE_GENERATED_PATHS } from "../../scripts/lib/showcase-pages.mjs";
 import { SITE_COPY_ARTIFACTS } from "../../scripts/lib/site-artifacts.mjs";
 
-const EXPECTED_PUBLIC_HTML_COUNT = 53;
+const EXPECTED_PUBLIC_HTML_COUNT = 54;
 const READY_TIMEOUT = 20_000;
 const MATRIX_VIEWPORTS = Object.freeze([
   { name: "1600", width: 1600, height: 1000 },

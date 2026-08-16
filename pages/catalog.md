@@ -54,6 +54,7 @@ A successful screenshot or build MUST NOT be treated as page completion.
 | System and recovery | [`system-and-recovery.md`](./system-and-recovery.md) | [`system.html`](../examples/page-patterns/system.html) |
 | Search and results | [`search-and-results.md`](./search-and-results.md) | [`search.html`](../examples/page-patterns/search.html) |
 | Help and support | [`help-and-support.md`](./help-and-support.md) | [`support.html`](../examples/page-patterns/support.html) |
+| Data and admin dashboard | [`data-and-admin-dashboard.md`](./data-and-admin-dashboard.md) | [`dashboard.html`](../examples/page-patterns/dashboard.html) |
 
 ## Candidate page contracts
 

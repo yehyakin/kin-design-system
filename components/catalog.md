@@ -4,7 +4,7 @@ Status: normative registry
 
 This catalog records what KIN currently supports, how mature each component is, and where its evidence lives. It prevents a component mentioned in prose from being mistaken for a stable, tested contract.
 
-The machine-readable registry is [`catalog.json`](./catalog.json). Canonical names and non-synonyms are defined in [`terminology.md`](./terminology.md) and [`terminology.json`](./terminology.json).
+The machine-readable registry is [`catalog.json`](./catalog.json). Canonical names and non-synonyms are defined in [`terminology.md`](./terminology.md) and [`terminology.json`](./terminology.json). [`selection-routing.md`](./selection-routing.md) defines how an Agent automatically maps a real task and data relationship to the most appropriate mature component without creating a component wall.
 
 ## Maturity model
 
