@@ -44,7 +44,7 @@
       "summary": "第一有效视图先呈现用户要使用的对象、任务、搜索、列表、文档或操作。",
       "do": ["让真实内容和用户任务决定构图。"],
       "do_not": ["不要在工作任务之前放营销 Hero、泛化价值主张或装饰图表。"],
-      "review": {"status": "reviewed", "reviewers": ["@yehyakin"], "normative_source_checksum": "acb2433cce6a12cf440dd28f5c651ab6ed4872f4f70ed72dc7779a2ef2f9e502", "localized_content_checksum": "279bf17132501070ece3c95847561c28335ea5eed7dc19f9f5ece74f55e7f32d", "reviewed_ref": "1b880a128046a45c25d5fadb9d61ff07af31f6e8"}
+      "review": {"status": "unreviewed", "reviewers": [], "normative_source_checksum": null, "localized_content_checksum": null}
     },
     {
       "id": "one-dominant-region",
@@ -52,7 +52,7 @@
       "summary": "每个状态只有一个主导工作或阅读区域；完成定位后，导航、元数据和次要界面应退后。",
       "do": ["用视觉权重让下一项有用操作清楚可见。"],
       "do_not": ["不要因为有网格，就让无关面板拥有相同视觉权重。"],
-      "review": {"status": "reviewed", "reviewers": ["@yehyakin"], "normative_source_checksum": "690002ce0929ab1cf3807c762311b933fde603e3167559353e27e5f4698d6eff", "localized_content_checksum": "f36834345f0b31778da627e1316d8112753714c44b8f9f3c1a71a8708ced4586", "reviewed_ref": "1b880a128046a45c25d5fadb9d61ff07af31f6e8"}
+      "review": {"status": "unreviewed", "reviewers": [], "normative_source_checksum": null, "localized_content_checksum": null}
     },
     {
       "id": "neutral-precise-emphasis",

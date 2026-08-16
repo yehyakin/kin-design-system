@@ -7,9 +7,9 @@ normative: false
 artifact_status: "generated-derivative"
 editable: false
 publication:
-  state: "published-development"
-  published: true
-  public_locators: "active"
+  state: "repository-only"
+  published: false
+  public_locators: "unavailable"
 kin_version: "3.0.4"
 release_status: "development"
 latest_stable_contract: "3.0.3"
@@ -22,16 +22,15 @@ coverage: "compact-foundations-and-routing"
 features:
   component_recipes: "unavailable"
 locale_review:
-  status: "reviewed"
-  reviewers:
-    - "@yehyakin"
-  normative_source_checksum: "28d428a4429c45b5bcc6dc4cfddfd97682ef2f6a2b0297852954be1c247c4fe2"
+  status: "unreviewed"
+  reviewers: []
+  normative_source_checksum: "146c8e68dcadd1d15f242590f3af47fbee155f46ad7eaaf33a024ede9798961f"
   localized_content_checksum: "8cbc0ee2535f738266c73e9f80419076c0da5afad2212a6049408902706f412a"
 source:
   contract_path: "DESIGN.md"
   checksum_algorithm: "sha256"
-  checksum: "1f9592c102139615c68855f73b20e38a7cc58bed9eed66e68fcc7d7c819794db"
-  input_set_checksum: "cdaface78efd19a372710171a687092baaa1a066b2e35332372258a0d33d62da"
+  checksum: "6005e761d31b844fbb418be73fdb12582e32f5e2912e26b4f38e181d6444013e"
+  input_set_checksum: "12efb7d8dad870659f04f19ba2141522a238463d62c5c272a0687991a058fa43"
   ref: "main"
   revision_status: "mutable"
 manifest_locator: "design-manifest.json"
@@ -231,10 +230,10 @@ component_recipes: null
 ## Status and source
 
 - This compact file is generated from the current KIN contract. It is non-normative, must not be edited, and does not replace the linked source documents.
-- Contract checksum: `1f9592c102139615c68855f73b20e38a7cc58bed9eed66e68fcc7d7c819794db`
+- Contract checksum: `6005e761d31b844fbb418be73fdb12582e32f5e2912e26b4f38e181d6444013e`
 - Resolved mode: `light` / `more`
-- Locale copy review: `reviewed`
-- Publication state: `published-development`
+- Locale copy review: `unreviewed`
+- Publication state: `repository-only; locale review incomplete`
 
 ## Visual register
 

@@ -6,9 +6,9 @@
   "generated": true,
   "normative": false,
   "publication": {
-    "state": "published-development",
-    "published": true,
-    "public_locators": "active"
+    "state": "repository-only",
+    "published": false,
+    "public_locators": "unavailable"
   },
   "kin_version": "3.0.4",
   "release_status": "development",
@@ -17,8 +17,8 @@
   "source": {
     "contract_path": "DESIGN.md",
     "checksum_algorithm": "sha256",
-    "checksum": "1f9592c102139615c68855f73b20e38a7cc58bed9eed66e68fcc7d7c819794db",
-    "input_set_checksum": "cdaface78efd19a372710171a687092baaa1a066b2e35332372258a0d33d62da",
+    "checksum": "6005e761d31b844fbb418be73fdb12582e32f5e2912e26b4f38e181d6444013e",
+    "input_set_checksum": "12efb7d8dad870659f04f19ba2141522a238463d62c5c272a0687991a058fa43",
     "ref": "main",
     "revision_status": "mutable",
     "inputs": [
@@ -30,7 +30,7 @@
       {
         "path": "DESIGN.md",
         "role": "normative-contract",
-        "sha256": "1f9592c102139615c68855f73b20e38a7cc58bed9eed66e68fcc7d7c819794db"
+        "sha256": "6005e761d31b844fbb418be73fdb12582e32f5e2912e26b4f38e181d6444013e"
       },
       {
         "path": "components/catalog.json",
@@ -40,12 +40,12 @@
       {
         "path": "distribution/locales/en.json",
         "role": "informative-translation-input",
-        "sha256": "e67b6929c02dcbb6f49b899a952b12dbaf4934f39051216174a8584cdd6717fd"
+        "sha256": "6c3af763bcd27887be8a418d4564daed46a640ea59098044f42969ffdd9ef54e"
       },
       {
         "path": "distribution/locales/zh-CN.json",
         "role": "informative-translation-input",
-        "sha256": "a056f50748c6cb4b68b999be8a19686e63b494e83b1bb779504bd131af2187ee"
+        "sha256": "6df9e391b1abf737004b46fe74ffa69591bc38767843f6f46ee4c4fc7c52c3f0"
       },
       {
         "path": "distribution/profiles.json",
@@ -105,12 +105,12 @@
       {
         "path": "pages/catalog.json",
         "role": "machine-catalog",
-        "sha256": "ea45c92c32bb2d1d94dda76659f3ab848d4be550e074dfbb2c91fe0ab27cdde1"
+        "sha256": "79feb70b353aa29e648855dbbc037f389dcd9bd58dec800cca094023e63f888f"
       },
       {
         "path": "patterns/ecommerce-operations.md",
         "role": "normative-pattern",
-        "sha256": "32b223dfc181e0dbd012aba1c01714f27990bd2b7b3f46e16d6e41525eebdad8"
+        "sha256": "d5d8aa14cedbeb6ea31253876e12880be23de2d34fd57391d6abeefe013ad6ed"
       },
       {
         "path": "patterns/engineering-canvas.md",
@@ -125,12 +125,12 @@
       {
         "path": "patterns/intelligence-workspace.md",
         "role": "normative-pattern",
-        "sha256": "8e46e684f95b564a5ce2d659502ccf3cf4a2540866d4dfd95a5b081968622dd8"
+        "sha256": "bf5223534830eed7af37e2d00f19304d8f7bd7c662b3919d73739b0c85c8bcd5"
       },
       {
         "path": "principles/visual-signature.md",
         "role": "normative-contract",
-        "sha256": "f183b339aa098234f2ecff0a755fca72277753c5705b13be76f177c205539d57"
+        "sha256": "e274ef7ee8dbcc4f8c35b30e78e36ab218b8a1b45b42e9253cd66f6194dae2fb"
       },
       {
         "path": "tokens/kin.tokens.json",
@@ -192,25 +192,21 @@
   "locales": [
     {
       "id": "en",
-      "complete": true,
+      "complete": false,
       "review": {
-        "status": "reviewed",
-        "reviewers": [
-          "@yehyakin"
-        ],
-        "normative_source_checksum": "28d428a4429c45b5bcc6dc4cfddfd97682ef2f6a2b0297852954be1c247c4fe2",
+        "status": "unreviewed",
+        "reviewers": [],
+        "normative_source_checksum": "146c8e68dcadd1d15f242590f3af47fbee155f46ad7eaaf33a024ede9798961f",
         "localized_content_checksum": "8cbc0ee2535f738266c73e9f80419076c0da5afad2212a6049408902706f412a"
       }
     },
     {
       "id": "zh-CN",
-      "complete": true,
+      "complete": false,
       "review": {
-        "status": "reviewed",
-        "reviewers": [
-          "@yehyakin"
-        ],
-        "normative_source_checksum": "28d428a4429c45b5bcc6dc4cfddfd97682ef2f6a2b0297852954be1c247c4fe2",
+        "status": "unreviewed",
+        "reviewers": [],
+        "normative_source_checksum": "146c8e68dcadd1d15f242590f3af47fbee155f46ad7eaaf33a024ede9798961f",
         "localized_content_checksum": "5ce67d168f77941fa5cf023d00f72ffcbc0235a0fcf13c2af5a34fcf93cd2bc2"
       }
     }
@@ -286,15 +282,15 @@
       "raw_url": "https://raw.githubusercontent.com/yehyakin/kin-design-system/main/pages/catalog.json",
       "human_url": "https://github.com/yehyakin/kin-design-system/blob/main/pages/catalog.json",
       "schema_version": "1.0.0",
-      "catalog_version": "1.4.0",
-      "reviewed_on": "2026-07-16",
-      "entry_count": 16,
+      "catalog_version": "1.5.0",
+      "reviewed_on": "2026-08-16",
+      "entry_count": 17,
       "status_counts": {
         "candidate": 5,
         "draft": 1,
-        "stable": 10
+        "stable": 11
       },
-      "source_sha256": "ea45c92c32bb2d1d94dda76659f3ab848d4be550e074dfbb2c91fe0ab27cdde1"
+      "source_sha256": "79feb70b353aa29e648855dbbc037f389dcd9bd58dec800cca094023e63f888f"
     },
     "integrations": {
       "repository_path": "integrations/catalog.json",
@@ -329,7 +325,7 @@
       "public_url": "https://yehyakin.github.io/kin-design-system/next/design.dark.high-contrast.md",
       "media_type": "text/markdown; charset=utf-8",
       "normative": false,
-      "sha256": "789f11e99a529a957a70a1de2a6d2f45de1fbe04a6e9a53a42f81027fa27cb1e"
+      "sha256": "887960ccda8a9d33f1228d3852af7d9983e66a07b2e9bb995710dabbd2747112"
     },
     {
       "id": "design-en-dark",
@@ -342,7 +338,7 @@
       "public_url": "https://yehyakin.github.io/kin-design-system/next/design.dark.md",
       "media_type": "text/markdown; charset=utf-8",
       "normative": false,
-      "sha256": "31eab717b3f687e4e1b4f5dea18dfd35f680af73eb591a33e0c81e1606ca8de8"
+      "sha256": "35e504b814c63597fee69ea376eaec42ccdb2c29452b10a37227d7ae669bed2a"
     },
     {
       "id": "design-en-light-high-contrast",
@@ -355,7 +351,7 @@
       "public_url": "https://yehyakin.github.io/kin-design-system/next/design.high-contrast.md",
       "media_type": "text/markdown; charset=utf-8",
       "normative": false,
-      "sha256": "01e8461bb8c638d84b274ab01d12a1e98f451077fa10522f54af3008ce1b1809"
+      "sha256": "f474c190098ac4d6bc287240fceceb28dff992801b5a6bf3d6d15ac6e0424412"
     },
     {
       "id": "design-en-light",
@@ -368,7 +364,7 @@
       "public_url": "https://yehyakin.github.io/kin-design-system/next/design.md",
       "media_type": "text/markdown; charset=utf-8",
       "normative": false,
-      "sha256": "6ef2938a8a0f1d0f0012e7c9352c4fd0160d7a13124ed4f9676fa0ed978346e6"
+      "sha256": "acece740dbc7872711447a6915cc1607ee7b82d0b988e040a8105d00408a0700"
     },
     {
       "id": "schema-alias_manifest",
@@ -451,7 +447,7 @@
       "public_url": "https://yehyakin.github.io/kin-design-system/next/zh/design.dark.high-contrast.md",
       "media_type": "text/markdown; charset=utf-8",
       "normative": false,
-      "sha256": "d14b140b4cd689bd85bd45b04dda27bbf368b5b925cdb76359b87aeb8eef5289"
+      "sha256": "fd0d24c1e0f481880c7bbf8a9b9fcdf8c31ddb4da69cb7d86a75558b84809742"
     },
     {
       "id": "design-zh-cn-dark",
@@ -464,7 +460,7 @@
       "public_url": "https://yehyakin.github.io/kin-design-system/next/zh/design.dark.md",
       "media_type": "text/markdown; charset=utf-8",
       "normative": false,
-      "sha256": "ad4567d74a79fd9863c22b2814105020ae14cb7b1fea4d65a8c7414333093a24"
+      "sha256": "47e26ac27390e69184d21acccd70eed392af117965a9261f784e0e8263152b75"
     },
     {
       "id": "design-zh-cn-light-high-contrast",
@@ -477,7 +473,7 @@
       "public_url": "https://yehyakin.github.io/kin-design-system/next/zh/design.high-contrast.md",
       "media_type": "text/markdown; charset=utf-8",
       "normative": false,
-      "sha256": "506eb9dddbdeba34a1a88f0b622bd2205ec5640003e60020bbf1231c0c878a7e"
+      "sha256": "68e5ad975c6d62e23e880c6b1674c7b5934fc68d0a104b851a15f2201ccf1af6"
     },
     {
       "id": "design-zh-cn-light",
@@ -490,7 +486,7 @@
       "public_url": "https://yehyakin.github.io/kin-design-system/next/zh/design.md",
       "media_type": "text/markdown; charset=utf-8",
       "normative": false,
-      "sha256": "e510bebe62cda583c76e30576995ff9573d2a8fb6a8988107318cd884c636dfe"
+      "sha256": "605ef61fefc2b90855e0aa0916f4f79203c185daaba358ee17dfd104ab603394"
     }
   ]
 }

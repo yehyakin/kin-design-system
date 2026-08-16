@@ -7,7 +7,7 @@ Status: generated, non-normative, review state derived from locale inputs
 ## Review boundary
 
 - KIN contract: `3.0.4` (`development`)
-- Bundle input-set checksum: `cdaface78efd19a372710171a687092baaa1a066b2e35332372258a0d33d62da`
+- Bundle input-set checksum: `12efb7d8dad870659f04f19ba2141522a238463d62c5c272a0687991a058fa43`
 - Scope: exact English and Simplified Chinese copy used by the Agent Snapshot matrix.
 - This packet changes no publication state. Current attestations are consumed separately by `/next/`, release-export, and promotion gates.
 - A human reviewer must compare every localized record with its exact normative source before a separate attestation change updates `distribution/locales/*.json`.
@@ -16,8 +16,8 @@ Status: generated, non-normative, review state derived from locale inputs
 
 | Locale | Current state | Candidate normative-source aggregate | Candidate localized-content aggregate |
 | --- | --- | --- | --- |
-| `en` | `reviewed` | `28d428a4429c45b5bcc6dc4cfddfd97682ef2f6a2b0297852954be1c247c4fe2` | `8cbc0ee2535f738266c73e9f80419076c0da5afad2212a6049408902706f412a` |
-| `zh-CN` | `reviewed` | `28d428a4429c45b5bcc6dc4cfddfd97682ef2f6a2b0297852954be1c247c4fe2` | `5ce67d168f77941fa5cf023d00f72ffcbc0235a0fcf13c2af5a34fcf93cd2bc2` |
+| `en` | `unreviewed` | `146c8e68dcadd1d15f242590f3af47fbee155f46ad7eaaf33a024ede9798961f` | `8cbc0ee2535f738266c73e9f80419076c0da5afad2212a6049408902706f412a` |
+| `zh-CN` | `unreviewed` | `146c8e68dcadd1d15f242590f3af47fbee155f46ad7eaaf33a024ede9798961f` | `5ce67d168f77941fa5cf023d00f72ffcbc0235a0fcf13c2af5a34fcf93cd2bc2` |
 
 ## `snapshot-source-boundary`
 
@@ -149,35 +149,35 @@ The machine-readable adoption values are `mode: contract-first`, `figma: variabl
 - Requirement: `must`
 - Source: [`principles/visual-signature.md`](../principles/visual-signature.md)
 - Exact heading: `1. The task appears before the explanation`
-- Candidate normative-source checksum: `acb2433cce6a12cf440dd28f5c651ab6ed4872f4f70ed72dc7779a2ef2f9e502`
+- Candidate normative-source checksum: `2f81e4ff08d9a2f551fd1ce78da4e0c7da01c4fefcc029ea27281b138fede0af`
 
 ### Normative source section (readable)
 
 ````markdown
 ### 1. The task appears before the explanation
 
-- The first meaningful view MUST expose the subject, current task, search, list, document, object, or action the user came to use.
+- The first meaningful view MUST expose the subject, current task, search, list, document, object, action, or operational overview the user came to use.
 - A product MUST NOT place a marketing Hero, decorative graph, generic value proposition, or implementation showcase ahead of the primary task inside a working product.
 - Explanatory content SHOULD sit beside, below, or progressively behind the task unless understanding it is itself the task.
 ````
 
 ### Exact source string used for checksum
 
-- UTF-8 byte length: `474`
+- UTF-8 byte length: `496`
 - JSON escaping preserves the exact trailing whitespace and line endings supplied to the checksum input.
 
 ````json
-"### 1. The task appears before the explanation\n\n- The first meaningful view MUST expose the subject, current task, search, list, document, object, or action the user came to use.\n- A product MUST NOT place a marketing Hero, decorative graph, generic value proposition, or implementation showcase ahead of the primary task inside a working product.\n- Explanatory content SHOULD sit beside, below, or progressively behind the task unless understanding it is itself the task.\n\n"
+"### 1. The task appears before the explanation\n\n- The first meaningful view MUST expose the subject, current task, search, list, document, object, action, or operational overview the user came to use.\n- A product MUST NOT place a marketing Hero, decorative graph, generic value proposition, or implementation showcase ahead of the primary task inside a working product.\n- Explanatory content SHOULD sit beside, below, or progressively behind the task unless understanding it is itself the task.\n\n"
 ````
 
 ### en
 
-- Locale-source state: `reviewed`
-- Attestation state: `valid-attestation`
-- Recorded reviewers: `@yehyakin`
-- Recorded reviewed ref: `1b880a128046a45c25d5fadb9d61ff07af31f6e8`
-- Recorded normative-source checksum: `acb2433cce6a12cf440dd28f5c651ab6ed4872f4f70ed72dc7779a2ef2f9e502`
-- Recorded localized-content checksum: `5ebde1269d8997f0915502a1b5c8a6e0b03a2e57c4ddd9901656717efdf429f6`
+- Locale-source state: `unreviewed`
+- Attestation state: `unreviewed`
+- Recorded reviewers: none
+- Recorded reviewed ref: `null`
+- Recorded normative-source checksum: `null`
+- Recorded localized-content checksum: `null`
 - Candidate localized-content checksum: `5ebde1269d8997f0915502a1b5c8a6e0b03a2e57c4ddd9901656717efdf429f6`
 
 **Heading:** Visual register
@@ -194,12 +194,12 @@ The machine-readable adoption values are `mode: contract-first`, `figma: variabl
 
 ### zh-CN
 
-- Locale-source state: `reviewed`
-- Attestation state: `valid-attestation`
-- Recorded reviewers: `@yehyakin`
-- Recorded reviewed ref: `1b880a128046a45c25d5fadb9d61ff07af31f6e8`
-- Recorded normative-source checksum: `acb2433cce6a12cf440dd28f5c651ab6ed4872f4f70ed72dc7779a2ef2f9e502`
-- Recorded localized-content checksum: `279bf17132501070ece3c95847561c28335ea5eed7dc19f9f5ece74f55e7f32d`
+- Locale-source state: `unreviewed`
+- Attestation state: `unreviewed`
+- Recorded reviewers: none
+- Recorded reviewed ref: `null`
+- Recorded normative-source checksum: `null`
+- Recorded localized-content checksum: `null`
 - Candidate localized-content checksum: `279bf17132501070ece3c95847561c28335ea5eed7dc19f9f5ece74f55e7f32d`
 
 **Heading:** 视觉基调
@@ -220,7 +220,7 @@ The machine-readable adoption values are `mode: contract-first`, `figma: variabl
 - Requirement: `must`
 - Source: [`principles/visual-signature.md`](../principles/visual-signature.md)
 - Exact heading: `2. One region owns attention`
-- Candidate normative-source checksum: `690002ce0929ab1cf3807c762311b933fde603e3167559353e27e5f4698d6eff`
+- Candidate normative-source checksum: `25b5a3eb41041a504ce60fb49d4707aa25772b664cc7229d222711b59757372c`
 
 ### Normative source section (readable)
 
@@ -229,26 +229,26 @@ The machine-readable adoption values are `mode: contract-first`, `figma: variabl
 
 - Each state MUST have one dominant work or reading region.
 - Navigation, global actions, metadata, secondary properties, and status chrome MUST recede after orientation.
-- Equal visual weight MUST NOT be assigned to several unrelated panels merely because a grid is available.
+- Equal visual weight MUST NOT be assigned to several unrelated panels merely because a grid is available. A data/admin overview MAY contain independent metric and analysis Cards, but one analysis region and one exception path still own attention.
 ````
 
 ### Exact source string used for checksum
 
-- UTF-8 byte length: `313`
+- UTF-8 byte length: `454`
 - JSON escaping preserves the exact trailing whitespace and line endings supplied to the checksum input.
 
 ````json
-"### 2. One region owns attention\n\n- Each state MUST have one dominant work or reading region.\n- Navigation, global actions, metadata, secondary properties, and status chrome MUST recede after orientation.\n- Equal visual weight MUST NOT be assigned to several unrelated panels merely because a grid is available.\n\n"
+"### 2. One region owns attention\n\n- Each state MUST have one dominant work or reading region.\n- Navigation, global actions, metadata, secondary properties, and status chrome MUST recede after orientation.\n- Equal visual weight MUST NOT be assigned to several unrelated panels merely because a grid is available. A data/admin overview MAY contain independent metric and analysis Cards, but one analysis region and one exception path still own attention.\n\n"
 ````
 
 ### en
 
-- Locale-source state: `reviewed`
-- Attestation state: `valid-attestation`
-- Recorded reviewers: `@yehyakin`
-- Recorded reviewed ref: `1b880a128046a45c25d5fadb9d61ff07af31f6e8`
-- Recorded normative-source checksum: `690002ce0929ab1cf3807c762311b933fde603e3167559353e27e5f4698d6eff`
-- Recorded localized-content checksum: `a977c0c118dfdcc6f60112e6f104dc73c23c30effa0faf72be37137b2e906178`
+- Locale-source state: `unreviewed`
+- Attestation state: `unreviewed`
+- Recorded reviewers: none
+- Recorded reviewed ref: `null`
+- Recorded normative-source checksum: `null`
+- Recorded localized-content checksum: `null`
 - Candidate localized-content checksum: `a977c0c118dfdcc6f60112e6f104dc73c23c30effa0faf72be37137b2e906178`
 
 **Heading:** Visual register
@@ -265,12 +265,12 @@ The machine-readable adoption values are `mode: contract-first`, `figma: variabl
 
 ### zh-CN
 
-- Locale-source state: `reviewed`
-- Attestation state: `valid-attestation`
-- Recorded reviewers: `@yehyakin`
-- Recorded reviewed ref: `1b880a128046a45c25d5fadb9d61ff07af31f6e8`
-- Recorded normative-source checksum: `690002ce0929ab1cf3807c762311b933fde603e3167559353e27e5f4698d6eff`
-- Recorded localized-content checksum: `f36834345f0b31778da627e1316d8112753714c44b8f9f3c1a71a8708ced4586`
+- Locale-source state: `unreviewed`
+- Attestation state: `unreviewed`
+- Recorded reviewers: none
+- Recorded reviewed ref: `null`
+- Recorded normative-source checksum: `null`
+- Recorded localized-content checksum: `null`
 - Candidate localized-content checksum: `f36834345f0b31778da627e1316d8112753714c44b8f9f3c1a71a8708ced4586`
 
 **Heading:** 视觉基调

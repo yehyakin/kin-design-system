@@ -648,7 +648,7 @@ test("scenario lab verifies every catalog-backed showcased state", async ({ page
   expect(response.ok()).toBe(true);
   const catalog = await response.json();
   const showcased = catalog.scenarios.filter((scenario) => scenario.presentation_status === "showcased");
-  expect(showcased).toHaveLength(17);
+  expect(showcased).toHaveLength(18);
 
   for (const scenario of showcased) {
     await page.goto("/scenarios/lab.html?scenario=" + scenario.id + "&viewport=narrow&theme=light-high-contrast&mode=inspect");

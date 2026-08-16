@@ -4,7 +4,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import test from "node:test";
-import { buildAgentDistribution } from "../scripts/lib/agent-distribution.mjs";
+import { buildAgentDistribution, loadAgentDistributionContext } from "../scripts/lib/agent-distribution.mjs";
 import {
   applyAgentRegistryRollback,
   applyAgentSupportUpdate,
@@ -77,6 +77,8 @@ function createReleaseFixture() {
   packageValue.version = "3.0.0";
   fs.writeFileSync(packagePath, `${JSON.stringify(packageValue, null, 2)}\n`);
 
+  markLocalesReviewedForFixture(directory);
+
   fs.rmSync(path.join(directory, "generated", "agent", "versions"), {
     recursive: true,
     force: true,
@@ -138,6 +140,26 @@ function markLocalesUnreviewed(directory) {
         reviewers: [],
         normative_source_checksum: null,
         localized_content_checksum: null,
+      };
+    }
+    fs.writeFileSync(file, `${JSON.stringify(value, null, 2)}\n`);
+  }
+}
+
+function markLocalesReviewedForFixture(directory) {
+  const context = loadAgentDistributionContext(directory, { allowStaleLocaleReview: true });
+  for (const locale of context.locales) {
+    const file = path.join(directory, ...locale.source.split("/"));
+    const value = JSON.parse(fs.readFileSync(file, "utf8"));
+    const candidates = new Map(context.localeReviews.get(locale.id).records.map((record) => [record.id, record]));
+    for (const record of value.rules) {
+      const candidate = candidates.get(record.id);
+      record.review = {
+        status: "reviewed",
+        reviewers: ["@fixture-reviewer"],
+        normative_source_checksum: candidate.normativeSourceChecksum,
+        localized_content_checksum: candidate.localizedContentChecksum,
+        reviewed_ref: "fixture-reviewed",
       };
     }
     fs.writeFileSync(file, `${JSON.stringify(value, null, 2)}\n`);

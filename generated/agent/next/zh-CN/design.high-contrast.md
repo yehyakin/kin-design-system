@@ -7,9 +7,9 @@ normative: false
 artifact_status: "generated-derivative"
 editable: false
 publication:
-  state: "published-development"
-  published: true
-  public_locators: "active"
+  state: "repository-only"
+  published: false
+  public_locators: "unavailable"
 kin_version: "3.0.4"
 release_status: "development"
 latest_stable_contract: "3.0.3"
@@ -22,16 +22,15 @@ coverage: "compact-foundations-and-routing"
 features:
   component_recipes: "unavailable"
 locale_review:
-  status: "reviewed"
-  reviewers:
-    - "@yehyakin"
-  normative_source_checksum: "28d428a4429c45b5bcc6dc4cfddfd97682ef2f6a2b0297852954be1c247c4fe2"
+  status: "unreviewed"
+  reviewers: []
+  normative_source_checksum: "146c8e68dcadd1d15f242590f3af47fbee155f46ad7eaaf33a024ede9798961f"
   localized_content_checksum: "5ce67d168f77941fa5cf023d00f72ffcbc0235a0fcf13c2af5a34fcf93cd2bc2"
 source:
   contract_path: "DESIGN.md"
   checksum_algorithm: "sha256"
-  checksum: "1f9592c102139615c68855f73b20e38a7cc58bed9eed66e68fcc7d7c819794db"
-  input_set_checksum: "cdaface78efd19a372710171a687092baaa1a066b2e35332372258a0d33d62da"
+  checksum: "6005e761d31b844fbb418be73fdb12582e32f5e2912e26b4f38e181d6444013e"
+  input_set_checksum: "12efb7d8dad870659f04f19ba2141522a238463d62c5c272a0687991a058fa43"
   ref: "main"
   revision_status: "mutable"
 manifest_locator: "design-manifest.json"
@@ -231,10 +230,10 @@ component_recipes: null
 ## 状态与来源
 
 - 这份精简文件由当前 KIN 合同生成。它不是规范来源、不得直接编辑，也不能替代所链接的完整文档。
-- 合同校验和: `1f9592c102139615c68855f73b20e38a7cc58bed9eed66e68fcc7d7c819794db`
+- 合同校验和: `6005e761d31b844fbb418be73fdb12582e32f5e2912e26b4f38e181d6444013e`
 - 已解析模式: `light` / `more`
-- 本地化文案审核: `reviewed`
-- 发布状态: `published-development`
+- 本地化文案审核: `unreviewed`
+- 发布状态: `repository-only; locale review incomplete`
 
 ## 视觉基调
 

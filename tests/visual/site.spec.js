@@ -195,10 +195,10 @@ test("English and Chinese roots lead with a catalog-backed workflow", async ({ p
 
     const catalogDisclosure = page.locator(".showcase-evidence details.catalog-disclosure");
     await expect(catalogDisclosure).not.toHaveAttribute("open", "");
-    await expect(catalogDisclosure.locator('[data-showcase-count="showcased-scenarios"]')).toHaveText("17");
+    await expect(catalogDisclosure.locator('[data-showcase-count="showcased-scenarios"]')).toHaveText("18");
     await expect(catalogDisclosure.locator('[data-showcase-count="planned-scenarios"]')).toHaveText("13");
     await expect(catalogDisclosure.locator('[data-showcase-count="stable-components"]')).toHaveText("65");
-    await expect(catalogDisclosure.locator('[data-showcase-count="stable-pages"]')).toHaveText("10");
+    await expect(catalogDisclosure.locator('[data-showcase-count="stable-pages"]')).toHaveText("11");
     await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
     await expectNoHorizontalOverflow(page);
   }
@@ -1480,7 +1480,7 @@ test("Chinese component fixture bootstrap localizes before the React module load
   await expect(page.locator("#showcase-specimen-app")).toBeEmpty();
 });
 
-test("scenario atlas exposes honest coverage and seventeen inspectable scenarios", async ({ page }) => {
+test("scenario atlas exposes honest coverage and eighteen inspectable scenarios", async ({ page }) => {
   const consoleWarnings = [];
   page.on("console", (message) => {
     if (["warning", "error"].includes(message.type())) consoleWarnings.push(message.text());
@@ -1498,8 +1498,8 @@ test("scenario atlas exposes honest coverage and seventeen inspectable scenarios
     "src",
     "../examples/workspace-reference/index.html?view=investigation&lang=en&state=normal",
   );
-  await expect(page.locator("[data-scenario-id]")).toHaveCount(30);
-  await expect(page.locator('[data-scenario-id][data-presentation-status="showcased"]')).toHaveCount(17);
+  await expect(page.locator("[data-scenario-id]")).toHaveCount(31);
+  await expect(page.locator('[data-scenario-id][data-presentation-status="showcased"]')).toHaveCount(18);
   await expect(page.locator('[data-scenario-id][data-presentation-status="linked"]')).toHaveCount(0);
   await expect(page.locator('[data-scenario-id][data-presentation-status="planned"]')).toHaveCount(13);
   await expect(page.getByRole("heading", { name: "Entity Database Review" })).toBeVisible();
@@ -1510,6 +1510,7 @@ test("scenario atlas exposes honest coverage and seventeen inspectable scenarios
   await expect(page.locator('[data-scenario-id="INF-02"]').getByRole("link", { name: "Inspect scenario" })).toHaveAttribute("href", "lab.html?scenario=INF-02");
   await expect(page.locator('[data-scenario-id="COM-02"]').getByRole("link", { name: "Inspect scenario" })).toHaveAttribute("href", "lab.html?scenario=COM-02");
   await expect(page.locator('[data-scenario-id="ENG-02"]').getByRole("link", { name: "Inspect scenario" })).toHaveAttribute("href", "lab.html?scenario=ENG-02");
+  await expect(page.locator('[data-scenario-id="WORK-05"]').getByRole("link", { name: "Inspect scenario" })).toHaveAttribute("href", "lab.html?scenario=WORK-05");
   await expect(page.locator('[data-scenario-id="WORK-01"] .source-status.candidate')).toHaveText("Candidate source");
   await expect(page.getByText("Discovery is not adoption evidence.")).toBeVisible();
   await expectNoHorizontalOverflow(page);
@@ -1553,7 +1554,7 @@ test("Chinese Scenario Atlas and Lab preserve language through discovery and ver
   await expect.poll(() => featureFrameRequests).toEqual([
     "/examples/workspace-reference/index.html?view=investigation&lang=zh-CN&state=normal",
   ]);
-  await expect(page.locator("[data-scenario-id]")).toHaveCount(30);
+  await expect(page.locator("[data-scenario-id]")).toHaveCount(31);
   await expect(page.locator('[data-scenario-id="INT-01"]')).toContainText("档案复核");
   await expect(page.locator('[data-scenario-id="CORE-03"]')).toContainText("搜索与结果");
   await expect(page.locator('[data-scenario-id="WORK-01"]')).toContainText("排期工作台");

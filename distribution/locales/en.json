@@ -44,7 +44,7 @@
       "summary": "Put the subject, current task, search, list, document, object, or action in the first meaningful view.",
       "do": ["Let real content and the user's job establish the composition."],
       "do_not": ["Do not place a marketing Hero, generic value proposition, or decorative graph before the working task."],
-      "review": {"status": "reviewed", "reviewers": ["@yehyakin"], "normative_source_checksum": "acb2433cce6a12cf440dd28f5c651ab6ed4872f4f70ed72dc7779a2ef2f9e502", "localized_content_checksum": "5ebde1269d8997f0915502a1b5c8a6e0b03a2e57c4ddd9901656717efdf429f6", "reviewed_ref": "1b880a128046a45c25d5fadb9d61ff07af31f6e8"}
+      "review": {"status": "unreviewed", "reviewers": [], "normative_source_checksum": null, "localized_content_checksum": null}
     },
     {
       "id": "one-dominant-region",
@@ -52,7 +52,7 @@
       "summary": "Give each state one dominant work or reading region; navigation, metadata, and secondary chrome recede after orientation.",
       "do": ["Use visual weight to make the next useful action obvious."],
       "do_not": ["Do not give unrelated panels equal weight merely because a grid is available."],
-      "review": {"status": "reviewed", "reviewers": ["@yehyakin"], "normative_source_checksum": "690002ce0929ab1cf3807c762311b933fde603e3167559353e27e5f4698d6eff", "localized_content_checksum": "a977c0c118dfdcc6f60112e6f104dc73c23c30effa0faf72be37137b2e906178", "reviewed_ref": "1b880a128046a45c25d5fadb9d61ff07af31f6e8"}
+      "review": {"status": "unreviewed", "reviewers": [], "normative_source_checksum": null, "localized_content_checksum": null}
     },
     {
       "id": "neutral-precise-emphasis",
