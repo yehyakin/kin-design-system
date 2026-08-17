@@ -41,7 +41,7 @@
   <a class="skip-link" href="#main">Skip to scenario inspection</a>
 
   <header class="site-header global-header">
-    <a class="brand" href="../" aria-label="KIN Design System home">
+    <a class="brand" data-header-primary href="../" aria-label="KIN Design System home">
       <span class="brand-mark" aria-hidden="true">KIN</span>
       <span class="brand-copy"><strong>KIN</strong><small>Design System</small></span>
     </a>
@@ -55,19 +55,45 @@
       <a href="https://github.com/yehyakin/kin-design-system">GitHub</a>
     </nav>
     <div class="header-actions">
-      <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="showcase-nav" aria-label="Open navigation"><i data-lucide="menu"></i></button>
-      <button class="command-trigger showcase-command-trigger" type="button" data-command-trigger aria-haspopup="dialog" aria-label="Search KIN"><i data-lucide="search"></i><span class="visually-hidden">Search KIN</span></button>
-      <div class="language-control" data-language-control>
-        <button class="language-trigger" type="button" data-language-trigger aria-haspopup="menu" aria-expanded="false" aria-label="Choose language"><i data-lucide="languages"></i></button>
-        <div class="language-menu" data-language-menu role="menu" data-state="closed" hidden>
-          <a href="./lab.html" role="menuitem" lang="en" hreflang="en" data-lab-language="en"><span>English</span></a>
-          <a href="./lab.html?lang=zh-CN" role="menuitem" lang="zh-CN" hreflang="zh-CN" data-lab-language="zh-CN"><span>中文</span></a>
-        </div>
+      <button class="nav-toggle" data-header-primary type="button" data-nav-toggle aria-expanded="false" aria-controls="showcase-nav" aria-label="Open navigation"><i data-lucide="menu"></i></button>
+      <button class="command-trigger showcase-command-trigger" data-header-primary type="button" data-command-trigger aria-haspopup="dialog" aria-label="Search KIN"><i data-lucide="search"></i><span class="visually-hidden">Search KIN</span></button>
+      <div class="header-preferences" data-preferences-root>
+        <button class="preferences-trigger" data-header-primary type="button" data-preferences-trigger aria-haspopup="dialog" aria-expanded="false" aria-controls="site-preferences" aria-label="Open preferences">
+          <i data-lucide="palette"></i><span class="visually-hidden">Preferences</span>
+        </button>
+        <section id="site-preferences" class="header-preferences-panel" data-preferences-panel data-state="closed" aria-labelledby="site-preferences-title" aria-hidden="true" inert>
+          <header class="header-preferences-heading">
+            <div>
+              <p class="eyebrow">Appearance</p>
+              <h2 id="site-preferences-title">Preferences</h2>
+            </div>
+            <button class="preferences-close" type="button" data-preferences-close aria-label="Close">Close</button>
+          </header>
+          <div class="header-preferences-controls">
+            <div class="preferences-setting">
+              <span class="preferences-setting-label">Language</span>
+              <div class="language-control" data-language-control>
+                <button class="language-trigger" type="button" data-language-trigger aria-haspopup="menu" aria-expanded="false" aria-label="Choose language"><i data-lucide="languages"></i></button>
+                <div class="language-menu" data-language-menu role="menu" data-state="closed" hidden>
+                  <a href="./lab.html" role="menuitem" lang="en" hreflang="en" data-lab-language="en"><span>English</span></a>
+                  <a href="./lab.html?lang=zh-CN" role="menuitem" lang="zh-CN" hreflang="zh-CN" data-lab-language="zh-CN"><span>中文</span></a>
+                </div>
+              </div>
+            </div>
+            <div class="preferences-setting">
+              <span class="preferences-setting-label">Theme</span>
+              <button class="theme-switch" type="button" role="switch" data-theme-switch aria-checked="true" aria-label="Switch to light mode"><i class="theme-sun" data-lucide="sun"></i><i class="theme-moon" data-lucide="moon"></i></button>
+            </div>
+            <div class="preferences-setting">
+              <span class="preferences-setting-label">Contrast</span>
+              <button class="contrast-toggle" type="button" data-contrast-toggle aria-pressed="false" aria-label="Increase contrast"><i data-lucide="contrast"></i></button>
+            </div>
+          </div>
+        </section>
       </div>
-      <button class="theme-switch" type="button" role="switch" data-theme-switch aria-checked="true" aria-label="Switch to light mode"><i class="theme-sun" data-lucide="sun"></i><i class="theme-moon" data-lucide="moon"></i></button>
-      <button class="contrast-toggle" type="button" data-contrast-toggle aria-pressed="false" aria-label="Increase contrast"><i data-lucide="contrast"></i></button>
     </div>
   </header>
+  <div class="preferences-scrim" data-preferences-scrim aria-hidden="true"></div>
 
   <header class="lab-topbar" data-nav-background aria-label="Scenario Lab toolbar">
     <a class="lab-brand" href="./" aria-label="Back to the Scenario Atlas">

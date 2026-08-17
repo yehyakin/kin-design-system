@@ -77,6 +77,11 @@ const skipLink = document.querySelector(".skip-link");
 const languageControl = document.querySelector("[data-language-control]");
 const languageTrigger = document.querySelector("[data-language-trigger]");
 const languageMenu = document.querySelector("[data-language-menu]");
+const preferencesRoot = document.querySelector("[data-preferences-root]");
+const preferencesTrigger = document.querySelector("[data-preferences-trigger]");
+const preferencesPanel = document.querySelector("[data-preferences-panel]");
+const preferencesClose = document.querySelector("[data-preferences-close]");
+const preferencesScrim = document.querySelector("[data-preferences-scrim]");
 const commandDialog = document.querySelector("[data-command-dialog]");
 const commandTrigger = document.querySelector("[data-command-trigger]");
 const commandSearch = document.querySelector("[data-command-search]");
@@ -86,6 +91,8 @@ let sonnerModulePromise;
 let navCloseTimer;
 let navCloseTransition;
 let activeNavigationDrawer;
+let preferencesCloseTimer;
+let preferencesReturnFocus;
 
 const navigationDrawers = [
   { trigger: globalNavToggle, panel: globalNav },
@@ -173,13 +180,143 @@ function setNavigationBackgroundInert(inert, drawer = activeNavigationDrawer) {
       if (navigationDrawers.some(({ panel }) => panel === child)) continue;
       if (child === drawer?.trigger || child.contains(drawer?.trigger)) {
         for (const descendant of child.children) {
-          if (descendant !== drawer.trigger && !descendant.contains(drawer.trigger)) descendant.inert = inert;
+          if (descendant !== drawer.trigger && !descendant.contains(drawer.trigger)) {
+            descendant.inert = inert;
+            if (descendant === preferencesRoot || descendant.contains(preferencesRoot)) {
+              if (preferencesTrigger) preferencesTrigger.inert = inert;
+              if (preferencesPanel) preferencesPanel.inert = compactLayout.matches && preferencesState() !== "open";
+            }
+          }
         }
       } else {
         child.inert = inert;
       }
     }
   }
+}
+
+function preferencesState() {
+  return preferencesPanel?.dataset.state || "closed";
+}
+
+function preferencesAreOpen() {
+  return preferencesState() === "open";
+}
+
+function setPreferencesBackgroundInert(inert) {
+  if (!preferencesPanel) return;
+  if (docsMain) docsMain.inert = inert;
+  for (const element of navigationBackgrounds) element.inert = inert;
+  if (skipLink) skipLink.inert = inert;
+  if (siteHeader) {
+    for (const child of siteHeader.children) {
+      const containsPreferences = child === preferencesRoot || child.contains(preferencesRoot);
+      if (!containsPreferences) {
+        child.inert = inert;
+        continue;
+      }
+      child.inert = false;
+      for (const descendant of child.children) {
+        const keepsPreferences = descendant === preferencesRoot || descendant.contains(preferencesRoot);
+        if (!keepsPreferences) {
+          descendant.inert = inert;
+          continue;
+        }
+        descendant.inert = false;
+        if (descendant === preferencesRoot) {
+          if (preferencesTrigger) preferencesTrigger.inert = inert;
+          preferencesPanel.inert = compactLayout.matches && preferencesState() !== "open";
+        } else {
+          for (const nested of descendant.children) {
+            if (nested === preferencesRoot || nested.contains(preferencesRoot)) continue;
+            nested.inert = inert;
+          }
+        }
+      }
+    }
+  }
+}
+
+function preferenceFocusable() {
+  if (!preferencesPanel) return [];
+  return [
+    preferencesClose,
+    ...preferencesPanel.querySelectorAll('button:not([disabled]), a[href], input, select, textarea, [tabindex]:not([tabindex="-1"])'),
+  ].filter((element, index, list) => {
+    if (!element || list.indexOf(element) !== index || element.disabled || element.hidden || element.inert) return false;
+    if (element.closest("[hidden], [inert]")) return false;
+    const style = getComputedStyle(element);
+    return style.display !== "none" && style.visibility !== "hidden" && element.getClientRects().length > 0;
+  });
+}
+
+function finishPreferencesClose() {
+  if (!preferencesPanel || preferencesState() !== "closing") return;
+  clearTimeout(preferencesCloseTimer);
+  preferencesCloseTimer = undefined;
+  preferencesPanel.dataset.state = "closed";
+  preferencesPanel.inert = true;
+  preferencesPanel.setAttribute("aria-hidden", "true");
+  preferencesPanel.removeAttribute("role");
+  preferencesPanel.removeAttribute("aria-modal");
+  preferencesScrim?.setAttribute("aria-hidden", "true");
+  document.body.classList.remove("preferences-open");
+  if (document.body.dataset.overlayOwner === "preferences") delete document.body.dataset.overlayOwner;
+  setPreferencesBackgroundInert(false);
+  if (preferencesFocusOnClose) {
+    preferencesFocusOnClose = false;
+    const target = preferencesReturnFocus?.isConnected ? preferencesReturnFocus : preferencesTrigger;
+    preferencesReturnFocus = undefined;
+    target?.focus({ preventScroll: true });
+  }
+}
+
+let preferencesFocusOnClose = false;
+
+function setPreferences(open, { moveFocus = true, returnTarget, immediate = false } = {}) {
+  if (!preferencesPanel || !preferencesTrigger || (!compactLayout.matches && open)) return;
+  clearTimeout(preferencesCloseTimer);
+  preferencesCloseTimer = undefined;
+
+  if (open) {
+    document.dispatchEvent(new CustomEvent("kin:overlay-will-open", { detail: { overlay: "preferences" } }));
+    preferencesReturnFocus = returnTarget || preferencesTrigger;
+    preferencesFocusOnClose = false;
+    preferencesTrigger.setAttribute("aria-expanded", "true");
+    preferencesPanel.dataset.state = "open";
+    preferencesPanel.inert = false;
+    preferencesPanel.removeAttribute("aria-hidden");
+    preferencesPanel.setAttribute("role", "dialog");
+    preferencesPanel.setAttribute("aria-modal", "true");
+    preferencesScrim?.setAttribute("aria-hidden", "false");
+    document.body.classList.add("preferences-open");
+    document.body.dataset.overlayOwner = "preferences";
+    setPreferencesBackgroundInert(true);
+    if (moveFocus) preferencesClose?.focus({ preventScroll: true });
+    return;
+  }
+
+  if (preferencesState() === "closed") return;
+  closeLanguageMenuImmediately();
+  preferencesFocusOnClose ||= moveFocus;
+  preferencesTrigger.setAttribute("aria-expanded", "false");
+  preferencesPanel.dataset.state = "closing";
+  const duration = immediate || reducedMotion.matches ? 0 : 240;
+  if (duration === 0) {
+    finishPreferencesClose();
+    return;
+  }
+  preferencesCloseTimer = window.setTimeout(finishPreferencesClose, duration);
+}
+
+function closeLanguageMenuImmediately() {
+  if (!languageMenu || !languageTrigger) return;
+  cancelLanguageMenuWork();
+  languageMenu.hidden = true;
+  languageMenu.inert = false;
+  languageMenu.dataset.state = "closed";
+  delete languageMenu.dataset.invocation;
+  languageTrigger.setAttribute("aria-expanded", "false");
 }
 
 function cancelNavigationCloseWait() {
@@ -196,6 +333,7 @@ function finishNavigationClose(drawer) {
   document.body.classList.remove("nav-closing");
   drawer.panel.dataset.drawerState = "closed";
   setNavigationBackgroundInert(false, drawer);
+  if (document.body.dataset.overlayOwner === "navigation") delete document.body.dataset.overlayOwner;
 }
 
 function navigationLabel(drawer, open) {
@@ -211,12 +349,14 @@ function setNavigation(drawer, open, moveFocus = true, immediate = false) {
   drawer.trigger.setAttribute("aria-label", navigationLabel(drawer, open));
 
   if (open) {
+    document.dispatchEvent(new CustomEvent("kin:overlay-will-open", { detail: { overlay: "navigation" } }));
     if (activeNavigationDrawer && activeNavigationDrawer !== drawer) {
       setNavigation(activeNavigationDrawer, false, false, true);
     }
     activeNavigationDrawer = drawer;
     document.body.classList.remove("nav-closing");
     document.body.classList.add("nav-open");
+    document.body.dataset.overlayOwner = "navigation";
     drawer.panel.dataset.drawerState = "open";
     setNavigationBackgroundInert(true, drawer);
     drawer.panel.inert = false;
@@ -263,8 +403,53 @@ for (const drawer of navigationDrawers) {
   });
 }
 navScrim?.addEventListener("click", () => setNavigation(activeNavigationDrawer, false));
+
+document.addEventListener("kin:overlay-will-open", (event) => {
+  const overlay = event.detail?.overlay;
+  if (overlay === "preferences") {
+    if (activeNavigationDrawer) setNavigation(activeNavigationDrawer, false, false, true);
+    if (commandDialog?.open) closeCommand({ immediate: true });
+  } else if (overlay === "navigation") {
+    setPreferences(false, { moveFocus: false, immediate: true });
+    if (commandDialog?.open) closeCommand({ immediate: true });
+  } else if (overlay === "command") {
+    if (activeNavigationDrawer) setNavigation(activeNavigationDrawer, false, false, true);
+    setPreferences(false, { moveFocus: false, immediate: true });
+  } else if (overlay === "inspect") {
+    if (activeNavigationDrawer) setNavigation(activeNavigationDrawer, false, false, true);
+    setPreferences(false, { moveFocus: false, immediate: true });
+    if (commandDialog?.open) closeCommand({ immediate: true });
+  }
+});
+
+function syncPreferencesMode() {
+  if (!preferencesPanel || !preferencesTrigger) return;
+  preferencesPanel.dataset.state = "closed";
+  preferencesTrigger.setAttribute("aria-expanded", "false");
+  preferencesPanel.inert = compactLayout.matches;
+  if (compactLayout.matches) {
+    preferencesPanel.setAttribute("aria-hidden", "true");
+  } else {
+    preferencesPanel.removeAttribute("aria-hidden");
+    preferencesPanel.removeAttribute("role");
+    preferencesPanel.removeAttribute("aria-modal");
+  }
+  preferencesScrim?.setAttribute("aria-hidden", "true");
+}
+
+syncPreferencesMode();
+preferencesTrigger?.addEventListener("click", () => setPreferences(!preferencesAreOpen(), { returnTarget: preferencesTrigger }));
+preferencesClose?.addEventListener("click", () => setPreferences(false, { moveFocus: true }));
+preferencesScrim?.addEventListener("click", () => setPreferences(false, { moveFocus: true }));
+
 addEventListener("resize", () => {
-  if (!compactLayout.matches && activeNavigationDrawer) setNavigation(activeNavigationDrawer, false, false, true);
+  if (!compactLayout.matches) {
+    if (activeNavigationDrawer) setNavigation(activeNavigationDrawer, false, false, true);
+    if (preferencesState() !== "closed") setPreferences(false, { moveFocus: false, immediate: true });
+    syncPreferencesMode();
+  } else if (preferencesState() === "closed") {
+    syncPreferencesMode();
+  }
   for (const drawer of navigationDrawers) {
     if (compactLayout.matches) {
       if (activeNavigationDrawer !== drawer) {
@@ -283,6 +468,17 @@ addEventListener("resize", () => {
 });
 
 addEventListener("keydown", (event) => {
+  if (event.key === "Tab" && compactLayout.matches && preferencesAreOpen()) {
+    const focusable = preferenceFocusable();
+    if (focusable.length === 0) return;
+    const currentIndex = focusable.indexOf(document.activeElement);
+    const nextIndex = event.shiftKey
+      ? (currentIndex <= 0 ? focusable.length - 1 : currentIndex - 1)
+      : (currentIndex < 0 || currentIndex === focusable.length - 1 ? 0 : currentIndex + 1);
+    event.preventDefault();
+    focusable[nextIndex].focus();
+    return;
+  }
   if (
     event.key !== "Tab"
     || !compactLayout.matches
@@ -439,15 +635,22 @@ function cancelCommandWork() {
 
 function openCommand(invocation = "pointer") {
   if (!commandDialog) return;
+  document.dispatchEvent(new CustomEvent("kin:overlay-will-open", { detail: { overlay: "command" } }));
   cancelCommandWork();
   const activeElement = document.activeElement;
+  const activeStyle = activeElement instanceof HTMLElement ? getComputedStyle(activeElement) : null;
   commandReturnFocus = activeElement instanceof HTMLElement
     && activeElement !== document.body
     && activeElement !== document.documentElement
+    && activeElement.isConnected
+    && !activeElement.closest("[inert], [aria-hidden=\"true\"]")
+    && activeStyle?.display !== "none"
+    && activeStyle?.visibility !== "hidden"
     ? activeElement
     : commandTrigger;
   if (!commandDialog.open) commandDialog.showModal();
   commandDialog.inert = false;
+  document.body.dataset.overlayOwner = "command";
   commandDialog.dataset.invocation = invocation;
   commandDialog.dataset.state = "opening";
   commandSearch.value = "";
@@ -464,7 +667,7 @@ function openCommand(invocation = "pointer") {
   });
 }
 
-function closeCommand() {
+function closeCommand({ immediate = false } = {}) {
   if (!commandDialog?.open) return;
   cancelCommandWork();
   commandDialog.inert = true;
@@ -475,6 +678,7 @@ function closeCommand() {
     commandDialog.close();
     commandDialog.inert = false;
     commandDialog.dataset.state = "closed";
+    if (document.body.dataset.overlayOwner === "command") delete document.body.dataset.overlayOwner;
     const target = commandReturnFocus?.isConnected ? commandReturnFocus : commandTrigger;
     commandReturnFocus = undefined;
     let focusAttempts = 0;
@@ -489,7 +693,7 @@ function closeCommand() {
     };
     commandFocusTimer = window.setTimeout(restoreFocus, 0);
   };
-  if (commandDialog.dataset.invocation === "keyboard" || reducedMotion.matches) {
+  if (immediate || commandDialog.dataset.invocation === "keyboard" || reducedMotion.matches) {
     finish();
     return;
   }
@@ -521,12 +725,12 @@ for (const item of commandItems) item.addEventListener("click", closeCommand);
 addEventListener("keydown", (event) => {
   const editable = event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement || event.target.isContentEditable;
   if ((event.metaKey || event.ctrlKey) && event.key.toLocaleLowerCase() === "k") {
-    if (document.body.classList.contains("lab-controls-modal-open")) return;
+    if (document.body.classList.contains("lab-controls-modal-open") || preferencesAreOpen() || activeNavigationDrawer) return;
     event.preventDefault();
     openCommand("keyboard");
   }
   if (event.key === "/" && !editable && !commandDialog?.open) {
-    if (document.body.classList.contains("lab-controls-modal-open")) return;
+    if (document.body.classList.contains("lab-controls-modal-open") || preferencesAreOpen() || activeNavigationDrawer) return;
     event.preventDefault();
     openCommand("keyboard");
   }
@@ -536,6 +740,9 @@ addEventListener("keydown", (event) => {
   } else if (event.key === "Escape" && !languageMenu?.hidden) {
     event.preventDefault();
     setLanguageMenu(false, true, "keyboard");
+  } else if (event.key === "Escape" && preferencesAreOpen()) {
+    event.preventDefault();
+    setPreferences(false, { moveFocus: true });
   } else if (event.key === "Escape" && activeNavigationDrawer) {
     event.preventDefault();
     setNavigation(activeNavigationDrawer, false);
