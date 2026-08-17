@@ -139,6 +139,16 @@ button:active { background: var(--hover); }
 .command-trigger > svg { width: 14px; height: 14px; flex: 0 0 auto; }
 .command-trigger kbd { color: var(--muted); font: 11px/1 ui-monospace, monospace; }
 .header-actions { display: flex; align-items: center; gap: 6px; padding: 0 12px; }
+.header-preferences { display: contents; }
+.preferences-trigger { display: none; min-width: 32px; height: 32px; place-items: center; border: 1px solid transparent; border-radius: 5px; background: transparent; color: var(--muted); }
+.preferences-trigger svg { width: 16px; height: 16px; }
+.header-preferences-panel { display: contents; }
+.header-preferences-heading { display: none; }
+.header-preferences-controls,
+.preferences-setting { display: contents; }
+.preferences-setting-label { display: none; }
+.preferences-close { display: inline-flex; min-height: 34px; align-items: center; justify-content: center; padding: 0 9px; border: 1px solid var(--line); border-radius: 5px; background: transparent; color: var(--text-2); font-size: 11px; font-weight: 650; }
+.preferences-scrim { display: none; }
 .language-control { position: relative; }
 .language-trigger, .github-link, .contrast-toggle, .nav-toggle { display: grid; min-width: 32px; height: 32px; place-items: center; border: 1px solid transparent; border-radius: 5px; background: transparent; color: var(--muted); font-size: 12px; }
 .language-trigger svg, .github-link svg, .contrast-toggle svg, .nav-toggle svg { width: 16px; height: 16px; }
@@ -543,6 +553,7 @@ h1 { max-width: 670px; margin: 0; font-size: clamp(30px, 4.5vw, 46px); font-weig
   .site-header.global-header {
     grid-template-columns: auto minmax(0, 1fr) auto;
     padding-inline: 6px;
+    z-index: 45;
   }
   .global-header .brand {
     min-width: 0;
@@ -567,6 +578,109 @@ h1 { max-width: 670px; margin: 0; font-size: clamp(30px, 4.5vw, 46px); font-weig
   }
   .global-header .theme-switch::before {
     inset-block: 8px;
+  }
+  .header-preferences {
+    display: block;
+  }
+  .global-header .preferences-trigger {
+    display: grid;
+    width: 44px;
+    min-width: 44px;
+    height: 44px;
+    border-color: transparent;
+  }
+  .header-preferences-panel {
+    position: fixed;
+    z-index: 41;
+    inset: var(--header-height) 0 0 auto;
+    display: block;
+    width: min(340px, calc(100vw - 20px));
+    max-width: 100%;
+    overflow-y: auto;
+    padding:
+      calc(18px + env(safe-area-inset-top))
+      max(18px, env(safe-area-inset-right))
+      calc(28px + env(safe-area-inset-bottom))
+      18px;
+    border-left: 1px solid var(--line-strong);
+    background: var(--surface-1);
+    box-shadow: inset 1px 0 0 var(--edge-highlight-strong), var(--shadow-floating);
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(100%);
+  }
+  .header-preferences-panel[data-state="open"] {
+    visibility: visible;
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateX(0);
+  }
+  .header-preferences-panel[data-state="closing"] {
+    visibility: visible;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(100%);
+  }
+  .header-preferences-heading {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 14px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--line);
+  }
+  .header-preferences-heading .eyebrow { margin-bottom: 5px; }
+  .header-preferences-heading h2 { max-width: 15ch; margin: 0; font-size: 20px; line-height: 1.2; letter-spacing: -0.02em; }
+  .header-preferences-controls {
+    display: grid;
+    gap: 0;
+  }
+  .preferences-setting {
+    display: flex;
+    min-height: 68px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    border-bottom: 1px solid var(--line);
+  }
+  .preferences-setting-label {
+    display: block;
+    color: var(--text-2);
+    font-size: 12px;
+    font-weight: 650;
+  }
+  .preferences-setting .language-control { margin-left: auto; }
+  .header-preferences-panel .language-trigger,
+  .header-preferences-panel .contrast-toggle {
+    min-width: 44px;
+    height: 44px;
+  }
+  .header-preferences-panel .theme-switch {
+    width: 62px;
+    height: 44px;
+  }
+  .header-preferences-panel .theme-switch::before { inset-block: 8px; }
+  .header-preferences-panel .language-menu {
+    top: calc(100% + 6px);
+    right: 0;
+    width: min(220px, calc(100vw - 56px));
+  }
+  .preferences-close { min-width: 72px; min-height: 44px; }
+  .preferences-scrim {
+    position: fixed;
+    z-index: 40;
+    inset: var(--header-height) 0 0;
+    display: block;
+    visibility: hidden;
+    background: var(--overlay);
+    opacity: 0;
+    pointer-events: none;
+  }
+  body.preferences-open .preferences-scrim {
+    visibility: visible;
+    opacity: 1;
+    pointer-events: auto;
   }
   .global-header .showcase-nav {
     position: fixed;
@@ -648,7 +762,8 @@ h1 { max-width: 670px; margin: 0; font-size: clamp(30px, 4.5vw, 46px); font-weig
     transform: translateX(-100%);
   }
   body.nav-open,
-  body.nav-closing { overflow: hidden; }
+  body.nav-closing,
+  body.preferences-open { overflow: hidden; }
   .docs-nav[data-drawer-state="open"] {
     opacity: 1;
     pointer-events: auto;
@@ -763,8 +878,11 @@ h1 { max-width: 670px; margin: 0; font-size: clamp(30px, 4.5vw, 46px); font-weig
   html[data-site-ready="true"] .command-dialog[data-invocation="keyboard"] { transition: none; }
   html[data-site-ready="true"] .command-dialog[data-invocation="keyboard"]::backdrop { transition: none; }
   html[data-site-ready="true"] .global-header .showcase-nav { transition: opacity 120ms ease-out, transform 180ms var(--ease-exit); }
+  html[data-site-ready="true"] .header-preferences-panel { transition: opacity 240ms var(--ease), transform 240ms var(--ease); }
   html[data-site-ready="true"] .docs-nav { transition: opacity 180ms var(--ease), transform 240ms cubic-bezier(0.32, 0.72, 0, 1); }
   html[data-site-ready="true"] .nav-scrim { transition: opacity 180ms var(--ease); }
+  html[data-site-ready="true"] .preferences-scrim { transition: opacity 240ms var(--ease), visibility 0s linear 240ms; }
+  html[data-site-ready="true"] body.preferences-open .preferences-scrim { transition: opacity 240ms var(--ease), visibility 0s linear; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -775,8 +893,11 @@ h1 { max-width: 670px; margin: 0; font-size: clamp(30px, 4.5vw, 46px); font-weig
   html[data-site-ready="true"] .theme-switch::after { scale: 1; transition: none; }
   html[data-site-ready="true"] .command-dialog::backdrop { transition: background-color 80ms linear; }
   html[data-site-ready="true"] .global-header .showcase-nav { transition: opacity 80ms linear; }
+  html[data-site-ready="true"] .header-preferences-panel { transform: none; transition: opacity 80ms linear; }
   html[data-site-ready="true"] .docs-nav { transition: opacity 80ms linear; }
   html[data-site-ready="true"] .nav-scrim { transition: opacity 80ms linear; }
+  html[data-site-ready="true"] .preferences-scrim { transition: opacity 80ms linear, visibility 0s linear 80ms; }
+  html[data-site-ready="true"] body.preferences-open .preferences-scrim { transition: opacity 80ms linear, visibility 0s linear; }
 }
 
 @media (prefers-contrast: more) {
@@ -1557,11 +1678,18 @@ h1 { max-width: 670px; margin: 0; font-size: clamp(30px, 4.5vw, 46px); font-weig
     transform: translateX(-100%);
   }
   .lab-controls-heading h1 { max-width: none; }
-  .lab-preview { height: 100%; min-height: 0; }
-  .lab-preview-bar { align-items: flex-start; padding: 13px 16px; }
+  .lab-preview { position: relative; height: 100%; min-height: 0; }
+  .lab-preview-bar {
+    position: absolute;
+    z-index: 3;
+    inset: 0 0 auto;
+    min-height: 56px;
+    align-items: flex-start;
+    padding: 10px 16px;
+  }
   .lab-preview-heading { min-width: min(230px, 40%); }
   .lab-preview-tools { max-width: 58%; }
-  .lab-stage { min-height: 0; padding: 16px; scrollbar-gutter: auto; }
+  .lab-stage { min-height: 0; padding: 66px 16px 16px; scrollbar-gutter: auto; }
 }
 
 @media (max-width: 520px) {
@@ -1573,7 +1701,7 @@ h1 { max-width: 670px; margin: 0; font-size: clamp(30px, 4.5vw, 46px); font-weig
   .lab-preview-tools { max-width: none; align-items: stretch; margin-top: 10px; }
   .lab-preview-actions { justify-content: flex-start; }
   .lab-readouts { max-width: none; justify-content: flex-start; margin-top: 10px; }
-  .lab-stage { padding: 10px; }
+  .lab-stage { padding: 64px 10px 10px; }
 
   .lab-shell[data-mode="present"] .lab-preview-bar {
     display: grid;

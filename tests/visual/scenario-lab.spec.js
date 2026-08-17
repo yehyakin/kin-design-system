@@ -204,6 +204,120 @@ test("mobile Lab drawers cannot compete for focus or global shortcuts", async ({
   expect(await globalHeader.evaluate((element) => element.inert)).toBe(false);
 });
 
+test("mobile Scenario Lab chrome leads with the live stage and one preferences sheet", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/scenarios/lab.html?scenario=INT-02&state=normal&viewport=narrow&theme=dark&mode=present");
+  await expectVerified(page);
+
+  const primaryControls = page.locator("[data-header-primary]:visible");
+  await expect(primaryControls).toHaveCount(4);
+  await expect(page.locator("[data-language-trigger]:visible")).toHaveCount(0);
+  await expect(page.locator("[data-theme-switch]:visible")).toHaveCount(0);
+  await expect(page.locator("[data-contrast-toggle]:visible")).toHaveCount(0);
+
+  const geometry = await page.evaluate(() => {
+    const context = document.querySelector(".lab-topbar").getBoundingClientRect();
+    const stage = document.querySelector("[data-lab-stage]").getBoundingClientRect();
+    return {
+      contextHeight: context.height,
+      stageTop: stage.top,
+      visibleStageHeight: Math.min(innerHeight, stage.bottom) - Math.max(0, stage.top),
+      rootOverflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+    };
+  });
+  expect(geometry.contextHeight).toBeLessThanOrEqual(56);
+  expect(geometry.stageTop).toBeLessThanOrEqual(180);
+  expect(geometry.visibleStageHeight).toBeGreaterThanOrEqual(420);
+  expect(geometry.rootOverflow).toBeLessThanOrEqual(0);
+
+  const preferencesTrigger = page.locator("[data-preferences-trigger]");
+  const preferences = page.locator("[data-preferences-panel]");
+  await preferencesTrigger.click();
+  await expect(preferences).toBeVisible();
+  await expect(preferences).toHaveAttribute("role", "dialog");
+  await expect(preferences).toHaveAttribute("aria-modal", "true");
+  await expect(page.locator("[data-preferences-close]")).toBeFocused();
+  await expect(preferences.locator("[data-language-trigger]")).toHaveCount(1);
+  await expect(preferences.locator("[data-theme-switch]")).toHaveCount(1);
+  await expect(preferences.locator("[data-contrast-toggle]")).toHaveCount(1);
+  await expect(page.locator("[data-mobile-nav]")).toHaveAttribute("data-drawer-state", "closed");
+
+  await page.keyboard.press("Escape");
+  await expect(preferences).toBeHidden();
+  await expect(preferencesTrigger).toBeFocused();
+
+  await page.locator("[data-nav-toggle]").click();
+  await expect(page.locator("[data-mobile-nav]")).toHaveAttribute("data-drawer-state", "open");
+  expect(await preferencesTrigger.evaluate((element) => element.inert)).toBe(true);
+  await page.keyboard.press("Escape");
+  await expect(page.locator("[data-mobile-nav]")).toHaveAttribute("data-drawer-state", "closed");
+  await preferencesTrigger.click();
+  await expect(preferences).toBeVisible();
+  await expect(page.locator("[aria-modal=\"true\"]:visible")).toHaveCount(1);
+});
+
+test("mobile preferences keep the modal stack, language menu, and resize ownership coherent", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/scenarios/lab.html?scenario=INT-01&state=normal&viewport=narrow&theme=dark&mode=present");
+  await expectVerified(page);
+
+  const preferencesTrigger = page.locator("[data-preferences-trigger]");
+  const preferences = page.locator("[data-preferences-panel]");
+  const languageTrigger = preferences.locator("[data-language-trigger]");
+  const languageMenu = preferences.locator("[data-language-menu]");
+  await preferencesTrigger.click();
+  await expect(preferences).toBeVisible();
+  await languageTrigger.click();
+  await expect(languageMenu).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(languageMenu).toBeHidden();
+  await expect(languageTrigger).toBeFocused();
+  await page.keyboard.press("Escape");
+  await expect(preferences).toBeHidden();
+  await expect(preferencesTrigger).toBeFocused();
+
+  await preferencesTrigger.click();
+  await page.setViewportSize({ width: 390, height: 720 });
+  await expect(preferences).toBeVisible();
+  await expect(page.locator("body")).toHaveClass(/preferences-open/);
+  await page.setViewportSize({ width: 1280, height: 800 });
+  await expect(preferences).toHaveAttribute("data-state", "closed");
+  await expect(page.locator("body")).not.toHaveClass(/preferences-open/);
+  expect(await page.locator("[data-scenario-lab]").evaluate((element) => element.inert)).toBe(false);
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  const commandTrigger = page.locator("[data-command-trigger]");
+  await page.locator("[data-nav-toggle]").click();
+  await expect(page.locator("[data-mobile-nav]")).toHaveAttribute("data-drawer-state", "open");
+  await page.evaluate(() => document.querySelector("[data-command-trigger]").click());
+  await expect(page.locator("[data-mobile-nav]")).toHaveAttribute("data-drawer-state", "closed");
+  await expect(page.locator("[data-command-dialog]")).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(commandTrigger).toBeFocused();
+
+  await commandTrigger.click();
+  await expect(page.locator("[data-command-dialog]")).toBeVisible();
+  await expect(page.locator("body")).toHaveAttribute("data-overlay-owner", "command");
+  await page.keyboard.press("Escape");
+  await expect(page.locator("[data-command-dialog]")).toBeHidden();
+  await expect(commandTrigger).toBeFocused();
+
+  await page.locator('[data-lab-mode="inspect"]').click();
+  await expect(page.locator("[data-scenario-lab]")).toHaveAttribute("data-controls-state", "open");
+  expect(await page.locator(".global-header").evaluate((element) => element.inert)).toBe(true);
+  await expect(page.locator("[aria-modal=\"true\"]:visible")).toHaveCount(1);
+  await page.keyboard.press("Escape");
+  await expect(page.locator("[data-scenario-lab]")).toHaveAttribute("data-mode", "present");
+
+  await page.locator("[data-nav-toggle]").click();
+  await expect(page.locator("[data-mobile-nav]")).toHaveAttribute("data-drawer-state", "open");
+  expect(await preferencesTrigger.evaluate((element) => element.inert)).toBe(true);
+  await page.keyboard.press("Escape");
+  await expect(page.locator("[data-mobile-nav]")).toHaveAttribute("data-drawer-state", "closed");
+});
+
 test("a valid URL mode overrides local storage and a missing mode uses the stored fallback", async ({ page }) => {
   await page.addInitScript(() => {
     if (window === window.top) localStorage.setItem("kin-showcase-lab-mode", "inspect");
