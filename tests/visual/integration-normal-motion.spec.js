@@ -20,6 +20,26 @@ test("Sonner preserves its official toast transition", async ({ page }) => {
   expect(duration.split(",").some((value) => value.trim() !== "0s")).toBe(true);
 });
 
+test("Sonner keeps normal-motion action and close geometry", async ({ page }) => {
+  await page.locator('[data-integration-action="toast-error"]').click();
+  const toast = page.locator('[data-sonner-toast][data-visible="true"]').first();
+  const retry = toast.getByRole("button", { name: "Retry", exact: true });
+  const close = toast.getByRole("button", { name: "Close notification", exact: true });
+  await expect(retry).toBeVisible();
+  await expect(close).toBeVisible();
+
+  const [toastBox, retryBox] = await Promise.all([toast.boundingBox(), retry.boundingBox()]);
+  expect(toastBox).not.toBeNull();
+  expect(retryBox).not.toBeNull();
+  if (!toastBox || !retryBox) return;
+  expect(retryBox.x).toBeGreaterThanOrEqual(toastBox.x);
+  expect(retryBox.y).toBeGreaterThanOrEqual(toastBox.y);
+  expect(retryBox.x + retryBox.width).toBeLessThanOrEqual(toastBox.x + toastBox.width);
+  expect(retryBox.y + retryBox.height).toBeLessThanOrEqual(toastBox.y + toastBox.height);
+  const closeTransform = await close.evaluate((element) => getComputedStyle(element).transform);
+  expect(closeTransform).not.toBe("none");
+});
+
 test("preference menus retain their exit frame and support rapid reversal", async ({ page }) => {
   await page.clock.install();
   await page.goto("/examples/workspace-reference/integrations.html");

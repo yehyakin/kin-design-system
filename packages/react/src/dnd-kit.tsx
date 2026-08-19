@@ -2,6 +2,7 @@ import * as React from "react";
 import {
   DndContext,
   DragOverlay,
+  defaultKeyboardCoordinateGetter,
   KeyboardSensor,
   MouseSensor,
   TouchSensor,
@@ -19,7 +20,6 @@ import type {
 import {
   SortableContext,
   arrayMove,
-  sortableKeyboardCoordinates,
   useSortable,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
@@ -97,7 +97,7 @@ export function KinSortableList<T extends KinSortableItem>({
   const sensors = useSensors(
     useSensor(MouseSensor, { activationConstraint: { distance: 4 } }),
     useSensor(TouchSensor, { activationConstraint: { delay: 180, tolerance: 5 } }),
-    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
+    useSensor(KeyboardSensor, { coordinateGetter: defaultKeyboardCoordinateGetter }),
   );
   const activeItem = activeId == null ? undefined : items.find((item) => item.id === activeId);
   const labels = React.useMemo(() => new Map(items.map((item) => [item.id, getLabel(item)])), [getLabel, items]);

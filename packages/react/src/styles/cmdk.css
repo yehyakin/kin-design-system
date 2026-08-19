@@ -95,6 +95,12 @@
   font-size: 11px;
 }
 
+@media (pointer: coarse) {
+  .kin-command [cmdk-item] {
+    min-height: 44px;
+  }
+}
+
 @media (max-width: 480px) {
   .kin-command {
     top: 12px;

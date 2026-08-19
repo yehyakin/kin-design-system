@@ -251,14 +251,14 @@ function startLocalTransfer() {
   stopFileTimers();
   transferAttempt += 1;
   let progress = 0;
-  renderFileState("uploading", "本地模拟中", "正在运行本地交互样例；文件不会发送到服务器。", progress);
+  renderFileState("uploading", "本地模拟中", "正在运行本地交互示例；文件不会发送到服务器。", progress);
   uploadTimer = setInterval(() => {
     progress = Math.min(100, progress + 20);
     fileProgress.value = progress;
     fileProgress.textContent = `${progress}%`;
     if (selectedFile?.name.toLocaleLowerCase().includes("retry") && transferAttempt === 1 && progress >= 60) {
       stopFileTimers();
-      renderFileState("failed", "模拟传输失败", "本地样例在传输阶段失败。可重试；没有文件离开此页面。", progress);
+      renderFileState("failed", "模拟传输失败", "本地示例在传输阶段失败。可重试；没有文件离开此页面。", progress);
       return;
     }
     if (progress >= 100) {
@@ -364,8 +364,41 @@ const sampleMenu = document.querySelector(".sample-menu");
 const menuItems = [...sampleMenu.querySelectorAll('[role="menuitem"]')];
 const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
 const transientSurfaceCleanups = new WeakMap();
+const transientSurfaceAnchors = new WeakMap();
 const managedDialogCleanups = new WeakMap();
 const managedDialogScrollGuards = new WeakSet();
+
+function fitTransientSurface(surface, trigger) {
+  if (!trigger || !matchMedia("(max-width: 720px)").matches) {
+    surface.style.removeProperty("left");
+    surface.style.removeProperty("right");
+    surface.style.removeProperty("top");
+    surface.style.removeProperty("position");
+    return;
+  }
+
+  const inset = 12;
+  const triggerBounds = trigger.getBoundingClientRect();
+  const surfaceBounds = surface.getBoundingClientRect();
+  const maximumLeft = Math.max(inset, window.innerWidth - surfaceBounds.width - inset);
+  const left = Math.min(Math.max(inset, triggerBounds.left), maximumLeft);
+  const below = triggerBounds.bottom + 6;
+  const above = triggerBounds.top - surfaceBounds.height - 6;
+  const top = below + surfaceBounds.height <= window.innerHeight - inset
+    ? below
+    : Math.max(inset, above);
+
+  surface.style.position = "fixed";
+  surface.style.left = `${Math.round(left)}px`;
+  surface.style.right = "auto";
+  surface.style.top = `${Math.round(top)}px`;
+}
+
+window.addEventListener("resize", () => {
+  for (const surface of document.querySelectorAll(".sample-menu, .sample-popover")) {
+    if (!surface.hidden) fitTransientSurface(surface, transientSurfaceAnchors.get(surface));
+  }
+});
 
 function setTransientSurface(surface, open, { trigger, focusTarget, restoreFocus = false } = {}) {
   const cleanup = transientSurfaceCleanups.get(surface);
@@ -375,11 +408,14 @@ function setTransientSurface(surface, open, { trigger, focusTarget, restoreFocus
     surface.hidden = false;
     surface.inert = false;
     surface.dataset.state = "opening";
+    transientSurfaceAnchors.set(surface, trigger);
+    fitTransientSurface(surface, trigger);
     trigger?.setAttribute("aria-expanded", "true");
     focusTarget?.focus();
     requestAnimationFrame(() => {
       if (surface.dataset.state !== "opening") return;
       surface.dataset.state = "open";
+      fitTransientSurface(surface, trigger);
     });
     return;
   }
@@ -906,7 +942,7 @@ if (buttonLab) {
         setButtonStatus("保存失败；操作保留在原位，可直接重试。");
         sonner.showKinToast({
           title: "规则未保存",
-          description: "本地样例模拟请求失败，可在原按钮上重试。",
+          description: "本地示例模拟请求失败，可在原按钮上重试。",
           theme: document.documentElement.dataset.theme,
           locale: coreLocale,
           tone: "error",

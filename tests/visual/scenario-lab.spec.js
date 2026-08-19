@@ -15,6 +15,16 @@ test.afterEach(async ({ page }) => {
   expect(browserErrors.get(page) ?? []).toEqual([]);
 });
 
+test("Scenario Lab localizes its eighteen-scenario field help", async ({ page }) => {
+  for (const [query, expected] of [
+    ["", "Eighteen scenarios are available to preview."],
+    ["&lang=zh-CN", "当前提供 18 个可预览场景。"],
+  ]) {
+    await page.goto(`/scenarios/lab.html?scenario=INT-01&state=normal&viewport=wide&theme=dark${query}`);
+    await expect(page.locator("#lab-scenario-help")).toHaveText(expected);
+  }
+});
+
 async function expectVerified(page) {
   const verification = page.locator("[data-lab-verification]");
   await expect(verification).toHaveAttribute("data-state", "pass");
@@ -145,7 +155,7 @@ test("Scenario Lab retains global navigation and gives Escape to the topmost sur
   const labLink = navigation.locator('[data-global-nav-key="lab"]');
   await expect(globalHeader).toBeVisible();
   await expect(navigation).toBeVisible();
-  await expect(labLink).toHaveText("场景检查台");
+  await expect(labLink).toHaveText("场景预览");
   await expect(labLink).toHaveAttribute("aria-current", "page");
   const persistedHref = await labLink.evaluate((element) => element.href);
   expect(persistedHref).toContain("scenario=INT-02");

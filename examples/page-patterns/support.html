@@ -22,7 +22,7 @@
       <a class="flow-brand" href="../../"><strong>KIN</strong><span data-i18n="common.reference">页面流程</span></a>
       <div class="flow-preferences">
         <div class="language-control">
-          <button class="icon-control" type="button" data-language-trigger aria-haspopup="menu" aria-expanded="false" aria-controls="language-menu" data-i18n-aria="common.language" aria-label="切换语言"><i data-lucide="languages" aria-hidden="true"></i></button>
+          <button class="icon-control" type="button" data-language-trigger aria-haspopup="menu" aria-expanded="false" aria-controls="language-menu" data-i18n-aria="common.language" aria-label="选择语言"><i data-lucide="languages" aria-hidden="true"></i></button>
           <div class="language-menu preference-menu" id="language-menu" data-language-menu role="menu" data-state="closed" hidden><button type="button" role="menuitemradio" aria-checked="true" data-language-option="zh-CN">中文</button><button type="button" role="menuitemradio" aria-checked="false" data-language-option="en">English</button></div>
         </div>
         <div class="theme-control">
@@ -47,8 +47,8 @@
       <div class="support-main">
         <section class="support-section" data-support-section="help">
           <header>
-            <h2 tabindex="-1" data-i18n="support.helpTitle">查找经过复核的产品说明</h2>
-            <p data-i18n="support.helpBody">搜索结果会显示所属分类和最近复核时间；找不到答案时，可连同当前信息提交请求。</p>
+            <h2 tabindex="-1" data-i18n="support.helpTitle">查找产品帮助</h2>
+            <p data-i18n="support.helpBody">搜索结果会显示所属分类和最近更新时间；找不到答案时，可连同当前信息提交请求。</p>
           </header>
           <div class="support-search-controls">
             <div class="flow-field support-search-wrap">
@@ -69,15 +69,15 @@
           <p class="support-result-summary" data-help-summary aria-live="polite"></p>
           <div class="support-result-list" data-help-results>
             <article class="support-article" data-help-article data-category="access" data-search="权限 access permission role 邀请 invitation">
-              <button type="button" aria-expanded="false"><span><strong data-i18n="support.article1Title">为什么我只能查看，不能修改记录？</strong><span data-i18n="support.article1Meta">账号与权限 · 2026-07-10 复核</span></span><i data-lucide="chevron-down" aria-hidden="true"></i></button>
+              <button type="button" aria-expanded="false"><span><strong data-i18n="support.article1Title">为什么我只能查看，不能修改记录？</strong><span data-i18n="support.article1Meta">账号与权限 · 2026-07-10 更新</span></span><i data-lucide="chevron-down" aria-hidden="true"></i></button>
               <div class="support-article-answer" hidden data-i18n="support.article1Answer">能否修改记录取决于工作区角色和记录权限。如需编辑，请申请相应权限。</div>
             </article>
             <article class="support-article" data-help-article data-category="data" data-search="导出 export csv 下载 download 失败 failed">
-              <button type="button" aria-expanded="false"><span><strong data-i18n="support.article2Title">导出任务失败后会发生什么？</strong><span data-i18n="support.article2Meta">数据与导出 · 2026-07-08 复核</span></span><i data-lucide="chevron-down" aria-hidden="true"></i></button>
+              <button type="button" aria-expanded="false"><span><strong data-i18n="support.article2Title">导出任务失败后会发生什么？</strong><span data-i18n="support.article2Meta">数据与导出 · 2026-07-08 更新</span></span><i data-lucide="chevron-down" aria-hidden="true"></i></button>
               <div class="support-article-answer" hidden data-i18n="support.article2Answer">导出失败后会保留筛选范围、格式和任务 ID；重试只处理失败部分。</div>
             </article>
             <article class="support-article" data-help-article data-category="workspace" data-search="布局 layout 工作区 workspace 重置 reset 同步 sync">
-              <button type="button" aria-expanded="false"><span><strong data-i18n="support.article3Title">工作区布局保存在哪里？</strong><span data-i18n="support.article3Meta">工作区 · 2026-07-06 复核</span></span><i data-lucide="chevron-down" aria-hidden="true"></i></button>
+              <button type="button" aria-expanded="false"><span><strong data-i18n="support.article3Title">工作区布局保存在哪里？</strong><span data-i18n="support.article3Meta">工作区 · 2026-07-06 更新</span></span><i data-lucide="chevron-down" aria-hidden="true"></i></button>
               <div class="support-article-answer" hidden data-i18n="support.article3Answer">布局可能保存在当前设备、个人账号或整个组织中，具体取决于工作区设置。</div>
             </article>
           </div>
@@ -109,7 +109,7 @@
               <p class="field-help" data-i18n="support.descriptionHelp">包含预期结果、实际结果、发生时间和已尝试步骤；不要包含敏感信息。</p>
             </div>
             <label class="support-confirm"><input type="checkbox" name="safe-content" required /><span data-i18n="support.safeConfirm">我确认说明中不包含密码、验证码、密钥或支付凭据。</span></label>
-            <div class="form-actions"><button class="flow-button primary-action" type="submit"><i data-lucide="send" aria-hidden="true"></i><span data-i18n="support.submitRequest">记录示例请求</span></button></div>
+            <div class="form-actions"><button class="flow-button primary-action" type="submit"><i data-lucide="send" aria-hidden="true"></i><span data-i18n="support.submitRequest">提交示例请求</span></button></div>
             <p class="form-status" data-support-request-status tabindex="-1" aria-live="polite"></p>
           </form>
           <div class="support-result" data-support-request-result hidden>

@@ -271,6 +271,39 @@ test("workspace localizes controls and loads Sonner on demand", async ({ page })
   expect(await page.evaluate(() => performance.getEntriesByType("resource").some(({ name }) => name.includes("sonner-island")))).toBe(true);
 });
 
+test("workspace gives progress, meter, and context-thread triggers meaningful localized names", async ({ page }) => {
+  await page.goto("/examples/workspace-reference/core-components.html");
+  await expect(page.getByRole("progressbar", { name: "正在核验来源" })).toHaveAttribute("value", "3");
+  await expect(page.getByRole("meter", { name: "本月自动化额度" })).toHaveAttribute("value", "68");
+
+  const cases = [
+    { locale: "en", name: "Open context thread" },
+    { locale: "zh-CN", name: "打开复核助手" },
+  ];
+  for (const { locale, name } of cases) {
+    await page.goto(`/examples/workspace-reference/?lang=${locale}`);
+    await expect(page.locator(".brand-mark")).toHaveAccessibleName(locale === "zh-CN" ? "KIN 设计系统" : "KIN Design System");
+    const triggers = page.locator("[data-context-toggle]");
+    const visibleTriggers = page.locator(".brand-actions [data-context-toggle], .inspector-header-actions [data-context-toggle]");
+    await expect(visibleTriggers).toHaveCount(2);
+    await expect(visibleTriggers.nth(0)).toHaveAccessibleName(name);
+    await expect(visibleTriggers.nth(1)).toHaveAccessibleName(name);
+    await expect(triggers).toHaveCount(3);
+    expect(await triggers.evaluateAll((elements) => elements.map((element) => element.getAttribute("aria-label")))).toEqual([name, name, name]);
+
+    const contextThread = page.locator("[data-context-thread]");
+    const contextInput = page.locator("[data-context-input]");
+    const close = page.locator("[data-context-close]");
+    for (const trigger of [visibleTriggers.nth(0), visibleTriggers.nth(1)]) {
+      await trigger.click();
+      await expect(contextInput).toBeFocused();
+      await close.click();
+      await expect(contextThread).toHaveAttribute("data-state", "closed");
+      await expect(trigger).toBeFocused();
+    }
+  }
+});
+
 test("workspace command and contextual composer expose visible keyboard focus boundaries", async ({ page }) => {
   await seedPreferences(page, "dark", "normal", "en");
   await page.setViewportSize({ width: 1440, height: 900 });
@@ -1204,7 +1237,7 @@ test("background task fixture exposes durable recovery states", async ({ page })
   await seedPreferences(page, "dark");
   await page.goto("/examples/workspace-reference/advanced-components.html#background-work");
 
-  await expect(page.getByRole("table", { name: "后台任务队列" })).toBeVisible();
+  await expect(page.getByRole("table", { name: "后台任务" })).toBeVisible();
   await page.getByRole("button", { name: "重试失败任务" }).click();
   await expect(page.getByText("排队重试", { exact: true })).toBeVisible();
   await expect(page.getByText("原始筛选保持不变", { exact: false })).toBeVisible();

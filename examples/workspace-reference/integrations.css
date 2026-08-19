@@ -1,6 +1,6 @@
 .integration-lab-page {
   min-height: 100vh;
-  overflow: visible;
+  overflow-x: clip;
   --font-ui: var(--font-sans, Inter, Geist, system-ui, sans-serif);
   --text-primary: var(--text);
   --text-secondary: var(--text-2);
@@ -15,6 +15,12 @@
   --radius-md: 7px;
   --radius-lg: 10px;
 }
+.integration-lab-page,
+.integration-lab,
+.integration-header,
+.integration-section,
+.integration-header .reference-actions,
+.integration-section .reference-section-heading { min-width: 0; max-width: 100%; }
 .integration-header { position: sticky; z-index: 20; top: 0; background: color-mix(in srgb, var(--canvas) 94%, transparent); }
 .integration-preference-menu-root { position: relative; }
 .integration-theme-control { display: inline-flex; align-items: center; gap: 2px; }
@@ -34,7 +40,7 @@
 .integration-section { padding: 30px 0; border-bottom: 1px solid var(--line); }
 .integration-section .reference-section-heading { margin-bottom: 18px; }
 .integration-section .reference-section-heading p { max-width: 760px; }
-.integration-section .reference-section-heading > a { color: var(--muted); font-size: 11px; }
+.integration-section .reference-section-heading > a { flex: 0 0 auto; max-width: 45%; overflow: hidden; color: var(--muted); font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }
 .integration-actions { display: flex; flex-wrap: wrap; gap: 8px; }
 .integration-toast-config { display: grid; max-width: 760px; grid-template-columns: minmax(0, 1fr) auto; gap: 16px; margin-bottom: 18px; }
 .integration-toast-config fieldset { min-width: 0; padding: 0; border: 0; margin: 0; }
@@ -79,8 +85,8 @@
 .integration-section .kin-sortable { max-width: 560px; }
 .integration-section .kin-otp { max-width: 440px; }
 .integration-section .kin-live-chart { max-width: 860px; }
-.integration-code-boundary { display: flex; max-width: 620px; min-height: 44px; align-items: center; gap: 10px; padding: 0 12px; border-block: 1px solid var(--line); color: var(--muted); }
-.integration-code-boundary code { color: var(--text-2); }
+.integration-code-boundary { display: flex; max-width: 620px; min-height: 44px; align-items: center; flex-wrap: wrap; gap: 10px; padding: 0 12px; border-block: 1px solid var(--line); color: var(--muted); }
+.integration-code-boundary code { min-width: 0; overflow-wrap: anywhere; color: var(--text-2); }
 .integration-code-boundary span { margin-left: auto; font-size: 11px; }
 
 @media (max-width: 700px) {
@@ -101,6 +107,7 @@
   .toast-position-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .integration-actions button, .integration-section > .icon-action { min-height: 44px; }
   .integration-header .icon-only-control { width: 44px; min-width: 44px; height: 44px; }
+  .integration-section .reference-section-heading > a { display: inline-flex; min-width: 44px; min-height: 44px; align-items: center; }
   .integration-entity-row { grid-template-columns: 74px minmax(0, 1fr); min-height: 46px; }
   .integration-entity-row > small { display: none; }
 }

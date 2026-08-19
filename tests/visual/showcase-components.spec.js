@@ -71,6 +71,30 @@ test("Button uses real pending, notification, destructive confirmation, and undo
   await expect(page.locator('[data-sonner-toast][data-visible="true"]').filter({ hasText: "Draft restored" })).toBeVisible();
 });
 
+test("Button Save exposes localized busy and live status in English and Chinese", async ({ page }) => {
+  const cases = [
+    { locale: "en", initial: "Save changes", pending: "Saving…", saved: "Changes saved" },
+    { locale: "zh-CN", initial: "保存更改", pending: "保存中…", saved: "更改已保存" },
+  ];
+
+  for (const { locale, initial, pending, saved } of cases) {
+    await page.goto(specimenUrl("button", locale));
+    const save = page.locator(".button-specimen-group").first().getByRole("button").first();
+    const liveStatus = page.locator("[data-save-status]");
+    await expect(save).toHaveAccessibleName(initial);
+    await expect(save).toHaveAttribute("aria-busy", "false");
+    await expect(liveStatus).toHaveText("");
+
+    await save.click();
+    await expect(save).toBeDisabled();
+    await expect(save).toHaveAttribute("aria-busy", "true");
+    await expect(page.getByRole("button", { name: pending })).toBeDisabled();
+    await expect(liveStatus).toHaveText(pending);
+    await expect(liveStatus).toHaveText(saved, { timeout: 2_000 });
+    await expect(save).toHaveAttribute("aria-busy", "false");
+  }
+});
+
 test("Command Menu remains keyboard-first and returns focus to its trigger", async ({ page }) => {
   await page.goto(specimenUrl("command-menu"));
   const trigger = page.getByRole("button", { name: "Open command menu" });

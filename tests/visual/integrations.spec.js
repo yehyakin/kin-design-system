@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { devices, expect, test } from "@playwright/test";
 
 const browserErrors = new WeakMap();
 
@@ -63,7 +63,7 @@ test("theme and language controls expose explicit menus and preserve the working
   await expect(english).toBeFocused();
   await chinese.click();
   await expect(page.locator("html")).toHaveAttribute("lang", "zh-CN");
-  await expect(page.getByText("第三方能力成为 KIN 的一部分", { exact: true })).toBeVisible();
+  await expect(page.getByText("查看官方组件在 KIN 中的实际表现", { exact: true })).toBeVisible();
   await expect(language).toBeFocused();
 
   await theme.click();
@@ -176,19 +176,30 @@ test("cmdk opens from the keyboard, filters, and restores focus", async ({ page 
   await expect(trigger).toBeFocused();
 });
 
-test("React Virtuoso windows one thousand rows and follows keyboard selection", async ({ page }) => {
+test("React Virtuoso owns direct options and follows active-descendant keyboard selection", async ({ page }) => {
   await openLab(page);
   const section = page.locator("#virtuoso");
   await section.scrollIntoViewIfNeeded();
   const shell = section.locator("[data-integration-virtual]");
   await shell.scrollIntoViewIfNeeded();
   await expect(shell).toBeVisible();
+  await expect(shell).toHaveAttribute("role", "listbox");
+  await expect(shell.locator('[role="list"], [role="listitem"]')).toHaveCount(0);
+  await expect.poll(() => shell.locator('[role="option"]').count()).toBeGreaterThan(0);
+  expect(await shell.locator('[role="option"]').evaluateAll((options) => options.every((option) => option.closest('[role="listbox"]')?.hasAttribute("data-integration-virtual")))).toBe(true);
   const renderedRows = shell.locator(".integration-entity-row");
   expect(await renderedRows.count()).toBeGreaterThan(0);
   expect(await renderedRows.count()).toBeLessThan(100);
+  const activeBefore = await shell.getAttribute("aria-activedescendant");
+  expect(activeBefore).toBe("integration-entity-ENT-0001");
+  await expect(shell.locator(`#${activeBefore}`)).toHaveAttribute("role", "option");
+  await expect(shell.locator(`#${activeBefore}`)).toHaveAttribute("aria-selected", "true");
   await shell.focus();
   await page.keyboard.press("j");
-  await expect(shell.locator('.integration-entity-row[aria-selected="true"]')).toContainText("ENT-0002");
+  await expect(shell).toBeFocused();
+  await expect(shell).toHaveAttribute("aria-activedescendant", "integration-entity-ENT-0002");
+  await expect(shell.locator('#integration-entity-ENT-0002')).toHaveAttribute("role", "option");
+  await expect(shell.locator('#integration-entity-ENT-0002')).toHaveAttribute("aria-selected", "true");
 });
 
 test("dnd kit supports keyboard sorting with localized instructions", async ({ page }) => {
@@ -293,6 +304,82 @@ test("Sonner keeps mobile notifications inside safe-area-aware offsets", async (
   expect(box.x).toBeGreaterThanOrEqual(16);
   expect(box.y).toBeGreaterThanOrEqual(16);
   expect(box.x + box.width).toBeLessThanOrEqual(390 - 16);
+});
+
+test("coarse-pointer integration targets keep a 44px hit area within the toast", async ({ browser }) => {
+  const context = await browser.newContext({
+    ...devices["iPhone 13"],
+    colorScheme: "dark",
+    reducedMotion: "reduce",
+  });
+  const touchPage = await context.newPage();
+  const errors = [];
+  touchPage.on("console", (message) => {
+    if (message.type() === "error") errors.push(`console: ${message.text()}`);
+  });
+  touchPage.on("pageerror", (error) => errors.push(`pageerror: ${error.message}`));
+  await touchPage.addInitScript(() => {
+    localStorage.setItem("kin-reference-theme", "dark");
+    localStorage.setItem("kin-integration-locale", "en");
+  });
+
+  try {
+    await touchPage.goto("/examples/workspace-reference/integrations.html");
+    await expect(touchPage.evaluate(() => matchMedia("(pointer: coarse)").matches)).resolves.toBe(true);
+
+    const commandTrigger = touchPage.locator('[data-integration-action="command-open"]');
+    await commandTrigger.scrollIntoViewIfNeeded();
+    await commandTrigger.click();
+    const commandItem = touchPage.locator("[cmdk-item]").first();
+    await expect(commandItem).toBeVisible();
+    const commandBox = await commandItem.boundingBox();
+    expect(commandBox).not.toBeNull();
+    await touchPage.keyboard.press("Escape");
+    await expect(touchPage.getByRole("dialog")).toBeHidden();
+
+    const dndSection = touchPage.locator("#dnd-kit");
+    await dndSection.scrollIntoViewIfNeeded();
+    const dragHandle = dndSection.locator(".kin-sortable__handle").first();
+    await expect(dragHandle).toBeVisible();
+
+    const livelineSection = touchPage.locator("#liveline");
+    await livelineSection.scrollIntoViewIfNeeded();
+    const disclosure = livelineSection.locator("summary");
+    await expect(disclosure).toBeVisible();
+
+    await touchPage.locator('[data-integration-action="toast-error"]').click();
+    const toast = touchPage.locator('[data-sonner-toast][data-visible="true"]').first();
+    const retry = toast.getByRole("button", { name: "Retry", exact: true });
+    const close = toast.getByRole("button", { name: "Close notification", exact: true });
+    await expect(retry).toBeVisible();
+    await expect(close).toBeVisible();
+
+    const targets = await Promise.all([dragHandle, disclosure, retry, close].map(async (locator) => {
+      const box = await locator.boundingBox();
+      expect(box).not.toBeNull();
+      return box;
+    }));
+    for (const [name, box] of [["cmdk item", commandBox], ["drag handle", targets[0]], ["chart disclosure", targets[1]], ["toast retry", targets[2]], ["toast close", targets[3]]]) {
+      expect(box, `${name} should have a measured box`).not.toBeNull();
+      expect(Math.round(box?.width ?? 0), `${name} width`).toBeGreaterThanOrEqual(44);
+      expect(Math.round(box?.height ?? 0), `${name} height`).toBeGreaterThanOrEqual(44);
+    }
+
+    const toastBox = await toast.boundingBox();
+    const closeBox = await close.boundingBox();
+    expect(toastBox).not.toBeNull();
+    expect(closeBox).not.toBeNull();
+    if (toastBox && closeBox) {
+      expect(closeBox.x).toBeGreaterThanOrEqual(toastBox.x);
+      expect(closeBox.y).toBeGreaterThanOrEqual(toastBox.y);
+      expect(closeBox.x + closeBox.width).toBeLessThanOrEqual(toastBox.x + toastBox.width);
+      expect(closeBox.y + closeBox.height).toBeLessThanOrEqual(toastBox.y + toastBox.height);
+    }
+  } finally {
+    await context.close().catch(() => undefined);
+  }
+
+  expect(errors).toEqual([]);
 });
 
 test("showcase registers the Blocks icon and removes thumb motion for Reduced Motion", async ({ page }) => {

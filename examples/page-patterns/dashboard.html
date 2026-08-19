@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#f6f7f8" />
-    <title>KIN 数据与后台总览参考</title>
+    <title>运营总览 · KIN</title>
     <script>
       (() => {
         const preference = localStorage.getItem("kin-reference-theme") || "system";
@@ -22,7 +22,7 @@
       <a class="flow-brand" href="../../"><strong>KIN</strong><span data-i18n="common.reference">页面流程</span></a>
       <div class="flow-preferences">
         <div class="language-control">
-          <button class="icon-control" type="button" data-language-trigger aria-haspopup="menu" aria-expanded="false" aria-controls="language-menu" data-i18n-aria="common.language" aria-label="切换语言"><i data-lucide="languages" aria-hidden="true"></i></button>
+          <button class="icon-control" type="button" data-language-trigger aria-haspopup="menu" aria-expanded="false" aria-controls="language-menu" data-i18n-aria="common.language" aria-label="选择语言"><i data-lucide="languages" aria-hidden="true"></i></button>
           <div class="language-menu preference-menu" id="language-menu" data-language-menu role="menu" data-state="closed" hidden><button type="button" role="menuitemradio" aria-checked="true" data-language-option="zh-CN">中文</button><button type="button" role="menuitemradio" aria-checked="false" data-language-option="en">English</button></div>
         </div>
         <div class="theme-control">
@@ -43,7 +43,7 @@
           <a href="#sources"><i data-lucide="database" aria-hidden="true"></i><span data-i18n="dashboard.navSources">数据来源</span></a>
           <a href="./settings.html"><i data-lucide="settings" aria-hidden="true"></i><span data-i18n="dashboard.navSettings">后台设置</span></a>
         </nav>
-        <p class="dashboard-sidebar-note"><i data-lucide="shield-check" aria-hidden="true"></i><span data-i18n="dashboard.fixture">确定性本地数据 · 未连接分析、监控或后台服务</span></p>
+        <p class="dashboard-sidebar-note"><i data-lucide="shield-check" aria-hidden="true"></i><span data-i18n="dashboard.fixture">本地示例数据 · 未连接分析、监控或后台服务</span></p>
       </aside>
 
       <main class="dashboard-main">
@@ -51,10 +51,10 @@
           <div class="dashboard-title-group">
             <p data-i18n="dashboard.eyebrow">共享后台 / 全部来源</p>
             <h1 data-i18n="dashboard.title">运营总览</h1>
-            <p><span data-i18n="dashboard.updated">最近验证于 09:42 UTC+8</span><span aria-hidden="true"> · </span><span data-i18n="dashboard.sourceCount">12 个来源</span></p>
+            <p><span data-i18n="dashboard.updated">最后更新：09:42 UTC+8</span><span aria-hidden="true"> · </span><span data-i18n="dashboard.sourceCount">12 个来源</span></p>
           </div>
           <div class="dashboard-toolbar-actions">
-            <label class="dashboard-state-control"><span data-i18n="dashboard.stateLabel">示例状态</span><select data-dashboard-state-select><option value="normal" data-i18n="dashboard.stateNormal">正常</option><option value="partial" data-i18n="dashboard.statePartial">部分来源</option><option value="stale" data-i18n="dashboard.stateStale">数据过期</option><option value="error" data-i18n="dashboard.stateError">分析错误</option></select></label>
+            <label class="dashboard-state-control"><span data-i18n="dashboard.stateLabel">示例状态</span><select data-dashboard-state-select><option value="normal" data-i18n="dashboard.stateNormal">正常</option><option value="partial" data-i18n="dashboard.statePartial">部分来源</option><option value="stale" data-i18n="dashboard.stateStale">数据过期</option><option value="error" data-i18n="dashboard.stateError">分析失败</option></select></label>
             <button class="flow-button" type="button" data-dashboard-refresh><i data-lucide="refresh-cw" aria-hidden="true"></i><span data-i18n="dashboard.refresh">刷新示例</span></button>
           </div>
         </header>
@@ -93,24 +93,24 @@
           </a>
           <a class="dashboard-metric" href="#exceptions" data-metric="review">
             <span class="dashboard-metric-icon warning"><i data-lucide="clipboard-check" aria-hidden="true"></i></span>
-            <span class="dashboard-metric-heading"><span data-i18n="dashboard.metricReview">等待复核</span><i data-lucide="arrow-up-right" aria-hidden="true"></i></span>
+            <span class="dashboard-metric-heading"><span data-i18n="dashboard.metricReview">等待审核</span><i data-lucide="arrow-up-right" aria-hidden="true"></i></span>
             <strong data-dashboard-metric-value="review">7</strong>
             <small><span data-dashboard-metric-change="review">-2</span><span data-i18n="dashboard.vsPrevious"> 对比上一周期</span></small>
-            <em data-i18n="dashboard.metricReviewSource">复核队列 · 当前范围</em>
+            <em data-i18n="dashboard.metricReviewSource">审核队列 · 当前范围</em>
           </a>
           <a class="dashboard-metric" href="#exceptions" data-metric="failed">
             <span class="dashboard-metric-icon negative"><i data-lucide="circle-alert" aria-hidden="true"></i></span>
             <span class="dashboard-metric-heading"><span data-i18n="dashboard.metricFailed">失败来源</span><i data-lucide="arrow-up-right" aria-hidden="true"></i></span>
             <strong data-dashboard-metric-value="failed">2</strong>
             <small><span data-dashboard-metric-change="failed">+1</span><span data-i18n="dashboard.vsPrevious"> 对比上一周期</span></small>
-            <em data-i18n="dashboard.metricFailedSource">来源健康 · 需要处理</em>
+            <em data-i18n="dashboard.metricFailedSource">来源状态 · 需要处理</em>
           </a>
         </section>
 
         <section class="dashboard-analysis" id="analysis" aria-label="运营分析" data-i18n-aria="dashboard.analysisLabel">
           <article class="dashboard-primary-chart">
             <header>
-              <div><p data-i18n="dashboard.chartEyebrow">处理量</p><h2 data-i18n="dashboard.chartTitle">记录处理趋势</h2><p data-i18n="dashboard.chartBody">按已验证完成时间统计；不含失败和待复核记录。</p></div>
+              <div><p data-i18n="dashboard.chartEyebrow">处理量</p><h2 data-i18n="dashboard.chartTitle">记录处理趋势</h2><p data-i18n="dashboard.chartBody">按已验证完成时间统计；不含失败和待审核记录。</p></div>
               <span class="dashboard-chart-total"><strong data-dashboard-chart-total>24,680</strong><small data-i18n="dashboard.recordsUnit"> 条记录</small></span>
             </header>
             <div class="dashboard-error" data-dashboard-error hidden>
@@ -139,14 +139,14 @@
 
           <div class="dashboard-side-analysis">
             <article class="dashboard-module" id="sources">
-              <header><div><p data-i18n="dashboard.sourcesEyebrow">来源覆盖</p><h2 data-i18n="dashboard.sourcesTitle">来源分布</h2></div><a href="#exceptions" data-i18n="dashboard.inspectSources">查看来源</a></header>
+              <header><div><p data-i18n="dashboard.sourcesEyebrow">来源构成</p><h2 data-i18n="dashboard.sourcesTitle">来源分布</h2></div><a href="#exceptions" data-i18n="dashboard.inspectSources">查看来源</a></header>
               <div class="dashboard-distribution">
                 <div class="dashboard-donut" role="img" data-i18n-aria="dashboard.distributionAria" aria-label="内部记录 58%，监控任务 27%，外部来源 15%"><span><strong>12</strong><small data-i18n="dashboard.sourcesUnit">来源</small></span></div>
                 <ul><li><span class="distribution-key internal"></span><span data-i18n="dashboard.sourceInternal">内部记录</span><strong>58%</strong></li><li><span class="distribution-key monitor"></span><span data-i18n="dashboard.sourceMonitor">监控任务</span><strong>27%</strong></li><li><span class="distribution-key external"></span><span data-i18n="dashboard.sourceExternal">外部来源</span><strong>15%</strong></li></ul>
               </div>
             </article>
             <article class="dashboard-module dashboard-health">
-              <header><div><p data-i18n="dashboard.healthEyebrow">任务健康</p><h2 data-i18n="dashboard.healthTitle">当前执行状态</h2></div><span data-i18n="dashboard.healthTime">09:42</span></header>
+              <header><div><p data-i18n="dashboard.healthEyebrow">任务状态</p><h2 data-i18n="dashboard.healthTitle">当前执行状态</h2></div><span data-i18n="dashboard.healthTime">09:42</span></header>
               <ul><li><span><i data-lucide="circle-check" aria-hidden="true"></i><span data-i18n="dashboard.healthCompleted">已完成</span></span><strong>31</strong></li><li><span><i data-lucide="clock" aria-hidden="true"></i><span data-i18n="dashboard.healthRunning">运行中</span></span><strong>5</strong></li><li class="negative"><span><i data-lucide="circle-alert" aria-hidden="true"></i><span data-i18n="dashboard.healthFailed">失败</span></span><strong>2</strong></li></ul>
               <div class="dashboard-health-meter" role="meter" aria-valuemin="0" aria-valuemax="38" aria-valuenow="31" data-i18n-aria="dashboard.healthMeter" aria-label="38 个任务中 31 个已完成"><span style="--meter-value:81.6%"></span></div>
             </article>
@@ -155,10 +155,10 @@
 
         <section class="dashboard-bottom-grid">
           <article class="dashboard-exceptions" id="exceptions">
-            <header><div><p data-i18n="dashboard.queueEyebrow">需要处理</p><h2 data-i18n="dashboard.queueTitle">异常队列</h2><p data-i18n="dashboard.queueBody">按影响和最近失败时间排序。</p></div><label><span data-i18n="dashboard.queueFilter">筛选</span><select data-dashboard-queue-filter><option value="all" data-i18n="dashboard.queueAll">全部异常</option><option value="review" data-i18n="dashboard.queueReview">等待复核</option><option value="failed" data-i18n="dashboard.queueFailed">失败来源</option></select></label></header>
+            <header><div><p data-i18n="dashboard.queueEyebrow">需要处理</p><h2 data-i18n="dashboard.queueTitle">异常队列</h2><p data-i18n="dashboard.queueBody">按影响和最近失败时间排序。</p></div><label><span data-i18n="dashboard.queueFilter">筛选</span><select data-dashboard-queue-filter><option value="all" data-i18n="dashboard.queueAll">全部异常</option><option value="review" data-i18n="dashboard.queueReview">等待审核</option><option value="failed" data-i18n="dashboard.queueFailed">失败来源</option></select></label></header>
             <div class="dashboard-table-scroll"><table><caption class="visually-hidden" data-i18n="dashboard.queueTitle">异常队列</caption><thead><tr><th scope="col" data-i18n="dashboard.object">对象</th><th scope="col" data-i18n="dashboard.stateLabel">示例状态</th><th scope="col" data-i18n="dashboard.owner">负责人</th><th scope="col" data-i18n="dashboard.updatedColumn">最近更新</th><th scope="col"><span class="visually-hidden" data-i18n="dashboard.open">打开</span></th></tr></thead><tbody>
               <tr data-dashboard-queue-row data-queue-kind="failed"><td><strong>SRC-07</strong><small data-i18n="dashboard.rowSource">渠道活动来源</small></td><td><span class="semantic-state negative"><i data-lucide="circle-alert" aria-hidden="true"></i><span data-i18n="dashboard.rowUnavailable">来源不可用</span></span></td><td>Lin</td><td data-i18n="dashboard.rowTime1">12 分钟前</td><td><a class="icon-control" href="./system.html#server" data-i18n-aria="dashboard.openSource" aria-label="打开来源"><i data-lucide="arrow-up-right" aria-hidden="true"></i></a></td></tr>
-              <tr data-dashboard-queue-row data-queue-kind="review"><td><strong>REV-128</strong><small data-i18n="dashboard.rowReview">价格变更复核</small></td><td><span class="semantic-state warning"><i data-lucide="clipboard-check" aria-hidden="true"></i><span data-i18n="dashboard.rowPending">等待复核</span></span></td><td>Mina</td><td data-i18n="dashboard.rowTime2">28 分钟前</td><td><a class="icon-control" href="../workspace-reference/advanced-components.html" data-i18n-aria="dashboard.openReview" aria-label="打开复核"><i data-lucide="arrow-up-right" aria-hidden="true"></i></a></td></tr>
+              <tr data-dashboard-queue-row data-queue-kind="review"><td><strong>REV-128</strong><small data-i18n="dashboard.rowReview">价格变更审核</small></td><td><span class="semantic-state warning"><i data-lucide="clipboard-check" aria-hidden="true"></i><span data-i18n="dashboard.rowPending">等待审核</span></span></td><td>Mina</td><td data-i18n="dashboard.rowTime2">28 分钟前</td><td><a class="icon-control" href="../workspace-reference/advanced-components.html" data-i18n-aria="dashboard.openReview" aria-label="打开审核项"><i data-lucide="arrow-up-right" aria-hidden="true"></i></a></td></tr>
               <tr data-dashboard-queue-row data-queue-kind="failed"><td><strong>JOB-044</strong><small data-i18n="dashboard.rowJob">目录同步任务</small></td><td><span class="semantic-state negative"><i data-lucide="circle-alert" aria-hidden="true"></i><span data-i18n="dashboard.rowFailed">执行失败</span></span></td><td>Ops</td><td data-i18n="dashboard.rowTime3">41 分钟前</td><td><a class="icon-control" href="../workspace-reference/advanced-components.html" data-i18n-aria="dashboard.openTask" aria-label="打开任务"><i data-lucide="arrow-up-right" aria-hidden="true"></i></a></td></tr>
               <tr data-dashboard-queue-row data-queue-kind="review"><td><strong>REV-124</strong><small data-i18n="dashboard.rowEvidence">来源冲突复核</small></td><td><span class="semantic-state warning"><i data-lucide="shield-alert" aria-hidden="true"></i><span data-i18n="dashboard.rowConflict">存在冲突</span></span></td><td>Yehyakin</td><td data-i18n="dashboard.rowTime4">1 小时前</td><td><a class="icon-control" href="../workspace-reference/index.html" data-i18n-aria="dashboard.openEvidence" aria-label="打开证据"><i data-lucide="arrow-up-right" aria-hidden="true"></i></a></td></tr>
             </tbody></table></div>
@@ -167,7 +167,7 @@
 
           <article class="dashboard-activity">
             <header><div><p data-i18n="dashboard.activityEyebrow">最近变化</p><h2 data-i18n="dashboard.activityTitle">运营活动</h2></div><a href="../workspace-reference/index.html" data-i18n="dashboard.viewActivity">查看全部</a></header>
-            <ol><li><span class="dashboard-activity-icon"><i data-lucide="refresh-cw" aria-hidden="true"></i></span><div><strong data-i18n="dashboard.activity1">记录索引完成同步</strong><p><span>JOB-041</span><span aria-hidden="true"> · </span><span data-i18n="dashboard.activityTime1">8 分钟前</span></p></div></li><li><span class="dashboard-activity-icon warning"><i data-lucide="clipboard-check" aria-hidden="true"></i></span><div><strong data-i18n="dashboard.activity2">两项价格变更进入复核</strong><p><span data-i18n="dashboard.activityOwner">运营规则</span><span aria-hidden="true"> · </span><span data-i18n="dashboard.activityTime2">28 分钟前</span></p></div></li><li><span class="dashboard-activity-icon negative"><i data-lucide="circle-alert" aria-hidden="true"></i></span><div><strong data-i18n="dashboard.activity3">一个外部来源停止响应</strong><p><span>SRC-07</span><span aria-hidden="true"> · </span><span data-i18n="dashboard.activityTime3">41 分钟前</span></p></div></li></ol>
+            <ol><li><span class="dashboard-activity-icon"><i data-lucide="refresh-cw" aria-hidden="true"></i></span><div><strong data-i18n="dashboard.activity1">记录索引完成同步</strong><p><span>JOB-041</span><span aria-hidden="true"> · </span><span data-i18n="dashboard.activityTime1">8 分钟前</span></p></div></li><li><span class="dashboard-activity-icon warning"><i data-lucide="clipboard-check" aria-hidden="true"></i></span><div><strong data-i18n="dashboard.activity2">两项价格变更进入审核</strong><p><span data-i18n="dashboard.activityOwner">运营规则</span><span aria-hidden="true"> · </span><span data-i18n="dashboard.activityTime2">28 分钟前</span></p></div></li><li><span class="dashboard-activity-icon negative"><i data-lucide="circle-alert" aria-hidden="true"></i></span><div><strong data-i18n="dashboard.activity3">一个外部来源停止响应</strong><p><span>SRC-07</span><span aria-hidden="true"> · </span><span data-i18n="dashboard.activityTime3">41 分钟前</span></p></div></li></ol>
           </article>
         </section>
       </main>

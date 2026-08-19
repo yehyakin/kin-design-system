@@ -194,7 +194,7 @@ for (const [pattern, headingKey, englishHeading, chineseHeading] of [
   ["access", "access.contextTitle", "Verify your identity and continue the current task", "验证身份后继续"],
   ["dashboard", "dashboard.title", "Operations overview", "运营总览"],
   ["onboarding", "onboarding.title", "Set up the workspace", "设置工作区"],
-  ["scheduling", "schedule.title", "Publication and review schedule", "发布与复核排期"],
+  ["scheduling", "schedule.title", "Publication and review schedule", "发布与审核排期"],
   ["search", "search.title", "Find records, documents, and tasks", "查找记录、文档和任务"],
   ["settings", "settings.title", "Settings", "设置"],
   ["support", "support.title", "Help and support", "帮助与支持"],
@@ -213,7 +213,7 @@ for (const [pattern, headingKey, englishHeading, chineseHeading] of [
 
     await expect(page.locator("html")).toHaveAttribute("lang", "zh-CN");
     await expect(heading).toHaveText(chineseHeading);
-    await expect(page.locator("[data-language-trigger]")).toHaveAccessibleName("切换语言");
+    await expect(page.locator("[data-language-trigger]")).toHaveAccessibleName("选择语言");
   });
 }
 
@@ -506,11 +506,11 @@ test("search preserves URL state and separates partial empty error and selected 
   await expect(page.locator('[data-result-id="REC-204"] [data-search-result-link]')).toBeFocused();
   await page.keyboard.press("Enter");
   await expect(page).toHaveURL(/selected=REC-204/);
-  await expect(page.locator("[data-search-detail-title]")).toHaveText("工作区角色复核");
+  await expect(page.locator("[data-search-detail-title]")).toHaveText("工作区权限审核");
   await page.locator('[data-result-id="REC-055"] [data-search-result-link]').click();
   await expect(page.locator("[data-search-detail-title]")).toHaveText("受限审计记录");
   await page.goBack();
-  await expect(page.locator("[data-search-detail-title]")).toHaveText("工作区角色复核");
+  await expect(page.locator("[data-search-detail-title]")).toHaveText("工作区权限审核");
 
   await page.locator('[name="scope"][value="document"]').check();
   await page.locator("[data-search-filter-form]").getByRole("button", { name: "应用筛选" }).click();
@@ -552,12 +552,12 @@ test("search preserves URL state and separates partial empty error and selected 
   await expect(page.locator("[data-search-detail-title]")).toHaveText("Workspace role review");
   await page.locator("[data-language-trigger]").click();
   await page.locator('[data-language-option="zh-CN"]').click();
-  await expect(page.locator("[data-search-detail-title]")).toHaveText("工作区角色复核");
+  await expect(page.locator("[data-search-detail-title]")).toHaveText("工作区权限审核");
 
   await page.setViewportSize({ width: 390, height: 844 });
   await page.reload();
   await page.evaluate(() => scrollTo(0, 0));
-  await expect(page.locator("[data-search-detail-title]")).toHaveText("工作区角色复核");
+  await expect(page.locator("[data-search-detail-title]")).toHaveText("工作区权限审核");
   await page.locator("[data-search-filter-toggle]").click();
   await expect(page.locator("[data-search-filters]")).toBeVisible();
   await assertMinimumTouchTargets(page, ".search-query-field input, .search-compact-control select, .search-filters label, button, .flow-button");
@@ -594,7 +594,7 @@ test("help and support separates guidance requests tickets and sourced status", 
   await page.locator("#affected-reference").fill("TASK-204");
   await page.locator("#request-description").fill("导出结果缺少两条记录，刷新和重新筛选后仍然缺失。");
   await page.locator('[name="safe-content"]').check();
-  await page.locator("[data-support-request-form]").getByRole("button", { name: "记录示例请求" }).click();
+  await page.locator("[data-support-request-form]").getByRole("button", { name: "提交示例请求" }).click();
   await expect(page.locator("[data-support-request-status]")).toContainText("未发送");
   await expect(page.locator("[data-support-request-result]")).toContainText("REF-SUP-2407");
 
@@ -711,7 +711,7 @@ test("scheduling preserves period, selection, Sidebar, Sidecar, agenda, and resp
   const sidecar = page.locator("[data-schedule-sidecar]");
   const conflict = page.locator('[data-event-id="SCH-103"]');
   await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
-  await expect(page.getByRole("heading", { name: "发布与复核排期", level: 1 })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "发布与审核排期", level: 1 })).toBeVisible();
   await expect(page.locator("[data-schedule-period]")).toContainText("2026");
 
   await page.locator("[data-theme-switch]").click();
@@ -732,7 +732,7 @@ test("scheduling preserves period, selection, Sidebar, Sidecar, agenda, and resp
   await expect(shell).toHaveAttribute("data-sidecar-open", "true");
   await expect(sidecar).toHaveAttribute("role", "region");
   await expect(sidecar).not.toHaveAttribute("aria-modal", "true");
-  await expect(page.locator("[data-sidecar-title]")).toHaveText("主图复核");
+  await expect(page.locator("[data-sidecar-title]")).toHaveText("主图审核");
   await expect(page.locator("[data-sidecar-title]")).toBeFocused();
   await expect(primary).not.toHaveAttribute("inert", "");
   await expect.poll(() => primary.evaluate((element) => element.getBoundingClientRect().width)).toBeLessThan(collapsedWidth - 250);

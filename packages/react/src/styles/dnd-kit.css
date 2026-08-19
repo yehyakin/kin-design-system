@@ -53,6 +53,17 @@
   padding: 10px 12px 10px 0;
 }
 
+@media (pointer: coarse) {
+  .kin-sortable__row {
+    grid-template-columns: 44px minmax(0, 1fr);
+  }
+
+  .kin-sortable__handle {
+    width: 44px;
+    min-height: 44px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .kin-sortable__row {
     transition: none !important;

@@ -147,7 +147,7 @@ function setTransientSurface(surface, open, { trigger, focusTarget, restoreFocus
 
 const copy = {
   zh: {
-    skip: "跳到主要内容", primaryNav: "主导航", workspaceNav: "工作区", workspaceName: "情报工作台", overview: "情报概览",
+    skip: "跳到主要内容", brandHome: "KIN 设计系统", primaryNav: "主导航", workspaceNav: "工作区", workspaceName: "情报工作台", overview: "情报概览",
     database: "记录库", signals: "风险信号", monitoring: "监测任务", savedViews: "已保存视图",
     stable: "近期稳定", changed: "最近变化", review: "等待复核", workspaceSettings: "工作区设置",
     admin: "管理员", breadcrumb: "面包屑", search: "搜索", properties: "属性", language: "切换语言",
@@ -194,7 +194,7 @@ const copy = {
     riskEvidencePrimary: "主要来源", riskEvidenceIndependent: "独立监测", riskEvidenceReview: "复核记录", riskResultObserved: "已观察到变更", riskResultBaseline: "基线未变化", riskResultMissing: "没有对应说明", riskResultFailureConfirmed: "故障已确认", riskResultCheckAgrees: "独立检查结果一致", riskResultReviewAvailable: "已有复核记录", riskResultRelationObserved: "已观察到关联", riskResultCheckPending: "独立检查待完成", riskResultDecisionOpen: "尚未记录决定", riskResultRecoveryConfirmed: "恢复已确认", riskResultResolutionRecorded: "已记录处理结论", riskDraftReason: "证书轮换与已核对的入口状态一致。", riskDraftPreserved: "草稿已保留", riskCountTemplate: "{count} 个本地信号", riskCountOne: "1 个本地信号", riskOwnerError: "记录决定前请选择负责人。", riskReasonError: "请记录证据如何支持该决定。", riskScopeValueElevated: "高或严重 · 未解决", riskScopeValueUnassigned: "未指派 · 未解决", riskScopeValueConflicting: "证据冲突 · 待判断", riskScopeValueResolved: "已记录处理结论",
   },
   en: {
-    skip: "Skip to main content", primaryNav: "Primary navigation", workspaceNav: "Workspace", workspaceName: "Information Workspace", overview: "Overview",
+    skip: "Skip to main content", brandHome: "KIN Design System", primaryNav: "Primary navigation", workspaceNav: "Workspace", workspaceName: "Information Workspace", overview: "Overview",
     database: "Entity database", signals: "Risk signals", monitoring: "Monitoring", savedViews: "Saved views",
     stable: "Recently stable", changed: "Recent changes", review: "Pending review", workspaceSettings: "Workspace settings",
     admin: "Administrator", breadcrumb: "Breadcrumb", search: "Search", properties: "Properties", language: "Change language",

@@ -149,9 +149,9 @@ test("English and Chinese roots lead with a catalog-backed workflow", async ({ p
       path: "/zh/",
       lang: "zh-CN",
       title: "KIN 设计系统 — 规则、组件与交互预览",
-      heading: "为关键工作构建界面。",
-      workflow: "对象数据库复核",
-      job: "选择对象，查看证据与属性，并完成可撤销的复核决定。",
+      heading: "为重要工作而设计。",
+      workflow: "档案复核",
+      job: "选择一条记录，核对证据与属性，并作出可撤销的决定。",
       tabs: ["信息", "情报", "电商", "工程"],
       reference: "../examples/workspace-reference/index.html?lang=zh-CN",
       source: "稳定",
@@ -481,7 +481,7 @@ test("every public route keeps one localized global navigation contract", async 
         components: "组件",
         patterns: "布局",
         scenarios: "场景",
-        lab: "场景检查台",
+        lab: "场景预览",
         docs: "文档",
       },
       hrefs: {
@@ -506,6 +506,30 @@ test("every public route keeps one localized global navigation contract", async 
     "真实产品参考",
     "当前检查参考",
     "稳定 规范",
+    "场景检查台",
+    "建议变更复核",
+    "智能体活动记录",
+    "故事时间线",
+    "度量表",
+    "身份验证框架",
+    "上下文线程",
+    "产品布局",
+    "规范已稳定",
+    "规范待完善",
+    "规范草稿",
+    "保持语义分离",
+    "诚实的无结果",
+    "安全恢复",
+    "付款恢复",
+    "任务健康",
+    "来源健康",
+    "部分核验",
+    "演示重新验证",
+    "检查恢复",
+    "记录身份",
+    "精确画布",
+    "运行时集成实验室",
+    "组件成熟度",
   ];
 
   for (const [route, activeKey, locale] of surfaces) {
@@ -581,11 +605,11 @@ test("documentation route retains the original contract and reference destinatio
   await page.goto("/zh/docs/");
   await expect(page).toHaveTitle("文档 · KIN 设计系统");
   await expect(page.locator('.docs-nav a[href="../../scenarios/?lang=zh-CN"]')).toContainText("场景目录");
-  await expect(page.getByRole("link", { name: "浏览 30 个任务场景" })).toHaveAttribute(
+  await expect(page.getByRole("link", { name: "浏览 31 个任务场景" })).toHaveAttribute(
     "href",
     "../../scenarios/?lang=zh-CN",
   );
-  await expect(page.locator('.command-list a[href="../../scenarios/?lang=zh-CN"]')).toContainText("30 个场景");
+  await expect(page.locator('.command-list a[href="../../scenarios/?lang=zh-CN"]')).toContainText("31 个场景");
   expect(consoleWarnings).toEqual([]);
 });
 
@@ -1330,7 +1354,7 @@ test("public product stages expose a native iframe focus entry and return path",
 test("Chinese Component and Pattern discovery preserve machine-fact parity", async ({ page }) => {
   await page.goto("/zh/components/");
   await expect(page).toHaveTitle("组件与交互 · KIN 设计系统");
-  await expect(page.getByRole("heading", { level: 1 })).toHaveText("先感受组件，再阅读规范。");
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("先试用组件，再查看规范。");
   await expect(page.locator("html")).toHaveAttribute("lang", "zh-CN");
   const browser = page.locator("[data-component-gallery]");
   const catalog = page.locator("details.catalog-disclosure");
@@ -1369,7 +1393,7 @@ test("Chinese Component and Pattern discovery preserve machine-fact parity", asy
   );
   await expect(page.frameLocator("iframe[data-stage-frame]").locator("html")).toHaveAttribute("lang", "zh-CN");
   await expect(page.locator('a[href="../../scenarios/?lang=zh-CN"]').first()).toContainText("场景");
-  await expect(page.locator('a[href="../../scenarios/lab.html?lang=zh-CN"]').first()).toContainText("场景检查台");
+  await expect(page.locator('a[href="../../scenarios/lab.html?lang=zh-CN"]').first()).toContainText("场景预览");
 
   await page.goto("/zh/components/evidence-list/");
   await expect(page).toHaveTitle("证据列表 · KIN 设计系统");
@@ -1379,11 +1403,11 @@ test("Chinese Component and Pattern discovery preserve machine-fact parity", asy
   await expect(chineseFeaturedLinks.allTextContents()).resolves.toEqual([
     "命令菜单",
     "证据列表",
-    "建议变更复核",
+    "变更审核",
     "执行预览",
-    "后台任务队列",
+    "后台任务",
     "数据表格",
-    "身份验证对话框",
+    "登录对话框",
     "应用框架",
   ]);
   await expect(chineseFeaturedLinks.first()).toHaveAttribute("href", "../command-menu/");
@@ -1403,7 +1427,7 @@ test("Chinese Component and Pattern discovery preserve machine-fact parity", asy
   await page.getByRole("button", { name: "工作流中" }).click();
   await expect(explorerStage).toHaveAttribute("data-stage-context", "workflow");
   await expect(explorerReference.locator("html")).not.toHaveAttribute("data-showcase-component-focus", "true");
-  await page.getByRole("button", { name: "单独查看" }).click();
+  await page.getByRole("button", { name: "单独预览" }).click();
   await expect(explorerStage).toHaveAttribute("data-stage-context", "isolated");
   await expect(explorerReference.locator("html")).not.toHaveAttribute("data-showcase-component-focus", "true");
   await expect(page.locator("#usage-panel .contract-boundary")).toHaveCount(0);
@@ -1416,8 +1440,8 @@ test("Chinese Component and Pattern discovery preserve machine-fact parity", asy
   await expect(page.locator('.component-support-grid [data-supported="true"]')).toHaveCount(5);
 
   await page.goto("/zh/patterns/");
-  await expect(page).toHaveTitle("按工作方式选择布局 · KIN 设计系统");
-  await expect(page.getByRole("heading", { level: 1 })).toHaveText("按工作方式选择布局");
+  await expect(page).toHaveTitle("为不同任务选择合适布局 · KIN 设计系统");
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("为不同任务选择合适布局");
   const patternBrowser = page.locator("[data-pattern-browser]");
   await expect(patternBrowser.locator("[data-pattern-choice]")).toHaveCount(4);
   await expect(patternBrowser.locator("iframe[data-stage-frame]")).toHaveCount(1);
@@ -1429,8 +1453,8 @@ test("Chinese Component and Pattern discovery preserve machine-fact parity", asy
     "src",
     "../../examples/workspace-reference/index.html?view=investigation&lang=zh-CN&state=normal",
   );
-  await expect(patternBrowser.locator('[data-pattern-context="information-site"] details.pattern-details')).toContainText("信息记录页");
-  await expect(patternBrowser.locator('[data-pattern-context="information-site"] details.pattern-details')).toContainText("查找并核验记录");
+  await expect(patternBrowser.locator('[data-pattern-context="information-site"] details.pattern-details')).toContainText("信息详情页");
+  await expect(patternBrowser.locator('[data-pattern-context="information-site"] details.pattern-details')).toContainText("查找并核验信息");
   await expect(patternBrowser.locator('[data-pattern-context="information-site"] details.pattern-details')).toContainText(
     "搜索、筛选并打开记录，同时确认来源与时效。",
   );
@@ -1541,7 +1565,7 @@ test("Chinese Scenario Atlas and Lab preserve language through discovery and ver
   await page.goto("/scenarios/?lang=zh-CN");
   await expect(page.locator("html")).toHaveAttribute("lang", "zh-CN");
   await expect(page).toHaveTitle("场景目录 · KIN 设计系统");
-  await expect(page.getByRole("heading", { level: 1 })).toHaveText("在典型产品任务中预览 KIN。");
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("在真实任务中体验 KIN。");
   await expect(page.getByRole("heading", { level: 2, name: "调查与证据复核" })).toBeVisible();
   await expect(page.getByRole("link", { name: "从证据复核开始" })).toHaveAttribute(
     "href",
@@ -1569,7 +1593,7 @@ test("Chinese Scenario Atlas and Lab preserve language through discovery and ver
     "/scenarios/lab.html?scenario=INT-02&state=normal&viewport=wide&theme=dark&mode=present&lang=zh-CN",
   );
   await expect(page.locator("html")).toHaveAttribute("lang", "zh-CN");
-  await expect(page).toHaveTitle("调查与证据复核 · 场景检查台");
+  await expect(page).toHaveTitle("调查与证据复核 · 场景预览");
   await expect(page.getByRole("heading", { level: 2, name: "调查与证据复核" })).toBeVisible();
   await expect(page.locator('[data-lab-mode="present"]')).toHaveText("预览");
   await expect(page.locator('[data-lab-mode="inspect"]')).toHaveText("检查");
@@ -1667,7 +1691,7 @@ test("theme and contrast persist through route-aware language links", async ({ p
   await page.waitForURL("**/zh/patterns/");
   await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
   await expect(page.locator("html")).toHaveAttribute("data-contrast", "more");
-  await expect(page.getByRole("heading", { level: 1 })).toHaveText("按工作方式选择布局");
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("为不同任务选择合适布局");
 
   await page.getByRole("button", { name: "选择语言" }).click();
   await expect(page.getByRole("menuitem", { name: "English" })).toHaveAttribute("href", "../../patterns/");
@@ -2132,6 +2156,73 @@ test("Showcase routes avoid mobile overflow and expose 44px primary touch target
   await expect(page.locator("[data-lab-verification]")).toHaveAttribute("data-state", "pass");
   await expectNoHorizontalOverflow(page);
   await expectEmbeddedDocumentsNoHorizontalOverflow(page, "iframe[data-lab-frame]");
+});
+
+test("mobile Explorer controls and reference overlays stay reachable inside the viewport", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+
+  for (const path of ["/components/button/", "/components/command-menu/", "/components/authentication-dialog/"]) {
+    await page.goto(path);
+    const stage = page.locator("[data-reference-stage]");
+    await expect(stage).toHaveAttribute("data-stage-ready", "true", { timeout: 10_000 });
+    for (const name of ["Light", "Dark", "Wide", "Narrow"]) {
+      await expect(stage.getByRole("button", { name })).toBeVisible();
+    }
+    const controls = await stage.locator(".reference-stage__controls").evaluate((element) => {
+      const root = document.documentElement;
+      const bounds = element.getBoundingClientRect();
+      return {
+        bottom: bounds.bottom,
+        clientWidth: root.clientWidth,
+        right: bounds.right,
+        scrollWidth: root.scrollWidth,
+        top: bounds.top,
+      };
+    });
+    expect(controls.scrollWidth).toBe(controls.clientWidth);
+    expect(controls.right).toBeLessThanOrEqual(390);
+    expect(controls.top).toBeGreaterThanOrEqual(0);
+    expect(controls.bottom).toBeLessThanOrEqual(844);
+  }
+
+  await page.goto("/docs/");
+  const compactSiteTargets = await page.locator(".button:visible, .demo-toolbar button:visible").evaluateAll((items) =>
+    items.map((item) => item.getBoundingClientRect().height),
+  );
+  expect(compactSiteTargets.length).toBeGreaterThan(0);
+  expect(Math.min(...compactSiteTargets)).toBeGreaterThanOrEqual(44);
+  await page.locator("[data-command-trigger]").click();
+  await expect(page.locator(".command-search input")).toHaveCSS("min-height", "44px");
+  await page.keyboard.press("Escape");
+
+  await page.goto("/examples/workspace-reference/core-components.html?lang=en");
+  await expectNoHorizontalOverflow(page);
+  const assertOverlayFits = async (trigger, overlay) => {
+    await trigger.click();
+    await expect(overlay).toBeVisible();
+    const bounds = await overlay.evaluate((element) => {
+      const rect = element.getBoundingClientRect();
+      return { bottom: rect.bottom, left: rect.left, right: rect.right, top: rect.top };
+    });
+    expect(bounds.left).toBeGreaterThanOrEqual(0);
+    expect(bounds.right).toBeLessThanOrEqual(390);
+    expect(bounds.top).toBeGreaterThanOrEqual(0);
+    expect(bounds.bottom).toBeLessThanOrEqual(844);
+    await page.keyboard.press("Escape");
+    await expect(trigger).toBeFocused();
+  };
+  await assertOverlayFits(page.locator("[data-menu-trigger]"), page.locator(".sample-menu").first());
+  await assertOverlayFits(page.locator("[data-popover-trigger]"), page.locator(".sample-popover"));
+
+  await page.goto("/examples/workspace-reference/integrations.html?lang=en");
+  await expectNoHorizontalOverflow(page);
+  const sourceLinks = page.locator(".integration-section .reference-section-heading > a");
+  await expect(sourceLinks.first()).toBeVisible();
+  const sourceSizes = await sourceLinks.evaluateAll((links) => links.map((link) => {
+    const box = link.getBoundingClientRect();
+    return { height: box.height, width: box.width };
+  }));
+  expect(sourceSizes.every((size) => size.width >= 44 && size.height >= 44)).toBe(true);
 });
 
 test.describe("coarse-pointer explorer controls", () => {
