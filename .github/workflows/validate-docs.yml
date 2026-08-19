@@ -117,7 +117,7 @@ jobs:
         run: npm run runtime:build
 
       - name: Install the compatibility browser
-        run: npx playwright install --with-deps chromium
+        run: npx playwright install chromium
 
       - name: Verify SSR and hydration with React ${{ matrix.react }}
         env:
@@ -148,7 +148,7 @@ jobs:
         run: npm ci
 
       - name: Install reference browsers
-        run: npx playwright install --with-deps chromium firefox webkit
+        run: npx playwright install chromium firefox webkit
 
       - name: Test reference interfaces
         run: npm run test:reference
