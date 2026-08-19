@@ -7,7 +7,7 @@ Status: generated, non-normative, review state derived from locale inputs
 ## Review boundary
 
 - KIN contract: `3.0.4` (`development`)
-- Bundle input-set checksum: `12efb7d8dad870659f04f19ba2141522a238463d62c5c272a0687991a058fa43`
+- Bundle input-set checksum: `0d678c0f3accc1e3d902f238415c4fedf738683c9e3b2d4742d86be12c355277`
 - Scope: exact English and Simplified Chinese copy used by the Agent Snapshot matrix.
 - This packet changes no publication state. Current attestations are consumed separately by `/next/`, release-export, and promotion gates.
 - A human reviewer must compare every localized record with its exact normative source before a separate attestation change updates `distribution/locales/*.json`.
@@ -16,8 +16,8 @@ Status: generated, non-normative, review state derived from locale inputs
 
 | Locale | Current state | Candidate normative-source aggregate | Candidate localized-content aggregate |
 | --- | --- | --- | --- |
-| `en` | `unreviewed` | `146c8e68dcadd1d15f242590f3af47fbee155f46ad7eaaf33a024ede9798961f` | `8cbc0ee2535f738266c73e9f80419076c0da5afad2212a6049408902706f412a` |
-| `zh-CN` | `unreviewed` | `146c8e68dcadd1d15f242590f3af47fbee155f46ad7eaaf33a024ede9798961f` | `5ce67d168f77941fa5cf023d00f72ffcbc0235a0fcf13c2af5a34fcf93cd2bc2` |
+| `en` | `reviewed` | `146c8e68dcadd1d15f242590f3af47fbee155f46ad7eaaf33a024ede9798961f` | `8cbc0ee2535f738266c73e9f80419076c0da5afad2212a6049408902706f412a` |
+| `zh-CN` | `reviewed` | `146c8e68dcadd1d15f242590f3af47fbee155f46ad7eaaf33a024ede9798961f` | `5ce67d168f77941fa5cf023d00f72ffcbc0235a0fcf13c2af5a34fcf93cd2bc2` |
 
 ## `snapshot-source-boundary`
 
@@ -172,12 +172,12 @@ The machine-readable adoption values are `mode: contract-first`, `figma: variabl
 
 ### en
 
-- Locale-source state: `unreviewed`
-- Attestation state: `unreviewed`
-- Recorded reviewers: none
-- Recorded reviewed ref: `null`
-- Recorded normative-source checksum: `null`
-- Recorded localized-content checksum: `null`
+- Locale-source state: `reviewed`
+- Attestation state: `valid-attestation`
+- Recorded reviewers: `@yehyakin`
+- Recorded reviewed ref: `fd1ff257728d3ab4e63578c4a259c63797170209`
+- Recorded normative-source checksum: `2f81e4ff08d9a2f551fd1ce78da4e0c7da01c4fefcc029ea27281b138fede0af`
+- Recorded localized-content checksum: `5ebde1269d8997f0915502a1b5c8a6e0b03a2e57c4ddd9901656717efdf429f6`
 - Candidate localized-content checksum: `5ebde1269d8997f0915502a1b5c8a6e0b03a2e57c4ddd9901656717efdf429f6`
 
 **Heading:** Visual register
@@ -194,12 +194,12 @@ The machine-readable adoption values are `mode: contract-first`, `figma: variabl
 
 ### zh-CN
 
-- Locale-source state: `unreviewed`
-- Attestation state: `unreviewed`
-- Recorded reviewers: none
-- Recorded reviewed ref: `null`
-- Recorded normative-source checksum: `null`
-- Recorded localized-content checksum: `null`
+- Locale-source state: `reviewed`
+- Attestation state: `valid-attestation`
+- Recorded reviewers: `@yehyakin`
+- Recorded reviewed ref: `fd1ff257728d3ab4e63578c4a259c63797170209`
+- Recorded normative-source checksum: `2f81e4ff08d9a2f551fd1ce78da4e0c7da01c4fefcc029ea27281b138fede0af`
+- Recorded localized-content checksum: `279bf17132501070ece3c95847561c28335ea5eed7dc19f9f5ece74f55e7f32d`
 - Candidate localized-content checksum: `279bf17132501070ece3c95847561c28335ea5eed7dc19f9f5ece74f55e7f32d`
 
 **Heading:** 视觉基调
@@ -243,12 +243,12 @@ The machine-readable adoption values are `mode: contract-first`, `figma: variabl
 
 ### en
 
-- Locale-source state: `unreviewed`
-- Attestation state: `unreviewed`
-- Recorded reviewers: none
-- Recorded reviewed ref: `null`
-- Recorded normative-source checksum: `null`
-- Recorded localized-content checksum: `null`
+- Locale-source state: `reviewed`
+- Attestation state: `valid-attestation`
+- Recorded reviewers: `@yehyakin`
+- Recorded reviewed ref: `fd1ff257728d3ab4e63578c4a259c63797170209`
+- Recorded normative-source checksum: `25b5a3eb41041a504ce60fb49d4707aa25772b664cc7229d222711b59757372c`
+- Recorded localized-content checksum: `a977c0c118dfdcc6f60112e6f104dc73c23c30effa0faf72be37137b2e906178`
 - Candidate localized-content checksum: `a977c0c118dfdcc6f60112e6f104dc73c23c30effa0faf72be37137b2e906178`
 
 **Heading:** Visual register
@@ -265,12 +265,12 @@ The machine-readable adoption values are `mode: contract-first`, `figma: variabl
 
 ### zh-CN
 
-- Locale-source state: `unreviewed`
-- Attestation state: `unreviewed`
-- Recorded reviewers: none
-- Recorded reviewed ref: `null`
-- Recorded normative-source checksum: `null`
-- Recorded localized-content checksum: `null`
+- Locale-source state: `reviewed`
+- Attestation state: `valid-attestation`
+- Recorded reviewers: `@yehyakin`
+- Recorded reviewed ref: `fd1ff257728d3ab4e63578c4a259c63797170209`
+- Recorded normative-source checksum: `25b5a3eb41041a504ce60fb49d4707aa25772b664cc7229d222711b59757372c`
+- Recorded localized-content checksum: `f36834345f0b31778da627e1316d8112753714c44b8f9f3c1a71a8708ced4586`
 - Candidate localized-content checksum: `f36834345f0b31778da627e1316d8112753714c44b8f9f3c1a71a8708ced4586`
 
 **Heading:** 视觉基调

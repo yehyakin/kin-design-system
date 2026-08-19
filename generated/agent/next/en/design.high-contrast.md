@@ -7,9 +7,9 @@ normative: false
 artifact_status: "generated-derivative"
 editable: false
 publication:
-  state: "repository-only"
-  published: false
-  public_locators: "unavailable"
+  state: "published-development"
+  published: true
+  public_locators: "active"
 kin_version: "3.0.4"
 release_status: "development"
 latest_stable_contract: "3.0.3"
@@ -22,15 +22,16 @@ coverage: "compact-foundations-and-routing"
 features:
   component_recipes: "unavailable"
 locale_review:
-  status: "unreviewed"
-  reviewers: []
+  status: "reviewed"
+  reviewers:
+    - "@yehyakin"
   normative_source_checksum: "146c8e68dcadd1d15f242590f3af47fbee155f46ad7eaaf33a024ede9798961f"
   localized_content_checksum: "8cbc0ee2535f738266c73e9f80419076c0da5afad2212a6049408902706f412a"
 source:
   contract_path: "DESIGN.md"
   checksum_algorithm: "sha256"
   checksum: "6005e761d31b844fbb418be73fdb12582e32f5e2912e26b4f38e181d6444013e"
-  input_set_checksum: "12efb7d8dad870659f04f19ba2141522a238463d62c5c272a0687991a058fa43"
+  input_set_checksum: "0d678c0f3accc1e3d902f238415c4fedf738683c9e3b2d4742d86be12c355277"
   ref: "main"
   revision_status: "mutable"
 manifest_locator: "design-manifest.json"
@@ -232,8 +233,8 @@ component_recipes: null
 - This compact file is generated from the current KIN contract. It is non-normative, must not be edited, and does not replace the linked source documents.
 - Contract checksum: `6005e761d31b844fbb418be73fdb12582e32f5e2912e26b4f38e181d6444013e`
 - Resolved mode: `light` / `more`
-- Locale copy review: `unreviewed`
-- Publication state: `repository-only; locale review incomplete`
+- Locale copy review: `reviewed`
+- Publication state: `published-development`
 
 ## Visual register
 

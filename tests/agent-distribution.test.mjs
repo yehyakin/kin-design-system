@@ -244,24 +244,20 @@ test("locale review exporter check reports missing and drift without creating re
 });
 
 test("committed locale inputs carry the separately approved checksum-bound attestation", () => {
-  const unreviewed = new Set(["task-before-explanation", "one-dominant-region"]);
+  const newlyReviewed = new Set(["task-before-explanation", "one-dominant-region"]);
   for (const locale of ["en", "zh-CN"]) {
     const source = JSON.parse(fs.readFileSync(path.join(root, "distribution", "locales", `${locale}.json`), "utf8"));
     for (const record of source.rules) {
-      if (unreviewed.has(record.id)) {
-        assert.deepEqual(record.review, {
-          status: "unreviewed",
-          reviewers: [],
-          normative_source_checksum: null,
-          localized_content_checksum: null,
-        });
-        continue;
-      }
       assert.equal(record.review.status, "reviewed");
       assert.deepEqual(record.review.reviewers, ["@yehyakin"]);
       assert.match(record.review.normative_source_checksum, /^[a-f0-9]{64}$/u);
       assert.match(record.review.localized_content_checksum, /^[a-f0-9]{64}$/u);
-      assert.equal(record.review.reviewed_ref, "1b880a128046a45c25d5fadb9d61ff07af31f6e8");
+      assert.equal(
+        record.review.reviewed_ref,
+        newlyReviewed.has(record.id)
+          ? "fd1ff257728d3ab4e63578c4a259c63797170209"
+          : "1b880a128046a45c25d5fadb9d61ff07af31f6e8",
+      );
     }
   }
 });
@@ -428,6 +424,11 @@ test("Agent distribution is deterministic, complete, and recipe-free", () => {
   assert.equal(first.artifacts.size, 16);
   assert.ok(!first.artifacts.has("component-recipes.json"));
   assert.equal(first.manifest.modes.length, 8);
+  assert.deepEqual(first.manifest.publication, {
+    state: "published-development",
+    published: true,
+    public_locators: "active",
+  });
   assert.deepEqual(
     first.manifest.modes.map((mode) => `${mode.locale}|${mode.theme}|${mode.contrast}`).sort(),
     [
@@ -484,7 +485,7 @@ test("Agent distribution is deterministic, complete, and recipe-free", () => {
       normative_source_checksum: expectedReview.normative_source_checksum,
       localized_content_checksum: expectedReview.localized_content_checksum,
     });
-    assert.deepEqual(metadata.publication, { state: "repository-only", published: false, public_locators: "unavailable" });
+    assert.deepEqual(metadata.publication, first.manifest.publication);
   }
   assert.equal(colorShapes.size, 1);
   assert.equal(materialShapes.size, 1);

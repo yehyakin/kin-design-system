@@ -7,9 +7,9 @@ normative: false
 artifact_status: "generated-derivative"
 editable: false
 publication:
-  state: "repository-only"
-  published: false
-  public_locators: "unavailable"
+  state: "published-development"
+  published: true
+  public_locators: "active"
 kin_version: "3.0.4"
 release_status: "development"
 latest_stable_contract: "3.0.3"
@@ -22,15 +22,16 @@ coverage: "compact-foundations-and-routing"
 features:
   component_recipes: "unavailable"
 locale_review:
-  status: "unreviewed"
-  reviewers: []
+  status: "reviewed"
+  reviewers:
+    - "@yehyakin"
   normative_source_checksum: "146c8e68dcadd1d15f242590f3af47fbee155f46ad7eaaf33a024ede9798961f"
   localized_content_checksum: "5ce67d168f77941fa5cf023d00f72ffcbc0235a0fcf13c2af5a34fcf93cd2bc2"
 source:
   contract_path: "DESIGN.md"
   checksum_algorithm: "sha256"
   checksum: "6005e761d31b844fbb418be73fdb12582e32f5e2912e26b4f38e181d6444013e"
-  input_set_checksum: "12efb7d8dad870659f04f19ba2141522a238463d62c5c272a0687991a058fa43"
+  input_set_checksum: "0d678c0f3accc1e3d902f238415c4fedf738683c9e3b2d4742d86be12c355277"
   ref: "main"
   revision_status: "mutable"
 manifest_locator: "design-manifest.json"
@@ -232,8 +233,8 @@ component_recipes: null
 - 这份精简文件由当前 KIN 合同生成。它不是规范来源、不得直接编辑，也不能替代所链接的完整文档。
 - 合同校验和: `6005e761d31b844fbb418be73fdb12582e32f5e2912e26b4f38e181d6444013e`
 - 已解析模式: `light` / `normal`
-- 本地化文案审核: `unreviewed`
-- 发布状态: `repository-only; locale review incomplete`
+- 本地化文案审核: `reviewed`
+- 发布状态: `published-development`
 
 ## 视觉基调
 
