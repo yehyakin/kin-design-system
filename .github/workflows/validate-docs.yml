@@ -147,6 +147,12 @@ jobs:
       - name: Install test dependencies
         run: npm ci
 
+      - name: Use the Ubuntu archive for Playwright dependencies
+        run: sudo sed -i 's|http://azure.archive.ubuntu.com/ubuntu|https://archive.ubuntu.com/ubuntu|g' /etc/apt/apt-mirrors.txt
+
+      - name: Install WebKit system dependencies
+        run: npx playwright install-deps webkit
+
       - name: Install reference browsers
         run: npx playwright install chromium firefox webkit
 
