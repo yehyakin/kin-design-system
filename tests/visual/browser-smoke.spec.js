@@ -35,7 +35,7 @@ test("cross-browser smoke preserves navigation focus and advanced states", async
   await page.goto("/examples/workspace-reference/advanced-components.html", { waitUntil: "domcontentloaded" });
   await expect(page.locator("body")).toHaveAttribute("data-fixture-ready", "true");
   await expect(page.getByRole("heading", { name: "AI 与专业工作流组件" })).toBeVisible();
-  await expect(page.getByRole("table", { name: "后台任务队列" })).toBeVisible();
+  await expect(page.getByRole("table", { name: "后台任务" })).toBeVisible();
   const accept = page.getByRole("button", { name: "接受建议" });
   await accept.scrollIntoViewIfNeeded();
   await accept.click();
@@ -75,7 +75,7 @@ test("cross-browser smoke preserves navigation focus and advanced states", async
 
   await page.goto("/examples/page-patterns/scheduling.html?selected=SCH-103", { waitUntil: "domcontentloaded" });
   await expect(page.locator("[data-schedule-sidecar]")).toHaveAttribute("aria-hidden", "false");
-  await expect(page.locator("[data-sidecar-title]")).toHaveText("主图复核");
+  await expect(page.locator("[data-sidecar-title]")).toHaveText("主图审核");
   await page.keyboard.press("Escape");
   await expect(page).not.toHaveURL(/selected=/);
 

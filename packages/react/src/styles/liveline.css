@@ -29,6 +29,12 @@
   outline-offset: 2px;
 }
 
+@media (pointer: coarse) {
+  .kin-live-chart__data > summary {
+    min-height: 44px;
+  }
+}
+
 .kin-live-chart__table-scroll {
   overflow-x: auto;
   margin-top: 8px;

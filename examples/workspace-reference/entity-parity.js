@@ -31,12 +31,12 @@ export function createEntityParityController({
   const copy = {
     zh: {
       workspaceActions: "工作区操作", follow: "关注当前记录", copyLink: "复制当前记录链接", runScan: "运行检测",
-      previousRecord: "上一条记录", nextRecord: "下一条记录", recordActivity: "记录活动", openThread: "打开上下文线程",
-      minimizeThread: "折叠上下文线程", expandThread: "展开上下文线程", closeThread: "关闭上下文线程", attach: "添加附件",
+      previousRecord: "上一条记录", nextRecord: "下一条记录", recordActivity: "记录动态", openThread: "打开复核助手",
+      minimizeThread: "折叠复核助手", expandThread: "展开复核助手", closeThread: "关闭复核助手", attach: "添加附件",
       send: "发送", reviewMode: "复核", createdRecord: "根据公开来源创建了这条记录", twoMinutesAgo: "2 分钟前",
       monitoringAgent: "监测代理", addedLabels: "添加了“运行稳定”和“东亚”标签", commandSearchLabel: "搜索工作区",
-      commandSearchPlaceholder: "搜索记录或前往…", recordsGroup: "记录", navigateGroup: "前往", databaseHint: "浏览对象",
-      investigationHint: "核对证据", riskHint: "等待复核", monitoringHint: "最近活动", commandEmpty: "没有匹配的记录或操作。",
+      commandSearchPlaceholder: "搜索记录或前往…", recordsGroup: "记录", navigateGroup: "前往", databaseHint: "浏览记录",
+      investigationHint: "核对证据", riskHint: "等待复核", monitoringHint: "查看最近动态", commandEmpty: "没有匹配的记录或操作。",
       connectedThread: "将 KIN 连接到 PRX-1027", examiningRecord: "正在核对最近的状态变化…", workedFor: "已检查 7 秒",
       threadResult: "已核对最近三条监测记录。官网和公开频道可访问；香港节点的延迟已恢复。",
       threadChangeOne: "确认 HK-02 已恢复到 89ms", threadChangeTwo: "保留“观察”状态，不提高风险等级",

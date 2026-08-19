@@ -36,14 +36,14 @@
     <div class="app-shell">
       <aside class="sidebar" data-i18n-aria="primaryNav">
         <header class="brand">
-          <a class="brand-mark" href="../../" aria-label="KIN Design System">K</a>
+          <a class="brand-mark" href="../../" aria-label="KIN Design System" data-i18n-aria="brandHome">K</a>
           <span>
             <strong>KIN</strong>
             <small data-i18n="workspaceName">情报工作台</small>
           </span>
           <div class="brand-actions" data-context-i18n-aria="workspaceActions">
             <button type="button" class="icon-button" data-workspace-search data-i18n-aria="search"><i data-lucide="search"></i></button>
-            <button type="button" class="icon-button" data-context-toggle aria-controls="context-thread" aria-expanded="true" aria-label="Open context thread"><i data-lucide="square-pen"></i></button>
+            <button type="button" class="icon-button" data-context-toggle aria-controls="context-thread" aria-expanded="true" data-context-i18n-aria="openThread"><i data-lucide="square-pen"></i></button>
           </div>
         </header>
 
@@ -372,7 +372,7 @@
             <div class="investigation-state-message" data-investigation-state-panel="conflict" data-investigation-conflict hidden><strong data-i18n="investigationConflictTitle">来源结论存在冲突</strong><span data-i18n="investigationConflictBody">维护通知支持预期轮换，但变更日志缺少对应记录；需要人工结论。</span></div>
             <div class="investigation-state-message" data-investigation-state-panel="stale" data-investigation-stale hidden><strong data-i18n="investigationStaleTitle">证据快照需要重新核验</strong><span data-i18n="investigationStaleBody">最后一次独立核验距基准时间 2 小时；不会自动改写当前结论。</span></div>
             <div class="investigation-state-message" data-investigation-state-panel="pending" data-investigation-pending hidden><strong data-i18n="investigationPendingTitle">正在记录调查结论</strong><span data-i18n="investigationPendingBody">记录期间暂时无法编辑；当前选择、来源对应关系和理由草稿保持不变。</span></div>
-            <div class="investigation-state-message positive-message" data-investigation-state-panel="committed" data-investigation-committed hidden><strong data-i18n="investigationCommittedTitle">调查结论已记录</strong><span data-i18n="investigationCommittedBody">人工判断与支持证据保持可追溯，并可在当前样例中撤销。</span></div>
+            <div class="investigation-state-message positive-message" data-investigation-state-panel="committed" data-investigation-committed hidden><strong data-i18n="investigationCommittedTitle">调查结论已记录</strong><span data-i18n="investigationCommittedBody">人工判断和支持证据保持可追溯，并可在当前示例中撤销。</span></div>
             <div class="investigation-state-message" data-investigation-state-panel="undo" data-investigation-undo hidden><strong data-i18n="investigationUndoTitle">调查结论已撤销</strong><span data-i18n="investigationUndoBody">调查回到未记录状态；理由与证据选择仍保留为本地草稿。</span></div>
             <div class="investigation-state-message" data-investigation-state-panel="permission" data-investigation-permission hidden><strong data-i18n="investigationPermissionTitle">仅可查看调查</strong><span data-i18n="investigationPermissionBody">此示例展示无记录权限的状态；证据时间线与来源详情仍可读取。</span></div>
             <div class="investigation-state-message error-message" data-investigation-state-panel="error" data-investigation-error hidden><strong data-i18n="investigationErrorTitle">无法记录调查结论</strong><span data-i18n="investigationErrorBody">理由、证据选择和当前事件均已保留，可以重试。</span><button type="button" data-investigation-retry data-i18n="retry">重试</button></div>
@@ -592,10 +592,10 @@
             </section>
             <section>
               <h2 data-context-i18n="navigateGroup">前往</h2>
-              <a href="./" class="workspace-command__item" data-workspace-command-item data-search-terms="entity database records"><i data-lucide="database"></i><span><strong data-i18n="database">记录库</strong><small data-context-i18n="databaseHint">浏览对象</small></span></a>
+              <a href="./" class="workspace-command__item" data-workspace-command-item data-search-terms="entity database records"><i data-lucide="database"></i><span><strong data-i18n="database">记录库</strong><small data-context-i18n="databaseHint">浏览记录</small></span></a>
               <a href="?view=investigation" class="workspace-command__item" data-workspace-command-item data-search-terms="investigations evidence"><i data-lucide="file-search"></i><span><strong data-i18n="investigations">调查记录</strong><small data-context-i18n="investigationHint">核对证据</small></span></a>
               <a href="?view=risk-queue" class="workspace-command__item" data-workspace-command-item data-search-terms="risk signals review"><i data-lucide="triangle-alert"></i><span><strong data-i18n="signals">风险信号</strong><small data-context-i18n="riskHint">等待复核</small></span></a>
-              <a href="#activity" class="workspace-command__item" data-workspace-command-item data-search-terms="monitoring activity tasks"><i data-lucide="activity"></i><span><strong data-i18n="monitoring">监测任务</strong><small data-context-i18n="monitoringHint">最近活动</small></span></a>
+              <a href="#activity" class="workspace-command__item" data-workspace-command-item data-search-terms="monitoring activity tasks"><i data-lucide="activity"></i><span><strong data-i18n="monitoring">监测任务</strong><small data-context-i18n="monitoringHint">查看最近动态</small></span></a>
             </section>
             <p class="workspace-command__empty" data-workspace-command-empty data-context-i18n="commandEmpty" hidden>没有匹配的记录或操作。</p>
           </div>

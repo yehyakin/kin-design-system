@@ -178,7 +178,7 @@
 .disclosure-row summary { color: var(--text-2); cursor: pointer; }
 .disclosure-row details p { margin: 9px 0 2px; color: var(--muted); }
 .menu-sample, .tooltip-sample, .popover-anchor { position: relative; }
-.sample-menu, .sample-popover { position: absolute; z-index: 4; top: calc(100% + 6px); right: 0; min-width: 190px; padding: 5px; border: 1px solid var(--line-strong); border-radius: 7px; background: var(--surface-3); box-shadow: inset 0 1px 0 var(--edge-highlight-strong), var(--shadow-floating); opacity: 0; pointer-events: none; transform: translateY(-4px) scale(0.985); transform-origin: top right; }
+.sample-menu, .sample-popover { position: absolute; z-index: 4; top: calc(100% + 6px); right: 0; min-width: 190px; max-width: calc(100vw - 24px); box-sizing: border-box; padding: 5px; border: 1px solid var(--line-strong); border-radius: 7px; background: var(--surface-3); box-shadow: inset 0 1px 0 var(--edge-highlight-strong), var(--shadow-floating); opacity: 0; pointer-events: none; transform: translateY(-4px) scale(0.985); transform-origin: top right; }
 .sample-menu[data-state="open"], .sample-popover[data-state="open"] { opacity: 1; pointer-events: auto; transform: none; }
 .sample-menu button { display: flex; align-items: center; gap: 8px; width: 100%; min-height: 34px; padding: 0 8px; border: 0; background: transparent; text-align: left; }
 .menu-item-icon { display: inline-grid; flex: 0 0 16px; width: 16px; height: 16px; place-items: center; color: var(--muted); }
@@ -362,7 +362,7 @@
   .core-dialog button, .core-dialog .core-field input { min-height: 45px; }
   .core-dialog button { min-width: 45px; }
   .core-dialog .icon-only-control { width: 45px; min-width: 45px; }
-  .sample-popover { right: 0; left: auto; }
+  .sample-popover { right: 0; left: auto; width: min(260px, calc(100vw - 24px)); }
   .truncation-heading { align-items: flex-start; flex-direction: column; gap: 2px; }
   .truncation-sample, .truncation-sample[dir="rtl"] { grid-template-columns: minmax(0, 1fr) auto; }
   .truncation-sample > :first-child { grid-column: 1 / -1; }

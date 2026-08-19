@@ -3945,23 +3945,19 @@ body[data-showcase-route="component-explorer"] .discovery-page {
   }
 
   .reference-stage__controls {
-    position: relative;
-    flex-wrap: nowrap;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, max-content));
+    position: static;
+    flex-wrap: wrap;
     max-width: none;
-    margin: 0 -10px;
-    padding-inline: 10px;
-    overflow-x: auto;
-    overscroll-behavior-inline: contain;
+    margin: 0;
+    padding: 0;
+    overflow: visible;
     justify-content: flex-start;
-    scrollbar-width: none;
-  }
-
-  .reference-stage__controls::-webkit-scrollbar {
-    display: none;
   }
 
   .reference-stage__controls > * {
-    flex: 0 0 auto;
+    min-width: 0;
   }
 
   .pattern-discovery-section__heading,

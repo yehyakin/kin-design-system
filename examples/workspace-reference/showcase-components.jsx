@@ -303,8 +303,8 @@ const copy = {
     copied: "链接已复制",
     copyFailed: "无法访问剪贴板",
     buttons: {
-      title: "不同后果对应不同操作",
-      body: "层级、内容和反馈随任务改变。只更换按钮文案，不会产生一个新组件。",
+      title: "按操作后果选择按钮层级",
+      body: "按钮的层级、文案和反馈应与操作后果一致。",
       hierarchy: "操作层级",
       primary: "保存更改",
       secondary: "导出记录",
@@ -346,7 +346,7 @@ const copy = {
     },
     evidence: {
       title: "证据与引用",
-      body: "结论始终映射到支持材料、缺失信息、有效期和冲突来源。",
+      body: "每条结论都对应支持材料、缺失信息、有效期和冲突来源。",
       count: "3 个来源",
       heading: "价格证据",
       intro: "解决冲突前，当前价格不能发布。",
@@ -357,7 +357,7 @@ const copy = {
       external: "外部渠道快照",
       externalBody: "显示 CNY 1,399.00，与已批准记录冲突。",
       verified: "已核验",
-      partial: "部分核验",
+      partial: "部分已核验",
       conflict: "存在冲突",
       source: "来源",
       observed: "记录时间",
@@ -389,13 +389,13 @@ const copy = {
       accepted: "建议已接受，等待执行",
       rejected: "建议已拒绝",
       edited: "已打开编辑",
-      pending: "待复核",
+      pending: "待审核",
       acceptedState: "已接受",
       rejectedState: "已拒绝",
     },
     execution: {
       title: "执行预览",
-      body: "在高后果操作运行前，先展示准确目标、写入内容、外部影响和恢复方式。",
+      body: "执行可能产生重要影响的操作前，先说明目标、写入内容、外部影响和恢复方式。",
       target: "目标",
       targetValue: "商品 PRD-184 · 已批准销售渠道",
       writes: "写入",
@@ -404,23 +404,23 @@ const copy = {
       effectValue: "更新两个店面",
       rollback: "恢复",
       rollbackValue: "恢复上一版已批准价格",
-      run: "运行本地预览",
-      ready: "可以运行预览",
-      running: "正在执行本地示例…",
+      run: "模拟执行",
+      ready: "准备就绪",
+      running: "正在模拟执行…",
       complete: "预览已完成",
       reset: "重置",
       queued: "执行已开始",
       noExternal: "未连接任何外部系统。",
     },
     tasks: {
-      title: "后台任务队列",
-      body: "持久任务显示进度、失败、结果和恢复入口，不阻塞当前工作区。",
+      title: "后台任务",
+      body: "后台任务持续显示进度、失败原因、结果和恢复入口，不阻塞当前工作区。",
       export: "导出已批准商品目录",
       exportBody: "正在准备 2,418 条记录",
       sync: "同步活动价格",
       syncBody: "上次运行因限流中断",
       report: "生成差异报告",
-      reportBody: "已完成 · 14 项发现",
+      reportBody: "已完成 · 发现 14 处差异",
       running: "运行中",
       failed: "失败",
       complete: "已完成",
@@ -430,14 +430,14 @@ const copy = {
     },
     table: {
       title: "运营记录",
-      body: "紧凑数据行同时支持扫读、排序、选择和准确的状态语义。",
+      body: "紧凑数据行便于快速浏览、排序和选择，并准确表达状态。",
       product: "商品",
       price: "价格",
       channel: "渠道",
       state: "状态",
       updated: "更新时间",
       approved: "已批准",
-      review: "待复核",
+      review: "待审核",
       draft: "草稿",
       selected: "已选择",
       count: "3 条记录",
@@ -447,38 +447,38 @@ const copy = {
       yesterday: "昨天",
     },
     auth: {
-      contextTitle: "身份验证属于被中断的任务",
-      contextBody: "关闭后，焦点返回打开弹窗的操作。本地示例不会发送或保存凭据。",
+      contextTitle: "登录后继续当前操作",
+      contextBody: "关闭后可从原来的操作继续。本地示例不会发送或保存凭据。",
       reopen: "打开登录弹窗",
       title: "登录后继续",
-      body: "使用工作账户继续审批流程。",
+      body: "使用工作账号继续审批。",
       email: "工作邮箱",
       emailPlaceholder: "name@company.com",
       cancel: "取消",
       continue: "继续",
-      submitted: "身份验证示例已提交",
+      submitted: "示例登录已完成，未创建真实会话",
     },
     shell: {
-      title: "工作台框架",
+      title: "应用框架",
       overview: "概览",
       catalog: "商品目录",
       evidence: "证据",
       tasks: "任务",
-      location: "商品目录 / 价格复核",
+      location: "商品目录 / 价格审核",
       records: "3 条记录",
       heading: "需要处理的商品",
       state: "状态",
       owner: "负责人",
       lastChange: "最近变化",
       selected: "当前记录",
-      review: "待复核",
+      review: "待审核",
       approved: "已批准",
       operator: "商品运营",
       today: "今天 09:42",
     },
     trace: {
-      title: "智能体活动记录",
-      body: "展示可审计的操作、工具、输入和结果；不要暴露隐藏推理过程。",
+      title: "AI 运行记录",
+      body: "显示可核查的操作、工具、输入和结果，不展示内部推理过程。",
       completed: "已完成",
       running: "运行中",
       waiting: "等待中",
@@ -487,14 +487,14 @@ const copy = {
       started: "开始时间",
       startedValue: "2026-07-30 09:40:11 UTC+8",
       initiatedBy: "发起人",
-      initiatedByValue: "本地示例操作员",
-      reviewPath: "复核与恢复",
-      reviewPathValue: "打开本地复核路径",
-      reviewPathBody: "在同一受约束路径中批准、拒绝或恢复这次虚构运行。",
+      initiatedByValue: "本地示例用户",
+      reviewPath: "审核与恢复",
+      reviewPathValue: "进入本地审核流程",
+      reviewPathBody: "可在同一流程中批准、拒绝或恢复本次示例操作。",
       received: "收到请求",
       receivedBody: "检查 PRD-184 的渠道价格冲突。",
       retrieved: "已获取证据",
-      retrievedBody: "三个获准来源返回结果。",
+      retrievedBody: "三个已授权来源返回了结果。",
       compared: "已对比记录",
       comparedBody: "发现一处冲突；未尝试外部写入。",
       proposed: "已准备变更建议",
@@ -502,9 +502,9 @@ const copy = {
       tool: "工具活动",
       toolBody: "catalog.search · 3 个结果 · 184ms",
       input: "输入",
-      inputValue: "PRD-184，仅限已批准来源",
+      inputValue: "PRD-184，仅查询授权来源",
       result: "结果",
-      resultValue: "发现一处冲突；置信度不代替批准。",
+      resultValue: "发现一处冲突；置信度不能代替人工批准。",
       permission: "权限",
       permissionValue: "只读",
     },
@@ -519,23 +519,23 @@ const copy = {
       lineCount: "9 行",
     },
     timeline: {
-      title: "同一个故事，两种方向",
-      body: "同一组有序事实在宽屏横向滚动，在窄屏纵向阅读，含义不变。",
+      title: "同一组事件，两种布局",
+      body: "同一组事件在宽屏中横向浏览，在窄屏中纵向阅读，顺序和含义保持不变。",
       cue: "使用方向键；内容超出时可滚动",
       detail: "当前里程碑",
       source: "来源",
-      sourceValue: "虚构的本地示例",
-      fixtureNotice: "虚构场景，不代表 KIN 的真实发布历史。",
+      sourceValue: "本地示例数据",
+      fixtureNotice: "示例内容，不代表 KIN 的真实发布历史。",
       introduced: "开始复核",
       introducedBody: "商品运营人员发起一次本地价格复核。",
       evidence: "收集证据",
-      evidenceBody: "三项获准来源已附加到记录。",
+      evidenceBody: "记录已关联三个已授权来源。",
       mobile: "识别冲突",
       mobileBody: "一个外部价格与已批准的内部价格不同。",
       agents: "记录决定",
       agentsBody: "运营人员复核后接受建议调整。",
-      current: "检查恢复",
-      currentBody: "上一版已批准价格仍可用于恢复。",
+      current: "确认可恢复",
+      currentBody: "仍可恢复到上一版已批准价格。",
     },
   },
 };
@@ -621,12 +621,15 @@ function SpecimenFrame({ title, body, status = "stable", actions, children, foot
 
 function ButtonSpecimen({ c }) {
   const [saving, setSaving] = React.useState(false);
+  const [saveStatus, setSaveStatus] = React.useState("");
   const [confirming, setConfirming] = React.useState(false);
 
   const save = () => {
     setSaving(true);
+    setSaveStatus(c.buttons.loading);
     window.setTimeout(() => {
       setSaving(false);
+      setSaveStatus(c.buttons.saved);
       kinToast.success(c.buttons.saved);
     }, 620);
   };
@@ -658,7 +661,7 @@ function ButtonSpecimen({ c }) {
         <section className="button-specimen-group">
           <h2>{c.buttons.hierarchy}</h2>
           <div className="button-specimen-row">
-            <button className="kin-button kin-button--primary" type="button" onClick={save} disabled={saving}>
+            <button className="kin-button kin-button--primary" type="button" onClick={save} disabled={saving} aria-busy={saving ? "true" : "false"}>
               {saving ? <LoaderCircle className="spinning" aria-hidden="true" /> : <Save aria-hidden="true" />}
               {saving ? c.buttons.loading : c.buttons.primary}
             </button>
@@ -705,6 +708,7 @@ function ButtonSpecimen({ c }) {
           </div>
         </section>
       </div>
+      <span className="visually-hidden" role="status" aria-live="polite" aria-atomic="true" data-save-status>{saveStatus}</span>
       {confirming ? (
         <div className="confirmation-strip" role="region" aria-labelledby="delete-title">
           <div>

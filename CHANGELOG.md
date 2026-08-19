@@ -20,6 +20,11 @@ The project follows semantic versioning for normative design documentation.
 - Added a source-derived public route matrix that checks all generated Showcase routes at wide, intermediate and narrow viewports, plus representative Firefox and WebKit smoke coverage for language, overflow, embedded-reference readiness, selection edges and runtime errors.
 - Prevented the localized Scenario Atlas from first loading and then cancelling the wrong-language reference module before mounting the correct iframe, removing a WebKit-only module error without weakening runtime-error checks.
 
+### Micro-component repair batch
+
+- Tightened responsive Explorer and overlay fitting, touch targets and Sonner feedback, Virtuoso list semantics, accessible progress labels and Button busy/live status, plus locale and count consistency across the reference surfaces.
+- Rewrote visible Simplified Chinese copy across the Showcase, Scenario Atlas, Scenario Lab, component examples and accessible control names so task language is concise, consistent and natural instead of exposing literal internal terminology.
+
 ## 3.0.3 — 2026-08-12
 
 ### Selection semantics

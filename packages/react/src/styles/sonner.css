@@ -37,6 +37,30 @@
   outline-offset: 2px;
 }
 
+@media (pointer: coarse) {
+  [data-sonner-toast].kin-toast {
+    padding-inline-end: 52px;
+  }
+
+  [data-sonner-toast] .kin-toast__action,
+  [data-sonner-toast] .kin-toast__cancel,
+  [data-sonner-toast] .kin-toast__close {
+    box-sizing: border-box;
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  [data-sonner-toast][data-styled="true"] .kin-toast__close {
+    top: 0 !important;
+    left: auto !important;
+    right: auto !important;
+    inset-block-start: 0 !important;
+    inset-inline-start: auto !important;
+    inset-inline-end: 0 !important;
+    transform: none !important;
+  }
+}
+
 @media (forced-colors: active) {
   [data-sonner-toaster] [data-sonner-toast].kin-toast {
     border-color: CanvasText;

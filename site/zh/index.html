@@ -52,7 +52,7 @@
       <a href="components/" data-global-nav-key="components">组件</a>
       <a href="patterns/" data-global-nav-key="patterns">布局</a>
       <a href="../scenarios/?lang=zh-CN" data-global-nav-key="scenarios">场景</a>
-      <a href="../scenarios/lab.html?lang=zh-CN" data-global-nav-key="lab">场景检查台</a>
+      <a href="../scenarios/lab.html?lang=zh-CN" data-global-nav-key="lab">场景预览</a>
       <a href="docs/" data-global-nav-key="docs">文档</a>
       <a href="https://github.com/yehyakin/kin-design-system">GitHub</a>
     </nav>
@@ -80,8 +80,8 @@
     <section class="showcase-hero" id="overview" aria-labelledby="overview-title">
       <div class="showcase-hero-copy">
         <p class="showcase-label">KIN 设计系统</p>
-        <h1 id="overview-title">为关键工作构建界面。</h1>
-        <p class="lead">一份面向专业产品的设计合同，让来源、状态、决策和恢复路径始终可见。</p>
+        <h1 id="overview-title">为重要工作而设计。</h1>
+        <p class="lead">一套面向专业产品的界面规范，让来源、状态、决策和恢复路径始终清晰可见。</p>
         <div class="showcase-hero-actions">
           <a class="showcase-button primary" href="components/">探索组件</a>
           <a class="showcase-text-action" href="docs/">阅读设计规范 <i data-lucide="arrow-right"></i></a>
@@ -104,10 +104,10 @@
               data-job="搜索、筛选并打开记录，确认它的来源和时效。"
               data-source="稳定"
               data-presentation="可预览"
-              data-entry="读者带着查询、主题或稳定记录链接进入。"
+              data-entry="读者通过查询、主题或记录固定链接进入。"
               data-dominant-region="结果列表或阅读正文。"
               data-completion="读者能够确认主题、来源、更新状态和下一步导航。"
-              data-boundary="此产品布局样例尚未提供可通过 URL 直接打开的搜索结果、空、过期与不可用状态。"
+              data-boundary="此示例暂不支持通过链接直接恢复搜索结果、空状态、过期状态或不可用状态。"
               data-reference-language="中文预览"
               data-ready-selector="main.article h1"
             >信息</button>
@@ -122,14 +122,14 @@
               data-showcase-stage-lab="INT-01"
               data-reference="../examples/workspace-reference/index.html?lang=zh-CN&amp;theme=dark"
               data-lab="../scenarios/lab.html?scenario=INT-01&amp;state=normal&amp;viewport=wide&amp;theme=dark&amp;mode=present&amp;lang=zh-CN"
-              data-title="对象数据库复核"
-              data-job="选择对象，查看证据与属性，并完成可撤销的复核决定。"
+              data-title="档案复核"
+              data-job="选择一条记录，核对证据与属性，并作出可撤销的决定。"
               data-source="稳定"
               data-presentation="可预览"
-              data-entry="分析人员从已保存的对象视图或深链接进入。"
-              data-dominant-region="对象列表与选中对象详情。"
-              data-completion="分析人员记录或退出复核决定，同时保留列表上下文。"
-              data-boundary="选择变化与复核决定可以交互，但尚未提供可直接访问的 URL 状态。"
+              data-entry="分析人员从已保存视图或记录链接进入。"
+              data-dominant-region="记录列表与当前档案。"
+              data-completion="分析人员记录复核结果或离开，列表位置与筛选条件保持不变。"
+              data-boundary="选择与复核可以交互，但刷新后暂时无法恢复当前状态。"
               data-reference-language="中文预览"
               data-ready-selector=".entity-content"
               data-poster="../assets/posters/int-01-normal-dark.png"
@@ -147,10 +147,10 @@
               data-job="编辑商品时，让可售状态、价格、库存、渠道和活动保持可见。"
               data-source="稳定"
               data-presentation="可预览"
-              data-entry="运营人员从限定范围的商品目录打开一件商品。"
+              data-entry="运营人员从指定范围的商品目录打开一件商品。"
               data-dominant-region="商品详情与可编辑的运营字段。"
               data-completion="商品变更被保存、拒绝，或保留为可恢复草稿。"
-              data-boundary="本地样例未连接商品后端、权限服务、审批引擎或渠道发布。"
+              data-boundary="本地示例未接入商品服务、权限、审批或渠道发布。"
               data-reference-language="中文预览"
               data-ready-selector=".commerce-main"
             >电商</button>
@@ -168,16 +168,16 @@
               data-source="稳定"
               data-presentation="可预览"
               data-entry="用户打开文档并选择对象或工具。"
-              data-dominant-region="精密画布。"
+              data-dominant-region="画布与当前选择。"
               data-completion="变更写入文档历史或被安全取消。"
-              data-boundary="提交、取消、撤销和修订历史尚不能通过 URL 直接打开。"
+              data-boundary="提交、取消、撤销和版本状态暂时无法通过链接直接恢复。"
               data-reference-language="中文预览"
               data-ready-selector=".canvas-shell"
             >工程</button>
           </div>
           <div class="stage-toolbar-actions">
             <span class="stage-language" data-stage-language><i data-lucide="languages"></i><span data-stage-language-text data-showcase-feature-language="INT-01">中文预览</span></span>
-            <a class="stage-lab-link" data-stage-lab-link data-showcase-lab-link data-showcase-feature-lab="INT-01" href="../scenarios/lab.html?scenario=INT-01&amp;state=normal&amp;viewport=wide&amp;theme=dark&amp;mode=present&amp;lang=zh-CN">在场景检查台中打开 <i data-lucide="arrow-up-right"></i></a>
+            <a class="stage-lab-link" data-stage-lab-link data-showcase-lab-link data-showcase-feature-lab="INT-01" href="../scenarios/lab.html?scenario=INT-01&amp;state=normal&amp;viewport=wide&amp;theme=dark&amp;mode=present&amp;lang=zh-CN">打开场景预览 <i data-lucide="arrow-up-right"></i></a>
           </div>
         </header>
 
@@ -193,14 +193,14 @@
             src="../assets/posters/int-01-normal-dark.png"
             width="1180"
             height="760"
-            alt="KIN 对象工作台，显示对象记录、属性、活动和上下文复核线程。"
+            alt="KIN 档案工作台，显示记录、属性、活动和复核助手。"
           >
           <div class="stage-loading" data-stage-loading role="status" aria-live="polite"><span aria-hidden="true"></span>正在准备交互预览</div>
           <iframe
             data-stage-frame
             data-showcase-feature-reference="INT-01"
             src="../examples/workspace-reference/index.html?lang=zh-CN&amp;theme=dark"
-            title="对象数据库复核交互预览"
+            title="档案复核交互预览"
             scrolling="no"
           ></iframe>
         </div>
@@ -208,15 +208,15 @@
         <footer class="stage-caption">
           <div>
             <p class="reference-code">INT-01 / 情报工作台</p>
-            <h2 id="stage-title" data-stage-title data-showcase-feature-name="INT-01">对象数据库复核</h2>
-            <p data-stage-job data-showcase-feature-job="INT-01">选择对象，查看证据与属性，并完成可撤销的复核决定。</p>
+            <h2 id="stage-title" data-stage-title data-showcase-feature-name="INT-01">档案复核</h2>
+            <p data-stage-job data-showcase-feature-job="INT-01">选择一条记录，核对证据与属性，并作出可撤销的决定。</p>
           </div>
           <details class="reference-disclosure">
             <summary>关于此预览</summary>
             <dl>
-              <div><dt>来源</dt><dd data-stage-source>稳定</dd></div>
+              <div><dt>规范状态</dt><dd data-stage-source>稳定</dd></div>
               <div><dt>预览</dt><dd data-stage-presentation>可预览</dd></div>
-              <div><dt>样例</dt><dd data-stage-boundary>选择变化与复核决定可以交互，但尚未提供可直接访问的 URL 状态。</dd></div>
+              <div><dt>说明</dt><dd data-stage-boundary>选择与复核可以交互，但刷新后暂时无法恢复当前状态。</dd></div>
               <div><dt>验证</dt><dd>自动检查不能替代真实读屏、浏览器缩放和实体设备复核。</dd></div>
             </dl>
           </details>
@@ -238,25 +238,25 @@
         <a class="context-entry context-entry--information" data-scenario-id="INF-01" data-showcase-lab-link data-showcase-scenario-link="INF-01" href="../scenarios/lab.html?scenario=INF-01&amp;mode=present&amp;lang=zh-CN">
           <span class="context-symbol" aria-hidden="true"><i data-lucide="book-open-text"></i></span>
           <div><strong>连同来源一起阅读</strong><p>把正文、来源、修订记录和相关内容放在同一条阅读路径中。</p></div>
-          <small data-showcase-scenario-meta="INF-01">INF-01 · 稳定来源 · 已展示</small>
+          <small data-showcase-scenario-meta="INF-01">INF-01 · 稳定 · 可预览</small>
         </a>
         <a class="context-entry context-entry--intelligence" data-scenario-id="INT-02" data-showcase-lab-link data-showcase-scenario-link="INT-02" href="../scenarios/lab.html?scenario=INT-02&amp;mode=present&amp;lang=zh-CN">
           <span class="context-symbol" aria-hidden="true"><i data-lucide="scan-search"></i></span>
           <div><strong>判断之前先调查</strong><p>比较时间顺序、冲突与不确定性，不把它们压成一个分数。</p></div>
-          <small data-showcase-scenario-meta="INT-02">INT-02 · 稳定来源 · 已展示</small>
+          <small data-showcase-scenario-meta="INT-02">INT-02 · 稳定 · 可预览</small>
         </a>
         <a class="context-entry context-entry--commerce" data-scenario-id="COM-02" data-showcase-lab-link data-showcase-scenario-link="COM-02" href="../scenarios/lab.html?scenario=COM-02&amp;mode=present&amp;lang=zh-CN">
           <span class="context-symbol" aria-hidden="true"><i data-lucide="package-check"></i></span>
           <div><strong>在完整信息中运营</strong><p>编辑商品时持续显示价格、库存、渠道、审批和历史记录。</p></div>
-          <small data-showcase-scenario-meta="COM-02">COM-02 · 稳定来源 · 已展示</small>
+          <small data-showcase-scenario-meta="COM-02">COM-02 · 稳定 · 可预览</small>
         </a>
         <a class="context-entry context-entry--engineering" data-scenario-id="ENG-01" data-showcase-lab-link data-showcase-scenario-link="ENG-01" href="../scenarios/lab.html?scenario=ENG-01&amp;mode=present&amp;lang=zh-CN">
           <span class="context-symbol" aria-hidden="true"><i data-lucide="box-select"></i></span>
           <div><strong>在画布中精确编辑</strong><p>让画布成为主角，同时保留工具、选择内容、属性和撤销路径。</p></div>
-          <small data-showcase-scenario-meta="ENG-01">ENG-01 · 稳定来源 · 已展示</small>
+          <small data-showcase-scenario-meta="ENG-01">ENG-01 · 稳定 · 可预览</small>
         </a>
       </div>
-      <a class="section-route" href="patterns/">比较四种产品布局 <i data-lucide="arrow-right"></i></a>
+      <a class="section-route" href="patterns/">比较四种应用布局 <i data-lucide="arrow-right"></i></a>
     </section>
 
     <section class="showcase-signature" id="components" aria-labelledby="components-title">
@@ -271,7 +271,7 @@
         <div><span><i data-lucide="log-in"></i>进入</span><p data-stage-trace="entry">分析人员从队列或直接链接打开对象调查。</p></div>
         <div><span><i data-lucide="scan-search"></i>处理</span><p data-stage-trace="dominant">证据与事件顺序。</p></div>
         <div><span><i data-lucide="circle-check-big"></i>提交</span><p data-stage-trace="completion">分析人员记录可追溯的结论，或保持调查不变。</p></div>
-        <div><span><i data-lucide="shield-alert"></i>已知限制</span><p data-stage-trace="boundary">本地样例未连接实时来源、权威权限服务或持久化结论。</p></div>
+        <div><span><i data-lucide="shield-alert"></i>已知限制</span><p data-stage-trace="boundary">本地示例未接入实时来源、正式权限服务或结论存储。</p></div>
       </div>
       <p class="decision-trace__current">当前场景：<strong data-stage-trace-scenario>调查与证据复核</strong></p>
       <a class="section-route" href="components/">探索组件系统 <i data-lucide="arrow-right"></i></a>
@@ -284,7 +284,7 @@
         <h2 id="resources-title">每项设计都有出处。</h2>
       </div>
       <div class="evidence-copy">
-        <p>设计规范、交互样例、生成文件和验证记录各自独立，需要时都能继续查看。</p>
+        <p>设计规范、交互示例、生成文件和验证记录各自独立，需要时都能继续查看。</p>
         <div class="evidence-actions">
           <a href="docs/">阅读文档 <span aria-hidden="true">→</span></a>
           <a href="https://github.com/yehyakin/kin-design-system">查看仓库 <span aria-hidden="true">→</span></a>
@@ -321,7 +321,7 @@
       <a class="command-item" data-command-item href="components/">组件 <span>浏览</span></a>
       <a class="command-item" data-command-item href="patterns/">模式 <span>浏览</span></a>
       <a class="command-item" data-command-item href="../scenarios/?lang=zh-CN">场景 <span>目录</span></a>
-      <a class="command-item" data-command-item href="../scenarios/lab.html?lang=zh-CN">场景检查台 <span>交互预览</span></a>
+      <a class="command-item" data-command-item href="../scenarios/lab.html?lang=zh-CN">场景预览 <span>交互预览</span></a>
       <a class="command-item" data-command-item href="docs/">文档 <span>规范</span></a>
       <div class="command-group-label">预览</div>
       <a class="command-item" data-command-item data-showcase-lab-link href="../scenarios/lab.html?scenario=INT-02&amp;state=normal&amp;viewport=wide&amp;theme=dark&amp;lang=zh-CN">调查与证据复核 <span>INT-02</span></a>

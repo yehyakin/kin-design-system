@@ -36,11 +36,11 @@
         <header class="reference-section-heading"><div><h2 id="ai-assistance-title">AI 输入、输出与证据</h2><p>输入、来源、生成内容、未确定信息和人工操作保持可追踪。</p></div><span>AI 辅助</span></header>
         <div class="ai-layout">
           <form class="composer-sample" data-composer>
-            <header><div><strong>分析商品价格变化</strong><span>商品：Field Jacket · SKU FJ-018</span></div><span class="fixture-label">本地样例</span></header>
+            <header><div><strong>分析商品价格变化</strong><span>商品：Field Jacket · SKU FJ-018</span></div><span class="fixture-label">本地示例</span></header>
             <label for="composer-instruction">说明</label>
             <textarea id="composer-instruction" rows="4">根据已核验来源，总结价格变化并指出仍需人工确认的信息。</textarea>
             <div class="attachment-row"><span><strong>price-history.csv</strong><small>12 KB · 当前工作区</small></span><button type="button" aria-label="移除 price-history.csv">移除</button></div>
-            <p class="privacy-note">内容只在本地样例中展示；没有数据离开浏览器。</p>
+            <p class="privacy-note">内容只在本地示例中展示；没有数据离开浏览器。</p>
             <div class="composer-actions"><span class="composer-status" role="status" aria-live="polite" data-composer-status>等待提交</span><button type="submit" class="primary-action" data-composer-submit>生成示例分析</button><button type="button" data-composer-stop hidden>停止</button><button type="button" data-composer-retry hidden>重试</button></div>
           </form>
 
@@ -55,17 +55,17 @@
           <header><div><h3 id="evidence-title">证据与引用</h3><p>引用编号与支持的结论保持稳定映射。</p></div><span>3 个来源</span></header>
           <ol>
             <li id="evidence-1"><a href="#evidence-1"><span>[1]</span><strong>商品价格记录</strong></a><p>支持“当前价格为 CNY 1,299.00”。</p><small>内部记录 · 今天 09:40 · 已核验</small></li>
-            <li id="evidence-2"><a href="#evidence-2"><span>[2]</span><strong>渠道活动日历</strong></a><p>活动状态仍待运营人员确认。</p><small>运营记录 · 昨天 17:20 · 部分核验</small></li>
+            <li id="evidence-2"><a href="#evidence-2"><span>[2]</span><strong>渠道活动日历</strong></a><p>活动状态仍待运营人员确认。</p><small>运营记录 · 昨天 17:20 · 部分已核验</small></li>
             <li id="evidence-3" class="evidence-conflict"><a href="#evidence-3"><span>[3]</span><strong>外部渠道快照</strong></a><p>显示 CNY 1,399.00，与内部记录存在冲突。</p><small>外部来源 · 今天 09:31 · 存在冲突</small></li>
           </ol>
         </div>
       </section>
 
       <section id="review" aria-labelledby="review-title">
-        <header class="reference-section-heading"><div><h2 id="review-title">建议变更复核与执行审批</h2><p>提案、批准、执行和完成是不同状态。</p></div><span>复核与审批</span></header>
+        <header class="reference-section-heading"><div><h2 id="review-title">变更审核与执行确认</h2><p>建议、批准、执行和完成是不同状态。</p></div><span>审核与确认</span></header>
         <div class="review-layout">
           <article class="change-review" data-change-review>
-            <header><div><strong>建议调整商品售价</strong><span>由本地示例工作流生成 · 尚未批准</span></div><span class="review-state" data-review-state>待复核</span></header>
+            <header><div><strong>建议调整商品售价</strong><span>由本地示例工作流生成 · 尚未批准</span></div><span class="review-state" data-review-state>待审核</span></header>
             <div class="diff-grid"><div><span>当前值</span><strong>CNY 1,399.00</strong></div><div class="proposed-value"><span>建议值</span><strong>CNY 1,299.00</strong></div></div>
             <dl class="change-context"><div><dt>原因</dt><dd>内部价格记录与已批准定价表一致。</dd></div><div><dt>影响</dt><dd>官网与 2 个销售渠道；库存不变。</dd></div><div><dt>依据</dt><dd><a href="#evidence-1">[1]</a> <a href="#evidence-2">[2]</a></dd></div></dl>
             <div class="review-actions"><button type="button" data-review-reject>拒绝</button><button type="button" data-review-edit>编辑建议</button><button type="button" class="primary-action" data-review-accept>接受建议</button></div>
@@ -98,7 +98,7 @@
       <section id="background-work" aria-labelledby="tasks-title">
         <header class="reference-section-heading"><div><h2 id="tasks-title">后台任务</h2><p>任务状态是持久记录，不依赖 Toast 或持续动画。</p></div><span>后台工作</span></header>
         <div class="task-summary" role="status" data-task-summary>3 个任务：1 个运行中，1 个失败，1 个已完成。</div>
-        <div class="task-table" role="table" aria-label="后台任务队列">
+        <div class="task-table" role="table" aria-label="后台任务">
           <div class="task-row task-head" role="row"><span role="columnheader">任务</span><span role="columnheader">状态</span><span role="columnheader">进度</span><span role="columnheader">更新</span><span role="columnheader">操作</span></div>
           <div class="task-row" role="row" data-created-task hidden><strong role="cell">发布已批准价格<small>Field Jacket · TASK-NEW</small></strong><span role="cell" data-created-state>排队中</span><span role="cell">等待执行</span><time role="cell">刚刚</time><button type="button" data-created-cancel>取消</button></div>
           <div class="task-row" role="row"><strong role="cell">同步渠道价格<small>3 个渠道 · TASK-184</small></strong><span role="cell" class="status-text monitor"><i></i>运行中</span><span role="cell"><progress max="3" value="2">2 / 3</progress> 2 / 3</span><time role="cell">1 分钟前</time><button type="button" data-task-cancel>取消</button></div>

@@ -22,7 +22,7 @@
       <a class="flow-brand" href="../../"><strong>KIN</strong><span data-i18n="common.reference">页面流程</span></a>
       <div class="flow-preferences">
         <div class="language-control">
-          <button class="icon-control" type="button" data-language-trigger aria-haspopup="menu" aria-expanded="false" aria-controls="language-menu" data-i18n-aria="common.language" aria-label="切换语言"><i data-lucide="languages" aria-hidden="true"></i></button>
+          <button class="icon-control" type="button" data-language-trigger aria-haspopup="menu" aria-expanded="false" aria-controls="language-menu" data-i18n-aria="common.language" aria-label="选择语言"><i data-lucide="languages" aria-hidden="true"></i></button>
           <div class="language-menu preference-menu" id="language-menu" data-language-menu role="menu" data-state="closed" hidden><button type="button" role="menuitemradio" aria-checked="true" data-language-option="zh-CN">中文</button><button type="button" role="menuitemradio" aria-checked="false" data-language-option="en">English</button></div>
         </div>
         <div class="theme-control">
@@ -48,7 +48,7 @@
         <div class="schedule-sidebar-section">
           <p class="schedule-sidebar-label" data-i18n="schedule.savedViews">已保存视图</p>
           <button class="schedule-nav-item" type="button" data-schedule-scope-shortcut="campaign" data-nav-label="发布窗口"><i data-lucide="megaphone" aria-hidden="true"></i><span class="schedule-sidebar-label" data-i18n="schedule.viewCampaigns">发布窗口</span></button>
-          <button class="schedule-nav-item" type="button" data-schedule-scope-shortcut="review" data-nav-label="复核任务"><i data-lucide="clipboard-check" aria-hidden="true"></i><span class="schedule-sidebar-label" data-i18n="schedule.viewReviews">复核任务</span></button>
+          <button class="schedule-nav-item" type="button" data-schedule-scope-shortcut="review" data-nav-label="审核任务"><i data-lucide="clipboard-check" aria-hidden="true"></i><span class="schedule-sidebar-label" data-i18n="schedule.viewReviews">审核任务</span></button>
         </div>
         <p class="schedule-sidebar-boundary schedule-sidebar-label" data-i18n="schedule.localState">侧栏状态仅保存在当前浏览器。</p>
       </aside>
@@ -57,7 +57,7 @@
         <header class="schedule-toolbar">
           <div class="schedule-title-group">
             <p data-i18n="schedule.eyebrow">排期工作台</p>
-            <h1 data-i18n="schedule.title">发布与复核排期</h1>
+            <h1 data-i18n="schedule.title">发布与审核排期</h1>
           </div>
           <div class="schedule-period-controls" aria-label="周期导航" data-i18n-aria="schedule.periodNavigation">
             <button class="icon-control" type="button" data-schedule-previous data-i18n-aria="schedule.previousWeek" aria-label="上一周"><i data-lucide="chevron-left" aria-hidden="true"></i></button>
@@ -85,14 +85,14 @@
           <div class="schedule-week" data-schedule-week role="listbox" aria-label="本周排期" data-i18n-aria="schedule.gridTitle">
             <div class="schedule-time-rail" aria-hidden="true"><span>08:00</span><span>10:00</span><span>12:00</span><span>14:00</span><span>16:00</span><span>18:00</span></div>
             <section class="schedule-day" data-schedule-day="0"><header><span data-i18n="schedule.monday">周一</span><strong data-day-date></strong></header><div class="schedule-day-body">
-              <button class="schedule-event event-campaign" type="button" style="--event-start:1.5;--event-span:1" data-schedule-event data-event-id="SCH-101" data-event-type="campaign" data-event-day="0" data-event-start="09:30" data-event-end="10:30" data-title-key="schedule.event1Title" data-status-key="schedule.statusReady" data-owner-key="schedule.ownerGrowth" data-context-key="schedule.event1Context" data-conflict-key="schedule.noConflict"><strong data-i18n="schedule.event1Title">夏季活动发布复核</strong><span data-i18n="schedule.event1Meta">09:30–10:30 · 已准备</span></button>
+              <button class="schedule-event event-campaign" type="button" style="--event-start:1.5;--event-span:1" data-schedule-event data-event-id="SCH-101" data-event-type="campaign" data-event-day="0" data-event-start="09:30" data-event-end="10:30" data-title-key="schedule.event1Title" data-status-key="schedule.statusReady" data-owner-key="schedule.ownerGrowth" data-context-key="schedule.event1Context" data-conflict-key="schedule.noConflict"><strong data-i18n="schedule.event1Title">夏季活动发布审核</strong><span data-i18n="schedule.event1Meta">09:30–10:30 · 已准备</span></button>
             </div></section>
             <section class="schedule-day" data-schedule-day="1"><header><span data-i18n="schedule.tuesday">周二</span><strong data-day-date></strong></header><div class="schedule-day-body">
               <button class="schedule-event event-automation" type="button" style="--event-start:3;--event-span:1" data-schedule-event data-event-id="SCH-102" data-event-type="automation" data-event-day="1" data-event-start="11:00" data-event-end="12:00" data-title-key="schedule.event2Title" data-status-key="schedule.statusBlocked" data-owner-key="schedule.ownerOps" data-context-key="schedule.event2Context" data-conflict-key="schedule.sourceUnavailable"><strong data-i18n="schedule.event2Title">库存同步窗口</strong><span data-i18n="schedule.event2Meta">11:00–12:00 · 来源不可用</span></button>
             </div></section>
             <section class="schedule-day" data-schedule-day="2"><header><span data-i18n="schedule.wednesday">周三</span><strong data-day-date></strong></header><div class="schedule-day-body">
-              <button class="schedule-event event-review has-conflict" type="button" style="--event-start:5.5;--event-span:1.5" data-schedule-event data-event-id="SCH-103" data-event-type="review" data-event-day="2" data-event-start="13:30" data-event-end="15:00" data-title-key="schedule.event3Title" data-status-key="schedule.statusConflict" data-owner-key="schedule.ownerCreative" data-context-key="schedule.event3Context" data-conflict-key="schedule.conflictReview"><strong data-i18n="schedule.event3Title">主图复核</strong><span data-i18n="schedule.event3Meta">13:30–15:00 · 存在冲突</span><i data-lucide="circle-alert" aria-hidden="true"></i></button>
-              <button class="schedule-event event-review has-conflict compact-offset" type="button" style="--event-start:6.5;--event-span:1" data-schedule-event data-event-id="SCH-105" data-event-type="review" data-event-day="2" data-event-start="14:30" data-event-end="15:30" data-title-key="schedule.event5Title" data-status-key="schedule.statusConflict" data-owner-key="schedule.ownerLocale" data-context-key="schedule.event5Context" data-conflict-key="schedule.conflictReview"><strong data-i18n="schedule.event5Title">本地化文案复核</strong><span data-i18n="schedule.event5Meta">14:30–15:30 · 复核人时间冲突</span><i data-lucide="circle-alert" aria-hidden="true"></i></button>
+              <button class="schedule-event event-review has-conflict" type="button" style="--event-start:5.5;--event-span:1.5" data-schedule-event data-event-id="SCH-103" data-event-type="review" data-event-day="2" data-event-start="13:30" data-event-end="15:00" data-title-key="schedule.event3Title" data-status-key="schedule.statusConflict" data-owner-key="schedule.ownerCreative" data-context-key="schedule.event3Context" data-conflict-key="schedule.conflictReview"><strong data-i18n="schedule.event3Title">主图审核</strong><span data-i18n="schedule.event3Meta">13:30–15:00 · 存在冲突</span><i data-lucide="circle-alert" aria-hidden="true"></i></button>
+              <button class="schedule-event event-review has-conflict compact-offset" type="button" style="--event-start:6.5;--event-span:1" data-schedule-event data-event-id="SCH-105" data-event-type="review" data-event-day="2" data-event-start="14:30" data-event-end="15:30" data-title-key="schedule.event5Title" data-status-key="schedule.statusConflict" data-owner-key="schedule.ownerLocale" data-context-key="schedule.event5Context" data-conflict-key="schedule.conflictReview"><strong data-i18n="schedule.event5Title">本地化文案审核</strong><span data-i18n="schedule.event5Meta">14:30–15:30 · 审核人时间冲突</span><i data-lucide="circle-alert" aria-hidden="true"></i></button>
             </div></section>
             <section class="schedule-day" data-schedule-day="3"><header><span data-i18n="schedule.thursday">周四</span><strong data-day-date></strong></header><div class="schedule-day-body">
               <button class="schedule-event event-campaign" type="button" style="--event-start:2;--event-span:1" data-schedule-event data-event-id="SCH-104" data-event-type="campaign" data-event-day="3" data-event-start="10:00" data-event-end="11:00" data-title-key="schedule.event4Title" data-status-key="schedule.statusScheduled" data-owner-key="schedule.ownerChannel" data-context-key="schedule.event4Context" data-conflict-key="schedule.noConflict"><strong data-i18n="schedule.event4Title">渠道发布窗口</strong><span data-i18n="schedule.event4Meta">10:00–11:00 · 待批准</span></button>

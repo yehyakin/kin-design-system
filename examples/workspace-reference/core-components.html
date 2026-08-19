@@ -242,7 +242,7 @@
           <div class="core-field file-upload-sample" data-file-upload role="group" aria-labelledby="evidence-upload-label" aria-describedby="evidence-upload-help evidence-upload-fixture">
             <span id="evidence-upload-label">补充证据</span>
             <small id="evidence-upload-help">PDF、PNG 或 JPG，单个文件不超过 10 MB。文件会先校验，再进入上传流程。</small>
-            <small id="evidence-upload-fixture" class="fixture-note">本地交互样例：不会连接服务器，也不会把模拟完成描述成真实上传。</small>
+            <small id="evidence-upload-fixture" class="fixture-note">本地交互示例：不会连接服务器，也不会把模拟完成描述成真实上传。</small>
             <input class="visually-hidden" id="evidence-upload" type="file" name="evidence" accept=".pdf,.png,.jpg,.jpeg,application/pdf,image/png,image/jpeg" aria-label="补充证据文件" data-file-input />
             <div class="file-dropzone" data-file-dropzone>
               <p>将一个文件拖放到这里，或使用文件选择器。</p>
@@ -337,8 +337,8 @@
           <div class="banner-sample" role="status"><span><strong>复核服务将在 18:00 维护</strong> 已打开的记录仍可查看，提交操作将在维护结束后恢复。</span><button type="button" aria-label="关闭维护通知">关闭</button></div>
           <div class="inline-alert" role="status"><div><strong>2 条记录需要复核</strong><p>价格变化超过当前规则阈值，现有发布状态不受影响。</p></div><button type="button">打开队列</button></div>
           <div class="inline-alert error-alert" role="alert"><div><strong>来源同步失败</strong><p>保留最近一次成功结果。重试不会重复创建复核任务。</p></div><button type="button">重试</button></div>
-          <div class="progress-sample"><div><span>正在核验来源</span><strong data-progress-label>3 / 5</strong></div><progress max="5" value="3">3 / 5</progress></div>
-          <div class="progress-sample"><div><span>本月自动化额度</span><strong>68%</strong></div><meter min="0" max="100" low="20" high="80" optimum="50" value="68">68%</meter></div>
+          <div class="progress-sample"><div><span id="source-progress-label">正在核验来源</span><strong data-progress-label>3 / 5</strong></div><progress max="5" value="3" aria-labelledby="source-progress-label">3 / 5</progress></div>
+          <div class="progress-sample"><div><span id="automation-quota-label">本月自动化额度</span><strong>68%</strong></div><meter min="0" max="100" low="20" high="80" optimum="50" value="68" aria-labelledby="automation-quota-label">68%</meter></div>
           <div class="loading-row" role="status"><span class="spinner-sample" aria-hidden="true"></span><span>正在读取复核记录</span></div>
           <div class="empty-sample"><strong>没有更多待复核记录</strong><p>当前筛选条件下的记录已经处理完成。</p><button type="button">清除筛选</button></div>
         </div>

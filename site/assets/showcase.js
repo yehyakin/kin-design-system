@@ -289,7 +289,7 @@ function initializeScenarioStage(container) {
       container.dataset.stageReady = "false";
       delete container.dataset.stageInput;
       loader.textContent = document.documentElement.lang === "zh-CN"
-        ? "预览暂时不可用，请在场景检查台中打开"
+        ? "预览暂时不可用，请打开场景预览"
         : "Reference unavailable. Open it in Lab.";
     }
   }
@@ -748,7 +748,7 @@ function initializePatternBrowser(browser) {
     stageContainer.dataset.readySelector = choice.dataset.patternReadySelector;
     stageContainer.dispatchEvent(new CustomEvent("kin:reference-change"));
     frame.title = `${choice.dataset.patternName}: ${
-      root.lang === "zh-CN" ? "产品布局预览" : "live product reference"
+      root.lang === "zh-CN" ? "应用布局预览" : "live product reference"
     }`;
     if (frame.getAttribute("src") === choice.dataset.patternReference) {
       frame.dispatchEvent(new Event("load"));

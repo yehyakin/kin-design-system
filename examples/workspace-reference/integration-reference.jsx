@@ -31,7 +31,7 @@ const copy = {
   zh: {
     back: "工作台",
     referenceLabel: "KIN 示例",
-    labTitle: "运行时集成实验室",
+    labTitle: "运行时集成示例",
     motionLab: "动效实验室",
     themeToLight: "切换为日间模式",
     themeToDark: "切换为夜间模式",
@@ -40,9 +40,9 @@ const copy = {
     dark: "夜间",
     system: "跟随系统",
     language: "切换语言",
-    eyebrow: "直接使用官方运行时",
-    title: "第三方能力成为 KIN 的一部分",
-    intro: "以下交互直接运行官方包。KIN 统一语义、Token、主题和接入要求，不重写成熟项目的动效与核心引擎。",
+    eyebrow: "官方运行时集成",
+    title: "查看官方组件在 KIN 中的实际表现",
+    intro: "以下交互直接使用官方包。KIN 只统一语义、设计变量、主题和接入规则，不改写原有动效或交互引擎。",
     statusTitle: "集成状态",
     statusBody: "“运行时集成”要求依赖、KIN API、可操作示例和自动化证据同时存在。",
     package: "官方包",
@@ -80,7 +80,7 @@ const copy = {
       "bottom-right": "右下",
     },
     numberTitle: "数值连续性",
-    numberBody: "NumberFlow 只在已有值真实变化时运行；首次渲染、主题切换和减弱动效模式下不制造计数动画。",
+    numberBody: "NumberFlow 只在已有数值发生变化时运行；首次显示不从 0 开始，主题切换或减弱动效时也不会重新播放。",
     sample: "记录下一组样本",
     availability: "可用率",
     latency: "平均延迟",
@@ -114,9 +114,9 @@ const copy = {
     dragPlaced: "已放到",
     dragReturned: "已回到原位置",
     otpTitle: "验证码输入",
-    otpBody: "input-otp 负责粘贴、自动填充和焦点行为。本地样例不发送、不验证也不记录验证码。",
+    otpBody: "input-otp 负责粘贴、自动填充和焦点行为。本地示例不会发送、验证或记录验证码。",
     otpLabel: "六位验证码",
-    otpDescription: "本地输入样例 · 不连接认证服务",
+    otpDescription: "本地输入示例 · 未连接认证服务",
     chartTitle: "实时趋势",
     chartBody: "Liveline 保留 Canvas 实时插值；KIN 关闭粒子、发光和娱乐化效果，并提供文字摘要与数据表。",
     chartSummary: "过去 12 个样本的延迟在 82–126ms 之间；当前值为 94ms。",
@@ -477,7 +477,7 @@ function App() {
     const url = new URL(window.location.href);
     url.searchParams.set("lang", locale === "zh" ? "zh-CN" : "en");
     window.history.replaceState(null, "", `${url.pathname}${url.search}${url.hash}`);
-    document.title = locale === "zh" ? "KIN 运行时集成实验室" : "KIN Integration Lab";
+    document.title = locale === "zh" ? "KIN 运行时集成示例" : "KIN Integration Lab";
   }, [locale]);
 
   React.useEffect(() => {
@@ -708,15 +708,32 @@ function App() {
 
         <Section id="virtuoso" title={c.virtualTitle} body={c.virtualBody} source={{ href: "https://github.com/petyosi/react-virtuoso", label: "React Virtuoso" }}>
           <LazyMount label={c.loadingRuntime}>
-            <div data-integration-virtual className="integration-virtual-shell" role="listbox" tabIndex={0} onKeyDown={moveActive} aria-activedescendant={`integration-entity-${listItems[activeIndex]?.id}`} aria-label={c.listLabel}>
-              <div className="integration-list-toolbar"><Search size={14} /><span>{c.listCount(listItems.length)}</span><span>J / K</span></div>
+            <div className="integration-virtual-shell">
+              <div className="integration-list-toolbar" aria-hidden="true"><Search size={14} /><span>{c.listCount(listItems.length)}</span><span>J / K</span></div>
               <KinVirtualList
+                containerRole="listbox"
+                itemRole="option"
+                containerProps={{
+                  "data-integration-virtual": true,
+                  tabIndex: 0,
+                  onKeyDown: moveActive,
+                  "aria-activedescendant": `integration-entity-${listItems[activeIndex]?.id}`,
+                }}
                 items={listItems}
                 getKey={(item) => item.id}
                 activeIndex={activeIndex}
                 label={c.listLabel}
                 defaultItemHeight={42}
-                renderItem={(item, index) => <button id={`integration-entity-${item.id}`} type="button" role="option" className="integration-entity-row" aria-selected={index === activeIndex} tabIndex={-1} onClick={(event) => { setActiveIndex(index); event.currentTarget.closest("[data-integration-virtual]")?.focus(); }}><span>{item.id}</span><strong>{item.name}</strong><small>{item.state}</small></button>}
+                getItemProps={(item, index) => ({
+                  id: `integration-entity-${item.id}`,
+                  className: "integration-entity-row",
+                  "aria-selected": index === activeIndex,
+                  onClick: (event) => {
+                    setActiveIndex(index);
+                    event.currentTarget.closest("[data-integration-virtual]")?.focus();
+                  },
+                })}
+                renderItem={(item) => <><span>{item.id}</span><strong>{item.name}</strong><small>{item.state}</small></>}
               />
             </div>
           </LazyMount>
