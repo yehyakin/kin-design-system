@@ -2149,7 +2149,10 @@ test("Showcase routes avoid mobile overflow and expose 44px primary touch target
     items.map((item) => item.getBoundingClientRect().height),
   );
   expect(commandTargets.length).toBeGreaterThan(0);
-  expect(Math.min(...commandTargets)).toBeGreaterThanOrEqual(44);
+  // Chromium can report a nominal 44 CSS px box as 43.999984 under parallel
+  // layout. Round only the measurement residue; a real 43.99 px target still fails.
+  const minimumCommandTarget = Math.round(Math.min(...commandTargets) * 1_000) / 1_000;
+  expect(minimumCommandTarget).toBeGreaterThanOrEqual(44);
   await page.keyboard.press("Escape");
 
   await page.goto("/scenarios/lab.html?scenario=INT-02&state=normal&viewport=narrow&theme=dark&mode=present");
