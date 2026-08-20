@@ -6,6 +6,8 @@ The project follows semantic versioning for normative design documentation.
 
 ## Unreleased
 
+## 3.0.4 — 2026-08-20
+
 ### Data and administration overview
 
 - Added a stable Data and Admin Dashboard page contract and deterministic bilingual reference for cross-object metrics, period comparison, source health, exception triage, and drill-down. Dashboard composition is selected automatically only when the overview itself is the user task; entity lists, details, approvals, investigations, and canvases retain their existing KIN structures.

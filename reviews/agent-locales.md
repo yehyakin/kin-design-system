@@ -6,8 +6,8 @@ Status: generated, non-normative, review state derived from locale inputs
 
 ## Review boundary
 
-- KIN contract: `3.0.4` (`development`)
-- Bundle input-set checksum: `0d678c0f3accc1e3d902f238415c4fedf738683c9e3b2d4742d86be12c355277`
+- KIN contract: `3.0.4` (`released`)
+- Bundle input-set checksum: `a5db95da5a88e463838e912a9ce53b50e50c0980576d5657cdb576d0219201bd`
 - Scope: exact English and Simplified Chinese copy used by the Agent Snapshot matrix.
 - This packet changes no publication state. Current attestations are consumed separately by `/next/`, release-export, and promotion gates.
 - A human reviewer must compare every localized record with its exact normative source before a separate attestation change updates `distribution/locales/*.json`.
