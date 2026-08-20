@@ -7,17 +7,16 @@ normative: false
 artifact_status: "generated-derivative"
 editable: false
 publication:
-  state: "published-development"
-  published: true
-  public_locators: "active"
+  state: "registry-controlled"
+  public_locators: "registry-authoritative"
 kin_version: "3.0.4"
 release_status: "released"
 latest_stable_contract: "3.0.4"
-channel: "next"
+channel: "versioned"
 locale: "en"
 direction: "ltr"
 theme: "dark"
-contrast: "more"
+contrast: "normal"
 coverage: "compact-foundations-and-routing"
 features:
   component_recipes: "unavailable"
@@ -32,8 +31,8 @@ source:
   checksum_algorithm: "sha256"
   checksum: "97a35adf1c75ebb683eb1fba5030b359b49b74a8c96c1b187cdc6b17db6b83ed"
   input_set_checksum: "a5db95da5a88e463838e912a9ce53b50e50c0980576d5657cdb576d0219201bd"
-  ref: "main"
-  revision_status: "mutable"
+  ref: "v3.0.4"
+  revision_status: "immutable"
 manifest_locator: "design-manifest.json"
 full_contract_path: "DESIGN.md"
 visual_signature_path: "principles/visual-signature.md"
@@ -100,30 +99,30 @@ rules:
     source_path: "principles/visual-signature.md"
     source_heading: "Adoption claims"
 colors:
-  canvas: "#000000"
+  canvas: "#08090a"
   sidebar: "#0b0c0d"
-  surface-1: "#08090a"
+  surface-1: "#0f1011"
   surface-2: "#141516"
   surface-3: "#191a1c"
   surface-4: "#202124"
   surface-hover: "#ffffff0b"
   surface-selected: "#5e6ad21f"
   surface-overlay: "#08090ab8"
-  text-primary: "#ffffff"
-  text-secondary: "#e1e4e8"
+  text-primary: "#f4f5f7"
+  text-secondary: "#c9cbd1"
   text-muted: "#8b8f98"
   text-disabled: "#62666d"
   text-inverse: "#151619"
   icon-primary: "#d7d9de"
   icon-muted: "#7f838b"
   line-subtle: "#ffffff0e"
-  line-default: "#747a86"
+  line-default: "#ffffff17"
   line-strong: "#ffffff26"
   accent: "#5e6ad2"
   accent-hover: "#626dcc"
   accent-active: "#515dbf"
   accent-soft: "#5e6ad224"
-  focus-ring: "#a8b1ff"
+  focus-ring: "#828fffb8"
   monitor: "#4fd0de"
   monitor-soft: "#4fd0de1a"
   positive: "#50ad7d"
@@ -215,12 +214,12 @@ motion:
   ease-exit: "cubic-bezier(0.23, 1, 0.32, 1)"
   ease-standard: "cubic-bezier(0.2, 0, 0, 1)"
 material:
-  edge-highlight: "#00000000"
-  edge-highlight-strong: "#00000000"
-  edge-contact: "#00000000"
-  shadow-contact: "none"
-  shadow-raised: "none"
-  shadow-floating: "none"
+  edge-highlight: "#ffffff08"
+  edge-highlight-strong: "#ffffff0d"
+  edge-contact: "#0000003d"
+  shadow-contact: "0 1px 2px rgba(0, 0, 0, 0.24)"
+  shadow-raised: "0 18px 48px rgba(0, 0, 0, 0.24), 0 2px 8px rgba(0, 0, 0, 0.20)"
+  shadow-floating: "0 18px 44px rgba(0, 0, 0, 0.42), 0 4px 14px rgba(0, 0, 0, 0.28)"
 component_recipes: null
 ---
 
@@ -232,9 +231,9 @@ component_recipes: null
 
 - This compact file is generated from the current KIN contract. It is non-normative, must not be edited, and does not replace the linked source documents.
 - Contract checksum: `97a35adf1c75ebb683eb1fba5030b359b49b74a8c96c1b187cdc6b17db6b83ed`
-- Resolved mode: `dark` / `more`
+- Resolved mode: `dark` / `normal`
 - Locale copy review: `reviewed`
-- Publication state: `published-development`
+- Publication state: `registry-controlled; consult versions.json`
 
 ## Visual register
 
@@ -272,12 +271,12 @@ component_recipes: null
 
 | Role | Resolved value |
 |---|---|
-| `edge-highlight` | `#00000000` |
-| `edge-highlight-strong` | `#00000000` |
-| `edge-contact` | `#00000000` |
-| `shadow-contact` | `none` |
-| `shadow-raised` | `none` |
-| `shadow-floating` | `none` |
+| `edge-highlight` | `#ffffff08` |
+| `edge-highlight-strong` | `#ffffff0d` |
+| `edge-contact` | `#0000003d` |
+| `shadow-contact` | `0 1px 2px rgba(0, 0, 0, 0.24)` |
+| `shadow-raised` | `0 18px 48px rgba(0, 0, 0, 0.24), 0 2px 8px rgba(0, 0, 0, 0.20)` |
+| `shadow-floating` | `0 18px 44px rgba(0, 0, 0, 0.42), 0 4px 14px rgba(0, 0, 0, 0.28)` |
 
 ## Motion
 

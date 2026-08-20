@@ -11,8 +11,8 @@ publication:
   published: true
   public_locators: "active"
 kin_version: "3.0.4"
-release_status: "development"
-latest_stable_contract: "3.0.3"
+release_status: "released"
+latest_stable_contract: "3.0.4"
 channel: "next"
 locale: "en"
 direction: "ltr"
@@ -30,8 +30,8 @@ locale_review:
 source:
   contract_path: "DESIGN.md"
   checksum_algorithm: "sha256"
-  checksum: "6005e761d31b844fbb418be73fdb12582e32f5e2912e26b4f38e181d6444013e"
-  input_set_checksum: "0d678c0f3accc1e3d902f238415c4fedf738683c9e3b2d4742d86be12c355277"
+  checksum: "97a35adf1c75ebb683eb1fba5030b359b49b74a8c96c1b187cdc6b17db6b83ed"
+  input_set_checksum: "a5db95da5a88e463838e912a9ce53b50e50c0980576d5657cdb576d0219201bd"
   ref: "main"
   revision_status: "mutable"
 manifest_locator: "design-manifest.json"
@@ -231,7 +231,7 @@ component_recipes: null
 ## Status and source
 
 - This compact file is generated from the current KIN contract. It is non-normative, must not be edited, and does not replace the linked source documents.
-- Contract checksum: `6005e761d31b844fbb418be73fdb12582e32f5e2912e26b4f38e181d6444013e`
+- Contract checksum: `97a35adf1c75ebb683eb1fba5030b359b49b74a8c96c1b187cdc6b17db6b83ed`
 - Resolved mode: `dark` / `normal`
 - Locale copy review: `reviewed`
 - Publication state: `published-development`

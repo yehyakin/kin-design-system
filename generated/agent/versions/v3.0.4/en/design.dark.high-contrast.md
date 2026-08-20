@@ -7,13 +7,12 @@ normative: false
 artifact_status: "generated-derivative"
 editable: false
 publication:
-  state: "published-development"
-  published: true
-  public_locators: "active"
+  state: "registry-controlled"
+  public_locators: "registry-authoritative"
 kin_version: "3.0.4"
 release_status: "released"
 latest_stable_contract: "3.0.4"
-channel: "next"
+channel: "versioned"
 locale: "en"
 direction: "ltr"
 theme: "dark"
@@ -32,8 +31,8 @@ source:
   checksum_algorithm: "sha256"
   checksum: "97a35adf1c75ebb683eb1fba5030b359b49b74a8c96c1b187cdc6b17db6b83ed"
   input_set_checksum: "a5db95da5a88e463838e912a9ce53b50e50c0980576d5657cdb576d0219201bd"
-  ref: "main"
-  revision_status: "mutable"
+  ref: "v3.0.4"
+  revision_status: "immutable"
 manifest_locator: "design-manifest.json"
 full_contract_path: "DESIGN.md"
 visual_signature_path: "principles/visual-signature.md"
@@ -234,7 +233,7 @@ component_recipes: null
 - Contract checksum: `97a35adf1c75ebb683eb1fba5030b359b49b74a8c96c1b187cdc6b17db6b83ed`
 - Resolved mode: `dark` / `more`
 - Locale copy review: `reviewed`
-- Publication state: `published-development`
+- Publication state: `registry-controlled; consult versions.json`
 
 ## Visual register
 

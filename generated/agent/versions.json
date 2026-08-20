@@ -46,6 +46,19 @@
       "input_set_checksum": "9ffdb2993dd50ed3eb058517eb2665fe62e0ef5c66d032f34c50e8f3e71164bb",
       "replacement": null,
       "advisory_url": null
+    },
+    {
+      "version": "3.0.4",
+      "publication_state": "staged",
+      "support_status": null,
+      "repository_directory": "generated/agent/versions/v3.0.4",
+      "manifest_url": null,
+      "manifest_sha256": "fb235cd12b1cfa390692f67981d72b5627eaa75615292626fe65636f32f44a15",
+      "kin_tag": "v3.0.4",
+      "design_checksum": "97a35adf1c75ebb683eb1fba5030b359b49b74a8c96c1b187cdc6b17db6b83ed",
+      "input_set_checksum": "a5db95da5a88e463838e912a9ce53b50e50c0980576d5657cdb576d0219201bd",
+      "replacement": null,
+      "advisory_url": null
     }
   ]
 }
