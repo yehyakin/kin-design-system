@@ -6,6 +6,8 @@ The project follows semantic versioning for normative design documentation.
 
 ## Unreleased
 
+- Updated the exact development dependency pins and matching optional React integration peers for Lucide, NumberFlow, Virtuoso, Sonner, and input-otp. Consumers of the private React adapters must install the newly recorded exact peer versions from `integrations/catalog.json`.
+
 ## 3.0.4 — 2026-08-20
 
 ### Data and administration overview
