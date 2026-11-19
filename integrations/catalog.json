@@ -27,7 +27,7 @@
     {
       "id": "lucide-react",
       "package": "lucide-react",
-      "version": "1.24.0",
+      "version": "1.33.0",
       "license": "ISC",
       "status": "visual-integrated",
       "catalog_component": "Icon grammar",
@@ -42,7 +42,7 @@
     {
       "id": "sonner",
       "package": "sonner",
-      "version": "2.0.7",
+      "version": "2.0.8",
       "license": "MIT",
       "status": "runtime-integrated",
       "catalog_component": "Toast",
@@ -57,7 +57,7 @@
     {
       "id": "number-flow",
       "package": "@number-flow/react",
-      "version": "0.6.1",
+      "version": "0.6.2",
       "license": "MIT",
       "status": "runtime-integrated",
       "catalog_component": "Number Transition",
@@ -87,7 +87,7 @@
     {
       "id": "react-virtuoso",
       "package": "react-virtuoso",
-      "version": "4.18.10",
+      "version": "4.18.12",
       "license": "MIT",
       "status": "runtime-integrated",
       "catalog_component": "Virtualized long list behavior",
@@ -121,7 +121,7 @@
     {
       "id": "input-otp",
       "package": "input-otp",
-      "version": "1.4.2",
+      "version": "1.5.0",
       "license": "MIT",
       "status": "runtime-integrated",
       "catalog_component": "OTP",
