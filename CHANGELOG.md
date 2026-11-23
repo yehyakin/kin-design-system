@@ -6,6 +6,7 @@ The project follows semantic versioning for normative design documentation.
 
 ## Unreleased
 
+- Updated React compatibility coverage to 19.3.1 and the Lucide and Virtuoso integration pins to 1.76.0 and 4.18.23. Consumers of the private Virtuoso adapter must install `react-virtuoso@4.18.23` to match its exact optional peer.
 - Updated the exact development dependency pins and matching optional React integration peers for Lucide, NumberFlow, Virtuoso, Sonner, and input-otp. Consumers of the private React adapters must install the newly recorded exact peer versions from `integrations/catalog.json`.
 
 ## 3.0.4 — 2026-08-20
