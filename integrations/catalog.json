@@ -27,7 +27,7 @@
     {
       "id": "lucide-react",
       "package": "lucide-react",
-      "version": "1.33.0",
+      "version": "1.76.0",
       "license": "ISC",
       "status": "visual-integrated",
       "catalog_component": "Icon grammar",
@@ -87,7 +87,7 @@
     {
       "id": "react-virtuoso",
       "package": "react-virtuoso",
-      "version": "4.18.12",
+      "version": "4.18.23",
       "license": "MIT",
       "status": "runtime-integrated",
       "catalog_component": "Virtualized long list behavior",
